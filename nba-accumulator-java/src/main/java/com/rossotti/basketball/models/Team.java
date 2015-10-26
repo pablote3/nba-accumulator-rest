@@ -1,18 +1,17 @@
 package com.rossotti.basketball.models;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 //@Entity
 //public class Team extends Model {
+
 public class Team {
-	private static final long serialVersionUID = 1L;
+	public Team() {
+	}
+	
 //	@Id 
 //	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
@@ -79,8 +78,8 @@ public class Team {
 //	@Required
 //	@Column(name="from_date", nullable=false)
 //	@Temporal(TemporalType.DATE)
-
 	@JsonProperty("from_date")
+	
 	private LocalDate fromDate;
 	public LocalDate getFromDate()  {
 		return fromDate;
@@ -91,8 +90,9 @@ public class Team {
 	
 //	@Required
 //	@Column(name="to_date", nullable=false)
-	@Temporal(TemporalType.DATE)
+//	@Temporal(TemporalType.DATE)
 	@JsonProperty("to_date")
+	
 	private LocalDate toDate;
 	public LocalDate getToDate()  {
 		return toDate;
@@ -268,6 +268,7 @@ public class Team {
 			.append("  key: " + this.key)
 			.append("  fullName: " + this.fullName)
 			.append("  abbr: " + this.abbr)
+			.append("  fromDate: " + this.fromDate)
 			.append("  conference: " + this.conference)
 			.append("  division: " + this.division + "\n")
 			.toString();

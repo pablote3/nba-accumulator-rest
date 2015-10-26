@@ -25,7 +25,7 @@ public class TeamResource {
 	@Consumes(MediaType.APPLICATION_JSON)
     public Response createTeam(Team team) {
 
-		String result = "Team created : " + team;
+		String result = "Team created : " + team.toString();
 //		Team team = team.createChirp(content);
 
 		return Response.ok(result).build();
