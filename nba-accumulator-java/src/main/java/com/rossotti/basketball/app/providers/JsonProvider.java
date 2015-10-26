@@ -17,12 +17,12 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 @Consumes({"application/json"})
 public class JsonProvider extends JacksonJsonProvider {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+
 	public JsonProvider() {
 		logger.info("----------------JsonProvider Loading----------------");
 		setMapper(buildObjectMapper());
 	}
-	
+
 	public static ObjectMapper buildObjectMapper() {
 		ObjectMapper mapper = new ObjectMapper();
 

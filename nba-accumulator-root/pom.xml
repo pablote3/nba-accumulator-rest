@@ -8,64 +8,64 @@
   <name>nba-accumulator-root</name>
   <url>http://maven.apache.org</url>
   <properties>
-  	<hibernate.jpa.version>1.0.0.Final</hibernate.jpa.version>
-  	<jackson.version>2.6.3</jackson.version>
-  	<joda.version>2.8.2</joda.version>
-    <junit.version>4.12</junit.version>
-    <resteasy.version>3.0.13.Final</resteasy.version>
-    <slf4j.version>1.7.12</slf4j.version>
+	<hibernate.jpa.version>1.0.0.Final</hibernate.jpa.version>
+		<jackson.version>2.6.3</jackson.version>
+		<joda.version>2.8.2</joda.version>
+		<junit.version>4.12</junit.version>
+		<resteasy.version>3.0.13.Final</resteasy.version>
+		<slf4j.version>1.7.12</slf4j.version>
   </properties>
   <dependencies>
-  	<dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-      <version>${jackson.version}</version>
+	<dependency>
+		<groupId>com.fasterxml.jackson.core</groupId>
+		<artifactId>jackson-core</artifactId>
+		<version>${jackson.version}</version>
 	</dependency>
 	<dependency>
-    	<groupId>joda-time</groupId>
-    	<artifactId>joda-time</artifactId>
-    	<version>${joda.version}</version>
+		<groupId>com.fasterxml.jackson.datatype</groupId>
+		<artifactId>jackson-datatype-joda</artifactId>
+		<version>${jackson.version}</version>
 	</dependency>
 	<dependency>
-    	<groupId>org.slf4j</groupId>
-    	<artifactId>slf4j-api</artifactId>
-    	<version>${slf4j.version}</version>
+		<groupId>com.fasterxml.jackson.jaxrs</groupId>
+		<artifactId>jackson-jaxrs-json-provider</artifactId>
+		<version>${jackson.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>joda-time</groupId>
+		<artifactId>joda-time</artifactId>
+		<version>${joda.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-api</artifactId>
+		<version>${slf4j.version}</version>
 	</dependency>	
 	<dependency>
-      <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-joda</artifactId>
-      <version>${jackson.version}</version>
-	</dependency>
-		<dependency>
-      <groupId>com.fasterxml.jackson.jaxrs</groupId>
-      <artifactId>jackson-jaxrs-json-provider</artifactId>
-      <version>${jackson.version}</version>
+		<groupId>org.hibernate.javax.persistence</groupId>
+		<artifactId>hibernate-jpa-2.1-api</artifactId>
+		<version>${hibernate.jpa.version}</version>
 	</dependency>
 	<dependency>
-      <groupId>org.hibernate.javax.persistence</groupId>
-      <artifactId>hibernate-jpa-2.1-api</artifactId>
-      <version>${hibernate.jpa.version}</version>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>${junit.version}</version>
+		<scope>test</scope>
 	</dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.resteasy</groupId>
-      <artifactId>resteasy-jaxrs</artifactId>
-      <version>${resteasy.version}</version>
-    </dependency>
-    <dependency>
-	  <groupId>org.jboss.resteasy</groupId>
-	  <artifactId>resteasy-jackson-provider</artifactId>
-	  <version>${resteasy.version}</version>
+	<dependency>
+		<groupId>org.jboss.resteasy</groupId>
+		<artifactId>resteasy-jaxrs</artifactId>
+		<version>${resteasy.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.jboss.resteasy</groupId>
+		<artifactId>resteasy-jackson-provider</artifactId>
+		<version>${resteasy.version}</version>
 	</dependency>
   </dependencies>
   <modules>
-    <module>../nba-accumulator-java</module>
-    <module>../nba-accumulator-web</module>
-    <module>../nba-accumulator-test</module>
+	<module>../nba-accumulator-java</module>
+	<module>../nba-accumulator-web</module>
+	<module>../nba-accumulator-test</module>
   </modules>
 </project>

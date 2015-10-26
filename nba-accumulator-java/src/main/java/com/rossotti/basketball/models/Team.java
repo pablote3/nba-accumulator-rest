@@ -123,10 +123,10 @@ public class Team {
 		this.conference = conference;
 	}
 	
-    public enum Conference {
-        East,
-        West;
-    }
+	public enum Conference {
+		East,
+		West;
+	}
 	
 //  @Required
 //	@Enumerated(EnumType.STRING)
@@ -140,13 +140,13 @@ public class Team {
 	}
 	
 	public enum Division {
-        Atlantic,
-        Central,
-        Southeast,
-        Southwest,
-        Northwest,
-        Pacific;
-    }
+		Atlantic,
+		Central,
+		Southeast,
+		Southwest,
+		Northwest,
+		Pacific;
+	}
 	
 //	@Column(name="site_name", length=30, nullable=false)
 	@JsonProperty("site_name")
@@ -157,7 +157,7 @@ public class Team {
 	public void setSiteName(String siteName) {
 		this.siteName = siteName;
 	}
-    
+
 //	@Column(name="city", length=15, nullable=false)
 	private String city;
 	public String getCity() {
@@ -166,7 +166,7 @@ public class Team {
 	public void setCity(String city) {
 		this.city = city;
 	}
-    
+
 //	@Column(name="state", length=2, nullable=false)
 	private String state;
 	public String getState() {
@@ -197,16 +197,16 @@ public class Team {
 //	public static List<Team> findAll() {
 //		Query<Team> query = Ebean.find(Team.class);
 //		List<Team> teams = query.findList();
-//	    return teams;
+//		return teams;
 //	}	
 	
 //	public static Team findByAbbr(String abbr, ProcessingType processingType) {
 //		Team team;
 //		Query<Team> query = null; 
-//	  	if (processingType.equals(ProcessingType.batch)) 
-//	  		query = ebeanServer.find(Team.class);
-//  		else if (processingType.equals(ProcessingType.online))
-//  			query = Ebean.find(Team.class);	
+//		if (processingType.equals(ProcessingType.batch)) 
+//			query = ebeanServer.find(Team.class);
+//		else if (processingType.equals(ProcessingType.online))
+//			query = Ebean.find(Team.class);	
 //
 //		query.where().eq("abbr", abbr);
 //		query.where().eq("active", true);
@@ -218,50 +218,50 @@ public class Team {
 //	public static Team findByTeamKey(String teamKey, ProcessingType processingType) {
 //		Team team;
 //		Query<Team> query = null; 
-//	  	if (processingType.equals(ProcessingType.batch)) 
-//	  		query = ebeanServer.find(Team.class);
-//  		else if (processingType.equals(ProcessingType.online))
-//  			query = Ebean.find(Team.class);	
+//		if (processingType.equals(ProcessingType.batch)) 
+//			query = ebeanServer.find(Team.class);
+//		else if (processingType.equals(ProcessingType.online))
+//			query = Ebean.find(Team.class);	
 //
 //		query.where().eq("team_key", teamKey);
 //		team = query.findUnique();
 //		return team;
 //	}
-	
+
 //	public static List<Team> findByActive(boolean active) {
 //		Query<Team> query = Ebean.find(Team.class);
 //		query.where().eq("active", active);
 //		List<Team> teams = query.findList();
-//	    return teams;
+//		return teams;
 //	}
-	
+
 //	public static List<Team> findFilter(String filter) {
 //		Query<Team> query = Ebean.find(Team.class);
 //		query.where().ilike("fullName", "%" + filter + "%");
 //		List<Team> teams = query.findList();
 //		return teams;
 //	}
-	  
+
 //	public static void create(Team team, ProcessingType processingType) {
 //		if (processingType.equals(ProcessingType.batch))
 //			ebeanServer.save(team);
 //		else if (processingType.equals(ProcessingType.online))
 //			Ebean.save(team);
 //	}
-	  
+
 //	public static void delete(Long id) {
 //		Team team = Team.findById(id);
 //	  	team.delete();
 //	}
 	
-//    public static Page<Team> page(int page, int pageSize, String sortBy, String order, String filter) {
-//    	Query<Team> query = Ebean.find(Team.class);
-//    	query.where().ilike("fullName", "%" + filter + "%");
-//    	query.where().orderBy(sortBy + " " + order);
-//    	Page<Team> p = query.findPagingList(pageSize).getPage(page);
-//    	return p;
-//    }
-	  
+//	public static Page<Team> page(int page, int pageSize, String sortBy, String order, String filter) {
+//		Query<Team> query = Ebean.find(Team.class);
+//		query.where().ilike("fullName", "%" + filter + "%");
+//		query.where().orderBy(sortBy + " " + order);
+//		Page<Team> p = query.findPagingList(pageSize).getPage(page);
+//		return p;
+//	}
+
 	public String toString() {
 		return new StringBuffer()
 			.append("\n" + "  id: " + this.id)

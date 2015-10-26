@@ -12,28 +12,28 @@ import com.rossotti.basketball.app.resources.TeamResource;
 
 public class AccumulatorApp extends Application {
 	protected final Set<Class<?>> classes = new HashSet<>();
-    private Set<Object> singletons = new HashSet<>();
-    protected final Map<String, Object> properties = new HashMap<>();
+	private Set<Object> singletons = new HashSet<>();
+	protected final Map<String, Object> properties = new HashMap<>();
 
-    public AccumulatorApp() {
-    	registerClasses();
-    }
-    
-    private void registerClasses() {    	
-    	// Resources
-    	classes.add(TeamResource.class);
-    	
-    	// Providers
-    	classes.add(JsonProvider.class);
-    }
-    
-    @Override
-    public Set<Class<?>> getClasses() {
-      return classes;
-    }
+	public AccumulatorApp() {
+		registerClasses();
+	}
 
-    @Override
-    public Set<Object> getSingletons() {
-        return singletons;
-    }
+	private void registerClasses() {    	
+		// Resources
+		classes.add(TeamResource.class);
+		
+		// Providers
+		classes.add(JsonProvider.class);
+	}
+
+	@Override
+	public Set<Class<?>> getClasses() {
+		return classes;
+	}
+
+	@Override
+	public Set<Object> getSingletons() {
+		return singletons;
+	}
 }

@@ -23,7 +23,7 @@ public class TeamResource {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-    public Response createTeam(Team team) {
+	public Response createTeam(Team team) {
 
 		String result = "Team created : " + team.toString();
 //		Team team = team.createChirp(content);
