@@ -14,8 +14,50 @@
 		<junit.version>4.12</junit.version>
 		<resteasy.version>3.0.13.Final</resteasy.version>
 		<slf4j.version>1.7.12</slf4j.version>
+		<spring.version>4.2.2.RELEASE</spring.version>
   </properties>
   <dependencies>
+	<!-- RESTEasy -->
+	<dependency>
+		<groupId>org.jboss.resteasy</groupId>
+		<artifactId>resteasy-jaxrs</artifactId>
+		<version>${resteasy.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.jboss.resteasy</groupId>
+		<artifactId>resteasy-jackson-provider</artifactId>
+		<version>${resteasy.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.jboss.resteasy</groupId>
+		<artifactId>resteasy-spring</artifactId>
+		<version>${resteasy.version}</version>
+	</dependency>
+	
+	<!-- Spring -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-context</artifactId>
+		<version>${spring.version}</version>
+		<type>jar</type>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-core</artifactId>
+		<version>${spring.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-web</artifactId>
+		<version>${spring.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-orm</artifactId>
+		<version>${spring.version}</version>
+	</dependency>
+
+	<!-- Jackson -->
 	<dependency>
 		<groupId>com.fasterxml.jackson.core</groupId>
 		<artifactId>jackson-core</artifactId>
@@ -31,6 +73,20 @@
 		<artifactId>jackson-jaxrs-json-provider</artifactId>
 		<version>${jackson.version}</version>
 	</dependency>
+
+	<!-- Hibernate -->
+	<dependency>
+		<groupId>org.hibernate.javax.persistence</groupId>
+		<artifactId>hibernate-jpa-2.1-api</artifactId>
+		<version>${hibernate.jpa.version}</version>
+	</dependency>
+
+	<!-- Misc -->
+	<dependency>
+		<groupId>javax.inject</groupId>
+		<artifactId>javax.inject</artifactId>
+		<version>1</version>
+	</dependency>
 	<dependency>
 		<groupId>joda-time</groupId>
 		<artifactId>joda-time</artifactId>
@@ -40,27 +96,14 @@
 		<groupId>org.slf4j</groupId>
 		<artifactId>slf4j-api</artifactId>
 		<version>${slf4j.version}</version>
-	</dependency>	
-	<dependency>
-		<groupId>org.hibernate.javax.persistence</groupId>
-		<artifactId>hibernate-jpa-2.1-api</artifactId>
-		<version>${hibernate.jpa.version}</version>
 	</dependency>
+
+	<!-- Test -->
 	<dependency>
 		<groupId>junit</groupId>
 		<artifactId>junit</artifactId>
 		<version>${junit.version}</version>
 		<scope>test</scope>
-	</dependency>
-	<dependency>
-		<groupId>org.jboss.resteasy</groupId>
-		<artifactId>resteasy-jaxrs</artifactId>
-		<version>${resteasy.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>org.jboss.resteasy</groupId>
-		<artifactId>resteasy-jackson-provider</artifactId>
-		<version>${resteasy.version}</version>
 	</dependency>
   </dependencies>
   <modules>
