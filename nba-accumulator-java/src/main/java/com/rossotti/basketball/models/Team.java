@@ -1,19 +1,28 @@
 package com.rossotti.basketball.models;
 
-import org.joda.time.DateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Version;
+
+import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-//@Entity
-//public class Team extends Model {
-
+@Entity
+@Table (name="team")
 public class Team {
-	public Team() {
-	}
+	public Team() {}
 	
-//	@Id 
-//	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	public Long getId() {
 		return id;
@@ -22,17 +31,18 @@ public class Team {
 		this.id = id;
 	}
 	
-//	@Version
-	private DateTime lastUpdate;
-	public DateTime getLastUpdate()  {
+	@Version
+	@Type(type="org.joda.time.contrib.hibernate.PersistentLocalDateTime")
+	@Column(name="last_update", nullable=false)
+	private LocalDateTime lastUpdate;
+	public LocalDateTime getLastUpdate()  {
 		return lastUpdate;
 	}
-	public void setLastUpdate(DateTime lastUpdate) {
+	public void setLastUpdate(LocalDateTime lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
 
-//	@Required
-//	@Column(name="team_key", length=35, nullable=false)
+	@Column(name="team_key", length=35, nullable=false)
 	@JsonProperty("team_id")
 	private String key;
 	public String getKey() {
@@ -42,8 +52,7 @@ public class Team {
 		this.key = key;
 	}
 	
-//	@Required
-//	@Column(name="first_name", length=15, nullable=false)
+	@Column(name="first_name", length=15, nullable=false)
 	@JsonProperty("first_name")
 	private String firstName;
 	public String getFirstName() {
@@ -53,8 +62,7 @@ public class Team {
 		this.firstName = firstName;
 	}
 	
-//	@Required
-//	@Column(name="last_name", length=20, nullable=false)
+	@Column(name="last_name", length=20, nullable=false)
 	@JsonProperty("last_name")
 	private String lastName;
 	public String getLastName() {
@@ -64,8 +72,7 @@ public class Team {
 		this.lastName = lastName;
 	}
 	
-//	@Required
-//	@Column(name="full_name", length=35, nullable=false)
+	@Column(name="full_name", length=35, nullable=false)
 	@JsonProperty("full_name")
 	private String fullName;
 	public String getFullName() {
@@ -75,11 +82,9 @@ public class Team {
 		this.fullName = fullName;
 	}
 	
-//	@Required
-//	@Column(name="from_date", nullable=false)
-//	@Temporal(TemporalType.DATE)
+	@Column(name="from_date", nullable=false)
+	@Type(type="org.joda.time.contrib.hibernate.PersistentLocalDate")
 	@JsonProperty("from_date")
-	
 	private LocalDate fromDate;
 	public LocalDate getFromDate()  {
 		return fromDate;
@@ -88,11 +93,9 @@ public class Team {
 		this.fromDate = fromDate;
 	}
 	
-//	@Required
-//	@Column(name="to_date", nullable=false)
-//	@Temporal(TemporalType.DATE)
+	@Column(name="to_date", nullable=false)
+	@Type(type="org.joda.time.contrib.hibernate.PersistentLocalDate")
 	@JsonProperty("to_date")
-	
 	private LocalDate toDate;
 	public LocalDate getToDate()  {
 		return toDate;
@@ -101,8 +104,7 @@ public class Team {
 		this.toDate = toDate;
 	}
 	
-//	@Required
-//	@Column(name="abbr", length=5, nullable=false)
+	@Column(name="abbr", length=5, nullable=false)
 	@JsonProperty("abbreviation")
 	private String abbr;
 	public String getAbbr() {
@@ -112,9 +114,8 @@ public class Team {
 		this.abbr = abbr;
 	}
 	
-//	@Required
-//	@Enumerated(EnumType.STRING)
-//	@Column(name="conference", length=4, nullable=false)
+	@Enumerated(EnumType.STRING)
+	@Column(name="conference", length=4, nullable=false)
 	private Conference conference;
 	public Conference getConference() {
 		return conference;
@@ -128,9 +129,8 @@ public class Team {
 		West;
 	}
 	
-//  @Required
-//	@Enumerated(EnumType.STRING)
-//	@Column(name="division", length=9, nullable=false)
+	@Enumerated(EnumType.STRING)
+	@Column(name="division", length=9, nullable=false)
 	private Division division;
 	public Division getDivision() {
 		return division;
@@ -148,7 +148,7 @@ public class Team {
 		Pacific;
 	}
 	
-//	@Column(name="site_name", length=30, nullable=false)
+	@Column(name="site_name", length=30, nullable=false)
 	@JsonProperty("site_name")
 	private String siteName;
 	public String getSiteName() {
@@ -158,7 +158,7 @@ public class Team {
 		this.siteName = siteName;
 	}
 
-//	@Column(name="city", length=15, nullable=false)
+	@Column(name="city", length=15, nullable=false)
 	private String city;
 	public String getCity() {
 		return city;
@@ -167,7 +167,7 @@ public class Team {
 		this.city = city;
 	}
 
-//	@Column(name="state", length=2, nullable=false)
+	@Column(name="state", length=2, nullable=false)
 	private String state;
 	public String getState() {
 		return state;
