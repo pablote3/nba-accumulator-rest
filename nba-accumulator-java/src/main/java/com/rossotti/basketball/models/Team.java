@@ -31,17 +31,6 @@ public class Team {
 		this.id = id;
 	}
 
-	@Version
-	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
-	@Column(name="last_update", nullable=false)
-	private LocalDateTime lastUpdate;
-	public LocalDateTime getLastUpdate()  {
-		return lastUpdate;
-	}
-	public void setLastUpdate(LocalDateTime lastUpdate) {
-		this.lastUpdate = lastUpdate;
-	}
-
 	@Column(name="team_key", length=35, nullable=false)
 	@JsonProperty("team_id")
 	private String key;
