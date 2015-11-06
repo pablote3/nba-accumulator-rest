@@ -95,6 +95,12 @@
 		<version>1</version>
 	</dependency>
 	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>javax.servlet-api</artifactId>
+		<version>3.0.1</version>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
 		<groupId>joda-time</groupId>
 		<artifactId>joda-time</artifactId>
 		<version>${joda.version}</version>
@@ -103,6 +109,11 @@
 		<groupId>joda-time</groupId>
 		<artifactId>joda-time-hibernate</artifactId>
 		<version>1.4</version>
+	</dependency>
+	<dependency>
+		<groupId>org.jadira.usertype</groupId>
+		<artifactId>usertype.core</artifactId>
+		<version>3.1.0.GA</version>
 	</dependency>
 	<dependency>
 		<groupId>org.slf4j</groupId>
