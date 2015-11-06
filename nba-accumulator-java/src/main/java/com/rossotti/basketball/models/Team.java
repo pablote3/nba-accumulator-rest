@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Table (name="team")
 public class Team {
 	public Team() {}
-	
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
@@ -30,9 +30,9 @@ public class Team {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	@Version
-	@Type(type="org.joda.time.contrib.hibernate.PersistentLocalDateTime")
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
 	@Column(name="last_update", nullable=false)
 	private LocalDateTime lastUpdate;
 	public LocalDateTime getLastUpdate()  {
@@ -83,7 +83,7 @@ public class Team {
 	}
 	
 	@Column(name="from_date", nullable=false)
-	@Type(type="org.joda.time.contrib.hibernate.PersistentLocalDate")
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
 	@JsonProperty("from_date")
 	private LocalDate fromDate;
 	public LocalDate getFromDate()  {
@@ -94,7 +94,7 @@ public class Team {
 	}
 	
 	@Column(name="to_date", nullable=false)
-	@Type(type="org.joda.time.contrib.hibernate.PersistentLocalDate")
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
 	@JsonProperty("to_date")
 	private LocalDate toDate;
 	public LocalDate getToDate()  {
@@ -268,9 +268,7 @@ public class Team {
 			.append("  key: " + this.key)
 			.append("  fullName: " + this.fullName)
 			.append("  abbr: " + this.abbr)
-			.append("  fromDate: " + this.fromDate)
-			.append("  conference: " + this.conference)
-			.append("  division: " + this.division + "\n")
+//			.append("  fromDate: " + this.fromDate + "\n")
 			.toString();
 	}
 }
