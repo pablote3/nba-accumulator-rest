@@ -1,22 +1,34 @@
 package com.rossotti.basketball.JUnits;
 
 import org.joda.time.LocalDate;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.rossotti.basketball.dao.impl.TeamDAOImpl;
+import com.rossotti.basketball.dao.TeamDAO;
 import com.rossotti.basketball.models.Team;
 import com.rossotti.basketball.models.Team.Conference;
 import com.rossotti.basketball.models.Team.Division;
 
 public class TeamJUnit {
-
+	private static TeamDAO teamDAO;
+	private static ClassPathXmlApplicationContext context;
+	
+	@BeforeClass
+	public static void onceExecuteBeforeAll() {
+		context = new ClassPathXmlApplicationContext("WEB-INF/applicationContext.xml");
+		teamDAO = (TeamDAO)context.getBean(TeamDAO.class);
+	}
+	
+	@AfterClass
+	public static void onceExecuteAfterAll() {
+		context.close();
+	}
+		
 	@Test
 	public void createTeam() {
-		ApplicationContext context = new ClassPathXmlApplicationContext("WEB-INF/applicationContext.xml");
-		TeamDAOImpl dao = context.getBean("teamDaoImpl", TeamDAOImpl.class);
-		dao.create(createMockTeam());
+		teamDAO.create(createMockTeam());
 
 //		Team createTeam = Team.findByTeamKey("seattle-supersonics", ProcessingType.online);
 //		assertThat(createTeam.getFullName()).isEqualTo("Seattle Supersonics");
