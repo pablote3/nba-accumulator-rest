@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.rossotti.basketball.dao.TeamDAO;
 import com.rossotti.basketball.models.Team;
 
-@Repository("teamDAO")
+@Repository
 public class TeamDAOImpl implements TeamDAO {
 	@Autowired
 	private SessionFactory sessionFactory;

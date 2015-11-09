@@ -19,10 +19,10 @@ public class AccumulatorApp extends Application {
 		registerClasses();
 	}
 
-	private void registerClasses() {    	
+	private void registerClasses() {
 		// Resources
 		classes.add(TeamResource.class);
-		
+
 		// Providers
 		classes.add(JsonProvider.class);
 	}
