@@ -19,7 +19,7 @@ public class TeamJavaApp {
 
 		TeamDAO teamDAO = (TeamDAO)context.getBean(TeamDAO.class);
 
-		teamDAO.create(createMockTeam());
+		teamDAO.createTeam(createMockTeam());
 		context.close();
 	}
 

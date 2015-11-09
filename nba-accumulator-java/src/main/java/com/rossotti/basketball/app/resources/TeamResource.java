@@ -16,23 +16,23 @@ import com.rossotti.basketball.dao.TeamDAO;
 import com.rossotti.basketball.models.Team;
 
 @Service
-@Path("/hello")
+@Path("/teams")
 public class TeamResource {
 
 	@Autowired
 	private TeamDAO teamDAO;
 	
 	@GET
-	@Path("/html/{name}/{age}")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String produceText_PathParam(@PathParam("name") String name, @PathParam("age") int age) {
-		return "Howdy " + name + ", welcome to " + age;
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getTeam(@PathParam("id") String id) {
+		return "Howdy " + id + ", welcome";
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createTeam(Team team) {
-		teamDAO.create(team);
+		teamDAO.createTeam(team);
 		String result = "Team created : " + team.toString();
 		return Response.ok(result).build();
 	}

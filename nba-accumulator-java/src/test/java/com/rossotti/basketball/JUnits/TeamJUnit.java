@@ -28,7 +28,7 @@ public class TeamJUnit {
 		
 	@Test
 	public void createTeam() {
-		teamDAO.create(createMockTeam());
+		teamDAO.createTeam(createMockTeam());
 
 //		Team createTeam = Team.findByTeamKey("seattle-supersonics", ProcessingType.online);
 //		assertThat(createTeam.getFullName()).isEqualTo("Seattle Supersonics");

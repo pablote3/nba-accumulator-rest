@@ -15,7 +15,7 @@ public class TeamDAOImpl implements TeamDAO {
 	private SessionFactory sessionFactory;
 	
 	@Override
-	public void create(Team team) {
+	public void createTeam(Team team) {
 		Session session = getSessionFactory().openSession();
 		Transaction tx = session.beginTransaction();
 		session.persist(team);
