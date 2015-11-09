@@ -5,8 +5,6 @@
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
 	xmlns:context="http://www.springframework.org/schema/context">
 
-	<bean class="org.jboss.resteasy.plugins.spring.SpringBeanProcessorServletAware"/>
-
 	<context:annotation-config/>
 	<context:component-scan base-package="com.rossotti.basketball" />
 
