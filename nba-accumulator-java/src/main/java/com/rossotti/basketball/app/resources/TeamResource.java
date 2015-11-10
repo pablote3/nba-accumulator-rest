@@ -6,9 +6,12 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +26,13 @@ public class TeamResource {
 	private TeamDAO teamDAO;
 	
 	@GET
-	@Path("/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public String getTeam(@PathParam("id") String id) {
-		return "Howdy " + id + ", welcome";
+	@Path("/{key}")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String findTeamByKey(@Context UriInfo uriInfo,
+							@PathParam("key") String key) {
+		Team team = teamDAO.findTeamByKey(key, new LocalDate());
+//		PubTeam pubTeam = team.toPubTeam(uriInfo);
+		return "Howdy " + team.getFullName() + ", welcome";
 	}
 
 	@POST

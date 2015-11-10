@@ -2,6 +2,7 @@ package com.rossotti.basketball.JUnits;
 
 import org.joda.time.LocalDate;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -30,9 +31,9 @@ public class TeamJUnit {
 	public void createTeam() {
 		teamDAO.createTeam(createMockTeam());
 
-//		Team createTeam = Team.findByTeamKey("seattle-supersonics", ProcessingType.online);
-//		assertThat(createTeam.getFullName()).isEqualTo("Seattle Supersonics");
-//		assertThat(createTeam.getAbbr()).isEqualTo("SEA");
+		Team createTeam = teamDAO.findTeamByKey("seattle-supersonics", new LocalDate("2012-07-01"));
+		Assert.assertEquals(createTeam.getFullName(), "Seattle Supersonics");
+		Assert.assertEquals(createTeam.getAbbr(), "SEA");
 //		Team.delete(createTeam.getId());
 	}
 	
