@@ -32,8 +32,8 @@ public class TeamJUnit {
 		teamDAO.createTeam(createMockTeam());
 
 		Team createTeam = teamDAO.findTeamByKey("seattle-supersonics", new LocalDate("2012-07-01"));
-		Assert.assertEquals(createTeam.getFullName(), "Seattle Supersonics");
-		Assert.assertEquals(createTeam.getAbbr(), "SEA");
+		Assert.assertEquals("Seattle Supersonics", createTeam.getFullName());
+		Assert.assertEquals("SEA", createTeam.getAbbr());
 //		Team.delete(createTeam.getId());
 	}
 	
