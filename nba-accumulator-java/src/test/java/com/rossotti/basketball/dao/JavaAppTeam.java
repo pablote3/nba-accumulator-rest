@@ -1,4 +1,4 @@
-package com.rossotti.basketball.JavaApps;
+package com.rossotti.basketball.dao;
 
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ import com.rossotti.basketball.models.Team;
 import com.rossotti.basketball.models.Team.Division;
 import com.rossotti.basketball.models.Team.Conference;
 
-public class TeamJavaApp {
+public class JavaAppTeam {
 	
 	@Autowired
 	private static TeamDAO teamDAO;
