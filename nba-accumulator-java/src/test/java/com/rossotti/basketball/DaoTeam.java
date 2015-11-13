@@ -1,4 +1,4 @@
-package com.rossotti.basketball.dao;
+package com.rossotti.basketball;
 
 import org.joda.time.LocalDate;
 import org.junit.AfterClass;
@@ -12,7 +12,7 @@ import com.rossotti.basketball.models.Team;
 import com.rossotti.basketball.models.Team.Conference;
 import com.rossotti.basketball.models.Team.Division;
 
-public class JUnitTeam {
+public class DaoTeam {
 	private static TeamDAO teamDAO;
 	private static ClassPathXmlApplicationContext context;
 	

@@ -1,4 +1,4 @@
-package com.rossotti.basketball.model;
+package com.rossotti.basketball;
 
 import java.io.IOException;
 
@@ -13,38 +13,46 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 
-public class JUnitObjectMapper {
+public class UtilObjectMapper {
 	private static ObjectMapper mapper = new ObjectMapper();
+	private static final LocalDate localDate = new LocalDate(2015,11,12);
+	private static JSONObject jsonObject = new JSONObject();
 
+	@SuppressWarnings("unchecked")
 	@BeforeClass
 	public static void onceExecuteBeforeAll() {
 		mapper.registerModule(new JodaModule());
 		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+		
+		jsonObject.put("date", "2015-11-12");
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	@Test
 	public void deserializeJsonToPojo() {
 		try {
-			JSONObject obj = new JSONObject();
-			obj.put("date", "2015-11-12");
-
-			TestPojo container = mapper.readValue(obj.toJSONString(), TestPojo.class);
-			Assert.assertEquals(new LocalDate(2015,11,12), container.getDate());
+			ZTestPojo container = mapper.readValue(jsonObject.toJSONString(), ZTestPojo.class);
+			Assert.assertEquals(localDate, container.getLocalDate());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	@Test
-	public void serializeLocalDateToString() {
-//		Container container = new Container();
-//		container.setDate(new LocalDate(2015,11,11));
+	public void serializePojoToJson() {
+		ZTestPojo obj = new ZTestPojo();
+		obj.setLocalDate(localDate);
 		
-		LocalDate date = new LocalDate(2015,11,11);
 		try {
-
-			Assert.assertEquals("\"2015-11-11\"", mapper.writeValueAsString(date));
+			Assert.assertEquals(jsonObject.toString(), mapper.writeValueAsString(obj));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void serializeLocalDateToString() {
+		try {
+			Assert.assertEquals("\"2015-11-12\"", mapper.writeValueAsString(localDate));
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
