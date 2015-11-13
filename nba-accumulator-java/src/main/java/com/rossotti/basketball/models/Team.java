@@ -1,5 +1,7 @@
 package com.rossotti.basketball.models;
 
+import java.net.URI;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -8,11 +10,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.ws.rs.core.UriInfo;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rossotti.basketball.pub.PubTeam;
 
 @Entity
 @Table (name="team")
@@ -162,92 +166,6 @@ public class Team {
 	public void setState(String state) {
 		this.state = state;
 	}
-	
-//	public static Team findById(Long id) {
-//		Team team = Ebean.find(Team.class, id);
-//		return team;
-//	}
-	
-//	public static Team findByKey(String key, String value, ProcessingType processingType) {
-//		Query<Team> query = null;
-//		if (processingType.equals(ProcessingType.batch))
-//			query = ebeanServer.find(Team.class);
-//		else if (processingType.equals(ProcessingType.online))
-//			query = Ebean.find(Team.class);
-//		
-//		query.where().eq(key, value);
-//		query.where().eq("active", true);
-//		Team team = query.findUnique();
-//		return team;
-//	}
-	  
-//	public static List<Team> findAll() {
-//		Query<Team> query = Ebean.find(Team.class);
-//		List<Team> teams = query.findList();
-//		return teams;
-//	}	
-	
-//	public static Team findByAbbr(String abbr, ProcessingType processingType) {
-//		Team team;
-//		Query<Team> query = null; 
-//		if (processingType.equals(ProcessingType.batch)) 
-//			query = ebeanServer.find(Team.class);
-//		else if (processingType.equals(ProcessingType.online))
-//			query = Ebean.find(Team.class);	
-//
-//		query.where().eq("abbr", abbr);
-//		query.where().eq("active", true);
-//		team = query.findUnique();
-//		return team;
-//	}
-	
-	
-//	public static Team findByTeamKey(String teamKey, ProcessingType processingType) {
-//		Team team;
-//		Query<Team> query = null; 
-//		if (processingType.equals(ProcessingType.batch)) 
-//			query = ebeanServer.find(Team.class);
-//		else if (processingType.equals(ProcessingType.online))
-//			query = Ebean.find(Team.class);	
-//
-//		query.where().eq("team_key", teamKey);
-//		team = query.findUnique();
-//		return team;
-//	}
-
-//	public static List<Team> findByActive(boolean active) {
-//		Query<Team> query = Ebean.find(Team.class);
-//		query.where().eq("active", active);
-//		List<Team> teams = query.findList();
-//		return teams;
-//	}
-
-//	public static List<Team> findFilter(String filter) {
-//		Query<Team> query = Ebean.find(Team.class);
-//		query.where().ilike("fullName", "%" + filter + "%");
-//		List<Team> teams = query.findList();
-//		return teams;
-//	}
-
-//	public static void create(Team team, ProcessingType processingType) {
-//		if (processingType.equals(ProcessingType.batch))
-//			ebeanServer.save(team);
-//		else if (processingType.equals(ProcessingType.online))
-//			Ebean.save(team);
-//	}
-
-//	public static void delete(Long id) {
-//		Team team = Team.findById(id);
-//	  	team.delete();
-//	}
-	
-//	public static Page<Team> page(int page, int pageSize, String sortBy, String order, String filter) {
-//		Query<Team> query = Ebean.find(Team.class);
-//		query.where().ilike("fullName", "%" + filter + "%");
-//		query.where().orderBy(sortBy + " " + order);
-//		Page<Team> p = query.findPagingList(pageSize).getPage(page);
-//		return p;
-//	}
 
 	public String toString() {
 		return new StringBuffer()
@@ -255,7 +173,12 @@ public class Team {
 			.append("  key: " + this.key)
 			.append("  fullName: " + this.fullName)
 			.append("  abbr: " + this.abbr)
-//			.append("  fromDate: " + this.fromDate + "\n")
+			.append("  fromDate: " + this.fromDate + "\n")
 			.toString();
+	}
+
+	public PubTeam toPubTeam(UriInfo uriInfo) {
+		URI self = uriInfo.getBaseUriBuilder().path("teams").path(this.getKey().toString()).build();
+		return new PubTeam(self, this.id, this.key, this.firstName, this.lastName, this.fullName, this.fromDate, this.toDate);
 	}
 }

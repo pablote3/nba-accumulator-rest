@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.dao.TeamDAO;
 import com.rossotti.basketball.models.Team;
+import com.rossotti.basketball.pub.PubTeam;
 
 @Service
 @Path("/teams")
@@ -27,12 +28,13 @@ public class TeamResource {
 	
 	@GET
 	@Path("/{key}")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String findTeamByKey(@Context UriInfo uriInfo,
-							@PathParam("key") String key) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findTeamByKey(@Context UriInfo uriInfo, @PathParam("key") String key) {
 		Team team = teamDAO.findTeamByKey(key, new LocalDate());
-//		PubTeam pubTeam = team.toPubTeam(uriInfo);
-		return "Howdy " + team.getFullName() + ", welcome";
+		PubTeam pubTeam = team.toPubTeam(uriInfo);
+		return Response.ok(pubTeam)
+			.link(uriInfo.getAbsolutePath(), "team")
+			.build();
 	}
 
 	@POST
