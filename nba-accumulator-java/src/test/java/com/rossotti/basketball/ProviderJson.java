@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 
-public class UtilObjectMapper {
+public class ProviderJson {
 	private static ObjectMapper mapper = new ObjectMapper();
 	private static final LocalDate localDate = new LocalDate(2015,11,12);
 	private static JSONObject jsonObject = new JSONObject();
