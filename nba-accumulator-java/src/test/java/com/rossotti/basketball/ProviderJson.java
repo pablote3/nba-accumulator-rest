@@ -12,20 +12,16 @@ import org.junit.Test;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.rossotti.basketball.app.providers.JsonProvider;
 
 public class ProviderJson {
-	private static ObjectMapper mapper = new ObjectMapper();
+	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
 	private static final LocalDate localDate = new LocalDate(2015,11,12);
 	private static JSONObject jsonObject = new JSONObject();
 
 	@SuppressWarnings("unchecked")
 	@BeforeClass
 	public static void onceExecuteBeforeAll() {
-		mapper.registerModule(new JodaModule());
-		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-		
 		jsonObject.put("localDate", "2015-11-12");
 	}
 
