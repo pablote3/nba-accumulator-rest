@@ -2,12 +2,14 @@ package com.rossotti.basketball;
 
 import java.io.IOException;
 
+import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 import org.json.simple.JSONObject;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -24,37 +26,42 @@ public class UtilObjectMapper {
 		mapper.registerModule(new JodaModule());
 		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 		
-		jsonObject.put("date", "2015-11-12");
+		jsonObject.put("localDate", "2015-11-12");
 	}
 
 	@Test
 	public void deserializeJsonToPojo() {
 		try {
-			ZTestPojo container = mapper.readValue(jsonObject.toJSONString(), ZTestPojo.class);
-			Assert.assertEquals(localDate, container.getLocalDate());
+			TestPojo pojo = mapper.readValue(jsonObject.toJSONString(), TestPojo.class);
+			Assert.assertEquals(localDate, pojo.getLocalDate());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	public void serializePojoToJson() {
-		ZTestPojo obj = new ZTestPojo();
-		obj.setLocalDate(localDate);
+		TestPojo pojo = new TestPojo();
+		pojo.setLocalDate(localDate);
 		
 		try {
-			Assert.assertEquals(jsonObject.toString(), mapper.writeValueAsString(obj));
+			Assert.assertEquals(jsonObject.toString(), mapper.writeValueAsString(pojo));
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	@Test
-	public void serializeLocalDateToString() {
-		try {
-			Assert.assertEquals("\"2015-11-12\"", mapper.writeValueAsString(localDate));
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+
+	public static class TestPojo {
+		@JsonCreator
+		public TestPojo() {}
+
+		@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+		public LocalDate localDate;
+		public LocalDate getLocalDate() {
+			return localDate;
+		}
+		public void setLocalDate(LocalDate localDate) {
+			this.localDate = localDate;
 		}
 	}
 	
