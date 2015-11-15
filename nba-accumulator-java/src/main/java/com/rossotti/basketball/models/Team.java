@@ -177,8 +177,25 @@ public class Team {
 			.toString();
 	}
 
-	public PubTeam toPubTeam(UriInfo uriInfo) {
-		URI self = uriInfo.getBaseUriBuilder().path("teams").path(this.getKey().toString()).build();
-		return new PubTeam(self, this.id, this.key, this.firstName, this.lastName, this.fullName, this.fromDate, this.toDate);
+	public PubTeam toPubTeam(UriInfo uriInfo, String key, String asOfDate) {
+		URI self;
+		if (asOfDate == null)
+			self = uriInfo.getBaseUriBuilder().path("teams").path(key).build();
+		else
+			self = uriInfo.getBaseUriBuilder().path("teams").path(key).path(asOfDate).build();
+		return new PubTeam( self,
+							this.id,
+							this.key,
+							this.firstName,
+							this.lastName,
+							this.fullName,
+							this.fromDate,
+							this.toDate,
+							this.abbr,
+							this.conference,
+							this.division,
+							this.city,
+							this.state,
+							this.siteName);
 	}
 }
