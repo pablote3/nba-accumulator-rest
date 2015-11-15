@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.rossotti.basketball.dao.TeamDAO;
+import com.rossotti.basketball.dao.exceptions.NoSuchEntityException;
 import com.rossotti.basketball.models.Team;
 
 @Repository
@@ -19,11 +20,15 @@ public class TeamDAOImpl implements TeamDAO {
 	@Override
 	public Team findTeamByKey(String key, LocalDate asOfDate) {
 		Session session = getSessionFactory().openSession();
-		Team team = (Team)session.createCriteria(Team.class)
+		Team team;
+		team = (Team)session.createCriteria(Team.class)
 			.add(Restrictions.eq("key", key))
 			.add(Restrictions.le("fromDate", asOfDate))
 			.add(Restrictions.ge("toDate", asOfDate))
 			.uniqueResult();
+		if (team == null) {
+			throw new NoSuchEntityException();
+		}
 		return team;
 	}
 

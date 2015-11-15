@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
+import com.rossotti.basketball.app.providers.NoSuchEntityExceptionMapper;
 import com.rossotti.basketball.app.providers.JsonProvider;
 import com.rossotti.basketball.app.resources.TeamResource;
 
@@ -25,6 +26,9 @@ public class AccumulatorApp extends Application {
 
 		// Providers
 		classes.add(JsonProvider.class);
+	
+		// Exception Mappers
+		classes.add(NoSuchEntityExceptionMapper.class);
 	}
 
 	@Override
