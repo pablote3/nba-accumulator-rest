@@ -8,6 +8,7 @@
   <name>nba-accumulator-root</name>
   <url>http://maven.apache.org</url>
   <properties>
+	<h2.version>1.4.190</h2.version>
 	<hibernate.version>4.2.4.Final</hibernate.version>
 	<hibernate.jpa.version>1.0.1.Final</hibernate.jpa.version>
 	<jackson.version>2.6.3</jackson.version>
@@ -54,6 +55,11 @@
 		<artifactId>spring-orm</artifactId>
 		<version>${spring.version}</version>
 	</dependency>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-jdbc</artifactId>
+		<version>${spring.version}</version>
+	</dependency>
 
 	<!-- Jackson -->
 	<dependency>
@@ -88,6 +94,18 @@
 		<artifactId>hibernate-jpa-2.0-api</artifactId>
 		<version>${hibernate.jpa.version}</version>
 	</dependency>
+	
+	<!-- Database -->
+	<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+		<version>${mysql.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>com.h2database</groupId>
+		<artifactId>h2</artifactId>
+		<version>${h2.version}</version>
+	</dependency>
 
 	<!-- Misc -->
 	<dependency>
@@ -120,11 +138,6 @@
 		<groupId>org.slf4j</groupId>
 		<artifactId>slf4j-api</artifactId>
 		<version>${slf4j.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>mysql</groupId>
-		<artifactId>mysql-connector-java</artifactId>
-		<version>${mysql.version}</version>
 	</dependency>
 	<dependency>
 		<groupId>org.jboss.logging</groupId>
