@@ -1,32 +1,24 @@
-package com.rossotti.basketball;
+package com.rossotti.basketball.dao;
 
 import org.joda.time.LocalDate;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.rossotti.basketball.dao.TeamDAO;
 import com.rossotti.basketball.models.Team;
 import com.rossotti.basketball.models.Team.Conference;
 import com.rossotti.basketball.models.Team.Division;
 
-public class DaoTeam {
-	private static TeamDAO teamDAO;
-	private static ClassPathXmlApplicationContext context;
-	
-	@BeforeClass
-	public static void onceExecuteBeforeAll() {
-		context = new ClassPathXmlApplicationContext("WEB-INF/applicationContext.xml");
-		teamDAO = (TeamDAO)context.getBean(TeamDAO.class);
-	}
-	
-	@AfterClass
-	public static void onceExecuteAfterAll() {
-		context.close();
-	}
-		
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={"config/applicationContextTest.xml"})
+public class TeamDaoTest {
+
+	@Autowired
+	private TeamDAO teamDAO;
+
 	@Test
 	public void createTeam() {
 		teamDAO.createTeam(createMockTeam());
