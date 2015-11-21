@@ -1,5 +1,7 @@
 package com.rossotti.basketball.dao.impl;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -30,6 +32,20 @@ public class TeamDAOImpl implements TeamDAO {
 			throw new NoSuchEntityException();
 		}
 		return team;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Team> findTeamsByDateRange(LocalDate fromDate, LocalDate toDate) {
+		Session session = getSessionFactory().openSession();
+		List<Team> teams = session.createCriteria(Team.class)
+//			.add(Restrictions.ge("fromDate", fromDate))
+//			.add(Restrictions.le("toDate", toDate))
+			.list();
+		if (teams == null) {
+			throw new NoSuchEntityException();
+		}
+		return teams;
 	}
 
 	@Override
