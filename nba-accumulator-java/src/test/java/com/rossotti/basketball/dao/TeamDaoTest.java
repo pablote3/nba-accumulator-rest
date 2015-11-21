@@ -29,7 +29,7 @@ public class TeamDaoTest {
 	
 	@Test
 	public void findTeamsByDateRange() {
-		List<Team> teams = teamDAO.findTeamsByDateRange(new LocalDate("2011-12-31"), new LocalDate("2012-0  7-01"));
+		List<Team> teams = teamDAO.findTeamsByDateRange(new LocalDate("2011-12-31"), new LocalDate("2012-07-01"));
 		Assert.assertEquals(1, teams.size());
 	}
 	
