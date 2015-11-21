@@ -39,8 +39,8 @@ public class TeamDAOImpl implements TeamDAO {
 	public List<Team> findTeamsByDateRange(LocalDate fromDate, LocalDate toDate) {
 		Session session = getSessionFactory().openSession();
 		List<Team> teams = session.createCriteria(Team.class)
-//			.add(Restrictions.ge("fromDate", fromDate))
-//			.add(Restrictions.le("toDate", toDate))
+			.add(Restrictions.ge("fromDate", fromDate))
+			.add(Restrictions.le("toDate", toDate))
 			.list();
 		if (teams == null) {
 			throw new NoSuchEntityException();
