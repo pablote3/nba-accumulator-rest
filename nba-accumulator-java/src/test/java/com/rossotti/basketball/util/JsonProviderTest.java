@@ -1,4 +1,4 @@
-package com.rossotti.basketball;
+package com.rossotti.basketball.util;
 
 import java.io.IOException;
 
@@ -14,7 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rossotti.basketball.app.providers.JsonProvider;
 
-public class ProviderJson {
+public class JsonProviderTest {
 	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
 	private static final LocalDate localDate = new LocalDate(2015,11,12);
 	private static JSONObject jsonObject = new JSONObject();
