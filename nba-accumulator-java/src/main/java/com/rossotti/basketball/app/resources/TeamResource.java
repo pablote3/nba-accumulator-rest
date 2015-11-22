@@ -33,7 +33,7 @@ public class TeamResource {
 	@Path("/{key}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findTeamByKey(@Context UriInfo uriInfo, @PathParam("key") String key) {
-		Team team = teamDAO.findTeamByKey(key, new LocalDate());
+		Team team = teamDAO.findTeamByKeyAsOfDate(key, new LocalDate());
 		PubTeam pubTeam = team.toPubTeam(uriInfo, key, null);
 		return Response.ok(pubTeam)
 			.link(uriInfo.getAbsolutePath(), "team")
@@ -48,7 +48,7 @@ public class TeamResource {
 		try {
 			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
-			Team team = teamDAO.findTeamByKey(key, asOfDate);
+			Team team = teamDAO.findTeamByKeyAsOfDate(key, asOfDate);
 			PubTeam pubTeam = team.toPubTeam(uriInfo, key, asOfDateString);
 			return Response.ok(pubTeam)
 				.link(uriInfo.getAbsolutePath(), "team")
