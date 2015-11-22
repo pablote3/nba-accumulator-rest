@@ -16,20 +16,19 @@ import com.rossotti.basketball.app.providers.JsonProvider;
 
 public class JsonProviderTest {
 	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
-	private static final LocalDate localDate = new LocalDate(2015,11,12);
 	private static JSONObject jsonObject = new JSONObject();
 
 	@SuppressWarnings("unchecked")
 	@BeforeClass
 	public static void onceExecuteBeforeAll() {
-		jsonObject.put("localDate", "2015-11-12");
+		jsonObject.put("asOfDate", "2015-11-12");
 	}
 
 	@Test
 	public void deserializeJsonToPojo() {
 		try {
 			TestPojo pojo = mapper.readValue(jsonObject.toJSONString(), TestPojo.class);
-			Assert.assertEquals(localDate, pojo.getLocalDate());
+			Assert.assertEquals(new LocalDate(2015,11,12), pojo.getAsOfDate());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -38,7 +37,7 @@ public class JsonProviderTest {
 	@Test
 	public void serializePojoToJson() {
 		TestPojo pojo = new TestPojo();
-		pojo.setLocalDate(localDate);
+		pojo.setAsOfDate(new LocalDate(2015,11,12));
 		
 		try {
 			Assert.assertEquals(jsonObject.toString(), mapper.writeValueAsString(pojo));
@@ -52,12 +51,13 @@ public class JsonProviderTest {
 		public TestPojo() {}
 
 		@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-		public LocalDate localDate;
-		public LocalDate getLocalDate() {
-			return localDate;
+		private LocalDate asOfDate;
+
+		public LocalDate getAsOfDate() {
+			return asOfDate;
 		}
-		public void setLocalDate(LocalDate localDate) {
-			this.localDate = localDate;
+		public void setAsOfDate(LocalDate asOfDate) {
+			this.asOfDate = asOfDate;
 		}
 	}
 	
