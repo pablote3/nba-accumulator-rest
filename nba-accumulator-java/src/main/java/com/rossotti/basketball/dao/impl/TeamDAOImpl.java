@@ -6,11 +6,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.rossotti.basketball.dao.TeamDAO;
+import com.rossotti.basketball.dao.exceptions.DuplicateEntityException;
 import com.rossotti.basketball.dao.exceptions.NoSuchEntityException;
 import com.rossotti.basketball.models.Team;
 
@@ -20,7 +22,7 @@ public class TeamDAOImpl implements TeamDAO {
 	private SessionFactory sessionFactory;
 
 	@Override
-	public Team findTeamByKey(String key, LocalDate asOfDate) {
+	public Team findTeamByKeyAsOfDate(String key, LocalDate asOfDate) {
 		Session session = getSessionFactory().openSession();
 		Team team;
 		team = (Team)session.createCriteria(Team.class)
@@ -39,8 +41,8 @@ public class TeamDAOImpl implements TeamDAO {
 	public List<Team> findTeamsByDateRange(LocalDate fromDate, LocalDate toDate) {
 		Session session = getSessionFactory().openSession();
 		List<Team> teams = session.createCriteria(Team.class)
-			.add(Restrictions.ge("fromDate", fromDate))
-			.add(Restrictions.le("toDate", toDate))
+			.add(Restrictions.le("fromDate", fromDate))
+			.add(Restrictions.ge("toDate", toDate))
 			.list();
 		if (teams == null) {
 			throw new NoSuchEntityException();
@@ -52,7 +54,11 @@ public class TeamDAOImpl implements TeamDAO {
 	public void createTeam(Team team) {
 		Session session = getSessionFactory().openSession();
 		Transaction tx = session.beginTransaction();
-		session.persist(team);
+		try {
+			session.persist(team);
+		} catch (ConstraintViolationException e) {
+			throw new DuplicateEntityException();
+		}
 		tx.commit();
 		session.close();
 	}
