@@ -77,6 +77,42 @@ public class TeamDaoTest {
 		teamDAO.createTeam(createMockTeam("duplicate-entity-exception-key"));
 	}
 	
+	@Test
+	public void updateTeam() {
+		Team updateTeam = updateMockTeam("st-louis-bombers");
+		teamDAO.updateTeam(updateTeam);
+		Team team = teamDAO.findTeamByKeyAsOfDate("st-louis-bombers", new LocalDate("2010-05-30"));
+		Assert.assertEquals("St. Louis Bombiers", team.getFullName());
+		Assert.assertEquals(new LocalDate("2010-05-30"), team.getToDate());
+	}
+
+	@Test(expected=NoSuchEntityException.class)
+	public void updateTeam_NoSuchEntityException_Key() {
+		Team team = updateMockTeam("st-louis-bombs");
+		teamDAO.updateTeam(team);
+	}
+
+	@Test(expected=NoSuchEntityException.class)
+	public void updateTeam_NoSuchEntityException_BeforeAsOfDate() {
+		Team team = updateMockTeam("st-louis-bombers");
+		team.setFromDate(new LocalDate("2009-06-30"));
+		teamDAO.updateTeam(team);
+	}
+
+	@Test(expected=NoSuchEntityException.class)
+	public void updateTeam_NoSuchEntityException_AfterAsOfDate() {
+		Team team = updateMockTeam("st-louis-bombers");
+		team.setToDate(new LocalDate("2010-07-01"));
+		teamDAO.updateTeam(team);
+	}
+	
+	@Test(expected=PropertyValueException.class)
+	public void updateTeam_MissingRequiredData() {
+		Team team = updateMockTeam("st-louis-bombers");
+		team.setFullName(null);
+		teamDAO.updateTeam(team);
+	}
+
 	private Team createMockTeam(String key) {
 		Team team = new Team();
 		team.setKey(key);
@@ -91,6 +127,23 @@ public class TeamDaoTest {
 		team.setCity("Seattle");
 		team.setState("WA");
 		team.setFullName("Seattle Supersonics");
+		return team;
+	}
+	
+	private Team updateMockTeam(String key) {
+		Team team = new Team();
+		team.setKey(key);
+		team.setAbbr("SLB");
+		team.setFromDate(new LocalDate("2009-07-01"));
+		team.setToDate(new LocalDate("2010-05-30"));
+		team.setFirstName("St. Louis");
+		team.setLastName("Bombiers");
+		team.setConference(Conference.East);
+		team.setDivision(Division.Southwest);
+		team.setSiteName("St. Louis Arena");
+		team.setCity("St. Louis");
+		team.setState("MO");
+		team.setFullName("St. Louis Bombiers");
 		return team;
 	}
 }

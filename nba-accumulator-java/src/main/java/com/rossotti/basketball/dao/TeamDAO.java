@@ -10,4 +10,5 @@ public interface TeamDAO {
 	public Team findTeamByKeyAsOfDate(String key, LocalDate asOfDate);
 	public List<Team> findTeamsByDateRange(LocalDate fromDate, LocalDate toDate);
 	public void createTeam(Team team);
+	public void updateTeam(Team team);
 }

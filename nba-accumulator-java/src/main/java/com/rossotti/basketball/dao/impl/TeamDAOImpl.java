@@ -63,6 +63,36 @@ public class TeamDAOImpl implements TeamDAO {
 		session.close();
 	}
 
+	@Override
+	public void updateTeam(Team updateTeam) {
+		Session session = getSessionFactory().openSession();
+		Team team = (Team)session.createCriteria(Team.class)
+			.add(Restrictions.eq("key", updateTeam.getKey()))
+			.add(Restrictions.le("fromDate", updateTeam.getFromDate()))
+			.add(Restrictions.ge("toDate", updateTeam.getToDate()))
+			.uniqueResult();
+		if (team != null) {
+			team.setLastName(updateTeam.getLastName());
+			team.setFirstName(updateTeam.getFirstName());
+			team.setFullName(updateTeam.getFullName());
+			team.setAbbr(updateTeam.getAbbr());
+			team.setFromDate(updateTeam.getFromDate());
+			team.setToDate(updateTeam.getToDate());
+			team.setConference(updateTeam.getConference());
+			team.setDivision(updateTeam.getDivision());
+			team.setCity(updateTeam.getCity());
+			team.setState(updateTeam.getState());
+			team.setSiteName(updateTeam.getSiteName());
+			Transaction tx = session.beginTransaction();
+			session.persist(team);
+			tx.commit();
+		}
+		else {
+			throw new NoSuchEntityException();
+		}
+		session.close();
+	}
+
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}

@@ -3,10 +3,6 @@ package com.rossotti.basketball;
 import static com.jayway.restassured.RestAssured.expect;
 import static org.hamcrest.Matchers.equalTo;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,7 +17,7 @@ public class ResourceTeam {
 	 }
 
 	@Test
-	public void foundTeam_NoDate() {
+	public void foundTeam_NoAsOfDate() {
 		expect().
 			statusCode(200).
 			defaultParser(Parser.JSON).
@@ -32,7 +28,7 @@ public class ResourceTeam {
 	}
 	
 	@Test
-	public void foundTeam_WithDate() {
+	public void foundTeam_WithAsOfDate() {
 		expect().
 			statusCode(200).
 			defaultParser(Parser.JSON).
@@ -43,7 +39,7 @@ public class ResourceTeam {
 	}
 	
 	@Test
-	public void badRequest_IllegalDate() {
+	public void badRequest_IllegalAsOfDate() {
 		expect().
 			statusCode(400).
 		when().
@@ -68,28 +64,31 @@ public class ResourceTeam {
 	
 //	@Test
 //	public void createTeam() {
-//		JsonObject json = buildJsonTeam();
-//		
-//		given().
-//			contentType(ContentType.JSON).
-//			body(json.toString()).
 //		expect().
 //			statusCode(201).
+//		given().
+//			contentType(ContentType.JSON).
+//			body(buildJsonTeam().toString()).
 //		when().
-//			put("/users");
+//			post("/teams");
 //	}
-	
-	private static JsonObject buildJsonTeam() {
-		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-		JsonObject value = factory.createObjectBuilder()
-			.add("team_id", "Utah Jazz")
-			.add("abbreviation", "UTA")
-			.add("from_date", "2012-07-01")
-			.add("to_date", "9999-12-31")
-			.add("first_name", "Utah")
-			.add("last_name", "Jazz")
-			.add("conference", "East")
-		.build();
-		return value;
-	}
+
+//	private static JsonObject buildJsonTeam() {
+//		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+//		JsonObject value = factory.createObjectBuilder()
+//			.add("team_id", "providence-steamrollers")
+//			.add("abbreviation", "PS")
+//			.add("from_date", "1946-07-01")
+//			.add("to_date", "1949-06-30")
+//			.add("first_name", "Providence")
+//			.add("last_name", "Steamrollers")
+//			.add("conference", "East")
+//			.add("division", "Atlantic")
+//			.add("site_name", "Rhode Island Auditorium")
+//			.add("city", "Providence")
+//			.add("state", "Rhode Island")
+//			.add("full_name", "Providence Steamrollers")
+//		.build();
+//		return value;
+//	}
 }
