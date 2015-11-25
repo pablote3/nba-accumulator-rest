@@ -22,7 +22,7 @@ public class TeamDAOImpl implements TeamDAO {
 	private SessionFactory sessionFactory;
 
 	@Override
-	public Team findTeamByKeyAsOfDate(String key, LocalDate asOfDate) {
+	public Team findTeam(String key, LocalDate asOfDate) {
 		Session session = getSessionFactory().openSession();
 		Team team;
 		team = (Team)session.createCriteria(Team.class)
@@ -38,7 +38,7 @@ public class TeamDAOImpl implements TeamDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Team> findTeamsByDateRange(LocalDate fromDate, LocalDate toDate) {
+	public List<Team> findTeams(LocalDate fromDate, LocalDate toDate) {
 		Session session = getSessionFactory().openSession();
 		List<Team> teams = session.createCriteria(Team.class)
 			.add(Restrictions.le("fromDate", fromDate))
