@@ -172,9 +172,8 @@ public class Team {
 		return new StringBuffer()
 			.append("\n" + "  id: " + this.id)
 			.append("  key: " + this.key)
-			.append("  fullName: " + this.fullName)
-			.append("  abbr: " + this.abbr)
 			.append("  fromDate: " + this.fromDate + "\n")
+			.append("  toDate: " + this.toDate + "\n")
 			.toString();
 	}
 
