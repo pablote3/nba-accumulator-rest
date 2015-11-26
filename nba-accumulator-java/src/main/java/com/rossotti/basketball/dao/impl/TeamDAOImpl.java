@@ -93,6 +93,24 @@ public class TeamDAOImpl implements TeamDAO {
 		session.close();
 	}
 
+	@Override
+	public void deleteTeam(String key, LocalDate asOfDate) {
+		Session session = getSessionFactory().openSession();
+		Team team = (Team)session.createCriteria(Team.class)
+			.add(Restrictions.eq("key", key))
+			.add(Restrictions.le("fromDate", asOfDate))
+			.add(Restrictions.ge("toDate", asOfDate))
+			.uniqueResult();
+		if (team != null) {
+			session.delete(team);
+//			session.close();
+		}
+		else {
+//			session.close();
+			throw new NoSuchEntityException();
+		}
+	}
+
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
