@@ -2,6 +2,7 @@ package com.rossotti.basketball.app.resources;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -93,6 +94,25 @@ public class TeamResource {
 			return Response.noContent().build();
 		} catch (PropertyValueException e) {
 			throw new BadRequestException("missing required field(s)", e);
+		}
+	}
+	
+	@DELETE
+	@Path("/{key}/{fromDate}/{toDate}")
+	public Response deleteTeam(@Context UriInfo uriInfo, 
+								@PathParam("key") String key, 
+								@PathParam("fromDate") String fromDateString, 
+								@PathParam("toDate") String toDateString) {
+		try {
+			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+			LocalDate fromDate = formatter.parseLocalDate(fromDateString);
+			LocalDate toDate = formatter.parseLocalDate(toDateString);
+			teamDAO.deleteTeam(key, fromDate, toDate);
+			return Response.noContent().build();
+		} catch (IllegalArgumentException e) {
+			throw new BadRequestException("asOfDate must be yyyy-MM-dd format", e);
+		} catch (NoSuchEntityException e) {
+			return Response.status(404).build();
 		}
 	}
 }

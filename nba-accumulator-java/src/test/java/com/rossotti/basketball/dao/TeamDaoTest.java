@@ -94,17 +94,14 @@ public class TeamDaoTest {
 	}
 
 	@Test(expected=NoSuchEntityException.class)
-	public void updateTeam_NoSuchEntityException_BeforeAsOfDate() {
-		Team team = updateMockTeam("st-louis-bombers");
-		team.setFromDate(new LocalDate("2009-06-30"));
-		teamDAO.updateTeam(team);
+	public void deleteTeam() {
+		teamDAO.deleteTeam("rochester-royals", new LocalDate("2009-06-30"), new LocalDate("2009-06-30"));
+		teamDAO.findTeam("rochester-royals", new LocalDate("2009-06-30"), new LocalDate("2009-06-30"));
 	}
 
 	@Test(expected=NoSuchEntityException.class)
-	public void updateTeam_NoSuchEntityException_AfterAsOfDate() {
-		Team team = updateMockTeam("st-louis-bombers");
-		team.setToDate(new LocalDate("2010-07-01"));
-		teamDAO.updateTeam(team);
+	public void deleteTeam_NoSuchEntityException_Key() {
+		teamDAO.deleteTeam("rochester-royales", new LocalDate("2009-06-30"), new LocalDate("2009-06-30"));
 	}
 	
 	@Test(expected=DataIntegrityViolationException.class)

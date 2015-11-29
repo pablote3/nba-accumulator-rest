@@ -58,11 +58,7 @@ public class TeamDAOImpl implements TeamDAO {
 
 	@Override
 	public void updateTeam(Team updateTeam) {
-		Team team = (Team)getSessionFactory().getCurrentSession().createCriteria(Team.class)
-			.add(Restrictions.eq("key", updateTeam.getKey()))
-			.add(Restrictions.le("fromDate", updateTeam.getFromDate()))
-			.add(Restrictions.ge("toDate", updateTeam.getToDate()))
-			.uniqueResult();
+		Team team = findTeam(updateTeam.getKey(), updateTeam.getFromDate(), updateTeam.getToDate());
 		if (team != null) {
 			team.setLastName(updateTeam.getLastName());
 			team.setFirstName(updateTeam.getFirstName());
@@ -83,12 +79,8 @@ public class TeamDAOImpl implements TeamDAO {
 	}
 
 	@Override
-	public void deleteTeam(String key, LocalDate asOfDate) {
-		Team team = (Team)getSessionFactory().getCurrentSession().createCriteria(Team.class)
-			.add(Restrictions.eq("key", key))
-			.add(Restrictions.le("fromDate", asOfDate))
-			.add(Restrictions.ge("toDate", asOfDate))
-			.uniqueResult();
+	public void deleteTeam(String key, LocalDate fromDate, LocalDate toDate) {
+		Team team = findTeam(key, fromDate, toDate);
 		if (team != null) {
 			getSessionFactory().getCurrentSession().delete(team);
 		}
