@@ -22,11 +22,11 @@ public class TeamDAOImpl implements TeamDAO {
 	private SessionFactory sessionFactory;
 
 	@Override
-	public Team findTeam(String key, LocalDate asOfDate) {
+	public Team findTeam(String key, LocalDate fromDate, LocalDate toDate) {
 		Team team = (Team)getSessionFactory().getCurrentSession().createCriteria(Team.class)
 			.add(Restrictions.eq("key", key))
-			.add(Restrictions.le("fromDate", asOfDate))
-			.add(Restrictions.ge("toDate", asOfDate))
+			.add(Restrictions.le("fromDate", fromDate))
+			.add(Restrictions.ge("toDate", toDate))
 			.uniqueResult();
 		if (team == null) {
 			throw new NoSuchEntityException();

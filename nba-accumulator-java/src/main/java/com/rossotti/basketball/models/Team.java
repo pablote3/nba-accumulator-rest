@@ -177,12 +177,12 @@ public class Team {
 			.toString();
 	}
 
-	public PubTeam toPubTeam(UriInfo uriInfo, String key, String asOfDate) {
+	public PubTeam toPubTeam(UriInfo uriInfo, String key, String fromDate, String toDate) {
 		URI self;
-		if (asOfDate == null)
+		if (fromDate == null)
 			self = uriInfo.getBaseUriBuilder().path("teams").path(key).build();
 		else
-			self = uriInfo.getBaseUriBuilder().path("teams").path(key).path(asOfDate).build();
+			self = uriInfo.getBaseUriBuilder().path("teams").path(key).path(fromDate).path(toDate).build();
 		return new PubTeam( self,
 							this.id,
 							this.key,

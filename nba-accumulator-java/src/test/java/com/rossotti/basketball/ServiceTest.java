@@ -36,7 +36,7 @@ public class ServiceTest {
 	@Test
 	public void test() {
 		Team team = getMockTeam();
-		stub(teamDao.findTeam(anyString(), (LocalDate) anyObject())).toReturn(team);
+		stub(teamDao.findTeam(anyString(), (LocalDate) anyObject(), (LocalDate) anyObject())).toReturn(team);
 		//need service to mock team into
 		//see Mockito tutorial at Tools/Testing
 	}

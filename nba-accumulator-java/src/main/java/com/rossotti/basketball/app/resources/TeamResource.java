@@ -36,10 +36,11 @@ public class TeamResource {
 	@GET
 	@Path("/{key}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response findTeamByKey(@Context UriInfo uriInfo, @PathParam("key") String key) {
+	public Response findTeamByKey(@Context UriInfo uriInfo, 
+									@PathParam("key") String key) {
 		try {
-			Team team = teamDAO.findTeam(key, new LocalDate());
-			PubTeam pubTeam = team.toPubTeam(uriInfo, key, null);
+			Team team = teamDAO.findTeam(key, new LocalDate(), new LocalDate());
+			PubTeam pubTeam = team.toPubTeam(uriInfo, key, null, null);
 			return Response.ok(pubTeam)
 				.link(uriInfo.getAbsolutePath(), "team")
 				.build();
@@ -49,14 +50,18 @@ public class TeamResource {
 	}
 
 	@GET
-	@Path("/{key}/{asOfDate}")
+	@Path("/{key}/{fromDate}/{toDate}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response findTeamByKey(@Context UriInfo uriInfo, @PathParam("key") String key, @PathParam("asOfDate") String asOfDateString) {
+	public Response findTeamByKey(@Context UriInfo uriInfo, 
+									@PathParam("key") String key, 
+									@PathParam("fromDate") String fromDateString, 
+									@PathParam("toDate") String toDateString) {
 		try {
 			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
-			Team team = teamDAO.findTeam(key, asOfDate);
-			PubTeam pubTeam = team.toPubTeam(uriInfo, key, asOfDateString);
+			LocalDate fromDate = formatter.parseLocalDate(fromDateString);
+			LocalDate toDate = formatter.parseLocalDate(toDateString);
+			Team team = teamDAO.findTeam(key, fromDate, toDate);
+			PubTeam pubTeam = team.toPubTeam(uriInfo, key, fromDateString, toDateString);
 			return Response.ok(pubTeam)
 				.link(uriInfo.getAbsolutePath(), "team")
 				.build();
