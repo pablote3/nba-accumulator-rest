@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -106,7 +107,7 @@ public class TeamDaoTest {
 		teamDAO.updateTeam(team);
 	}
 	
-	@Test(expected=PropertyValueException.class)
+	@Test(expected=DataIntegrityViolationException.class)
 	public void updateTeam_MissingRequiredData() {
 		Team team = updateMockTeam("st-louis-bombers");
 		team.setFullName(null);

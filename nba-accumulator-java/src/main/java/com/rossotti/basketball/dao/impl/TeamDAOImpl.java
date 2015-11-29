@@ -2,14 +2,13 @@ package com.rossotti.basketball.dao.impl;
 
 import java.util.List;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rossotti.basketball.dao.TeamDAO;
 import com.rossotti.basketball.dao.exceptions.DuplicateEntityException;
@@ -17,15 +16,14 @@ import com.rossotti.basketball.dao.exceptions.NoSuchEntityException;
 import com.rossotti.basketball.models.Team;
 
 @Repository
+@Transactional
 public class TeamDAOImpl implements TeamDAO {
 	@Autowired
 	private SessionFactory sessionFactory;
 
 	@Override
 	public Team findTeam(String key, LocalDate asOfDate) {
-		Session session = getSessionFactory().openSession();
-		Team team;
-		team = (Team)session.createCriteria(Team.class)
+		Team team = (Team)getSessionFactory().getCurrentSession().createCriteria(Team.class)
 			.add(Restrictions.eq("key", key))
 			.add(Restrictions.le("fromDate", asOfDate))
 			.add(Restrictions.ge("toDate", asOfDate))
@@ -39,8 +37,7 @@ public class TeamDAOImpl implements TeamDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Team> findTeams(LocalDate fromDate, LocalDate toDate) {
-		Session session = getSessionFactory().openSession();
-		List<Team> teams = session.createCriteria(Team.class)
+		List<Team> teams = getSessionFactory().getCurrentSession().createCriteria(Team.class)
 			.add(Restrictions.le("fromDate", fromDate))
 			.add(Restrictions.ge("toDate", toDate))
 			.list();
@@ -52,21 +49,16 @@ public class TeamDAOImpl implements TeamDAO {
 
 	@Override
 	public void createTeam(Team team) {
-		Session session = getSessionFactory().openSession();
-		Transaction tx = session.beginTransaction();
 		try {
-			session.persist(team);
+			getSessionFactory().getCurrentSession().persist(team);
 		} catch (ConstraintViolationException e) {
 			throw new DuplicateEntityException();
 		}
-		tx.commit();
-		session.close();
 	}
 
 	@Override
 	public void updateTeam(Team updateTeam) {
-		Session session = getSessionFactory().openSession();
-		Team team = (Team)session.createCriteria(Team.class)
+		Team team = (Team)getSessionFactory().getCurrentSession().createCriteria(Team.class)
 			.add(Restrictions.eq("key", updateTeam.getKey()))
 			.add(Restrictions.le("fromDate", updateTeam.getFromDate()))
 			.add(Restrictions.ge("toDate", updateTeam.getToDate()))
@@ -83,30 +75,24 @@ public class TeamDAOImpl implements TeamDAO {
 			team.setCity(updateTeam.getCity());
 			team.setState(updateTeam.getState());
 			team.setSiteName(updateTeam.getSiteName());
-			Transaction tx = session.beginTransaction();
-			session.persist(team);
-			tx.commit();
+			getSessionFactory().getCurrentSession().persist(team);
 		}
 		else {
 			throw new NoSuchEntityException();
 		}
-		session.close();
 	}
 
 	@Override
 	public void deleteTeam(String key, LocalDate asOfDate) {
-		Session session = getSessionFactory().openSession();
-		Team team = (Team)session.createCriteria(Team.class)
+		Team team = (Team)getSessionFactory().getCurrentSession().createCriteria(Team.class)
 			.add(Restrictions.eq("key", key))
 			.add(Restrictions.le("fromDate", asOfDate))
 			.add(Restrictions.ge("toDate", asOfDate))
 			.uniqueResult();
 		if (team != null) {
-			session.delete(team);
-//			session.close();
+			getSessionFactory().getCurrentSession().delete(team);
 		}
 		else {
-//			session.close();
 			throw new NoSuchEntityException();
 		}
 	}
