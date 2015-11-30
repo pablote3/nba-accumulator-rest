@@ -59,34 +59,24 @@ public class TeamDAOImpl implements TeamDAO {
 	@Override
 	public void updateTeam(Team updateTeam) {
 		Team team = findTeam(updateTeam.getKey(), updateTeam.getFromDate(), updateTeam.getToDate());
-		if (team != null) {
-			team.setLastName(updateTeam.getLastName());
-			team.setFirstName(updateTeam.getFirstName());
-			team.setFullName(updateTeam.getFullName());
-			team.setAbbr(updateTeam.getAbbr());
-			team.setFromDate(updateTeam.getFromDate());
-			team.setToDate(updateTeam.getToDate());
-			team.setConference(updateTeam.getConference());
-			team.setDivision(updateTeam.getDivision());
-			team.setCity(updateTeam.getCity());
-			team.setState(updateTeam.getState());
-			team.setSiteName(updateTeam.getSiteName());
-			getSessionFactory().getCurrentSession().persist(team);
-		}
-		else {
-			throw new NoSuchEntityException();
-		}
+		team.setLastName(updateTeam.getLastName());
+		team.setFirstName(updateTeam.getFirstName());
+		team.setFullName(updateTeam.getFullName());
+		team.setAbbr(updateTeam.getAbbr());
+		team.setFromDate(updateTeam.getFromDate());
+		team.setToDate(updateTeam.getToDate());
+		team.setConference(updateTeam.getConference());
+		team.setDivision(updateTeam.getDivision());
+		team.setCity(updateTeam.getCity());
+		team.setState(updateTeam.getState());
+		team.setSiteName(updateTeam.getSiteName());
+		getSessionFactory().getCurrentSession().persist(team);
 	}
 
 	@Override
 	public void deleteTeam(String key, LocalDate fromDate, LocalDate toDate) {
 		Team team = findTeam(key, fromDate, toDate);
-		if (team != null) {
-			getSessionFactory().getCurrentSession().delete(team);
-		}
-		else {
-			throw new NoSuchEntityException();
-		}
+		getSessionFactory().getCurrentSession().delete(team);
 	}
 
 	public SessionFactory getSessionFactory() {
