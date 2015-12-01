@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.exception.ConstraintViolationException;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -60,10 +59,16 @@ public class TeamDAOImpl implements TeamDAO {
 	}
 
 	@Override
-	public void createTeam(Team team) {
-		try {
-			getSessionFactory().getCurrentSession().persist(team);
-		} catch (ConstraintViolationException e) {
+	public void createTeam(Team createTeam) {
+		Team team = (Team)getSessionFactory().getCurrentSession().createCriteria(Team.class)
+				.add(Restrictions.eq("key", createTeam.getKey()))
+				.add(Restrictions.le("fromDate", createTeam.getFromDate()))
+				.add(Restrictions.ge("toDate", createTeam.getToDate()))
+				.uniqueResult();
+		if (team == null) {
+			getSessionFactory().getCurrentSession().persist(createTeam);
+		}
+		else {
 			throw new DuplicateEntityException();
 		}
 	}

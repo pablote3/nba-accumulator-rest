@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rossotti.basketball.pub.PubTeam;
 
 @Entity
-@Table (name="team", uniqueConstraints=@UniqueConstraint(columnNames={"team_key"}))
+@Table (name="team", uniqueConstraints=@UniqueConstraint(columnNames={"team_key", "from_date", "to_date"}))
 public class Team {
 	public Team() {}
 
@@ -45,37 +45,7 @@ public class Team {
 	public void setKey(String key) {
 		this.key = key;
 	}
-	
-	@Column(name="first_name", length=15, nullable=false)
-	@JsonProperty("first_name")
-	private String firstName;
-	public String getFirstName() {
-		return firstName;
-	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	
-	@Column(name="last_name", length=20, nullable=false)
-	@JsonProperty("last_name")
-	private String lastName;
-	public String getLastName() {
-		return lastName;
-	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-	
-	@Column(name="full_name", length=35, nullable=false)
-	@JsonProperty("full_name")
-	private String fullName;
-	public String getFullName() {
-		return fullName;
-	}
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-	
+
 	@Column(name="from_date", nullable=false)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
 	@JsonProperty("from_date")
@@ -86,7 +56,7 @@ public class Team {
 	public void setFromDate(LocalDate fromDate) {
 		this.fromDate = fromDate;
 	}
-	
+
 	@Column(name="to_date", nullable=false)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
 	@JsonProperty("to_date")
@@ -97,7 +67,37 @@ public class Team {
 	public void setToDate(LocalDate toDate) {
 		this.toDate = toDate;
 	}
-	
+
+	@Column(name="first_name", length=15, nullable=false)
+	@JsonProperty("first_name")
+	private String firstName;
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	@Column(name="last_name", length=20, nullable=false)
+	@JsonProperty("last_name")
+	private String lastName;
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	@Column(name="full_name", length=35, nullable=false)
+	@JsonProperty("full_name")
+	private String fullName;
+	public String getFullName() {
+		return fullName;
+	}
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
 	@Column(name="abbr", length=5, nullable=false)
 	@JsonProperty("abbreviation")
 	private String abbr;
@@ -107,7 +107,7 @@ public class Team {
 	public void setAbbr(String abbr) {
 		this.abbr = abbr;
 	}
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(name="conference", length=4, nullable=false)
 	private Conference conference;
@@ -117,12 +117,12 @@ public class Team {
 	public void setConference(Conference conference) {
 		this.conference = conference;
 	}
-	
+
 	public enum Conference {
 		East,
 		West;
 	}
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(name="division", length=9, nullable=false)
 	private Division division;
@@ -132,7 +132,7 @@ public class Team {
 	public void setDivision(Division division) {
 		this.division = division;
 	}
-	
+
 	public enum Division {
 		Atlantic,
 		Central,
@@ -141,7 +141,7 @@ public class Team {
 		Northwest,
 		Pacific;
 	}
-	
+
 	@Column(name="site_name", length=30, nullable=false)
 	@JsonProperty("site_name")
 	private String siteName;

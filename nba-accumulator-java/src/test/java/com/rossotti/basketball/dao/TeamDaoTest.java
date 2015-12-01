@@ -53,6 +53,17 @@ public class TeamDaoTest {
 	}
 
 	@Test
+	public void findTeamsByKey() {
+		List<Team> teams = teamDAO.findTeams("st-louis-bombers");
+		Assert.assertEquals(2, teams.size());
+	}
+
+	@Test(expected=NoSuchEntityException.class)
+	public void findTeamsByKey_NoSuchEntityException() {
+		teamDAO.findTeams("st-louis-bombbers");
+	}
+	
+	@Test
 	public void findTeamsByDateRange() {
 		List<Team> teams = teamDAO.findTeams(new LocalDate("2009-10-31"), new LocalDate("2010-06-30"));
 		Assert.assertEquals(2, teams.size());
@@ -68,6 +79,15 @@ public class TeamDaoTest {
 		teamDAO.createTeam(createMockTeam("seattle-supersonics"));
 		Team team = teamDAO.findTeam("seattle-supersonics", new LocalDate("2012-07-01"), new LocalDate("2012-07-01"));
 		Assert.assertEquals("Seattle Supersonics", team.getFullName());
+	}
+
+	@Test
+	public void createTeam_NonOverlappingDates() {
+		Team createTeam = createMockTeam("baltimore-bullets");
+		createTeam.setFullName("Baltimore Bullets");
+		teamDAO.createTeam(createTeam);
+		Team team = teamDAO.findTeam("baltimore-bullets", new LocalDate("2012-07-01"), new LocalDate("9999-12-31"));
+		Assert.assertEquals("Baltimore Bullets", team.getFullName());
 	}
 
 	@Test(expected=PropertyValueException.class)
