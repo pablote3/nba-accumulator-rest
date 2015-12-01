@@ -1,5 +1,8 @@
 package com.rossotti.basketball.app.resources;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -26,6 +29,7 @@ import com.rossotti.basketball.dao.exceptions.DuplicateEntityException;
 import com.rossotti.basketball.dao.exceptions.NoSuchEntityException;
 import com.rossotti.basketball.models.Team;
 import com.rossotti.basketball.pub.PubTeam;
+import com.rossotti.basketball.pub.PubTeams;
 
 @Service
 @Path("/teams")
@@ -37,12 +41,16 @@ public class TeamResource {
 	@GET
 	@Path("/{key}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response findTeamByKey(@Context UriInfo uriInfo, 
+	public Response findTeamsByKey(@Context UriInfo uriInfo, 
 									@PathParam("key") String key) {
 		try {
-			Team team = teamDAO.findTeam(key, new LocalDate(), new LocalDate());
-			PubTeam pubTeam = team.toPubTeam(uriInfo, key, null, null);
-			return Response.ok(pubTeam)
+			List<PubTeam> listTeams = new ArrayList<PubTeam>();
+			for (Team team : teamDAO.findTeams(key)) {
+				PubTeam pubTeam = team.toPubTeam(uriInfo);
+				listTeams.add(pubTeam);
+			}
+			PubTeams pubTeams = new PubTeams(uriInfo.getAbsolutePath(), listTeams);
+			return Response.ok(pubTeams)
 				.link(uriInfo.getAbsolutePath(), "team")
 				.build();
 		} catch (NoSuchEntityException e) {
@@ -53,7 +61,7 @@ public class TeamResource {
 	@GET
 	@Path("/{key}/{fromDate}/{toDate}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response findTeamByKey(@Context UriInfo uriInfo, 
+	public Response findTeamByKeyDate(@Context UriInfo uriInfo, 
 									@PathParam("key") String key, 
 									@PathParam("fromDate") String fromDateString, 
 									@PathParam("toDate") String toDateString) {
@@ -62,7 +70,7 @@ public class TeamResource {
 			LocalDate fromDate = formatter.parseLocalDate(fromDateString);
 			LocalDate toDate = formatter.parseLocalDate(toDateString);
 			Team team = teamDAO.findTeam(key, fromDate, toDate);
-			PubTeam pubTeam = team.toPubTeam(uriInfo, key, fromDateString, toDateString);
+			PubTeam pubTeam = team.toPubTeam(uriInfo);
 			return Response.ok(pubTeam)
 				.link(uriInfo.getAbsolutePath(), "team")
 				.build();

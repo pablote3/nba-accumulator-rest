@@ -15,6 +15,8 @@ import javax.ws.rs.core.UriInfo;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rossotti.basketball.pub.PubTeam;
@@ -177,12 +179,13 @@ public class Team {
 			.toString();
 	}
 
-	public PubTeam toPubTeam(UriInfo uriInfo, String key, String fromDate, String toDate) {
+	public PubTeam toPubTeam(UriInfo uriInfo) {
 		URI self;
-		if (fromDate == null)
-			self = uriInfo.getBaseUriBuilder().path("teams").path(key).build();
-		else
-			self = uriInfo.getBaseUriBuilder().path("teams").path(key).path(fromDate).path(toDate).build();
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
+		self = uriInfo.getBaseUriBuilder().path("teams").
+											path(this.getKey()).
+											path(this.getFromDate().toString(fmt)).
+											path(this.getToDate().toString(fmt)).build();
 		return new PubTeam( self,
 							this.id,
 							this.key,
