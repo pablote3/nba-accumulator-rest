@@ -59,6 +59,33 @@ public class TeamResource {
 	}
 
 	@GET
+	@Path("/{fromDate}/{toDate}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findTeamsByDate(@Context UriInfo uriInfo, 
+									@PathParam("fromDate") String fromDateString, 
+									@PathParam("toDate") String toDateString) {
+		try {
+			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+			LocalDate fromDate = formatter.parseLocalDate(fromDateString);
+			LocalDate toDate = formatter.parseLocalDate(toDateString);
+			List<PubTeam> listTeams = new ArrayList<PubTeam>();
+			for (Team team : teamDAO.findTeams(fromDate, toDate)) {
+				PubTeam pubTeam = team.toPubTeam(uriInfo);
+				listTeams.add(pubTeam);
+			}
+			
+			PubTeams pubTeams = new PubTeams(uriInfo.getAbsolutePath(), listTeams);
+			return Response.ok(pubTeams)
+				.link(uriInfo.getAbsolutePath(), "team")
+				.build();
+		} catch (IllegalArgumentException e) {
+			throw new BadRequestException("asOfDate must be yyyy-MM-dd format", e);
+		} catch (NoSuchEntityException e) {
+			return Response.status(404).build();
+		}
+	}
+	
+	@GET
 	@Path("/{key}/{fromDate}/{toDate}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findTeamByKeyDate(@Context UriInfo uriInfo, 

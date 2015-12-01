@@ -8,6 +8,7 @@ import com.rossotti.basketball.models.Team;
 
 public interface TeamDAO {
 	public Team findTeam(String key, LocalDate fromDate, LocalDate toDate);
+	public List<Team> findTeams(String key);
 	public List<Team> findTeams(LocalDate fromDate, LocalDate toDate);
 	public void createTeam(Team team);
 	public void updateTeam(Team team);

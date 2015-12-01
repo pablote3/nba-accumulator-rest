@@ -33,7 +33,7 @@ public class TeamDAOImpl implements TeamDAO {
 		}
 		return team;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Team> findTeams(LocalDate fromDate, LocalDate toDate) {
@@ -41,7 +41,19 @@ public class TeamDAOImpl implements TeamDAO {
 			.add(Restrictions.le("fromDate", fromDate))
 			.add(Restrictions.ge("toDate", toDate))
 			.list();
-		if (teams == null) {
+		if (teams == null || teams.size() == 0) {
+			throw new NoSuchEntityException();
+		}
+		return teams;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Team> findTeams(String key) {
+		List<Team> teams = getSessionFactory().getCurrentSession().createCriteria(Team.class)
+			.add(Restrictions.eq("key", key))
+			.list();
+		if (teams == null || teams.size() == 0) {
 			throw new NoSuchEntityException();
 		}
 		return teams;
