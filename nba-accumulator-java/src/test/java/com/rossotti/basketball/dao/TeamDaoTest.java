@@ -26,65 +26,70 @@ public class TeamDaoTest {
 	private TeamDAO teamDAO;
 
 	@Test
-	public void findByTeamKey_MatchFromDate() {
+	public void findTeamByKey_MatchFromDate() {
 		Team team = teamDAO.findTeam("harlem-globetrotters", new LocalDate("2009-07-01"), new LocalDate("2009-07-01"));
 		Assert.assertEquals("Harlem Globetrotters", team.getFullName());
 	}
-	
+
 	@Test
-	public void findByTeamKey_MatchToDate() {
+	public void findTeamByKey_MatchToDate() {
 		Team team = teamDAO.findTeam("harlem-globetrotters", new LocalDate("2010-06-30"), new LocalDate("2010-06-30"));
 		Assert.assertEquals("Harlem Globetrotters", team.getFullName());
 	}
-	
+
 	@Test(expected=NoSuchEntityException.class)
-	public void findByTeamKey_NoSuchEntityException_Key() {
+	public void findTeamByKey_NoSuchEntityException_Key() {
 		teamDAO.findTeam("harlem-hoopers", new LocalDate("2012-07-01"), new LocalDate("2012-07-01"));
 	}
-	
+
 	@Test(expected=NoSuchEntityException.class)
-	public void findByTeamKey_NoSuchEntityException_BeforeAsOfDate() {
+	public void findTeamByKey_NoSuchEntityException_BeforeAsOfDate() {
 		teamDAO.findTeam("harlem-globetrotters", new LocalDate("2009-06-30"), new LocalDate("2009-06-30"));
 	}
-	
+
 	@Test(expected=NoSuchEntityException.class)
-	public void findByTeamKey_NoSuchEntityException_AfterAsOfDate() {
+	public void findTeamByKey_NoSuchEntityException_AfterAsOfDate() {
 		teamDAO.findTeam("harlem-globetrotters", new LocalDate("2010-07-01"), new LocalDate("2010-07-01"));
 	}
-	
+
 	@Test
-	public void findByDateRange() {
+	public void findTeamsByDateRange() {
 		List<Team> teams = teamDAO.findTeams(new LocalDate("2009-10-31"), new LocalDate("2010-06-30"));
-		Assert.assertEquals(1, teams.size());
+		Assert.assertEquals(2, teams.size());
 	}
-	
+
+	@Test(expected=NoSuchEntityException.class)
+	public void findTeamsByDateRange_NoSuchEntityException() {
+		teamDAO.findTeams(new LocalDate("1909-10-31"), new LocalDate("1910-06-30"));
+	}
+
 	@Test
 	public void createTeam() {
 		teamDAO.createTeam(createMockTeam("seattle-supersonics"));
 		Team team = teamDAO.findTeam("seattle-supersonics", new LocalDate("2012-07-01"), new LocalDate("2012-07-01"));
 		Assert.assertEquals("Seattle Supersonics", team.getFullName());
 	}
-	
+
 	@Test(expected=PropertyValueException.class)
 	public void createTeam_MissingRequiredData() {
 		Team team = new Team();
 		team.setKey("missing-required-data-key");
 		teamDAO.createTeam(team);
 	}
-	
+
 	@Test(expected=DuplicateEntityException.class)
 	public void createTeam_DuplicateEntityException() {
 		teamDAO.createTeam(createMockTeam("duplicate-entity-exception-key"));
 		teamDAO.createTeam(createMockTeam("duplicate-entity-exception-key"));
 	}
-	
+
 	@Test
 	public void updateTeam() {
 		Team updateTeam = updateMockTeam("st-louis-bombers");
 		teamDAO.updateTeam(updateTeam);
 		Team team = teamDAO.findTeam("st-louis-bombers", new LocalDate("2010-05-30"), new LocalDate("2010-05-30"));
 		Assert.assertEquals("St. Louis Bombiers", team.getFullName());
-		Assert.assertEquals(new LocalDate("2010-05-30"), team.getToDate());
+
 	}
 
 	@Test(expected=NoSuchEntityException.class)
@@ -133,7 +138,7 @@ public class TeamDaoTest {
 		team.setKey(key);
 		team.setAbbr("SLB");
 		team.setFromDate(new LocalDate("2009-07-01"));
-		team.setToDate(new LocalDate("2010-05-30"));
+		team.setToDate(new LocalDate("2010-06-30"));
 		team.setFirstName("St. Louis");
 		team.setLastName("Bombiers");
 		team.setConference(Conference.East);
