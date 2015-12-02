@@ -90,6 +90,14 @@ public class TeamDaoTest {
 		Assert.assertEquals("Baltimore Bullets", team.getFullName());
 	}
 
+	@Test(expected=DuplicateEntityException.class)
+	public void createTeam_OverlappingDates() {
+		Team createTeam = createMockTeam("baltimore-bullets");
+		createTeam.setFromDate(new LocalDate("2005-07-01"));
+		createTeam.setToDate(new LocalDate("2005-07-01"));
+		teamDAO.createTeam(createTeam);
+	}
+
 	@Test(expected=PropertyValueException.class)
 	public void createTeam_MissingRequiredData() {
 		Team team = new Team();
