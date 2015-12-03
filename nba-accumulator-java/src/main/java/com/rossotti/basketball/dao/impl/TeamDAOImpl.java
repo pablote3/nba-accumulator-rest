@@ -21,9 +21,9 @@ public class TeamDAOImpl implements TeamDAO {
 	private SessionFactory sessionFactory;
 
 	@Override
-	public Team findTeam(String key, LocalDate fromDate, LocalDate toDate) {
+	public Team findTeam(String teamKey, LocalDate fromDate, LocalDate toDate) {
 		Team team = (Team)getSessionFactory().getCurrentSession().createCriteria(Team.class)
-			.add(Restrictions.eq("key", key))
+			.add(Restrictions.eq("teamKey", teamKey))
 			.add(Restrictions.le("fromDate", fromDate))
 			.add(Restrictions.ge("toDate", toDate))
 			.uniqueResult();
@@ -48,9 +48,9 @@ public class TeamDAOImpl implements TeamDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Team> findTeams(String key) {
+	public List<Team> findTeams(String teamKey) {
 		List<Team> teams = getSessionFactory().getCurrentSession().createCriteria(Team.class)
-			.add(Restrictions.eq("key", key))
+			.add(Restrictions.eq("teamKey", teamKey))
 			.list();
 		if (teams == null || teams.size() == 0) {
 			throw new NoSuchEntityException();
@@ -61,7 +61,7 @@ public class TeamDAOImpl implements TeamDAO {
 	@Override
 	public void createTeam(Team createTeam) {
 		Team team = (Team)getSessionFactory().getCurrentSession().createCriteria(Team.class)
-				.add(Restrictions.eq("key", createTeam.getKey()))
+				.add(Restrictions.eq("teamKey", createTeam.getTeamKey()))
 				.add(Restrictions.le("fromDate", createTeam.getFromDate()))
 				.add(Restrictions.ge("toDate", createTeam.getToDate()))
 				.uniqueResult();
@@ -75,7 +75,7 @@ public class TeamDAOImpl implements TeamDAO {
 
 	@Override
 	public void updateTeam(Team updateTeam) {
-		Team team = findTeam(updateTeam.getKey(), updateTeam.getFromDate(), updateTeam.getToDate());
+		Team team = findTeam(updateTeam.getTeamKey(), updateTeam.getFromDate(), updateTeam.getToDate());
 		team.setLastName(updateTeam.getLastName());
 		team.setFirstName(updateTeam.getFirstName());
 		team.setFullName(updateTeam.getFullName());
@@ -91,8 +91,8 @@ public class TeamDAOImpl implements TeamDAO {
 	}
 
 	@Override
-	public void deleteTeam(String key, LocalDate fromDate, LocalDate toDate) {
-		Team team = findTeam(key, fromDate, toDate);
+	public void deleteTeam(String teamKey, LocalDate fromDate, LocalDate toDate) {
+		Team team = findTeam(teamKey, fromDate, toDate);
 		getSessionFactory().getCurrentSession().delete(team);
 	}
 

@@ -115,7 +115,7 @@ public class TeamResource {
 			teamDAO.createTeam(team);
 			return Response.created(uriInfo.getAbsolutePath()).build();
 		} catch (DuplicateEntityException e) {
-			throw new BadRequestException("team " + team.getKey() + " already exists", e);
+			throw new BadRequestException("team " + team.getTeamKey() + " already exists", e);
 		} catch (PropertyValueException e) {
 			throw new BadRequestException("missing required field(s)", e);
 		}

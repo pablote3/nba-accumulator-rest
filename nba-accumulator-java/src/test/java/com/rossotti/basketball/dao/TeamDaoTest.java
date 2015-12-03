@@ -101,7 +101,7 @@ public class TeamDaoTest {
 	@Test(expected=PropertyValueException.class)
 	public void createTeam_MissingRequiredData() {
 		Team team = new Team();
-		team.setKey("missing-required-data-key");
+		team.setTeamKey("missing-required-data-key");
 		teamDAO.createTeam(team);
 	}
 
@@ -146,7 +146,7 @@ public class TeamDaoTest {
 
 	private Team createMockTeam(String key) {
 		Team team = new Team();
-		team.setKey(key);
+		team.setTeamKey(key);
 		team.setAbbr("SEA");
 		team.setFromDate(new LocalDate("2012-07-01"));
 		team.setToDate(new LocalDate("9999-12-31"));
@@ -163,7 +163,7 @@ public class TeamDaoTest {
 	
 	private Team updateMockTeam(String key) {
 		Team team = new Team();
-		team.setKey(key);
+		team.setTeamKey(key);
 		team.setAbbr("SLB");
 		team.setFromDate(new LocalDate("2009-07-01"));
 		team.setToDate(new LocalDate("2010-06-30"));

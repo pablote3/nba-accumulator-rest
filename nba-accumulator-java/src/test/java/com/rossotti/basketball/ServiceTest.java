@@ -43,7 +43,7 @@ public class ServiceTest {
 	
 	private Team getMockTeam() {
 		Team team = new Team();
-		team.setKey("seattle-supersonics");
+		team.setTeamKey("seattle-supersonics");
 		team.setAbbr("SEA");
 		team.setFromDate(new LocalDate("2012-07-01"));
 		team.setToDate(new LocalDate("9999-12-31"));

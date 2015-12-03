@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rossotti.basketball.pub.PubTeam;
 
 @Entity
-@Table (name="team", uniqueConstraints=@UniqueConstraint(columnNames={"team_key", "from_date", "to_date"}))
+@Table (name="team", uniqueConstraints=@UniqueConstraint(columnNames={"teamKey", "fromDate", "toDate"}))
 public class Team {
 	public Team() {}
 
@@ -36,17 +36,17 @@ public class Team {
 		this.id = id;
 	}
 
-	@Column(name="team_key", length=35, nullable=false)
+	@Column(name="teamKey", length=35, nullable=false)
 	@JsonProperty("team_id")
-	private String key;
-	public String getKey() {
-		return key;
+	private String teamKey;
+	public String getTeamKey() {
+		return teamKey;
 	}
-	public void setKey(String key) {
-		this.key = key;
+	public void setTeamKey(String teamKey) {
+		this.teamKey = teamKey;
 	}
 
-	@Column(name="from_date", nullable=false)
+	@Column(name="fromDate", nullable=false)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
 	@JsonProperty("from_date")
 	private LocalDate fromDate;
@@ -57,7 +57,7 @@ public class Team {
 		this.fromDate = fromDate;
 	}
 
-	@Column(name="to_date", nullable=false)
+	@Column(name="toDate", nullable=false)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
 	@JsonProperty("to_date")
 	private LocalDate toDate;
@@ -68,7 +68,7 @@ public class Team {
 		this.toDate = toDate;
 	}
 
-	@Column(name="first_name", length=15, nullable=false)
+	@Column(name="firstName", length=15, nullable=false)
 	@JsonProperty("first_name")
 	private String firstName;
 	public String getFirstName() {
@@ -78,7 +78,7 @@ public class Team {
 		this.firstName = firstName;
 	}
 
-	@Column(name="last_name", length=20, nullable=false)
+	@Column(name="lastName", length=20, nullable=false)
 	@JsonProperty("last_name")
 	private String lastName;
 	public String getLastName() {
@@ -88,7 +88,7 @@ public class Team {
 		this.lastName = lastName;
 	}
 
-	@Column(name="full_name", length=35, nullable=false)
+	@Column(name="fullName", length=35, nullable=false)
 	@JsonProperty("full_name")
 	private String fullName;
 	public String getFullName() {
@@ -142,7 +142,7 @@ public class Team {
 		Pacific;
 	}
 
-	@Column(name="site_name", length=30, nullable=false)
+	@Column(name="siteName", length=30, nullable=false)
 	@JsonProperty("site_name")
 	private String siteName;
 	public String getSiteName() {
@@ -173,7 +173,7 @@ public class Team {
 	public String toString() {
 		return new StringBuffer()
 			.append("\n" + "  id: " + this.id)
-			.append("  key: " + this.key)
+			.append("  teamKey: " + this.teamKey)
 			.append("  fromDate: " + this.fromDate + "\n")
 			.append("  toDate: " + this.toDate + "\n")
 			.toString();
@@ -183,12 +183,12 @@ public class Team {
 		URI self;
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		self = uriInfo.getBaseUriBuilder().path("teams").
-											path(this.getKey()).
+											path(this.getTeamKey()).
 											path(this.getFromDate().toString(fmt)).
 											path(this.getToDate().toString(fmt)).build();
 		return new PubTeam( self,
 							this.id,
-							this.key,
+							this.teamKey,
 							this.firstName,
 							this.lastName,
 							this.fullName,
