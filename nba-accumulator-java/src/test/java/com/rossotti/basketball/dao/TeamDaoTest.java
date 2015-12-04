@@ -37,6 +37,12 @@ public class TeamDaoTest {
 		Assert.assertEquals("Harlem Globetrotters", team.getFullName());
 	}
 
+	@Test
+	public void findTeamByKey_MatchDateRange() {
+		Team team = teamDAO.findTeam("harlem-globetrotters", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"));
+		Assert.assertEquals("Harlem Globetrotters", team.getFullName());
+	}
+
 	@Test(expected=NoSuchEntityException.class)
 	public void findTeamByKey_NoSuchEntityException_Key() {
 		teamDAO.findTeam("harlem-hoopers", new LocalDate("2012-07-01"), new LocalDate("2012-07-01"));
