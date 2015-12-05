@@ -65,55 +65,42 @@ public class PubTeam {
 	public URI getSelf() {
 		return self;
 	}
-	
 	public Long getId() {
 		return id;
 	}
-
 	public String getKey() {
 		return key;
 	}
-	
 	public String getFirstName() {
 		return firstName;
 	}
-	
 	public String getLastName() {
 		return lastName;
 	}
-
 	public String getFullName() {
 		return fullName;
 	}
-	
 	public String getAbbr() {
 		return abbr;
 	}
-	
 	public String getFromDate() {
 		return fromDate;
 	}
-	
 	public String getToDate() {
 		return toDate;
 	}
-	
 	public String getConference() {
 		return conference;
 	}
-
 	public String getDivision() {
 		return division;
 	}
-
 	public String getCity() {
 		return city;
 	}
-
 	public String getState() {
 		return state;
 	}
-
 	public String getSiteName() {
 		return siteName;
 	}

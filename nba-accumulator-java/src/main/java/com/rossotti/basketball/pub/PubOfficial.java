@@ -43,27 +43,21 @@ public class PubOfficial {
 	public URI getSelf() {
 		return self;
 	}
-	
 	public Long getId() {
 		return id;
 	}
-
 	public String getLastName() {
 		return lastName;
 	}
-
 	public String getFirstName() {
 		return firstName;
 	}
-
 	public String getFromDate() {
 		return fromDate;
 	}
-
 	public String getToDate() {
 		return toDate;
 	}
-
 	public String getNumber() {
 		return number;
 	}
