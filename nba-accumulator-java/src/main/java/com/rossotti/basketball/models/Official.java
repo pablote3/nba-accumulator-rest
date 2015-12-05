@@ -99,7 +99,7 @@ public class Official {
 	public PubOfficial toPubOfficial(UriInfo uriInfo) {
 		URI self;
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
-		self = uriInfo.getBaseUriBuilder().path("teams").
+		self = uriInfo.getBaseUriBuilder().path("officials").
 											path(this.getLastName()).
 											path(this.getFirstName()).
 											path(this.getFromDate().toString(fmt)).
