@@ -39,9 +39,9 @@ public class OfficialResource {
 	private OfficialDAO officialDAO;
 
 	@GET
-	@Path("/{lastName}/{firstName}")
+	@Path("/name/{lastName}/{firstName}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response findTeamsByKey(@Context UriInfo uriInfo, 
+	public Response findOfficialsByLastNameFirstName(@Context UriInfo uriInfo, 
 									@PathParam("lastName") String lastName, 
 									@PathParam("firstName") String firstName) {
 		try {
@@ -60,7 +60,7 @@ public class OfficialResource {
 	}
 
 	@GET
-	@Path("/{fromDate}/{toDate}")
+	@Path("/date/{fromDate}/{toDate}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findOfficialsByDate(@Context UriInfo uriInfo, 
 									@PathParam("fromDate") String fromDateString, 
@@ -87,7 +87,7 @@ public class OfficialResource {
 	}
 	
 	@GET
-	@Path("/{lastName}//{firstName/{fromDate}/{toDate}")
+	@Path("/{lastName}/{firstName}/{fromDate}/{toDate}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findOfficialByKeyDate(@Context UriInfo uriInfo, 
 									@PathParam("lastName") String lastName,
