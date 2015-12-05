@@ -33,6 +33,7 @@
 		<property name="annotatedClasses">
 			<list>
 				<value>com.rossotti.basketball.models.Team</value>
+				<value>com.rossotti.basketball.models.Official</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
