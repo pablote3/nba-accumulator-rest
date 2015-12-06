@@ -41,7 +41,7 @@ public class OfficialResource {
 	@GET
 	@Path("/name/{lastName}/{firstName}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response findOfficialsByLastNameFirstName(@Context UriInfo uriInfo, 
+	public Response findOfficialsByName(@Context UriInfo uriInfo, 
 									@PathParam("lastName") String lastName, 
 									@PathParam("firstName") String firstName) {
 		try {
@@ -89,7 +89,7 @@ public class OfficialResource {
 	@GET
 	@Path("/{lastName}/{firstName}/{fromDate}/{toDate}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response findOfficialByKeyDate(@Context UriInfo uriInfo, 
+	public Response findOfficialByNameDate(@Context UriInfo uriInfo, 
 									@PathParam("lastName") String lastName,
 									@PathParam("firstName") String firstName,
 									@PathParam("fromDate") String fromDateString, 

@@ -26,35 +26,35 @@ public class OfficialDaoTest {
 	//'Joe', 'LateCall', '2009-07-01', '2010-06-30'
 
 	@Test
-	public void findOfficialByLastNameFirstName_MatchFromDate() {
+	public void findOfficialByName_MatchFromDate() {
 		Official official = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2009-07-01"), new LocalDate("2009-07-01"));
 		Assert.assertEquals("96", official.getNumber());
 	}
 
 	@Test
-	public void findOfficialByLastNameFirstName_MatchToDate() {
+	public void findOfficialByName_MatchToDate() {
 		Official official = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2010-06-30"), new LocalDate("2010-06-30"));
 		Assert.assertEquals("96", official.getNumber());
 	}
 
 	@Test
-	public void findOfficialByLastNameFirstName_MatchDateRange() {
+	public void findOfficialByName_MatchDateRange() {
 		Official official = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"));
 		Assert.assertEquals("96", official.getNumber());
 	}
 
 	@Test(expected=NoSuchEntityException.class)
-	public void findOfficialByLastNameFirstName_NoSuchEntityException_Key() {
+	public void findOfficialByName_NoSuchEntityException_Key() {
 		officialDAO.findOfficial("LateCalls", "Joe", new LocalDate("2009-07-01"), new LocalDate("2009-07-01"));
 	}
 
 	@Test(expected=NoSuchEntityException.class)
-	public void findOfficialByLastNameFirstName_NoSuchEntityException_BeforeAsOfDate() {
+	public void findOfficialByName_NoSuchEntityException_BeforeAsOfDate() {
 		officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2009-06-30"), new LocalDate("2009-06-30"));
 	}
 
 	@Test(expected=NoSuchEntityException.class)
-	public void findOfficialByLastNameFirstName_NoSuchEntityException_AfterAsOfDate() {
+	public void findOfficialByName_NoSuchEntityException_AfterAsOfDate() {
 		officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2010-07-01"), new LocalDate("2010-07-01"));
 	}
 
@@ -63,13 +63,13 @@ public class OfficialDaoTest {
 	//'Joe', 'LateCall', '2009-07-01', '2010-06-30'
 
 	@Test
-	public void findOfficialsByLastNameFirstName() {
+	public void findOfficialsByName() {
 		List<Official> officials = officialDAO.findOfficials("MissedCall","Mike");
 		Assert.assertEquals(2, officials.size());
 	}
 
 	@Test(expected=NoSuchEntityException.class)
-	public void findOfficialsByLastNameFirstName_NoSuchEntityException() {
+	public void findOfficialsByName_NoSuchEntityException() {
 		officialDAO.findOfficials("MissedCall", "Mikey");
 	}
 	
