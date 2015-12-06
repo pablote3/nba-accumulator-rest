@@ -117,7 +117,7 @@ public class OfficialResource {
 			officialDAO.createOfficial(official);
 			return Response.created(uriInfo.getAbsolutePath()).build();
 		} catch (DuplicateEntityException e) {
-			throw new BadRequestException("official " + official.getLastName() + " " + official.getFirstName() + " already exists", e);
+			throw new BadRequestException("official " + official.getFirstName() + " " + official.getLastName() + " already exists", e);
 		} catch (PropertyValueException e) {
 			throw new BadRequestException("missing required field(s)", e);
 		}
