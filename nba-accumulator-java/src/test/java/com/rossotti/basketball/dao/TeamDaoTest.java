@@ -90,15 +90,14 @@ public class TeamDaoTest {
 
 	@Test
 	public void createTeam() {
-		teamDAO.createTeam(createMockTeam("seattle-supersonics", new LocalDate("2012-07-01"), new LocalDate("9999-12-31")));
+		teamDAO.createTeam(createMockTeam("seattle-supersonics", new LocalDate("2012-07-01"), new LocalDate("9999-12-31"), "Seattle Supersonics"));
 		Team team = teamDAO.findTeam("seattle-supersonics", new LocalDate("2012-07-01"), new LocalDate("2012-07-01"));
 		Assert.assertEquals("Seattle Supersonics", team.getFullName());
 	}
 
 	@Test
 	public void createTeam_NonOverlappingDates() {
-		Team createTeam = createMockTeam("baltimore-bullets", new LocalDate("2006-07-01"), new LocalDate("9999-12-31"));
-		createTeam.setFullName("Baltimore Bullets");
+		Team createTeam = createMockTeam("baltimore-bullets", new LocalDate("2006-07-01"), new LocalDate("9999-12-31"), "Baltimore Bullets");
 		teamDAO.createTeam(createTeam);
 		Team team = teamDAO.findTeam("baltimore-bullets", new LocalDate("2006-07-01"), new LocalDate("9999-12-31"));
 		Assert.assertEquals("Baltimore Bullets", team.getFullName());
@@ -106,7 +105,7 @@ public class TeamDaoTest {
 
 	@Test(expected=DuplicateEntityException.class)
 	public void createTeam_OverlappingDates() {
-		teamDAO.createTeam(createMockTeam("baltimore-bullets", new LocalDate("2005-07-01"), new LocalDate("2005-07-01")));
+		teamDAO.createTeam(createMockTeam("baltimore-bullets", new LocalDate("2005-07-01"), new LocalDate("2005-07-01"), "Baltimore Bullets"));
 	}
 
 	@Test(expected=PropertyValueException.class)
@@ -120,20 +119,19 @@ public class TeamDaoTest {
 
 	@Test
 	public void updateTeam() {
-		teamDAO.updateTeam(updateMockTeam("st-louis-bombers", new LocalDate("2009-07-01"), new LocalDate("2010-06-30")));
+		teamDAO.updateTeam(updateMockTeam("st-louis-bombers", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"), "St. Louis Bombiers"));
 		Team team = teamDAO.findTeam("st-louis-bombers", new LocalDate("2010-05-30"), new LocalDate("2010-05-30"));
 		Assert.assertEquals("St. Louis Bombiers", team.getFullName());
 	}
 
 	@Test(expected=NoSuchEntityException.class)
 	public void updateTeam_NoSuchEntityException_Key() {
-		teamDAO.updateTeam(updateMockTeam("st-louis-bombs", new LocalDate("2009-07-01"), new LocalDate("2010-07-01")));
+		teamDAO.updateTeam(updateMockTeam("st-louis-bombs", new LocalDate("2009-07-01"), new LocalDate("2010-07-01"), "St. Louis Bombiers"));
 	}
 
 	@Test(expected=DataIntegrityViolationException.class)
 	public void updateTeam_MissingRequiredData() {
-		Team team = updateMockTeam("st-louis-bombers", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"));
-		team.setFullName(null);
+		Team team = updateMockTeam("st-louis-bombers", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"), null);
 		teamDAO.updateTeam(team);
 	}
 
@@ -151,7 +149,7 @@ public class TeamDaoTest {
 	}
 	
 
-	private Team createMockTeam(String key, LocalDate fromDate, LocalDate toDate) {
+	private Team createMockTeam(String key, LocalDate fromDate, LocalDate toDate, String fullName) {
 		Team team = new Team();
 		team.setTeamKey(key);
 		team.setFromDate(fromDate);
@@ -164,11 +162,11 @@ public class TeamDaoTest {
 		team.setSiteName("Key Arena");
 		team.setCity("Seattle");
 		team.setState("WA");
-		team.setFullName("Seattle Supersonics");
+		team.setFullName(fullName);
 		return team;
 	}
 	
-	private Team updateMockTeam(String key, LocalDate fromDate, LocalDate toDate) {
+	private Team updateMockTeam(String key, LocalDate fromDate, LocalDate toDate, String fullName) {
 		Team team = new Team();
 		team.setTeamKey(key);
 		team.setAbbr("SLB");
@@ -181,7 +179,7 @@ public class TeamDaoTest {
 		team.setSiteName("St. Louis Arena");
 		team.setCity("St. Louis");
 		team.setState("MO");
-		team.setFullName("St. Louis Bombiers");
+		team.setFullName(fullName);
 		return team;
 	}
 }
