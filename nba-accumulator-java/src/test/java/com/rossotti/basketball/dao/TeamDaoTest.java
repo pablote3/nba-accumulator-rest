@@ -62,7 +62,6 @@ public class TeamDaoTest {
 
 	//'st-louis-bombers', '2009-07-01', '2010-06-30', 'St. Louis Bombers'
 	//'st-louis-bombers', '2010-07-01', '2011-06-30', 'St. Louis Bombers'
-	//'harlem-globetrotters', '2009-07-01', '2010-06-30', 'Harlem Globetrotters'
 
 	@Test
 	public void findTeamsByKey() {
