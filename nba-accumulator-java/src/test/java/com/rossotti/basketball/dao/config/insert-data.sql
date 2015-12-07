@@ -9,3 +9,7 @@ insert into official VALUES(2, 'Mike', '2009-07-01', 'MissedCall', '97', '2010-0
 insert into official VALUES(3, 'Mike', '2010-07-01', 'MissedCall', '98', '2011-06-30');
 insert into official VALUES(4, 'Hefe', '2005-07-01', 'QuestionableCall', '99', '2006-06-30');
 insert into official VALUES(5, 'Limo', '2005-07-01', 'TerribleCall', '100', '2006-06-30');
+
+insert into player VALUES(1, '2002-02-20', 'Sacramento, CA, USA', 'Luke Puzdrakiewicz', 'Luke', 78, 'Puzdrakiewicz', 175);
+insert into player VALUES(2, '1966-06-02', 'Sacramento, CA, USA', 'Thad Puzdrakiewicz', 'Thad', 81, 'Puzdrakiewicz', 210);
+insert into player VALUES(3, '1966-06-10', 'Sacramento, CA, USA', 'Junior Puzdrakiewicz', 'Junior', 80, 'Puzdrakiewicz', 240);

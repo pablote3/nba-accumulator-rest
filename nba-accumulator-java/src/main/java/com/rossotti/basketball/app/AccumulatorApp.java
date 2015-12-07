@@ -11,6 +11,7 @@ import com.rossotti.basketball.app.providers.DuplicateEntityExceptionMapper;
 import com.rossotti.basketball.app.providers.JsonProvider;
 import com.rossotti.basketball.app.providers.NoSuchEntityExceptionMapper;
 import com.rossotti.basketball.app.resources.OfficialResource;
+import com.rossotti.basketball.app.resources.PlayerResource;
 import com.rossotti.basketball.app.resources.TeamResource;
 
 public class AccumulatorApp extends Application {
@@ -26,6 +27,7 @@ public class AccumulatorApp extends Application {
 		// Resources
 		classes.add(TeamResource.class);
 		classes.add(OfficialResource.class);
+		classes.add(PlayerResource.class);
 
 		// Providers
 		classes.add(JsonProvider.class);

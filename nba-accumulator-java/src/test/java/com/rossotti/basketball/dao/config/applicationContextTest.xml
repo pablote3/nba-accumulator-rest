@@ -34,6 +34,7 @@
 			<list>
 				<value>com.rossotti.basketball.models.Team</value>
 				<value>com.rossotti.basketball.models.Official</value>
+				<value>com.rossotti.basketball.models.Player</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
