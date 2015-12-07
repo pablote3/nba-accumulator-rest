@@ -60,7 +60,6 @@ public class OfficialDaoTest {
 
 	//'Mike', 'MissedCall', '2009-07-01', '2010-06-30'
 	//'Mike', 'MissedCall', '2010-07-01', '2011-06-30'
-	//'Joe', 'LateCall', '2009-07-01', '2010-06-30'
 
 	@Test
 	public void findOfficialsByName() {
