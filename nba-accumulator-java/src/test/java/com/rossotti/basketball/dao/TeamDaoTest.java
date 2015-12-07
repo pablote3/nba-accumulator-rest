@@ -96,10 +96,10 @@ public class TeamDaoTest {
 
 	@Test
 	public void createTeam_NonOverlappingDates() {
-		Team createTeam = createMockTeam("baltimore-bullets", new LocalDate("2006-07-01"), new LocalDate("9999-12-31"), "Baltimore Bullets");
+		Team createTeam = createMockTeam("baltimore-bullets", new LocalDate("2006-07-01"), new LocalDate("9999-12-31"), "Baltimore Bullets2");
 		teamDAO.createTeam(createTeam);
 		Team team = teamDAO.findTeam("baltimore-bullets", new LocalDate("2006-07-01"), new LocalDate("9999-12-31"));
-		Assert.assertEquals("Baltimore Bullets", team.getFullName());
+		Assert.assertEquals("Baltimore Bullets2", team.getFullName());
 	}
 
 	@Test(expected=DuplicateEntityException.class)
