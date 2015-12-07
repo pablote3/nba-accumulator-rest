@@ -1,5 +1,7 @@
 package com.rossotti.basketball.dao;
 
+import java.util.List;
+
 import org.hibernate.PropertyValueException;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
@@ -45,24 +47,38 @@ public class PlayerDaoTest {
 	}
 
 	//'Thad', 'Puzdrakiewicz', '1966-06-02', 'Thad Puzdrakiewicz'
+	//'Thad', 'Puzdrakiewicz', '2000-03-13', 'Thad Puzdrakiewicz'
+
+	@Test
+	public void findPlayersByName() {
+		List<Player> players = playerDAO.findPlayers("Puzdrakiewicz","Thad");
+		Assert.assertEquals(2, players.size());
+	}
+
+	@Test(expected=NoSuchEntityException.class)
+	public void findPlayersByName_NoSuchEntityException() {
+		playerDAO.findPlayers("Puzdrakiewicz", "Thady");
+	}
+
+	//'Michelle', 'Puzdrakiewicz', '1969-09-08', 'Michelle Puzdrakiewicz'
 
 	@Test
 	public void createPlayer() {
-		playerDAO.createPlayer(createMockPlayer("Puzdrakiewicz", "Michelle", new LocalDate("1968-09-08"), "Michelle Puzdrakiewicz"));
-		Player player = playerDAO.findPlayer("Puzdrakiewicz", "Michelle", new LocalDate("1968-09-08"));
-		Assert.assertEquals("Michelle Puzdrakiewicz", player.getDisplayName());
+		playerDAO.createPlayer(createMockPlayer("Puzdrakiewicz", "Fred", new LocalDate("1968-11-08"), "Fred Puzdrakiewicz"));
+		Player player = playerDAO.findPlayer("Puzdrakiewicz", "Fred", new LocalDate("1968-11-08"));
+		Assert.assertEquals("Fred Puzdrakiewicz", player.getDisplayName());
 	}
 
 	@Test
 	public void createPlayer_UniqueBirthDate() {
-		playerDAO.createPlayer(createMockPlayer("Puzdrakiewicz", "Thad", new LocalDate("2000-03-13"), "Thad Puzdrakiewicz"));
-		Player player = playerDAO.findPlayer("Puzdrakiewicz", "Thad", new LocalDate("2000-03-13"));
-		Assert.assertEquals("Thad Puzdrakiewicz", player.getDisplayName());
+		playerDAO.createPlayer(createMockPlayer("Puzdrakiewicz", "Michelle", new LocalDate("1969-09-09"), "Michelle Puzdrakiewicz2"));
+		Player player = playerDAO.findPlayer("Puzdrakiewicz", "Michelle", new LocalDate("1969-09-09"));
+		Assert.assertEquals("Michelle Puzdrakiewicz2", player.getDisplayName());
 	}
 
 	@Test(expected=DuplicateEntityException.class)
 	public void createPlayer_IdenticalBirthDate() {
-		playerDAO.createPlayer(createMockPlayer("Puzdrakiewicz", "Thad", new LocalDate("1966-06-02"), "Thad Puzdrakiewicz"));
+		playerDAO.createPlayer(createMockPlayer("Puzdrakiewicz", "Michelle", new LocalDate("1969-09-08"), "Michelle Puzdrakiewicz"));
 	}
 
 	@Test(expected=PropertyValueException.class)
@@ -93,7 +109,7 @@ public class PlayerDaoTest {
 		playerDAO.updatePlayer(player);
 	}
 
-	//'Junior', 'Puzdrakiewicz', '1966-06-10', 'Thad Puzdrakiewicz'
+	//'Junior', 'Puzdrakiewicz', '1966-06-10', 'Junior Puzdrakiewicz'
 
 	@Test(expected=NoSuchEntityException.class)
 	public void deletePlayer() {
