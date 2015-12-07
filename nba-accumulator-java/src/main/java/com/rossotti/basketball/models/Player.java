@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rossotti.basketball.pub.PubPlayer;
 
 @Entity
-@Table (name="player", uniqueConstraints=@UniqueConstraint(columnNames={"lastName", "firstName", "birthDate"}))
+@Table (name="player", uniqueConstraints=@UniqueConstraint(columnNames={"lastName", "firstName", "birthdate"}))
 public class Player {
 	public Player() {}
 
@@ -54,15 +54,15 @@ public class Player {
 		this.firstName = firstName;
 	}
 
-	@Column(name="birthDate", nullable=false)
+	@Column(name="birthdate", nullable=false)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
 	@JsonProperty("birthdate")
-	private LocalDate birthDate;
-	public LocalDate getBirthDate()  {
-		return birthDate;
+	private LocalDate birthdate;
+	public LocalDate getBirthdate()  {
+		return birthdate;
 	}
-	public void setBirthDate(LocalDate birthDate) {
-		this.birthDate = birthDate;
+	public void setBirthdate(LocalDate birthdate) {
+		this.birthdate = birthdate;
 	}
 
 	@Column(name="displayName", length=40, nullable=false)
@@ -95,14 +95,14 @@ public class Player {
 		this.weight = weight;
 	}
 
-	@Column(name="birthPlace", length=40, nullable=true)
+	@Column(name="birthplace", length=40, nullable=true)
 	@JsonProperty("birthplace")
-	private String birthPlace;
-	public String getBirthPlace() {
-		return birthPlace;
+	private String birthplace;
+	public String getBirthplace() {
+		return birthplace;
 	}
-	public void setBirthPlace(String birthPlace) {
-		this.birthPlace = birthPlace;
+	public void setBirthplace(String birthplace) {
+		this.birthplace = birthplace;
 	}
 
 	public String toString() {
@@ -110,7 +110,7 @@ public class Player {
 			.append("\n" + "  id: " + this.id)
 			.append("  lastName: " + this.lastName + "\n")
 			.append("  firstName: " + this.firstName + "\n")
-			.append("  birthDate: " + this.birthDate + "\n")
+			.append("  birthdate: " + this.birthdate + "\n")
 			.toString();
 	}
 
@@ -120,15 +120,15 @@ public class Player {
 		self = uriInfo.getBaseUriBuilder().path("players").
 											path(this.getLastName()).
 											path(this.getFirstName()).
-											path(this.getBirthDate().toString(fmt)).build();
+											path(this.getBirthdate().toString(fmt)).build();
 		return new PubPlayer( self,
 							this.id,
 							this.lastName,
 							this.firstName,
-							this.birthDate,
+							this.birthdate,
 							this.displayName,
 							this.height,
 							this.weight,
-							this.birthPlace);
+							this.birthplace);
 	}
 }

@@ -26,7 +26,7 @@ public class PlayerDaoTest {
 	//'Luke', 'Puzdrakiewicz', '2002-02-20', 'Luke Puzdrakiewicz'
 
 	@Test
-	public void findPlayerByName_MatchBirthDate() {
+	public void findPlayerByName_MatchBirthdate() {
 		Player player = playerDAO.findPlayer("Puzdrakiewicz", "Luke", new LocalDate("2002-02-20"));
 		Assert.assertEquals("Luke Puzdrakiewicz", player.getDisplayName());
 	}
@@ -42,7 +42,7 @@ public class PlayerDaoTest {
 	}
 
 	@Test(expected=NoSuchEntityException.class)
-	public void findPlayerByName_NoSuchEntityException_BirthDate() {
+	public void findPlayerByName_NoSuchEntityException_Birthdate() {
 		playerDAO.findPlayer("Puzdrakiewicz", "Luke", new LocalDate("2002-02-21"));
 	}
 
@@ -70,14 +70,14 @@ public class PlayerDaoTest {
 	}
 
 	@Test
-	public void createPlayer_UniqueBirthDate() {
+	public void createPlayer_UniqueBirthdate() {
 		playerDAO.createPlayer(createMockPlayer("Puzdrakiewicz", "Michelle", new LocalDate("1969-09-09"), "Michelle Puzdrakiewicz2"));
 		Player player = playerDAO.findPlayer("Puzdrakiewicz", "Michelle", new LocalDate("1969-09-09"));
 		Assert.assertEquals("Michelle Puzdrakiewicz2", player.getDisplayName());
 	}
 
 	@Test(expected=DuplicateEntityException.class)
-	public void createPlayer_IdenticalBirthDate() {
+	public void createPlayer_IdenticalBirthdate() {
 		playerDAO.createPlayer(createMockPlayer("Puzdrakiewicz", "Michelle", new LocalDate("1969-09-08"), "Michelle Puzdrakiewicz"));
 	}
 
@@ -122,27 +122,27 @@ public class PlayerDaoTest {
 		playerDAO.deletePlayer("Juni", "Puzdrakiewicz", new LocalDate("1966-06-10"));
 	}
 
-	private Player createMockPlayer(String lastName, String firstName, LocalDate birthDate, String displayName) {
+	private Player createMockPlayer(String lastName, String firstName, LocalDate birthdate, String displayName) {
 		Player player = new Player();
 		player.setLastName(lastName);
 		player.setFirstName(firstName);
-		player.setBirthDate(birthDate);
+		player.setBirthdate(birthdate);
 		player.setDisplayName(displayName);
 		player.setHeight((short)79);
 		player.setWeight((short)195);
-		player.setBirthPlace("Monroe, Louisiana, USA");
+		player.setBirthplace("Monroe, Louisiana, USA");
 		return player;
 	}
 	
-	private Player updateMockPlayer(String lastName, String firstName, LocalDate birthDate, String displayName) {
+	private Player updateMockPlayer(String lastName, String firstName, LocalDate birthdate, String displayName) {
 		Player player = new Player();
 		player.setLastName(lastName);
 		player.setFirstName(firstName);
-		player.setBirthDate(birthDate);
+		player.setBirthdate(birthdate);
 		player.setDisplayName(displayName);
 		player.setHeight((short)79);
 		player.setWeight((short)215);
-		player.setBirthPlace("Monroe, Louisiana, USA");
+		player.setBirthplace("Monroe, Louisiana, USA");
 		return player;
 	}
 }

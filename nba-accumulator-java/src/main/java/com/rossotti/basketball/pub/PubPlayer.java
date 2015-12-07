@@ -17,32 +17,32 @@ public class PubPlayer {
 	private final Long id;
 	private final String lastName;
 	private final String firstName;
-	private final String birthDate;
+	private final String birthdate;
 	private final String displayName;
 	private final String height;
 	private final String weight;
-	private final String birthPlace;
+	private final String birthplace;
 
 	@JsonCreator
 	public PubPlayer(@JsonProperty("self") URI self,
 					@JsonProperty("id") Long id,
 					@JsonProperty("lastName") String lastName,
 					@JsonProperty("firstName") String firstName,
-					@JsonProperty("birthDate") LocalDate birthDate,
+					@JsonProperty("birthdate") LocalDate birthdate,
 					@JsonProperty("displayName") String displayName,
 					@JsonProperty("height") Short height,
 					@JsonProperty("weight") Short weight,
-					@JsonProperty("birthPlace") String birthPlace) {
+					@JsonProperty("birthplace") String birthplace) {
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("MM/dd/yyyy");
 		this.self = self;
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.birthDate = birthDate.toString(fmt);
+		this.birthdate = birthdate.toString(fmt);
 		this.displayName = displayName;
 		this.height = String.valueOf(height);
 		this.weight = String.valueOf(weight);
-		this.birthPlace = birthPlace;
+		this.birthplace = birthplace;
 	}
 
 	public URI getSelf() {
@@ -57,8 +57,8 @@ public class PubPlayer {
 	public String getFirstName() {
 		return firstName;
 	}
-	public String getBirthDate() {
-		return birthDate;
+	public String getBirthdate() {
+		return birthdate;
 	}
 	public String getDisplayName() {
 		return displayName;
@@ -69,7 +69,7 @@ public class PubPlayer {
 	public String getWeight() {
 		return weight;
 	}
-	public String getBirthPlace() {
-		return birthPlace;
+	public String getBirthplace() {
+		return birthplace;
 	}
 }

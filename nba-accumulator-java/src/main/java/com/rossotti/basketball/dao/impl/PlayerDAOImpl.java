@@ -21,11 +21,11 @@ public class PlayerDAOImpl implements PlayerDAO {
 	private SessionFactory sessionFactory;
 
 	@Override
-	public Player findPlayer(String lastName, String firstName, LocalDate birthDate) {
+	public Player findPlayer(String lastName, String firstName, LocalDate birthdate) {
 		Player player = (Player)getSessionFactory().getCurrentSession().createCriteria(Player.class)
 			.add(Restrictions.eq("lastName", lastName))
 			.add(Restrictions.eq("firstName", firstName))
-			.add(Restrictions.eq("birthDate", birthDate))
+			.add(Restrictions.eq("birthdate", birthdate))
 			.uniqueResult();
 		if (player == null) {
 			throw new NoSuchEntityException();
@@ -51,7 +51,7 @@ public class PlayerDAOImpl implements PlayerDAO {
 		Player player = (Player)getSessionFactory().getCurrentSession().createCriteria(Player.class)
 				.add(Restrictions.eq("lastName", createPlayer.getLastName()))
 				.add(Restrictions.eq("firstName", createPlayer.getFirstName()))
-				.add(Restrictions.eq("birthDate", createPlayer.getBirthDate()))
+				.add(Restrictions.eq("birthdate", createPlayer.getBirthdate()))
 				.uniqueResult();
 		if (player == null) {
 			getSessionFactory().getCurrentSession().persist(createPlayer);
@@ -63,20 +63,20 @@ public class PlayerDAOImpl implements PlayerDAO {
 
 	@Override
 	public void updatePlayer(Player updatePlayer) {
-		Player player = findPlayer(updatePlayer.getLastName(), updatePlayer.getFirstName(), updatePlayer.getBirthDate());
+		Player player = findPlayer(updatePlayer.getLastName(), updatePlayer.getFirstName(), updatePlayer.getBirthdate());
 		player.setLastName(updatePlayer.getLastName());
 		player.setFirstName(updatePlayer.getFirstName());
-		player.setBirthDate(updatePlayer.getBirthDate());
+		player.setBirthdate(updatePlayer.getBirthdate());
 		player.setDisplayName(updatePlayer.getDisplayName());
 		player.setHeight(updatePlayer.getHeight());
 		player.setWeight(updatePlayer.getWeight());
-		player.setBirthPlace(updatePlayer.getBirthPlace());
+		player.setBirthplace(updatePlayer.getBirthplace());
 		getSessionFactory().getCurrentSession().persist(player);
 	}
 
 	@Override
-	public void deletePlayer(String lastName, String firstName, LocalDate birthDate) {
-		Player player = findPlayer(lastName, firstName, birthDate);
+	public void deletePlayer(String lastName, String firstName, LocalDate birthdate) {
+		Player player = findPlayer(lastName, firstName, birthdate);
 		getSessionFactory().getCurrentSession().delete(player);
 	}
 
