@@ -1,8 +1,9 @@
-insert into team VALUES(1, 'HAR', 'Harlem', 'East', 'Atlantic', 'Harlem', '2009-07-01', 'Harlem Globetrotters', 'Globetrotters', 'Rucker Park', 'NY', 'harlem-globetrotters', '2010-06-30');
-insert into team VALUES(2, 'STL', 'St. Louis', 'East', 'Southwest', 'St. Louis', '2009-07-01', 'St. Louis Bombers', 'Bombers', 'St. Louis Arena', 'MO', 'st-louis-bombers', '2010-06-30');
-insert into team VALUES(3, 'STL', 'St. Louis', 'East', 'Southwest', 'St. Louis', '2010-07-01', 'St. Louis Bombers', 'Bombers', 'St. Louis Multiplex', 'MO', 'st-louis-bombers', '2011-06-30');
-insert into team VALUES(4, 'STL', 'Baltimore', 'East', 'Southeast', 'Baltimore', '2005-07-01', 'Baltimore Bullets', 'Bullets', 'Baltimore Coliseum', 'MD', 'baltimore-bullets', '2006-06-30');
-insert into team VALUES(5, 'ROC', 'Rochester', 'East', 'Atlantic', 'Rochester', '2008-07-01', 'Rochester Royals', 'Royals', 'Edgerton Park Arena', 'NY', 'rochester-royals', '2009-06-30');
+insert into team VALUES(1, 'CHI', 'Chicago', 'East', 'Central', 'Chicago', '2009-07-01', 'Chicago Zephyrs', 'Zephyrs', 'Chicago Coliseum', 'IL', 'chicago-zephyrs', '9999-12-31');
+insert into team VALUES(2, 'HAR', 'Harlem', 'East', 'Atlantic', 'Harlem', '2009-07-01', 'Harlem Globetrotters', 'Globetrotters', 'Rucker Park', 'NY', 'harlem-globetrotters', '2010-06-30');
+insert into team VALUES(3, 'STL', 'St. Louis', 'East', 'Southwest', 'St. Louis', '2009-07-01', 'St. Louis Bombers', 'Bombers', 'St. Louis Arena', 'MO', 'st-louis-bombers', '2010-06-30');
+insert into team VALUES(4, 'STL', 'St. Louis', 'East', 'Southwest', 'St. Louis', '2010-07-01', 'St. Louis Bombers', 'Bombers', 'St. Louis Multiplex', 'MO', 'st-louis-bombers', '2011-06-30');
+insert into team VALUES(5, 'STL', 'Baltimore', 'East', 'Southeast', 'Baltimore', '2005-07-01', 'Baltimore Bullets', 'Bullets', 'Baltimore Coliseum', 'MD', 'baltimore-bullets', '2006-06-30');
+insert into team VALUES(6, 'ROC', 'Rochester', 'East', 'Atlantic', 'Rochester', '2008-07-01', 'Rochester Royals', 'Royals', 'Edgerton Park Arena', 'NY', 'rochester-royals', '2009-06-30');
 
 insert into official VALUES(1, 'Joe', '2009-07-01', 'LateCall', '96', '2010-06-30');
 insert into official VALUES(2, 'Mike', '2009-07-01', 'MissedCall', '97', '2010-06-30');
@@ -15,3 +16,6 @@ insert into player VALUES(2, '1966-06-02', 'Sacramento, CA, USA', 'Thad Puzdraki
 insert into player VALUES(3, '2000-03-13', 'Sacramento, CA, USA', 'Thad Puzdrakiewicz', 'Thad', 79, 'Puzdrakiewicz', 180);
 insert into player VALUES(4, '1969-09-08', 'Sacramento, CA, USA', 'Michelle Puzdrakiewicz', 'Michelle', 75, 'Puzdrakiewicz', 170);
 insert into player VALUES(5, '1966-06-10', 'Sacramento, CA, USA', 'Junior Puzdrakiewicz', 'Junior', 80, 'Puzdrakiewicz', 240);
+
+insert into rosterplayer VALUES(1, '2009-11-30', '21', 'SG', '9999-12-31', 1, 1);
+insert into rosterplayer VALUES(2, '2009-10-30', '21', 'SG', '2009-11-03', 1, 1);

@@ -60,6 +60,27 @@ public class TeamDaoTest {
 		teamDAO.findTeam("harlem-globetrotters", new LocalDate("2010-07-01"), new LocalDate("2010-07-01"));
 	}
 
+	//'chicago-zephyrs', '2009-07-01', '9999-12-31', 'Chicago Zephyrs'
+	//'Luke', 'Puzdrakiewicz', '2002-02-20', 'Luke Puzdrakiewicz'
+
+	@Test
+	public void findTeamByKey_RosterPlayer_InsideDateRange() {
+		Team team = teamDAO.findTeam("chicago-zephyrs", new LocalDate("2009-07-01"), new LocalDate("9999-12-31"));
+		Assert.assertEquals("Chicago Zephyrs", team.getFullName());
+		Assert.assertEquals(new LocalDate("2009-11-30"), team.getRosterPlayers().get(0).getFromDate());
+		Assert.assertEquals("Luke", team.getRosterPlayers().get(0).getPlayer().getFirstName());
+		Assert.assertEquals(2, team.getRosterPlayers().size());
+	}
+
+	@Test
+	public void findTeamByKey_MatchRosterPlayer_OutsideDateRange() {
+		Team team = teamDAO.findTeam("chicago-zephyrs", new LocalDate("2009-07-01"), new LocalDate("2009-10-29"));
+		Assert.assertEquals("Chicago Zephyrs", team.getFullName());
+		Assert.assertEquals(new LocalDate("2009-11-30"), team.getRosterPlayers().get(0).getFromDate());
+		Assert.assertEquals("Luke", team.getRosterPlayers().get(0).getPlayer().getFirstName());
+		Assert.assertEquals(2, team.getRosterPlayers().size());
+	}
+
 	//'st-louis-bombers', '2009-07-01', '2010-06-30', 'St. Louis Bombers'
 	//'st-louis-bombers', '2010-07-01', '2011-06-30', 'St. Louis Bombers'
 
@@ -77,7 +98,7 @@ public class TeamDaoTest {
 	@Test
 	public void findTeamsByDateRange() {
 		List<Team> teams = teamDAO.findTeams(new LocalDate("2009-10-31"), new LocalDate("2010-06-30"));
-		Assert.assertEquals(2, teams.size());
+		Assert.assertEquals(3, teams.size());
 	}
 
 	@Test(expected=NoSuchEntityException.class)
