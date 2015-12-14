@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.dao.PlayerDAO;
 import com.rossotti.basketball.dao.exceptions.DuplicateEntityException;
-import com.rossotti.basketball.dao.exceptions.NoSuchEntityException;
 import com.rossotti.basketball.models.Player;
 import com.rossotti.basketball.pub.PubPlayer;
 import com.rossotti.basketball.pub.PubPlayers;
@@ -42,53 +41,65 @@ public class PlayerResource {
 	@Path("/{lastName}/{firstName}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findPlayersByName(@Context UriInfo uriInfo, 
-										@PathParam("lastName") String lastName, 
-										@PathParam("firstName") String firstName) {
-		try {
-			List<PubPlayer> listPlayers = new ArrayList<PubPlayer>();
+									@PathParam("lastName") String lastName, 
+									@PathParam("firstName") String firstName) {
+		List<PubPlayer> listPlayers = new ArrayList<PubPlayer>();
+		if (listPlayers.size() > 0) {
 			for (Player player : playerDAO.findPlayers(lastName, firstName)) {
 				PubPlayer pubPlayer = player.toPubPlayer(uriInfo);
 				listPlayers.add(pubPlayer);
 			}
 			PubPlayers pubPlayers = new PubPlayers(uriInfo.getAbsolutePath(), listPlayers);
 			return Response.ok(pubPlayers)
-				.link(uriInfo.getAbsolutePath(), "player")
-				.build();
-		} catch (NoSuchEntityException e) {
+					.link(uriInfo.getAbsolutePath(), "player")
+					.build();
+		}
+		else {
 			return Response.status(404).build();
 		}
 	}
 
 	@GET
-	@Path("/{lastName}/{firstName}/{birthDate}")
+	@Path("/{lastName}/{firstName}/{birthdate}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response findPlayerByKeyDate(@Context UriInfo uriInfo, 
+	public Response findPlayerByNameBirthdate(@Context UriInfo uriInfo, 
 										@PathParam("lastName") String lastName, 
 										@PathParam("firstName") String firstName,
-										@PathParam("birthDate") String birthDateString) {
+										@PathParam("birthdate") String birthdateString) {
 		try {
 			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate birthDate = formatter.parseLocalDate(birthDateString);
-			Player player = playerDAO.findPlayer(lastName, firstName, birthDate);
-			PubPlayer pubPlayer = player.toPubPlayer(uriInfo);
-			return Response.ok(pubPlayer)
-				.link(uriInfo.getAbsolutePath(), "player")
-				.build();
+			LocalDate birthdate = formatter.parseLocalDate(birthdateString);
+			Player player = playerDAO.findPlayer(lastName, firstName, birthdate);
+			if (player.isFound()) {
+				PubPlayer pubPlayer = player.toPubPlayer(uriInfo);
+				return Response.ok(pubPlayer)
+						.link(uriInfo.getAbsolutePath(), "player")
+						.build();
+			}
+			else if (player.isNotFound()) {
+				return Response.status(404).build();
+			}
+			else {
+				return Response.status(500).build();
+			}
 		} catch (IllegalArgumentException e) {
-			throw new BadRequestException("asOfDate must be yyyy-MM-dd format", e);
-		} catch (NoSuchEntityException e) {
-			return Response.status(404).build();
+			throw new BadRequestException("birthdate must be yyyy-MM-dd format", e);
 		}
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createPlayer(@Context UriInfo uriInfo, Player player) {
+	public Response createPlayer(@Context UriInfo uriInfo, Player deletePlayer) {
 		try {
-			playerDAO.createPlayer(player);
-			return Response.created(uriInfo.getAbsolutePath()).build();
+			Player player = playerDAO.createPlayer(deletePlayer);
+			if (player.isDeleted()) {
+				return Response.created(uriInfo.getAbsolutePath()).build();
+			}
+			else {
+				return Response.status(500).build();
+			}
 		} catch (DuplicateEntityException e) {
-			throw new BadRequestException("player " + player.getFirstName() + " " + player.getLastName() + " already exists", e);
+			throw new BadRequestException("player " + deletePlayer.getFirstName() + " " + deletePlayer.getLastName() + " already exists", e);
 		} catch (PropertyValueException e) {
 			throw new BadRequestException("missing required field(s)", e);
 		}
@@ -96,30 +107,44 @@ public class PlayerResource {
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response updatePlayer(Player player) {
+	public Response updatePlayer(Player updatePlayer) {
 		try {
-			playerDAO.updatePlayer(player);
-			return Response.noContent().build();
+			Player player = playerDAO.updatePlayer(updatePlayer);
+			if (player.isUpdated()) {
+				return Response.noContent().build();
+			}
+			else if (player.isNotFound()) {
+				return Response.status(404).build();
+			}
+			else {
+				return Response.status(500).build();
+			}
 		} catch (PropertyValueException e) {
 			throw new BadRequestException("missing required field(s)", e);
 		}
 	}
 	
 	@DELETE
-	@Path("/{lastName}/{firstName}/{birthDate}")
+	@Path("/{lastName}/{firstName}/{birthdate}")
 	public Response deletePlayer(@Context UriInfo uriInfo, 
 								@PathParam("lastName") String lastName, 
 								@PathParam("firstName") String firstName, 
-								@PathParam("birthDate") String birthDateString) {
+								@PathParam("birthdate") String birthdateString) {
 		try {
 			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate birthDate = formatter.parseLocalDate(birthDateString);
-			playerDAO.deletePlayer(lastName, firstName, birthDate);
-			return Response.noContent().build();
+			LocalDate birthdate = formatter.parseLocalDate(birthdateString);
+			Player player = playerDAO.deletePlayer(lastName, firstName, birthdate);
+			if (player.isDeleted()) {
+				return Response.noContent().build();
+			}
+			else if (player.isNotFound()){
+				return Response.status(404).build();
+			}
+			else {
+				return Response.status(500).build();
+			}
 		} catch (IllegalArgumentException e) {
-			throw new BadRequestException("asOfDate must be yyyy-MM-dd format", e);
-		} catch (NoSuchEntityException e) {
-			return Response.status(404).build();
+			throw new BadRequestException("birthdate must be yyyy-MM-dd format", e);
 		}
 	}
 }
