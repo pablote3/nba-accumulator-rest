@@ -6,12 +6,15 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.ws.rs.core.UriInfo;
 
@@ -26,7 +29,45 @@ import com.rossotti.basketball.pub.PubPlayer;
 @Entity
 @Table (name="player", uniqueConstraints=@UniqueConstraint(columnNames={"lastName", "firstName", "birthdate"}))
 public class Player {
-	public Player() {}
+
+	public Player() {
+		setStatus(Status.Found);
+	}
+
+	public Player(Status status) {
+		setStatus(status);
+	}
+
+	@Enumerated(EnumType.STRING)
+	@Transient
+	private Status status;
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public enum Status {
+		Found,
+		NotFound,
+		Updated,
+		Created,
+		Deleted;
+	}
+
+	public Boolean isFound() {
+		return status == Status.Found;
+	}
+	public Boolean isNotFound() {
+		return status == Status.NotFound;
+	}
+	public Boolean isUpdated() {
+		return status == Status.Updated;
+	}
+	public Boolean isCreated() {
+		return status == Status.Created;
+	}
+	public Boolean isDeleted() {
+		return status == Status.Deleted;
+	}
 
 	@OneToMany(mappedBy="player", fetch = FetchType.LAZY)
 	private List<RosterPlayer> rosterPlayers = new ArrayList<RosterPlayer>();
@@ -125,6 +166,7 @@ public class Player {
 			.append("  lastName: " + this.lastName + "\n")
 			.append("  firstName: " + this.firstName + "\n")
 			.append("  birthdate: " + this.birthdate + "\n")
+			.append("  status: " + this.status)
 			.toString();
 	}
 

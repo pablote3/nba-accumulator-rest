@@ -9,7 +9,7 @@ import com.rossotti.basketball.models.Player;
 public interface PlayerDAO {
 	public Player findPlayer(String lastName, String firstName, LocalDate birthDate);
 	public List<Player> findPlayers(String lastName, String firstName);
-	public void createPlayer(Player player);
-	public void updatePlayer(Player player);
-	public void deletePlayer(String lastName, String firstName, LocalDate birthDate);
+	public Player createPlayer(Player player);
+	public Player updatePlayer(Player player);
+	public Player deletePlayer(String lastName, String firstName, LocalDate birthDate);
 }

@@ -1,5 +1,6 @@
 package com.rossotti.basketball.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
@@ -11,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rossotti.basketball.dao.PlayerDAO;
 import com.rossotti.basketball.dao.exceptions.DuplicateEntityException;
-import com.rossotti.basketball.dao.exceptions.NoSuchEntityException;
 import com.rossotti.basketball.models.Player;
+import com.rossotti.basketball.models.Player.Status;
 
 @Repository
 @Transactional
@@ -28,7 +29,7 @@ public class PlayerDAOImpl implements PlayerDAO {
 			.add(Restrictions.eq("birthdate", birthdate))
 			.uniqueResult();
 		if (player == null) {
-			throw new NoSuchEntityException();
+			player = new Player(Status.NotFound);
 		}
 		return player;
 	}
@@ -40,44 +41,50 @@ public class PlayerDAOImpl implements PlayerDAO {
 			.add(Restrictions.eq("lastName", lastName))
 			.add(Restrictions.eq("firstName", firstName))
 			.list();
-		if (players == null || players.size() == 0) {
-			throw new NoSuchEntityException();
+		if (players == null) {
+			players = new ArrayList<Player>();
 		}
 		return players;
 	}
 
 	@Override
-	public void createPlayer(Player createPlayer) {
-		Player player = (Player)getSessionFactory().getCurrentSession().createCriteria(Player.class)
-				.add(Restrictions.eq("lastName", createPlayer.getLastName()))
-				.add(Restrictions.eq("firstName", createPlayer.getFirstName()))
-				.add(Restrictions.eq("birthdate", createPlayer.getBirthdate()))
-				.uniqueResult();
-		if (player == null) {
+	public Player createPlayer(Player createPlayer) {
+		Player player = findPlayer(createPlayer.getLastName(), createPlayer.getFirstName(), createPlayer.getBirthdate());
+		if (player.isNotFound()) {
 			getSessionFactory().getCurrentSession().persist(createPlayer);
+			createPlayer.setStatus(Status.Created);
 		}
 		else {
 			throw new DuplicateEntityException();
 		}
+		return createPlayer;
 	}
 
 	@Override
-	public void updatePlayer(Player updatePlayer) {
+	public Player updatePlayer(Player updatePlayer) {
 		Player player = findPlayer(updatePlayer.getLastName(), updatePlayer.getFirstName(), updatePlayer.getBirthdate());
-		player.setLastName(updatePlayer.getLastName());
-		player.setFirstName(updatePlayer.getFirstName());
-		player.setBirthdate(updatePlayer.getBirthdate());
-		player.setDisplayName(updatePlayer.getDisplayName());
-		player.setHeight(updatePlayer.getHeight());
-		player.setWeight(updatePlayer.getWeight());
-		player.setBirthplace(updatePlayer.getBirthplace());
-		getSessionFactory().getCurrentSession().persist(player);
+		if (player.isFound()) {
+			player.setLastName(updatePlayer.getLastName());
+			player.setFirstName(updatePlayer.getFirstName());
+			player.setBirthdate(updatePlayer.getBirthdate());
+			player.setDisplayName(updatePlayer.getDisplayName());
+			player.setHeight(updatePlayer.getHeight());
+			player.setWeight(updatePlayer.getWeight());
+			player.setBirthplace(updatePlayer.getBirthplace());
+			player.setStatus(Status.Updated);
+			getSessionFactory().getCurrentSession().persist(player);
+		}
+		return player;
 	}
 
 	@Override
-	public void deletePlayer(String lastName, String firstName, LocalDate birthdate) {
+	public Player deletePlayer(String lastName, String firstName, LocalDate birthdate) {
 		Player player = findPlayer(lastName, firstName, birthdate);
-		getSessionFactory().getCurrentSession().delete(player);
+		if (player.isFound()) {
+			getSessionFactory().getCurrentSession().delete(player);
+			player = new Player(Status.Deleted);
+		}
+		return player;
 	}
 
 	public SessionFactory getSessionFactory() {
