@@ -10,7 +10,7 @@ public interface TeamDAO {
 	public Team findTeam(String key, LocalDate fromDate, LocalDate toDate);
 	public List<Team> findTeams(String key);
 	public List<Team> findTeams(LocalDate fromDate, LocalDate toDate);
-	public void createTeam(Team team);
-	public void updateTeam(Team team);
-	public void deleteTeam(String key, LocalDate fromDate, LocalDate toDate);
+	public Team createTeam(Team team);
+	public Team updateTeam(Team team);
+	public Team deleteTeam(String key, LocalDate fromDate, LocalDate toDate);
 }

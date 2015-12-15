@@ -1,5 +1,6 @@
 package com.rossotti.basketball.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
@@ -11,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rossotti.basketball.dao.TeamDAO;
 import com.rossotti.basketball.dao.exceptions.DuplicateEntityException;
-import com.rossotti.basketball.dao.exceptions.NoSuchEntityException;
 import com.rossotti.basketball.models.Team;
+import com.rossotti.basketball.models.Team.Status;
 
 @Repository
 @Transactional
@@ -28,7 +29,7 @@ public class TeamDAOImpl implements TeamDAO {
 			.add(Restrictions.ge("toDate", toDate))
 			.uniqueResult();
 		if (team == null) {
-			throw new NoSuchEntityException();
+			team = new Team(Status.NotFound);
 		}
 		return team;
 	}
@@ -40,8 +41,8 @@ public class TeamDAOImpl implements TeamDAO {
 			.add(Restrictions.le("fromDate", fromDate))
 			.add(Restrictions.ge("toDate", toDate))
 			.list();
-		if (teams == null || teams.size() == 0) {
-			throw new NoSuchEntityException();
+		if (teams == null) {
+			teams = new ArrayList<Team>();
 		}
 		return teams;
 	}
@@ -52,48 +53,53 @@ public class TeamDAOImpl implements TeamDAO {
 		List<Team> teams = getSessionFactory().getCurrentSession().createCriteria(Team.class)
 			.add(Restrictions.eq("teamKey", teamKey))
 			.list();
-		if (teams == null || teams.size() == 0) {
-			throw new NoSuchEntityException();
+		if (teams == null) {
+			teams = new ArrayList<Team>();
 		}
 		return teams;
 	}
 
 	@Override
-	public void createTeam(Team createTeam) {
-		Team team = (Team)getSessionFactory().getCurrentSession().createCriteria(Team.class)
-				.add(Restrictions.eq("teamKey", createTeam.getTeamKey()))
-				.add(Restrictions.le("fromDate", createTeam.getFromDate()))
-				.add(Restrictions.ge("toDate", createTeam.getToDate()))
-				.uniqueResult();
-		if (team == null) {
+	public Team createTeam(Team createTeam) {
+		Team team = findTeam(createTeam.getTeamKey(), createTeam.getFromDate(), createTeam.getToDate());
+		if (team.isNotFound()) {
 			getSessionFactory().getCurrentSession().persist(createTeam);
+			createTeam.setStatus(Status.Created);
 		}
 		else {
 			throw new DuplicateEntityException();
 		}
+		return createTeam;
 	}
 
 	@Override
-	public void updateTeam(Team updateTeam) {
+	public Team updateTeam(Team updateTeam) {
 		Team team = findTeam(updateTeam.getTeamKey(), updateTeam.getFromDate(), updateTeam.getToDate());
-		team.setLastName(updateTeam.getLastName());
-		team.setFirstName(updateTeam.getFirstName());
-		team.setFullName(updateTeam.getFullName());
-		team.setAbbr(updateTeam.getAbbr());
-		team.setFromDate(updateTeam.getFromDate());
-		team.setToDate(updateTeam.getToDate());
-		team.setConference(updateTeam.getConference());
-		team.setDivision(updateTeam.getDivision());
-		team.setCity(updateTeam.getCity());
-		team.setState(updateTeam.getState());
-		team.setSiteName(updateTeam.getSiteName());
-		getSessionFactory().getCurrentSession().persist(team);
+		if (team.isFound()) {
+			team.setLastName(updateTeam.getLastName());
+			team.setFirstName(updateTeam.getFirstName());
+			team.setFullName(updateTeam.getFullName());
+			team.setAbbr(updateTeam.getAbbr());
+			team.setFromDate(updateTeam.getFromDate());
+			team.setToDate(updateTeam.getToDate());
+			team.setConference(updateTeam.getConference());
+			team.setDivision(updateTeam.getDivision());
+			team.setCity(updateTeam.getCity());
+			team.setState(updateTeam.getState());
+			team.setSiteName(updateTeam.getSiteName());
+			getSessionFactory().getCurrentSession().persist(team);
+		}
+		return team;
 	}
 
 	@Override
-	public void deleteTeam(String teamKey, LocalDate fromDate, LocalDate toDate) {
+	public Team deleteTeam(String teamKey, LocalDate fromDate, LocalDate toDate) {
 		Team team = findTeam(teamKey, fromDate, toDate);
-		getSessionFactory().getCurrentSession().delete(team);
+		if (team.isFound()) {
+			getSessionFactory().getCurrentSession().delete(team);
+			team = new Team(Status.Deleted);
+		}
+		return team;
 	}
 
 	public SessionFactory getSessionFactory() {
