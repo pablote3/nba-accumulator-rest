@@ -18,4 +18,5 @@ insert into player VALUES(4, '1969-09-08', 'Sacramento, CA, USA', 'Michelle Puzd
 insert into player VALUES(5, '1966-06-10', 'Sacramento, CA, USA', 'Junior Puzdrakiewicz', 'Junior', 80, 'Puzdrakiewicz', 240);
 
 insert into rosterplayer VALUES(1, '2009-11-30', '21', 'SG', '9999-12-31', 1, 1);
-insert into rosterplayer VALUES(2, '2009-10-30', '21', 'SG', '2009-11-03', 1, 1);
+insert into rosterplayer VALUES(2, '2009-10-30', '21', 'PG', '2009-11-03', 1, 1);
+insert into rosterplayer VALUES(3, '2009-10-30', '12', 'C', '2009-11-04', 2, 1);
