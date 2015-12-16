@@ -13,7 +13,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.rossotti.basketball.dao.exceptions.DuplicateEntityException;
-import com.rossotti.basketball.dao.exceptions.NoSuchEntityException;
 import com.rossotti.basketball.models.Official;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -27,35 +26,41 @@ public class OfficialDaoTest {
 
 	@Test
 	public void findOfficialByName_MatchFromDate() {
-		Official official = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2009-07-01"), new LocalDate("2009-07-01"));
-		Assert.assertEquals("96", official.getNumber());
+		Official findOfficial = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2009-07-01"), new LocalDate("2009-07-01"));
+		Assert.assertEquals("96", findOfficial.getNumber());
+		Assert.assertTrue(findOfficial.isFound());
 	}
 
 	@Test
 	public void findOfficialByName_MatchToDate() {
-		Official official = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2010-06-30"), new LocalDate("2010-06-30"));
-		Assert.assertEquals("96", official.getNumber());
+		Official findOfficial = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2010-06-30"), new LocalDate("2010-06-30"));
+		Assert.assertEquals("96", findOfficial.getNumber());
+		Assert.assertTrue(findOfficial.isFound());
 	}
 
 	@Test
 	public void findOfficialByName_MatchDateRange() {
-		Official official = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"));
-		Assert.assertEquals("96", official.getNumber());
+		Official findOfficial = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"));
+		Assert.assertEquals("96", findOfficial.getNumber());
+		Assert.assertTrue(findOfficial.isFound());
 	}
 
-	@Test(expected=NoSuchEntityException.class)
-	public void findOfficialByName_NoSuchEntityException_Key() {
-		officialDAO.findOfficial("LateCalls", "Joe", new LocalDate("2009-07-01"), new LocalDate("2009-07-01"));
+	@Test
+	public void findOfficialByName_NotFound_Key() {
+		Official findOfficial = officialDAO.findOfficial("LateCalls", "Joe", new LocalDate("2009-07-01"), new LocalDate("2009-07-01"));
+		Assert.assertTrue(findOfficial.isNotFound());
 	}
 
-	@Test(expected=NoSuchEntityException.class)
-	public void findOfficialByName_NoSuchEntityException_BeforeAsOfDate() {
-		officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2009-06-30"), new LocalDate("2009-06-30"));
+	@Test
+	public void findOfficialByName_NotFound_BeforeAsOfDate() {
+		Official findOfficial = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2009-06-30"), new LocalDate("2009-06-30"));
+		Assert.assertTrue(findOfficial.isNotFound());
 	}
 
-	@Test(expected=NoSuchEntityException.class)
-	public void findOfficialByName_NoSuchEntityException_AfterAsOfDate() {
-		officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2010-07-01"), new LocalDate("2010-07-01"));
+	@Test
+	public void findOfficialByName_NotFound_AfterAsOfDate() {
+		Official findOfficial = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2010-07-01"), new LocalDate("2010-07-01"));
+		Assert.assertTrue(findOfficial.isNotFound());
 	}
 
 	//'Mike', 'MissedCall', '2009-07-01', '2010-06-30'
@@ -63,13 +68,14 @@ public class OfficialDaoTest {
 
 	@Test
 	public void findOfficialsByName() {
-		List<Official> officials = officialDAO.findOfficials("MissedCall","Mike");
-		Assert.assertEquals(2, officials.size());
+		List<Official> findOfficials = officialDAO.findOfficials("MissedCall","Mike");
+		Assert.assertEquals(2, findOfficials.size());
 	}
 
-	@Test(expected=NoSuchEntityException.class)
+	@Test
 	public void findOfficialsByName_NoSuchEntityException() {
-		officialDAO.findOfficials("MissedCall", "Mikey");
+		List<Official> findOfficials = officialDAO.findOfficials("MissedCall", "Mikey");
+		Assert.assertEquals(0, findOfficials.size());
 	}
 	
 	@Test
@@ -78,24 +84,27 @@ public class OfficialDaoTest {
 		Assert.assertEquals(2, officials.size());
 	}
 
-	@Test(expected=NoSuchEntityException.class)
-	public void findOfficialsByDateRange_NoSuchEntityException() {
-		officialDAO.findOfficials(new LocalDate("1909-10-31"), new LocalDate("1910-06-30"));
+	@Test
+	public void findOfficialsByDateRange_NotFound() {
+		List<Official> findOfficials = officialDAO.findOfficials(new LocalDate("1909-10-31"), new LocalDate("1910-06-30"));
+		Assert.assertEquals(0, findOfficials.size());
 	}
 
 	//'Hefe', 'QuestionableCall', '2005-07-01', '2006-06-30'
 
 	@Test
-	public void createOfficial() {
-		officialDAO.createOfficial(createMockOfficial("BadCall", "Melvin", new LocalDate("2012-07-01"), new LocalDate("2012-07-01")));
-		Official official = officialDAO.findOfficial("BadCall", "Melvin", new LocalDate("2012-07-01"), new LocalDate("2012-07-01"));
-		Assert.assertEquals("999", official.getNumber());
+	public void createOfficial_Created() {
+		Official createOfficial = officialDAO.createOfficial(createMockOfficial("BadCall", "Melvin", new LocalDate("2012-07-01"), new LocalDate("2012-07-01")));
+		Official findOfficial = officialDAO.findOfficial("BadCall", "Melvin", new LocalDate("2012-07-01"), new LocalDate("2012-07-01"));
+		Assert.assertTrue(createOfficial.isCreated());
+		Assert.assertEquals("999", findOfficial.getNumber());
 	}
 
 	@Test
-	public void createOfficial_NonOverlappingDates() {
-		officialDAO.createOfficial(createMockOfficial("QuestionableCall", "Hefe", new LocalDate("2012-07-01"), new LocalDate("9999-12-31")));
+	public void createOfficial_Created_NonOverlappingDates() {
+		Official createOfficial = officialDAO.createOfficial(createMockOfficial("QuestionableCall", "Hefe", new LocalDate("2012-07-01"), new LocalDate("9999-12-31")));
 		Official official = officialDAO.findOfficial("QuestionableCall", "Hefe", new LocalDate("2012-07-01"), new LocalDate("9999-12-31"));
+		Assert.assertTrue(createOfficial.isCreated());
 		Assert.assertEquals("999", official.getNumber());
 	}
 
@@ -106,44 +115,49 @@ public class OfficialDaoTest {
 
 	@Test(expected=PropertyValueException.class)
 	public void createOfficial_MissingRequiredData() {
-		Official official = new Official();
-		official.setLastName("missing-required-data");
-		official.setFirstName("missing-required-data");
-		officialDAO.createOfficial(official);
+		Official createOfficial = new Official();
+		createOfficial.setLastName("missing-required-data");
+		createOfficial.setFirstName("missing-required-data");
+		officialDAO.createOfficial(createOfficial);
 	}
 
 	//'Mike', 'MissedCall', '2009-07-01', '2010-06-30'
 
 	@Test
-	public void updateOfficial() {
-		officialDAO.updateOfficial(updateMockOfficial("MissedCall", "Mike", new LocalDate("2009-07-01"), new LocalDate("2010-06-30")));
-		Official official = officialDAO.findOfficial("MissedCall", "Mike", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"));
-		Assert.assertEquals("998", official.getNumber());
+	public void updateOfficial_Updated() {
+		Official updateOfficial = officialDAO.updateOfficial(updateMockOfficial("MissedCall", "Mike", new LocalDate("2009-07-01"), new LocalDate("2010-06-30")));
+		Official findOfficial = officialDAO.findOfficial("MissedCall", "Mike", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"));
+		Assert.assertTrue(updateOfficial.isUpdated());
+		Assert.assertEquals("998", findOfficial.getNumber());
 	}
 
-	@Test(expected=NoSuchEntityException.class)
-	public void updateOfficial_NoSuchEntityException_Key() {
-		officialDAO.updateOfficial(updateMockOfficial("Sandin", "Erik", new LocalDate("2009-06-30"), new LocalDate("2009-06-30")));
+	@Test
+	public void updateOfficial_NotFound() {
+		Official updateOfficial = officialDAO.updateOfficial(updateMockOfficial("Sandin", "Erik", new LocalDate("2009-06-30"), new LocalDate("2009-06-30")));
+		Assert.assertTrue(updateOfficial.isNotFound());
 	}
 
 	@Test(expected=DataIntegrityViolationException.class)
 	public void updateOfficial_MissingRequiredData() {
-		Official official = updateMockOfficial("MissedCall", "Mike", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"));
-		official.setNumber(null);
-		officialDAO.updateOfficial(official);
+		Official updateOfficial = updateMockOfficial("MissedCall", "Mike", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"));
+		updateOfficial.setNumber(null);
+		officialDAO.updateOfficial(updateOfficial);
 	}
 
 	//'Limo', 'TerribleCall', '2005-07-01', '2006-06-30');
 
-	@Test(expected=NoSuchEntityException.class)
-	public void deleteOfficial() {
-		officialDAO.deleteOfficial("Limo", "TerribleCall", new LocalDate("2005-07-01"), new LocalDate("2006-06-30"));
-		officialDAO.findOfficial("Limo", "TerribleCall", new LocalDate("2005-07-01"), new LocalDate("2006-06-30"));
+	@Test
+	public void deleteOfficial_Deleted() {
+		Official deleteOfficial = officialDAO.deleteOfficial("TerribleCall", "Limo", new LocalDate("2005-07-01"), new LocalDate("2006-06-30"));
+		Official findOfficial = officialDAO.findOfficial("TerribleCall", "Limo", new LocalDate("2005-07-01"), new LocalDate("2006-06-30"));
+		Assert.assertTrue(deleteOfficial.isDeleted());
+		Assert.assertTrue(findOfficial.isNotFound());
 	}
 
-	@Test(expected=NoSuchEntityException.class)
-	public void deleteOfficial_NoSuchEntityException_Key() {
-		officialDAO.deleteOfficial("Limoe", "TerribleCall", new LocalDate("2005-07-01"), new LocalDate("2006-06-30"));
+	@Test
+	public void deleteOfficial_NotFound() {
+		Official deleteOfficial = officialDAO.deleteOfficial("Limoe", "TerribleCall", new LocalDate("2005-07-01"), new LocalDate("2006-06-30"));
+		Assert.assertTrue(deleteOfficial.isNotFound());
 	}
 
 	private Official createMockOfficial(String lastName, String firstName, LocalDate fromDate, LocalDate toDate) {

@@ -10,7 +10,7 @@ public interface OfficialDAO {
 	public Official findOfficial(String lastName, String firstName, LocalDate fromDate, LocalDate toDate);
 	public List<Official> findOfficials(String lastName, String firstName);
 	public List<Official> findOfficials(LocalDate fromDate, LocalDate toDate);
-	public void createOfficial(Official official);
-	public void updateOfficial(Official official);
-	public void deleteOfficial(String lastName, String firstName, LocalDate fromDate, LocalDate toDate);
+	public Official createOfficial(Official official);
+	public Official updateOfficial(Official official);
+	public Official deleteOfficial(String lastName, String firstName, LocalDate fromDate, LocalDate toDate);
 }

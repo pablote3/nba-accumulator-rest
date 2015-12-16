@@ -4,10 +4,13 @@ import java.net.URI;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.ws.rs.core.UriInfo;
 
@@ -22,7 +25,35 @@ import com.rossotti.basketball.pub.PubOfficial;
 @Entity
 @Table (name="official", uniqueConstraints=@UniqueConstraint(columnNames={"lastName", "firstName", "fromDate", "toDate"}))
 public class Official {
-	public Official() {}
+	public Official() {
+		setStatusCode(StatusCode.Found);
+	}
+
+	public Official(StatusCode statusCode) {
+		setStatusCode(statusCode);
+	}
+
+	@Enumerated(EnumType.STRING)
+	@Transient
+	private StatusCode statusCode;
+	public void setStatusCode(StatusCode statusCode) {
+		this.statusCode = statusCode;
+	}
+	public Boolean isFound() {
+		return statusCode == StatusCode.Found;
+	}
+	public Boolean isNotFound() {
+		return statusCode == StatusCode.NotFound;
+	}
+	public Boolean isUpdated() {
+		return statusCode == StatusCode.Updated;
+	}
+	public Boolean isCreated() {
+		return statusCode == StatusCode.Created;
+	}
+	public Boolean isDeleted() {
+		return statusCode == StatusCode.Deleted;
+	}
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -93,6 +124,7 @@ public class Official {
 			.append("  firstName: " + this.firstName + "\n")
 			.append("  fromDate: " + this.fromDate + "\n")
 			.append("  toDate: " + this.toDate + "\n")
+			.append("  statusCode: " + this.statusCode)
 			.toString();
 	}
 
