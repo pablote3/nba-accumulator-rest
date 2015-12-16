@@ -22,42 +22,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Table (name="rosterPlayer")
 public class RosterPlayer {
 	public RosterPlayer() {
-		setStatus(Status.Found);
+		setStatusCode(StatusCode.Found);
 	}
 
-	public RosterPlayer(Status status) {
-		setStatus(status);
+	public RosterPlayer(StatusCode statusCode) {
+		setStatusCode(statusCode);
 	}
 
 	@Enumerated(EnumType.STRING)
 	@Transient
-	private Status status;
-	public void setStatus(Status status) {
-		this.status = status;
+	private StatusCode statusCode;
+	public void setStatusCode(StatusCode statusCode) {
+		this.statusCode = statusCode;
 	}
-
-	public enum Status {
-		Found,
-		NotFound,
-		Updated,
-		Created,
-		Deleted;
-	}
-
 	public Boolean isFound() {
-		return status == Status.Found;
+		return statusCode == StatusCode.Found;
 	}
 	public Boolean isNotFound() {
-		return status == Status.NotFound;
+		return statusCode == StatusCode.NotFound;
 	}
 	public Boolean isUpdated() {
-		return status == Status.Updated;
+		return statusCode == StatusCode.Updated;
 	}
 	public Boolean isCreated() {
-		return status == Status.Created;
+		return statusCode == StatusCode.Created;
 	}
 	public Boolean isDeleted() {
-		return status == Status.Deleted;
+		return statusCode == StatusCode.Deleted;
 	}
 	
 	@Id

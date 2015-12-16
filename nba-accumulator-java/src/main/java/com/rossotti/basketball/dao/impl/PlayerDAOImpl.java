@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.rossotti.basketball.dao.PlayerDAO;
 import com.rossotti.basketball.dao.exceptions.DuplicateEntityException;
 import com.rossotti.basketball.models.Player;
-import com.rossotti.basketball.models.Player.Status;
+import com.rossotti.basketball.models.StatusCode;
 
 @Repository
 @Transactional
@@ -29,7 +29,7 @@ public class PlayerDAOImpl implements PlayerDAO {
 			.add(Restrictions.eq("birthdate", birthdate))
 			.uniqueResult();
 		if (player == null) {
-			player = new Player(Status.NotFound);
+			player = new Player(StatusCode.NotFound);
 		}
 		return player;
 	}
@@ -52,7 +52,7 @@ public class PlayerDAOImpl implements PlayerDAO {
 		Player player = findPlayer(createPlayer.getLastName(), createPlayer.getFirstName(), createPlayer.getBirthdate());
 		if (player.isNotFound()) {
 			getSessionFactory().getCurrentSession().persist(createPlayer);
-			createPlayer.setStatus(Status.Created);
+			createPlayer.setStatusCode(StatusCode.Created);
 		}
 		else {
 			throw new DuplicateEntityException();
@@ -71,7 +71,7 @@ public class PlayerDAOImpl implements PlayerDAO {
 			player.setHeight(updatePlayer.getHeight());
 			player.setWeight(updatePlayer.getWeight());
 			player.setBirthplace(updatePlayer.getBirthplace());
-			player.setStatus(Status.Updated);
+			player.setStatusCode(StatusCode.Updated);
 			getSessionFactory().getCurrentSession().persist(player);
 		}
 		return player;
@@ -82,7 +82,7 @@ public class PlayerDAOImpl implements PlayerDAO {
 		Player player = findPlayer(lastName, firstName, birthdate);
 		if (player.isFound()) {
 			getSessionFactory().getCurrentSession().delete(player);
-			player = new Player(Status.Deleted);
+			player = new Player(StatusCode.Deleted);
 		}
 		return player;
 	}

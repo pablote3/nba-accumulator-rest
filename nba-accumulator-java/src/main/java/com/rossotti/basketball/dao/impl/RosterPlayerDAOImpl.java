@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.rossotti.basketball.dao.RosterPlayerDAO;
 import com.rossotti.basketball.dao.exceptions.DuplicateEntityException;
 import com.rossotti.basketball.models.RosterPlayer;
-import com.rossotti.basketball.models.RosterPlayer.Status;
+import com.rossotti.basketball.models.StatusCode;
 
 @Repository
 @Transactional
@@ -34,7 +34,7 @@ public class RosterPlayerDAOImpl implements RosterPlayerDAO {
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
 		RosterPlayer rosterPlayer = (RosterPlayer)query.uniqueResult();
 		if (rosterPlayer == null) {
-			rosterPlayer = new RosterPlayer(Status.NotFound);
+			rosterPlayer = new RosterPlayer(StatusCode.NotFound);
 		}
 		return rosterPlayer;
 	}
@@ -53,7 +53,7 @@ public class RosterPlayerDAOImpl implements RosterPlayerDAO {
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
 		RosterPlayer rosterPlayer = (RosterPlayer)query.uniqueResult();
 		if (rosterPlayer == null) {
-			rosterPlayer = new RosterPlayer(Status.NotFound);
+			rosterPlayer = new RosterPlayer(StatusCode.NotFound);
 		}
 		return rosterPlayer;
 	}
@@ -80,7 +80,7 @@ public class RosterPlayerDAOImpl implements RosterPlayerDAO {
 		RosterPlayer rosterPlayer = findRosterPlayer(rp.getPlayer().getLastName(), rp.getPlayer().getFirstName(), rp.getPlayer().getBirthdate(), rp.getFromDate(), rp.getToDate());
 		if (rosterPlayer.isNotFound()) {
 			getSessionFactory().getCurrentSession().persist(rp);
-			rp.setStatus(Status.Created);
+			rp.setStatusCode(StatusCode.Created);
 		}
 		else {
 			throw new DuplicateEntityException();
@@ -96,7 +96,7 @@ public class RosterPlayerDAOImpl implements RosterPlayerDAO {
 			rosterPlayer.setToDate(rp.getToDate());
 			rosterPlayer.setNumber(rp.getNumber());
 			rosterPlayer.setPosition(rp.getPosition());
-			rosterPlayer.setStatus(Status.Updated);
+			rosterPlayer.setStatusCode(StatusCode.Updated);
 			getSessionFactory().getCurrentSession().persist(rosterPlayer);
 		}
 		return rosterPlayer;
@@ -107,7 +107,7 @@ public class RosterPlayerDAOImpl implements RosterPlayerDAO {
 		RosterPlayer rosterPlayer = findRosterPlayer(lastName, firstName, birthdate, fromDate, toDate);
 		if (rosterPlayer.isFound()) {
 			getSessionFactory().getCurrentSession().delete(rosterPlayer);
-			rosterPlayer = new RosterPlayer(Status.Deleted);
+			rosterPlayer = new RosterPlayer(StatusCode.Deleted);
 		}
 		return rosterPlayer;
 	}

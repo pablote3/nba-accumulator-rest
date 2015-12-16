@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.rossotti.basketball.dao.TeamDAO;
 import com.rossotti.basketball.dao.exceptions.DuplicateEntityException;
 import com.rossotti.basketball.models.Team;
-import com.rossotti.basketball.models.Team.Status;
+import com.rossotti.basketball.models.StatusCode;
 
 @Repository
 @Transactional
@@ -29,7 +29,7 @@ public class TeamDAOImpl implements TeamDAO {
 			.add(Restrictions.ge("toDate", toDate))
 			.uniqueResult();
 		if (team == null) {
-			team = new Team(Status.NotFound);
+			team = new Team(StatusCode.NotFound);
 		}
 		return team;
 	}
@@ -64,7 +64,7 @@ public class TeamDAOImpl implements TeamDAO {
 		Team team = findTeam(createTeam.getTeamKey(), createTeam.getFromDate(), createTeam.getToDate());
 		if (team.isNotFound()) {
 			getSessionFactory().getCurrentSession().persist(createTeam);
-			createTeam.setStatus(Status.Created);
+			createTeam.setStatusCode(StatusCode.Created);
 		}
 		else {
 			throw new DuplicateEntityException();
@@ -97,7 +97,7 @@ public class TeamDAOImpl implements TeamDAO {
 		Team team = findTeam(teamKey, fromDate, toDate);
 		if (team.isFound()) {
 			getSessionFactory().getCurrentSession().delete(team);
-			team = new Team(Status.Deleted);
+			team = new Team(StatusCode.Deleted);
 		}
 		return team;
 	}

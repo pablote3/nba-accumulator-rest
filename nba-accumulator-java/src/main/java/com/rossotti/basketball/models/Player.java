@@ -31,42 +31,33 @@ import com.rossotti.basketball.pub.PubPlayer;
 public class Player {
 
 	public Player() {
-		setStatus(Status.Found);
+		setStatusCode(StatusCode.Found);
 	}
 
-	public Player(Status status) {
-		setStatus(status);
+	public Player(StatusCode statusCode) {
+		setStatusCode(statusCode);
 	}
 
 	@Enumerated(EnumType.STRING)
 	@Transient
-	private Status status;
-	public void setStatus(Status status) {
-		this.status = status;
+	private StatusCode statusCode;
+	public void setStatusCode(StatusCode statusCode) {
+		this.statusCode = statusCode;
 	}
-
-	public enum Status {
-		Found,
-		NotFound,
-		Updated,
-		Created,
-		Deleted;
-	}
-
 	public Boolean isFound() {
-		return status == Status.Found;
+		return statusCode == StatusCode.Found;
 	}
 	public Boolean isNotFound() {
-		return status == Status.NotFound;
+		return statusCode == StatusCode.NotFound;
 	}
 	public Boolean isUpdated() {
-		return status == Status.Updated;
+		return statusCode == StatusCode.Updated;
 	}
 	public Boolean isCreated() {
-		return status == Status.Created;
+		return statusCode == StatusCode.Created;
 	}
 	public Boolean isDeleted() {
-		return status == Status.Deleted;
+		return statusCode == StatusCode.Deleted;
 	}
 
 	@OneToMany(mappedBy="player", fetch = FetchType.LAZY)
@@ -166,7 +157,7 @@ public class Player {
 			.append("  lastName: " + this.lastName + "\n")
 			.append("  firstName: " + this.firstName + "\n")
 			.append("  birthdate: " + this.birthdate + "\n")
-			.append("  status: " + this.status)
+			.append("  statusCode: " + this.statusCode)
 			.toString();
 	}
 
