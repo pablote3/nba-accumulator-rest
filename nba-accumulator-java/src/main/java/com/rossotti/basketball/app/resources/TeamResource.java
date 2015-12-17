@@ -49,8 +49,8 @@ public class TeamResource {
 			LocalDate fromDate = formatter.parseLocalDate(fromDateString);
 			LocalDate toDate = formatter.parseLocalDate(toDateString);
 			Team team = teamDAO.findTeam(key, fromDate, toDate);
-			PubTeam pubTeam = team.toPubTeam(uriInfo);
 			if (team.isFound()) {
+				PubTeam pubTeam = team.toPubTeam(uriInfo);
 				return Response.ok(pubTeam)
 					.link(uriInfo.getAbsolutePath(), "team")
 					.build();
@@ -72,8 +72,8 @@ public class TeamResource {
 	public Response findTeamsByKey(@Context UriInfo uriInfo, 
 									@PathParam("key") String key) {
 		List<Team> listTeams = teamDAO.findTeams(key);
-		List<PubTeam> listPubTeams = new ArrayList<PubTeam>();
 		if (listTeams.size() > 0) {
+			List<PubTeam> listPubTeams = new ArrayList<PubTeam>();
 			for (Team team : listTeams) {
 				PubTeam pubTeam = team.toPubTeam(uriInfo);
 				listPubTeams.add(pubTeam);

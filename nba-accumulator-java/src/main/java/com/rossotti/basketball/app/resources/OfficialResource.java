@@ -50,8 +50,8 @@ public class OfficialResource {
 			LocalDate fromDate = formatter.parseLocalDate(fromDateString);
 			LocalDate toDate = formatter.parseLocalDate(toDateString);
 			Official official = officialDAO.findOfficial(lastName, firstName, fromDate, toDate);
-			PubOfficial pubOfficial = official.toPubOfficial(uriInfo);
 			if (official.isFound()) {
+				PubOfficial pubOfficial = official.toPubOfficial(uriInfo);
 				return Response.ok(pubOfficial)
 					.link(uriInfo.getAbsolutePath(), "official")
 					.build();
@@ -74,8 +74,8 @@ public class OfficialResource {
 									@PathParam("lastName") String lastName, 
 									@PathParam("firstName") String firstName) {
 		List<Official> listOfficials = officialDAO.findOfficials(lastName, firstName);
-		List<PubOfficial> listPubOfficials = new ArrayList<PubOfficial>();
 		if (listOfficials.size() > 0) {
+			List<PubOfficial> listPubOfficials = new ArrayList<PubOfficial>();
 			for (Official official : officialDAO.findOfficials(lastName, firstName)) {
 				PubOfficial pubOfficial = official.toPubOfficial(uriInfo);
 				listPubOfficials.add(pubOfficial);

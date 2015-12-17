@@ -72,8 +72,8 @@ public class PlayerResource {
 									@PathParam("lastName") String lastName, 
 									@PathParam("firstName") String firstName) {
 		List<Player> listPlayers = playerDAO.findPlayers(lastName, firstName);
-		List<PubPlayer> listPubPlayers = new ArrayList<PubPlayer>();
 		if (listPlayers.size() > 0) {
+			List<PubPlayer> listPubPlayers = new ArrayList<PubPlayer>();
 			for (Player player : listPlayers) {
 				PubPlayer pubPlayer = player.toPubPlayer(uriInfo);
 				listPubPlayers.add(pubPlayer);
