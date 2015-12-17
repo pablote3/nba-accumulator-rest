@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.dao.OfficialDAO;
 import com.rossotti.basketball.dao.exceptions.DuplicateEntityException;
-import com.rossotti.basketball.dao.exceptions.NoSuchEntityException;
 import com.rossotti.basketball.models.Official;
 import com.rossotti.basketball.pub.PubOfficial;
 import com.rossotti.basketball.pub.PubOfficials;
@@ -38,54 +37,6 @@ public class OfficialResource {
 	@Autowired
 	private OfficialDAO officialDAO;
 
-	@GET
-	@Path("/name/{lastName}/{firstName}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response findOfficialsByName(@Context UriInfo uriInfo, 
-									@PathParam("lastName") String lastName, 
-									@PathParam("firstName") String firstName) {
-		try {
-			List<PubOfficial> listOfficials = new ArrayList<PubOfficial>();
-			for (Official official : officialDAO.findOfficials(lastName, firstName)) {
-				PubOfficial pubOfficial = official.toPubOfficial(uriInfo);
-				listOfficials.add(pubOfficial);
-			}
-			PubOfficials pubOfficials = new PubOfficials(uriInfo.getAbsolutePath(), listOfficials);
-			return Response.ok(pubOfficials)
-				.link(uriInfo.getAbsolutePath(), "official")
-				.build();
-		} catch (NoSuchEntityException e) {
-			return Response.status(404).build();
-		}
-	}
-
-	@GET
-	@Path("/date/{fromDate}/{toDate}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response findOfficialsByDate(@Context UriInfo uriInfo, 
-									@PathParam("fromDate") String fromDateString, 
-									@PathParam("toDate") String toDateString) {
-		try {
-			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate fromDate = formatter.parseLocalDate(fromDateString);
-			LocalDate toDate = formatter.parseLocalDate(toDateString);
-			List<PubOfficial> listOfficials = new ArrayList<PubOfficial>();
-			for (Official official : officialDAO.findOfficials(fromDate, toDate)) {
-				PubOfficial pubOfficial = official.toPubOfficial(uriInfo);
-				listOfficials.add(pubOfficial);
-			}
-			
-			PubOfficials pubOfficials = new PubOfficials(uriInfo.getAbsolutePath(), listOfficials);
-			return Response.ok(pubOfficials)
-				.link(uriInfo.getAbsolutePath(), "official")
-				.build();
-		} catch (IllegalArgumentException e) {
-			throw new BadRequestException("asOfDate must be yyyy-MM-dd format", e);
-		} catch (NoSuchEntityException e) {
-			return Response.status(404).build();
-		}
-	}
-	
 	@GET
 	@Path("/{lastName}/{firstName}/{fromDate}/{toDate}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -100,24 +51,88 @@ public class OfficialResource {
 			LocalDate toDate = formatter.parseLocalDate(toDateString);
 			Official official = officialDAO.findOfficial(lastName, firstName, fromDate, toDate);
 			PubOfficial pubOfficial = official.toPubOfficial(uriInfo);
-			return Response.ok(pubOfficial)
-				.link(uriInfo.getAbsolutePath(), "official")
-				.build();
+			if (official.isFound()) {
+				return Response.ok(pubOfficial)
+					.link(uriInfo.getAbsolutePath(), "official")
+					.build();
+			}
+			else if (official.isNotFound()) {
+				return Response.status(404).build();
+			}
+			else {
+				return Response.status(500).build();
+			}
 		} catch (IllegalArgumentException e) {
 			throw new BadRequestException("asOfDate must be yyyy-MM-dd format", e);
-		} catch (NoSuchEntityException e) {
+		}
+	}
+
+	@GET
+	@Path("/name/{lastName}/{firstName}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findOfficialsByName(@Context UriInfo uriInfo, 
+									@PathParam("lastName") String lastName, 
+									@PathParam("firstName") String firstName) {
+		List<Official> listOfficials = officialDAO.findOfficials(lastName, firstName);
+		List<PubOfficial> listPubOfficials = new ArrayList<PubOfficial>();
+		if (listOfficials.size() > 0) {
+			for (Official official : officialDAO.findOfficials(lastName, firstName)) {
+				PubOfficial pubOfficial = official.toPubOfficial(uriInfo);
+				listPubOfficials.add(pubOfficial);
+			}
+			PubOfficials pubOfficials = new PubOfficials(uriInfo.getAbsolutePath(), listPubOfficials);
+			return Response.ok(pubOfficials)
+				.link(uriInfo.getAbsolutePath(), "official")
+				.build();
+		}
+		else {
 			return Response.status(404).build();
+		}
+	}
+
+	@GET
+	@Path("/date/{fromDate}/{toDate}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findOfficialsByDate(@Context UriInfo uriInfo, 
+									@PathParam("fromDate") String fromDateString, 
+									@PathParam("toDate") String toDateString) {
+		try {
+			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+			LocalDate fromDate = formatter.parseLocalDate(fromDateString);
+			LocalDate toDate = formatter.parseLocalDate(toDateString);
+			List<Official> listOfficials = officialDAO.findOfficials(fromDate, toDate);
+			if (listOfficials.size() > 0) {
+				List<PubOfficial> listPubOfficials = new ArrayList<PubOfficial>();
+				for (Official official : listOfficials) {
+					PubOfficial pubOfficial = official.toPubOfficial(uriInfo);
+					listPubOfficials.add(pubOfficial);
+				}
+				PubOfficials pubOfficials = new PubOfficials(uriInfo.getAbsolutePath(), listPubOfficials);
+				return Response.ok(pubOfficials)
+					.link(uriInfo.getAbsolutePath(), "official")
+					.build();
+			}
+			else {
+				return Response.status(404).build();
+			}
+		} catch (IllegalArgumentException e) {
+			throw new BadRequestException("asOfDate must be yyyy-MM-dd format", e);
 		}
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createOfficial(@Context UriInfo uriInfo, Official official) {
+	public Response createOfficial(@Context UriInfo uriInfo, Official createOfficial) {
 		try {
-			officialDAO.createOfficial(official);
-			return Response.created(uriInfo.getAbsolutePath()).build();
+			Official official = officialDAO.createOfficial(createOfficial);
+			if (official.isDeleted()) {
+				return Response.created(uriInfo.getAbsolutePath()).build();
+			}
+			else {
+				return Response.status(500).build();
+			}
 		} catch (DuplicateEntityException e) {
-			throw new BadRequestException("official " + official.getFirstName() + " " + official.getLastName() + " already exists", e);
+			throw new BadRequestException("official " + createOfficial.getFirstName() + " " + createOfficial.getLastName() + " already exists", e);
 		} catch (PropertyValueException e) {
 			throw new BadRequestException("missing required field(s)", e);
 		}
@@ -125,10 +140,18 @@ public class OfficialResource {
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response updateOfficial(Official official) {
+	public Response updateOfficial(Official updateOfficial) {
 		try {
-			officialDAO.updateOfficial(official);
-			return Response.noContent().build();
+			Official official = officialDAO.updateOfficial(updateOfficial);
+			if (official.isUpdated()) {
+				return Response.noContent().build();
+			}
+			else if (official.isNotFound()) {
+				return Response.status(404).build();
+			}
+			else {
+				return Response.status(500).build();
+			}
 		} catch (PropertyValueException e) {
 			throw new BadRequestException("missing required field(s)", e);
 		}
@@ -145,12 +168,18 @@ public class OfficialResource {
 			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 			LocalDate fromDate = formatter.parseLocalDate(fromDateString);
 			LocalDate toDate = formatter.parseLocalDate(toDateString);
-			officialDAO.deleteOfficial(lastName, firstName, fromDate, toDate);
-			return Response.noContent().build();
+			Official official = officialDAO.deleteOfficial(lastName, firstName, fromDate, toDate);
+			if (official.isDeleted()) {
+				return Response.noContent().build();
+			}
+			else if (official.isNotFound()){
+				return Response.status(404).build();
+			}
+			else {
+				return Response.status(500).build();
+			}
 		} catch (IllegalArgumentException e) {
 			throw new BadRequestException("asOfDate must be yyyy-MM-dd format", e);
-		} catch (NoSuchEntityException e) {
-			return Response.status(404).build();
 		}
 	}
 }

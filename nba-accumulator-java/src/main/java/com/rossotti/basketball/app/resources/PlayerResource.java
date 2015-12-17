@@ -38,34 +38,12 @@ public class PlayerResource {
 	private PlayerDAO playerDAO;
 
 	@GET
-	@Path("/{lastName}/{firstName}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response findPlayersByName(@Context UriInfo uriInfo, 
-									@PathParam("lastName") String lastName, 
-									@PathParam("firstName") String firstName) {
-		List<PubPlayer> listPlayers = new ArrayList<PubPlayer>();
-		if (listPlayers.size() > 0) {
-			for (Player player : playerDAO.findPlayers(lastName, firstName)) {
-				PubPlayer pubPlayer = player.toPubPlayer(uriInfo);
-				listPlayers.add(pubPlayer);
-			}
-			PubPlayers pubPlayers = new PubPlayers(uriInfo.getAbsolutePath(), listPlayers);
-			return Response.ok(pubPlayers)
-					.link(uriInfo.getAbsolutePath(), "player")
-					.build();
-		}
-		else {
-			return Response.status(404).build();
-		}
-	}
-
-	@GET
 	@Path("/{lastName}/{firstName}/{birthdate}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findPlayerByNameBirthdate(@Context UriInfo uriInfo, 
-										@PathParam("lastName") String lastName, 
-										@PathParam("firstName") String firstName,
-										@PathParam("birthdate") String birthdateString) {
+											@PathParam("lastName") String lastName, 
+											@PathParam("firstName") String firstName,
+											@PathParam("birthdate") String birthdateString) {
 		try {
 			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 			LocalDate birthdate = formatter.parseLocalDate(birthdateString);
@@ -73,8 +51,8 @@ public class PlayerResource {
 			if (player.isFound()) {
 				PubPlayer pubPlayer = player.toPubPlayer(uriInfo);
 				return Response.ok(pubPlayer)
-						.link(uriInfo.getAbsolutePath(), "player")
-						.build();
+					.link(uriInfo.getAbsolutePath(), "player")
+					.build();
 			}
 			else if (player.isNotFound()) {
 				return Response.status(404).build();
@@ -87,11 +65,34 @@ public class PlayerResource {
 		}
 	}
 
+	@GET
+	@Path("/{lastName}/{firstName}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findPlayersByName(@Context UriInfo uriInfo, 
+									@PathParam("lastName") String lastName, 
+									@PathParam("firstName") String firstName) {
+		List<Player> listPlayers = playerDAO.findPlayers(lastName, firstName);
+		List<PubPlayer> listPubPlayers = new ArrayList<PubPlayer>();
+		if (listPlayers.size() > 0) {
+			for (Player player : listPlayers) {
+				PubPlayer pubPlayer = player.toPubPlayer(uriInfo);
+				listPubPlayers.add(pubPlayer);
+			}
+			PubPlayers pubPlayers = new PubPlayers(uriInfo.getAbsolutePath(), listPubPlayers);
+			return Response.ok(pubPlayers)
+					.link(uriInfo.getAbsolutePath(), "player")
+					.build();
+		}
+		else {
+			return Response.status(404).build();
+		}
+	}
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createPlayer(@Context UriInfo uriInfo, Player deletePlayer) {
+	public Response createPlayer(@Context UriInfo uriInfo, Player createPlayer) {
 		try {
-			Player player = playerDAO.createPlayer(deletePlayer);
+			Player player = playerDAO.createPlayer(createPlayer);
 			if (player.isDeleted()) {
 				return Response.created(uriInfo.getAbsolutePath()).build();
 			}
@@ -99,7 +100,7 @@ public class PlayerResource {
 				return Response.status(500).build();
 			}
 		} catch (DuplicateEntityException e) {
-			throw new BadRequestException("player " + deletePlayer.getFirstName() + " " + deletePlayer.getLastName() + " already exists", e);
+			throw new BadRequestException("player " + createPlayer.getFirstName() + " " + createPlayer.getLastName() + " already exists", e);
 		} catch (PropertyValueException e) {
 			throw new BadRequestException("missing required field(s)", e);
 		}
