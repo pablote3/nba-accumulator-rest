@@ -1,5 +1,7 @@
 package com.rossotti.basketball.models;
 
+import java.net.URI;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,11 +14,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.ws.rs.core.UriInfo;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rossotti.basketball.pub.PubRosterPlayer;
 
 @Entity
 @Table (name="rosterPlayer")
@@ -136,30 +142,29 @@ public class RosterPlayer {
 	public String toString() {
 		return new StringBuffer()
 			.append("\n" + "  id: " + this.id)
-//			.append("  lastName: " + player.getLastName() + "\n")
-//			.append("  firstName: " + player.getFirstName() + "\n")
-//			.append("  birthDate: " + player.getBirthdate() + "\n")
-//			.append("  teamKey: " + team.getTeamKey() + "\n")
+			.append("  lastName: " + player.getLastName() + "\n")
+			.append("  firstName: " + player.getFirstName() + "\n")
+			.append("  birthDate: " + player.getBirthdate() + "\n")
+			.append("  teamKey: " + team.getTeamKey() + "\n")
 			.append("  fromDate: " + this.getFromDate() + "\n")
 			.append("  toDate: " + this.getToDate() + "\n")
 			.toString();
 	}
 
-//	public PubPlayer toPubPlayer(UriInfo uriInfo) {
-//		URI self;
-//		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
-//		self = uriInfo.getBaseUriBuilder().path("players").
-//											path(player.getLastName()).
-//											path(player.getFirstName()).
-//											path(player.getBirthDate().toString(fmt)).build();
-//		return new PubRosterPlayer( self,
-//							this.id,
-//							player.lastName,
-//							player.firstName,
-//							this.birthDate,
-//							this.displayName,
-//							this.height,
-//							this.weight,
-//							this.birthPlace);
-//	}
+	public PubRosterPlayer toPubRosterPlayer(UriInfo uriInfo) {
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
+		URI self = uriInfo.getBaseUriBuilder().path("rosterPlayers").
+												path(this.getPlayer().getLastName()).
+												path(this.getPlayer().getFirstName()).
+												path(this.getPlayer().getBirthdate().toString(fmt)).
+												path(this.getFromDate().toString(fmt)).
+												path(this.getToDate().toString(fmt)).build();
+		return new PubRosterPlayer( self,
+							this.fromDate,
+							this.toDate,
+							this.position,
+							this.number,
+							this.getTeam().toPubTeam(uriInfo),
+							this.getPlayer().toPubPlayer(uriInfo));
+	}
 }
