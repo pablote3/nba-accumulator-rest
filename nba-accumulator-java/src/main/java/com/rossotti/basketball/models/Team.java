@@ -229,7 +229,6 @@ public class Team {
 											path(this.getFromDate().toString(fmt)).
 											path(this.getToDate().toString(fmt)).build();
 		return new PubTeam( self,
-							this.id,
 							this.teamKey,
 							this.firstName,
 							this.lastName,

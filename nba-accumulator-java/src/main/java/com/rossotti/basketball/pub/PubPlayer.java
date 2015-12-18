@@ -14,7 +14,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class PubPlayer {
 
 	private final URI self;
-	private final Long id;
 	private final String lastName;
 	private final String firstName;
 	private final String birthdate;
@@ -25,7 +24,6 @@ public class PubPlayer {
 
 	@JsonCreator
 	public PubPlayer(@JsonProperty("self") URI self,
-					@JsonProperty("id") Long id,
 					@JsonProperty("lastName") String lastName,
 					@JsonProperty("firstName") String firstName,
 					@JsonProperty("birthdate") LocalDate birthdate,
@@ -35,7 +33,6 @@ public class PubPlayer {
 					@JsonProperty("birthplace") String birthplace) {
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("MM/dd/yyyy");
 		this.self = self;
-		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.birthdate = birthdate.toString(fmt);
@@ -47,9 +44,6 @@ public class PubPlayer {
 
 	public URI getSelf() {
 		return self;
-	}
-	public Long getId() {
-		return id;
 	}
 	public String getLastName() {
 		return lastName;

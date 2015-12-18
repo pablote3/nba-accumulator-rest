@@ -16,7 +16,6 @@ import com.rossotti.basketball.models.Team.Division;
 public class PubTeam {
 
 	private final URI self;
-	private final Long id;
 	private final String key;
 	private final String firstName;
 	private final String lastName;
@@ -32,7 +31,6 @@ public class PubTeam {
 
 	@JsonCreator
 	public PubTeam(	@JsonProperty("self") URI self,
-					@JsonProperty("id") Long id,
 					@JsonProperty("key") String key,
 					@JsonProperty("firstName") String firstName,
 					@JsonProperty("lastName") String lastName,
@@ -47,7 +45,6 @@ public class PubTeam {
 					@JsonProperty("siteName") String siteName) {
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("MM/dd/yyyy");
 		this.self = self;
-		this.id = id;
 		this.key = key;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -64,9 +61,6 @@ public class PubTeam {
 
 	public URI getSelf() {
 		return self;
-	}
-	public Long getId() {
-		return id;
 	}
 	public String getKey() {
 		return key;

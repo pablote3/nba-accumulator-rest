@@ -169,7 +169,6 @@ public class Player {
 											path(this.getFirstName()).
 											path(this.getBirthdate().toString(fmt)).build();
 		return new PubPlayer( self,
-							this.id,
 							this.lastName,
 							this.firstName,
 							this.birthdate,

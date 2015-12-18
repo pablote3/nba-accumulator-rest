@@ -137,7 +137,6 @@ public class Official {
 											path(this.getFromDate().toString(fmt)).
 											path(this.getToDate().toString(fmt)).build();
 		return new PubOfficial( self,
-							this.id,
 							this.lastName,
 							this.firstName,
 							this.fromDate,
