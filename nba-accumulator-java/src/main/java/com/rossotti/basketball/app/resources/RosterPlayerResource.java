@@ -1,0 +1,214 @@
+package com.rossotti.basketball.app.resources;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+
+import org.hibernate.PropertyValueException;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.rossotti.basketball.dao.PlayerDAO;
+import com.rossotti.basketball.dao.RosterPlayerDAO;
+import com.rossotti.basketball.dao.exceptions.DuplicateEntityException;
+import com.rossotti.basketball.models.Player;
+import com.rossotti.basketball.models.RosterPlayer;
+import com.rossotti.basketball.pub.PubPlayer;
+import com.rossotti.basketball.pub.PubPlayers;
+import com.rossotti.basketball.pub.PubRosterPlayer;
+import com.rossotti.basketball.pub.PubRosterPlayers;
+
+@Service
+@Path("/rosterPlayers")
+public class RosterPlayerResource {
+
+	@Autowired
+	private RosterPlayerDAO rosterPlayerDAO;
+
+	@GET
+	@Path("/birthdate/{lastName}/{firstName}/{birthdate}/{asOfDate}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findRosterPlayerByPlayer(@Context UriInfo uriInfo, 
+											@PathParam("lastName") String lastName,
+											@PathParam("firstName") String firstName,
+											@PathParam("birthdate") String birthdateString,
+											@PathParam("asOfDate") String asOfDateString) {
+		try {
+			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+			LocalDate birthdate = formatter.parseLocalDate(birthdateString);
+			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+			RosterPlayer rosterPlayer = rosterPlayerDAO.findRosterPlayer(lastName, firstName, birthdate, asOfDate);
+			if (rosterPlayer.isFound()) {
+				PubRosterPlayer pubRosterPlayer = rosterPlayer.toPubRosterPlayer(uriInfo);
+				return Response.ok(pubRosterPlayer)
+					.link(uriInfo.getAbsolutePath(), "rosterPlayer")
+					.build();
+			}
+			else if (rosterPlayer.isNotFound()) {
+				return Response.status(404).build();
+			}
+			else {
+				return Response.status(500).build();
+			}
+		} catch (IllegalArgumentException e) {
+			throw new BadRequestException("dates must be yyyy-MM-dd format", e);
+		}
+	}
+	
+	@GET
+	@Path("/team/{lastName}/{firstName}/{teamKey}/{asOfDate}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findRosterPlayerByTeam(@Context UriInfo uriInfo, 
+											@PathParam("lastName") String lastName,
+											@PathParam("firstName") String firstName,
+											@PathParam("teamKey") String teamKey,
+											@PathParam("asOfDate") String asOfDateString) {
+		try {
+			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+			RosterPlayer rosterPlayer = rosterPlayerDAO.findRosterPlayer(lastName, firstName, teamKey, asOfDate);
+			if (rosterPlayer.isFound()) {
+				PubRosterPlayer pubRosterPlayer = rosterPlayer.toPubRosterPlayer(uriInfo);
+				return Response.ok(pubRosterPlayer)
+					.link(uriInfo.getAbsolutePath(), "rosterPlayer")
+					.build();
+			}
+			else if (rosterPlayer.isNotFound()) {
+				return Response.status(404).build();
+			}
+			else {
+				return Response.status(500).build();
+			}
+		} catch (IllegalArgumentException e) {
+			throw new BadRequestException("dates must be yyyy-MM-dd format", e);
+		}
+	}
+
+	@GET
+	@Path("/player/{lastName}/{firstName}/{birthdate}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findRosterPlayersByPlayer(@Context UriInfo uriInfo, 
+											@PathParam("lastName") String lastName, 
+											@PathParam("firstName") String firstName,
+											@PathParam("birthdate") String birthdateString) {
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+		LocalDate birthdate = formatter.parseLocalDate(birthdateString);
+		List<RosterPlayer> listRosterPlayers = rosterPlayerDAO.findRosterPlayers(lastName, firstName, birthdate);
+		if (listRosterPlayers.size() > 0) {
+			List<PubRosterPlayer> listPubRosterPlayers = new ArrayList<PubRosterPlayer>();
+			for (RosterPlayer rosterPlayer : listRosterPlayers) {
+				PubRosterPlayer pubRosterPlayer = rosterPlayer.toPubRosterPlayer(uriInfo);
+				listPubRosterPlayers.add(pubRosterPlayer);
+			}
+			PubRosterPlayers pubRosterPlayers = new PubRosterPlayers(uriInfo.getAbsolutePath(), listPubRosterPlayers);
+			return Response.ok(pubRosterPlayers)
+					.link(uriInfo.getAbsolutePath(), "rosterPlayer")
+					.build();
+		}
+		else {
+			return Response.status(404).build();
+		}
+	}
+
+	@GET
+	@Path("/team/{teamKey}/{asOfDate}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findRosterPlayersByTeamKey(@Context UriInfo uriInfo, 
+											@PathParam("teamKey") String teamKey,
+											@PathParam("asOfDate") String asOfDateString) {
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+		LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+		List<RosterPlayer> listRosterPlayers = rosterPlayerDAO.findRosterPlayers(teamKey, asOfDate);
+		if (listRosterPlayers.size() > 0) {
+			List<PubRosterPlayer> listPubRosterPlayers = new ArrayList<PubRosterPlayer>();
+			for (RosterPlayer rosterPlayer : listRosterPlayers) {
+				PubRosterPlayer pubRosterPlayer = rosterPlayer.toPubRosterPlayer(uriInfo);
+				listPubRosterPlayers.add(pubRosterPlayer);
+			}
+			PubRosterPlayers pubRosterPlayers = new PubRosterPlayers(uriInfo.getAbsolutePath(), listPubRosterPlayers);
+			return Response.ok(pubRosterPlayers)
+					.link(uriInfo.getAbsolutePath(), "rosterPlayer")
+					.build();
+		}
+		else {
+			return Response.status(404).build();
+		}
+	}
+
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response createRosterPlayer(@Context UriInfo uriInfo, RosterPlayer createRosterPlayer) {
+		try {
+			RosterPlayer rosterPlayer = rosterPlayerDAO.createRosterPlayer(createRosterPlayer);
+			if (rosterPlayer.isDeleted()) {
+				return Response.created(uriInfo.getAbsolutePath()).build();
+			}
+			else {
+				return Response.status(500).build();
+			}
+		} catch (DuplicateEntityException e) {
+			throw new BadRequestException("player " + createRosterPlayer.getPlayer().getFirstName() + " " + createRosterPlayer.getPlayer().getLastName() + " already exists", e);
+		} catch (PropertyValueException e) {
+			throw new BadRequestException("missing required field(s)", e);
+		}
+	}
+
+//	@PUT
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	public Response updatePlayer(Player updatePlayer) {
+//		try {
+//			Player player = playerDAO.updatePlayer(updatePlayer);
+//			if (player.isUpdated()) {
+//				return Response.noContent().build();
+//			}
+//			else if (player.isNotFound()) {
+//				return Response.status(404).build();
+//			}
+//			else {
+//				return Response.status(500).build();
+//			}
+//		} catch (PropertyValueException e) {
+//			throw new BadRequestException("missing required field(s)", e);
+//		}
+//	}
+//	
+//	@DELETE
+//	@Path("/{lastName}/{firstName}/{birthdate}")
+//	public Response deletePlayer(@Context UriInfo uriInfo, 
+//								@PathParam("lastName") String lastName, 
+//								@PathParam("firstName") String firstName, 
+//								@PathParam("birthdate") String birthdateString) {
+//		try {
+//			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+//			LocalDate birthdate = formatter.parseLocalDate(birthdateString);
+//			Player player = playerDAO.deletePlayer(lastName, firstName, birthdate);
+//			if (player.isDeleted()) {
+//				return Response.noContent().build();
+//			}
+//			else if (player.isNotFound()){
+//				return Response.status(404).build();
+//			}
+//			else {
+//				return Response.status(500).build();
+//			}
+//		} catch (IllegalArgumentException e) {
+//			throw new BadRequestException("birthdate must be yyyy-MM-dd format", e);
+//		}
+//	}
+}
