@@ -148,6 +148,7 @@ public class RosterPlayer {
 			.append("  teamKey: " + team.getTeamKey() + "\n")
 			.append("  fromDate: " + this.getFromDate() + "\n")
 			.append("  toDate: " + this.getToDate() + "\n")
+			.append("  statusCode: " + this.statusCode)
 			.toString();
 	}
 
@@ -164,7 +165,7 @@ public class RosterPlayer {
 							this.toDate,
 							this.position,
 							this.number,
-							this.getTeam().toPubTeam(uriInfo),
-							this.getPlayer().toPubPlayer(uriInfo));
+							this.getPlayer().toPubPlayer(uriInfo),
+							this.getTeam().toPubTeam(uriInfo));
 	}
 }
