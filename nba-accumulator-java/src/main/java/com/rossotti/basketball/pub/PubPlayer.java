@@ -31,7 +31,7 @@ public class PubPlayer {
 					@JsonProperty("height") Short height,
 					@JsonProperty("weight") Short weight,
 					@JsonProperty("birthplace") String birthplace) {
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("MM/dd/yyyy");
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		this.self = self;
 		this.firstName = firstName;
 		this.lastName = lastName;

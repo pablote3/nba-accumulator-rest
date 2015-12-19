@@ -27,7 +27,7 @@ public class PubOfficial {
 					@JsonProperty("fromDate") LocalDate fromDate,
 					@JsonProperty("toDate") LocalDate toDate,
 					@JsonProperty("number") String number) {
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("MM/dd/yyyy");
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		this.self = self;
 		this.firstName = firstName;
 		this.lastName = lastName;

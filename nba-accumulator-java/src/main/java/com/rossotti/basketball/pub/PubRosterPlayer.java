@@ -28,16 +28,16 @@ public class PubRosterPlayer {
 					@JsonProperty("toDate") LocalDate toDate,
 					@JsonProperty("position") Position position,
 					@JsonProperty("number") String number,
-					@JsonProperty("team") PubTeam team,
-					@JsonProperty("player") PubPlayer player) {
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("MM/dd/yyyy");
+					@JsonProperty("player") PubPlayer player,
+					@JsonProperty("team") PubTeam team) {
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		this.self = self;
 		this.fromDate = fromDate.toString(fmt);
 		this.toDate = toDate.toString(fmt);
 		this.position = position.name();
 		this.number = number;
-		this.team = team;
 		this.player = player;
+		this.team = team;
 	}
 
 	public URI getSelf() {

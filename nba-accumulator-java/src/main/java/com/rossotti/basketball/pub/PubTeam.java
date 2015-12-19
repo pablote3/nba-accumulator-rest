@@ -43,7 +43,7 @@ public class PubTeam {
 					@JsonProperty("city") String city,
 					@JsonProperty("state") String state,
 					@JsonProperty("siteName") String siteName) {
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("MM/dd/yyyy");
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		this.self = self;
 		this.key = key;
 		this.firstName = firstName;
