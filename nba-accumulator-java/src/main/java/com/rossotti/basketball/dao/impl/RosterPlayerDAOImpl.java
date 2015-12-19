@@ -22,15 +22,15 @@ public class RosterPlayerDAOImpl implements RosterPlayerDAO {
 	private SessionFactory sessionFactory;
 
 	@Override
-	public RosterPlayer findRosterPlayer(String lastName, String firstName, LocalDate birthdate, LocalDate fromDate, LocalDate toDate) {
+	public RosterPlayer findRosterPlayer(String lastName, String firstName, LocalDate birthdate, LocalDate asOfDate) {
 		String sql = 	"select rp " +
 						"from RosterPlayer rp " +
 						"inner join rp.player p " +
 						"where p.lastName = '" + lastName + "' " +
 						"and p.firstName = '" + firstName + "' " +
 						"and p.birthdate = '" + birthdate + "' " +
-						"and rp.fromDate <= '" + fromDate + "' " +
-						"and rp.toDate >= '" + toDate + "' ";
+						"and rp.fromDate <= '" + asOfDate + "' " +
+						"and rp.toDate >= '" + asOfDate + "' ";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
 		RosterPlayer rosterPlayer = (RosterPlayer)query.uniqueResult();
 		if (rosterPlayer == null) {
@@ -40,7 +40,7 @@ public class RosterPlayerDAOImpl implements RosterPlayerDAO {
 	}
 
 	@Override
-	public RosterPlayer findRosterPlayer(String lastName, String firstName, String teamKey, LocalDate fromDate, LocalDate toDate) {
+	public RosterPlayer findRosterPlayer(String lastName, String firstName, String teamKey, LocalDate asOfDate) {
 		String sql = 	"select rp " +
 						"from RosterPlayer rp " +
 						"inner join rp.player p " +
@@ -48,14 +48,31 @@ public class RosterPlayerDAOImpl implements RosterPlayerDAO {
 						"where p.lastName = '" + lastName + "' " +
 						"and p.firstName = '" + firstName + "' " +
 						"and t.teamKey = '" + teamKey + "' " +
-						"and rp.fromDate <= '" + fromDate + "' " +
-						"and rp.toDate >= '" + toDate + "' ";
+						"and rp.fromDate <= '" + asOfDate + "' " +
+						"and rp.toDate >= '" + asOfDate + "'";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
 		RosterPlayer rosterPlayer = (RosterPlayer)query.uniqueResult();
 		if (rosterPlayer == null) {
 			rosterPlayer = new RosterPlayer(StatusCode.NotFound);
 		}
 		return rosterPlayer;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<RosterPlayer> findRosterPlayers(String lastName, String firstName, LocalDate birthdate) {
+		String sql = 	"select rp " +
+				"from RosterPlayer rp " +
+				"inner join rp.player p " +
+				"where p.lastName = '" + lastName + "' " +
+				"and p.firstName = '" + firstName + "' " +
+				"and p.birthdate = '" + birthdate + "'";
+		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		List<RosterPlayer> rosterPlayers = (List<RosterPlayer>)query.list();
+		if (rosterPlayers == null) {
+			rosterPlayers = new ArrayList<RosterPlayer>();
+		}
+		return rosterPlayers;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -77,7 +94,7 @@ public class RosterPlayerDAOImpl implements RosterPlayerDAO {
 
 	@Override
 	public RosterPlayer createRosterPlayer(RosterPlayer rp) {
-		RosterPlayer rosterPlayer = findRosterPlayer(rp.getPlayer().getLastName(), rp.getPlayer().getFirstName(), rp.getPlayer().getBirthdate(), rp.getFromDate(), rp.getToDate());
+		RosterPlayer rosterPlayer = findRosterPlayer(rp.getPlayer().getLastName(), rp.getPlayer().getFirstName(), rp.getPlayer().getBirthdate(), rp.getFromDate());
 		if (rosterPlayer.isNotFound()) {
 			getSessionFactory().getCurrentSession().persist(rp);
 			rp.setStatusCode(StatusCode.Created);
@@ -90,7 +107,7 @@ public class RosterPlayerDAOImpl implements RosterPlayerDAO {
 
 	@Override
 	public RosterPlayer updateRosterPlayer(RosterPlayer rp) {
-		RosterPlayer rosterPlayer = findRosterPlayer(rp.getPlayer().getLastName(), rp.getPlayer().getFirstName(), rp.getPlayer().getBirthdate(), rp.getFromDate(), rp.getToDate());
+		RosterPlayer rosterPlayer = findRosterPlayer(rp.getPlayer().getLastName(), rp.getPlayer().getFirstName(), rp.getPlayer().getBirthdate(), rp.getFromDate());
 		if (rosterPlayer.isFound()) {
 			rosterPlayer.setFromDate(rp.getFromDate());
 			rosterPlayer.setToDate(rp.getToDate());
@@ -103,8 +120,8 @@ public class RosterPlayerDAOImpl implements RosterPlayerDAO {
 	}
 
 	@Override
-	public RosterPlayer deleteRosterPlayer(String lastName, String firstName, LocalDate birthdate, LocalDate fromDate, LocalDate toDate) {
-		RosterPlayer rosterPlayer = findRosterPlayer(lastName, firstName, birthdate, fromDate, toDate);
+	public RosterPlayer deleteRosterPlayer(String lastName, String firstName, LocalDate birthdate, LocalDate asOfDate) {
+		RosterPlayer rosterPlayer = findRosterPlayer(lastName, firstName, birthdate, asOfDate);
 		if (rosterPlayer.isFound()) {
 			getSessionFactory().getCurrentSession().delete(rosterPlayer);
 			rosterPlayer = new RosterPlayer(StatusCode.Deleted);
