@@ -25,41 +25,40 @@ public class OfficialDaoTest {
 	//'Joe', 'LateCall', '2009-07-01', '2010-06-30'
 
 	@Test
-	public void findOfficialByName_MatchFromDate() {
-		Official findOfficial = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2009-07-01"), new LocalDate("2009-07-01"));
+	public void findOfficialByName_Found_FromDate() {
+		Official findOfficial = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2009-07-01"));
 		Assert.assertEquals("96", findOfficial.getNumber());
 		Assert.assertTrue(findOfficial.isFound());
 	}
 
 	@Test
-	public void findOfficialByName_MatchToDate() {
-		Official findOfficial = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2010-06-30"), new LocalDate("2010-06-30"));
+	public void findOfficialByName_Found_ToDate() {
+		Official findOfficial = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2010-06-30"));
 		Assert.assertEquals("96", findOfficial.getNumber());
 		Assert.assertTrue(findOfficial.isFound());
 	}
 
 	@Test
-	public void findOfficialByName_MatchDateRange() {
-		Official findOfficial = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"));
-		Assert.assertEquals("96", findOfficial.getNumber());
-		Assert.assertTrue(findOfficial.isFound());
+	public void findOfficialByName_NotFound_LastName() {
+		Official findOfficial = officialDAO.findOfficial("LateCalls", "Joe", new LocalDate("2009-07-01"));
+		Assert.assertTrue(findOfficial.isNotFound());
 	}
 
 	@Test
-	public void findOfficialByName_NotFound_Key() {
-		Official findOfficial = officialDAO.findOfficial("LateCalls", "Joe", new LocalDate("2009-07-01"), new LocalDate("2009-07-01"));
+	public void findOfficialByName_NotFound_FirstName() {
+		Official findOfficial = officialDAO.findOfficial("LateCall", "Joey", new LocalDate("2009-07-01"));
 		Assert.assertTrue(findOfficial.isNotFound());
 	}
 
 	@Test
 	public void findOfficialByName_NotFound_BeforeAsOfDate() {
-		Official findOfficial = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2009-06-30"), new LocalDate("2009-06-30"));
+		Official findOfficial = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2009-06-30"));
 		Assert.assertTrue(findOfficial.isNotFound());
 	}
 
 	@Test
 	public void findOfficialByName_NotFound_AfterAsOfDate() {
-		Official findOfficial = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2010-07-01"), new LocalDate("2010-07-01"));
+		Official findOfficial = officialDAO.findOfficial("LateCall", "Joe", new LocalDate("2010-07-01"));
 		Assert.assertTrue(findOfficial.isNotFound());
 	}
 
@@ -73,20 +72,26 @@ public class OfficialDaoTest {
 	}
 
 	@Test
-	public void findOfficialsByName_NoSuchEntityException() {
+	public void findOfficialsByName_NotFound_LastName() {
+		List<Official> findOfficials = officialDAO.findOfficials("MissedCalls", "Mike");
+		Assert.assertEquals(0, findOfficials.size());
+	}
+
+	@Test
+	public void findOfficialsByName_NotFound_FirstName() {
 		List<Official> findOfficials = officialDAO.findOfficials("MissedCall", "Mikey");
 		Assert.assertEquals(0, findOfficials.size());
 	}
 	
 	@Test
-	public void findOfficialsByDateRange() {
-		List<Official> officials = officialDAO.findOfficials(new LocalDate("2009-10-31"), new LocalDate("2010-06-30"));
+	public void findOfficialsByDateRange_Found() {
+		List<Official> officials = officialDAO.findOfficials(new LocalDate("2009-10-31"));
 		Assert.assertEquals(2, officials.size());
 	}
 
 	@Test
 	public void findOfficialsByDateRange_NotFound() {
-		List<Official> findOfficials = officialDAO.findOfficials(new LocalDate("1909-10-31"), new LocalDate("1910-06-30"));
+		List<Official> findOfficials = officialDAO.findOfficials(new LocalDate("1909-10-31"));
 		Assert.assertEquals(0, findOfficials.size());
 	}
 
@@ -95,17 +100,9 @@ public class OfficialDaoTest {
 	@Test
 	public void createOfficial_Created() {
 		Official createOfficial = officialDAO.createOfficial(createMockOfficial("BadCall", "Melvin", new LocalDate("2012-07-01"), new LocalDate("2012-07-01")));
-		Official findOfficial = officialDAO.findOfficial("BadCall", "Melvin", new LocalDate("2012-07-01"), new LocalDate("2012-07-01"));
+		Official findOfficial = officialDAO.findOfficial("BadCall", "Melvin", new LocalDate("2012-07-01"));
 		Assert.assertTrue(createOfficial.isCreated());
 		Assert.assertEquals("999", findOfficial.getNumber());
-	}
-
-	@Test
-	public void createOfficial_Created_NonOverlappingDates() {
-		Official createOfficial = officialDAO.createOfficial(createMockOfficial("QuestionableCall", "Hefe", new LocalDate("2012-07-01"), new LocalDate("9999-12-31")));
-		Official official = officialDAO.findOfficial("QuestionableCall", "Hefe", new LocalDate("2012-07-01"), new LocalDate("9999-12-31"));
-		Assert.assertTrue(createOfficial.isCreated());
-		Assert.assertEquals("999", official.getNumber());
 	}
 
 	@Test(expected=DuplicateEntityException.class)
@@ -126,7 +123,7 @@ public class OfficialDaoTest {
 	@Test
 	public void updateOfficial_Updated() {
 		Official updateOfficial = officialDAO.updateOfficial(updateMockOfficial("MissedCall", "Mike", new LocalDate("2009-07-01"), new LocalDate("2010-06-30")));
-		Official findOfficial = officialDAO.findOfficial("MissedCall", "Mike", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"));
+		Official findOfficial = officialDAO.findOfficial("MissedCall", "Mike", new LocalDate("2009-07-01"));
 		Assert.assertTrue(updateOfficial.isUpdated());
 		Assert.assertEquals("998", findOfficial.getNumber());
 	}
@@ -148,15 +145,15 @@ public class OfficialDaoTest {
 
 	@Test
 	public void deleteOfficial_Deleted() {
-		Official deleteOfficial = officialDAO.deleteOfficial("TerribleCall", "Limo", new LocalDate("2005-07-01"), new LocalDate("2006-06-30"));
-		Official findOfficial = officialDAO.findOfficial("TerribleCall", "Limo", new LocalDate("2005-07-01"), new LocalDate("2006-06-30"));
+		Official deleteOfficial = officialDAO.deleteOfficial("TerribleCall", "Limo", new LocalDate("2005-07-01"));
+		Official findOfficial = officialDAO.findOfficial("TerribleCall", "Limo", new LocalDate("2005-07-01"));
 		Assert.assertTrue(deleteOfficial.isDeleted());
 		Assert.assertTrue(findOfficial.isNotFound());
 	}
 
 	@Test
 	public void deleteOfficial_NotFound() {
-		Official deleteOfficial = officialDAO.deleteOfficial("Limoe", "TerribleCall", new LocalDate("2005-07-01"), new LocalDate("2006-06-30"));
+		Official deleteOfficial = officialDAO.deleteOfficial("Limoe", "TerribleCall", new LocalDate("2005-07-01"));
 		Assert.assertTrue(deleteOfficial.isNotFound());
 	}
 

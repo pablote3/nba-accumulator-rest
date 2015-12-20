@@ -22,30 +22,17 @@ public class OfficialDAOImpl implements OfficialDAO {
 	private SessionFactory sessionFactory;
 
 	@Override
-	public Official findOfficial(String lastName, String firstName, LocalDate fromDate, LocalDate toDate) {
+	public Official findOfficial(String lastName, String firstName, LocalDate asOfDate) {
 		Official official = (Official)getSessionFactory().getCurrentSession().createCriteria(Official.class)
 			.add(Restrictions.eq("lastName", lastName))
 			.add(Restrictions.eq("firstName", firstName))
-			.add(Restrictions.le("fromDate", fromDate))
-			.add(Restrictions.ge("toDate", toDate))
+			.add(Restrictions.le("fromDate", asOfDate))
+			.add(Restrictions.ge("toDate", asOfDate))
 			.uniqueResult();
 		if (official == null) {
 			official = new Official(StatusCode.NotFound);
 		}
 		return official;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Official> findOfficials(LocalDate fromDate, LocalDate toDate) {
-		List<Official> officials = getSessionFactory().getCurrentSession().createCriteria(Official.class)
-			.add(Restrictions.le("fromDate", fromDate))
-			.add(Restrictions.ge("toDate", toDate))
-			.list();
-		if (officials == null) {
-			officials = new ArrayList<Official>();
-		}
-		return officials;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -61,9 +48,22 @@ public class OfficialDAOImpl implements OfficialDAO {
 		return officials;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Official> findOfficials(LocalDate asOfDate) {
+		List<Official> officials = getSessionFactory().getCurrentSession().createCriteria(Official.class)
+			.add(Restrictions.le("fromDate", asOfDate))
+			.add(Restrictions.ge("toDate", asOfDate))
+			.list();
+		if (officials == null) {
+			officials = new ArrayList<Official>();
+		}
+		return officials;
+	}
+
 	@Override
 	public Official createOfficial(Official createOfficial) {
-		Official official = findOfficial(createOfficial.getLastName(), createOfficial.getFirstName(), createOfficial.getFromDate(), createOfficial.getToDate());
+		Official official = findOfficial(createOfficial.getLastName(), createOfficial.getFirstName(), createOfficial.getFromDate());
 		if (official.isNotFound()) {
 			getSessionFactory().getCurrentSession().persist(createOfficial);
 			createOfficial.setStatusCode(StatusCode.Created);
@@ -76,7 +76,7 @@ public class OfficialDAOImpl implements OfficialDAO {
 
 	@Override
 	public Official updateOfficial(Official updateOfficial) {
-		Official official = findOfficial(updateOfficial.getLastName(), updateOfficial.getFirstName(), updateOfficial.getFromDate(), updateOfficial.getToDate());
+		Official official = findOfficial(updateOfficial.getLastName(), updateOfficial.getFirstName(), updateOfficial.getFromDate());
 		if (official.isFound()) {
 			official.setLastName(updateOfficial.getLastName());
 			official.setFirstName(updateOfficial.getFirstName());
@@ -90,8 +90,8 @@ public class OfficialDAOImpl implements OfficialDAO {
 	}
 
 	@Override
-	public Official deleteOfficial(String lastName, String firstName, LocalDate fromDate, LocalDate toDate) {
-		Official official = findOfficial(lastName, firstName, fromDate, toDate);
+	public Official deleteOfficial(String lastName, String firstName, LocalDate asOfDate) {
+		Official official = findOfficial(lastName, firstName, asOfDate);
 		if (official.isFound()) {
 			getSessionFactory().getCurrentSession().delete(official);
 			official = new Official(StatusCode.Deleted);

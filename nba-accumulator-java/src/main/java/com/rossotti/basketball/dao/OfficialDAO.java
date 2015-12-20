@@ -7,10 +7,10 @@ import org.joda.time.LocalDate;
 import com.rossotti.basketball.models.Official;
 
 public interface OfficialDAO {
-	public Official findOfficial(String lastName, String firstName, LocalDate fromDate, LocalDate toDate);
+	public Official findOfficial(String lastName, String firstName, LocalDate asOfDate);
 	public List<Official> findOfficials(String lastName, String firstName);
-	public List<Official> findOfficials(LocalDate fromDate, LocalDate toDate);
+	public List<Official> findOfficials(LocalDate asOfDate);
 	public Official createOfficial(Official official);
 	public Official updateOfficial(Official official);
-	public Official deleteOfficial(String lastName, String firstName, LocalDate fromDate, LocalDate toDate);
+	public Official deleteOfficial(String lastName, String firstName, LocalDate asOfDate);
 }

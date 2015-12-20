@@ -38,18 +38,16 @@ public class OfficialResource {
 	private OfficialDAO officialDAO;
 
 	@GET
-	@Path("/{lastName}/{firstName}/{fromDate}/{toDate}")
+	@Path("/{lastName}/{firstName}/{asOfDate}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findOfficialByNameDate(@Context UriInfo uriInfo, 
-									@PathParam("lastName") String lastName,
-									@PathParam("firstName") String firstName,
-									@PathParam("fromDate") String fromDateString, 
-									@PathParam("toDate") String toDateString) {
+										@PathParam("lastName") String lastName,
+										@PathParam("firstName") String firstName,
+										@PathParam("asOfDate") String asOfDateString) {
 		try {
 			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate fromDate = formatter.parseLocalDate(fromDateString);
-			LocalDate toDate = formatter.parseLocalDate(toDateString);
-			Official official = officialDAO.findOfficial(lastName, firstName, fromDate, toDate);
+			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+			Official official = officialDAO.findOfficial(lastName, firstName, asOfDate);
 			if (official.isFound()) {
 				PubOfficial pubOfficial = official.toPubOfficial(uriInfo);
 				return Response.ok(pubOfficial)
@@ -68,11 +66,11 @@ public class OfficialResource {
 	}
 
 	@GET
-	@Path("/name/{lastName}/{firstName}")
+	@Path("/{lastName}/{firstName}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findOfficialsByName(@Context UriInfo uriInfo, 
-									@PathParam("lastName") String lastName, 
-									@PathParam("firstName") String firstName) {
+										@PathParam("lastName") String lastName, 
+										@PathParam("firstName") String firstName) {
 		List<Official> listOfficials = officialDAO.findOfficials(lastName, firstName);
 		if (listOfficials.size() > 0) {
 			List<PubOfficial> listPubOfficials = new ArrayList<PubOfficial>();
@@ -91,16 +89,14 @@ public class OfficialResource {
 	}
 
 	@GET
-	@Path("/date/{fromDate}/{toDate}")
+	@Path("/{asOfDate}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findOfficialsByDate(@Context UriInfo uriInfo, 
-									@PathParam("fromDate") String fromDateString, 
-									@PathParam("toDate") String toDateString) {
+										@PathParam("asOfDate") String asOfDateString) {
 		try {
 			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate fromDate = formatter.parseLocalDate(fromDateString);
-			LocalDate toDate = formatter.parseLocalDate(toDateString);
-			List<Official> listOfficials = officialDAO.findOfficials(fromDate, toDate);
+			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+			List<Official> listOfficials = officialDAO.findOfficials(asOfDate);
 			if (listOfficials.size() > 0) {
 				List<PubOfficial> listPubOfficials = new ArrayList<PubOfficial>();
 				for (Official official : listOfficials) {
@@ -125,7 +121,7 @@ public class OfficialResource {
 	public Response createOfficial(@Context UriInfo uriInfo, Official createOfficial) {
 		try {
 			Official official = officialDAO.createOfficial(createOfficial);
-			if (official.isDeleted()) {
+			if (official.isCreated()) {
 				return Response.created(uriInfo.getAbsolutePath()).build();
 			}
 			else {
@@ -158,17 +154,15 @@ public class OfficialResource {
 	}
 	
 	@DELETE
-	@Path("/{lastName}/{firstName}/{fromDate}/{toDate}")
+	@Path("/{lastName}/{firstName}/{asOfDate}")
 	public Response deleteOfficial(@Context UriInfo uriInfo, 
 								@PathParam("lastName") String lastName,
 								@PathParam("firstName") String firstName,
-								@PathParam("fromDate") String fromDateString, 
-								@PathParam("toDate") String toDateString) {
+								@PathParam("asOfDate") String asOfDateString) {
 		try {
 			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate fromDate = formatter.parseLocalDate(fromDateString);
-			LocalDate toDate = formatter.parseLocalDate(toDateString);
-			Official official = officialDAO.deleteOfficial(lastName, firstName, fromDate, toDate);
+			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+			Official official = officialDAO.deleteOfficial(lastName, firstName, asOfDate);
 			if (official.isDeleted()) {
 				return Response.noContent().build();
 			}
