@@ -5,10 +5,8 @@ import java.util.List;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -24,15 +22,14 @@ import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rossotti.basketball.dao.PlayerDAO;
 import com.rossotti.basketball.dao.RosterPlayerDAO;
 import com.rossotti.basketball.dao.exceptions.DuplicateEntityException;
-import com.rossotti.basketball.models.Player;
 import com.rossotti.basketball.models.RosterPlayer;
 import com.rossotti.basketball.pub.PubPlayer;
-import com.rossotti.basketball.pub.PubPlayers;
 import com.rossotti.basketball.pub.PubRosterPlayer;
+import com.rossotti.basketball.pub.PubRosterPlayer_ByPlayer;
 import com.rossotti.basketball.pub.PubRosterPlayers;
+import com.rossotti.basketball.pub.PubRosterPlayers_ByPlayer;
 
 @Service
 @Path("/rosterPlayers")
@@ -55,7 +52,7 @@ public class RosterPlayerResource {
 			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
 			RosterPlayer rosterPlayer = rosterPlayerDAO.findRosterPlayer(lastName, firstName, birthdate, asOfDate);
 			if (rosterPlayer.isFound()) {
-				PubRosterPlayer pubRosterPlayer = rosterPlayer.toPubRosterPlayer(uriInfo);
+				PubRosterPlayer_ByPlayer pubRosterPlayer = rosterPlayer.toPubRosterPlayer_ByPlayer(uriInfo);
 				return Response.ok(pubRosterPlayer)
 					.link(uriInfo.getAbsolutePath(), "rosterPlayer")
 					.build();
@@ -110,13 +107,14 @@ public class RosterPlayerResource {
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 		LocalDate birthdate = formatter.parseLocalDate(birthdateString);
 		List<RosterPlayer> listRosterPlayers = rosterPlayerDAO.findRosterPlayers(lastName, firstName, birthdate);
+		PubPlayer pubPlayer = listRosterPlayers.get(0).getPlayer().toPubPlayer(uriInfo);
 		if (listRosterPlayers.size() > 0) {
-			List<PubRosterPlayer> listPubRosterPlayers = new ArrayList<PubRosterPlayer>();
+			List<PubRosterPlayer_ByPlayer> listPubRosterPlayers = new ArrayList<PubRosterPlayer_ByPlayer>();
 			for (RosterPlayer rosterPlayer : listRosterPlayers) {
-				PubRosterPlayer pubRosterPlayer = rosterPlayer.toPubRosterPlayer(uriInfo);
+				PubRosterPlayer_ByPlayer pubRosterPlayer = rosterPlayer.toPubRosterPlayer_ByPlayer(uriInfo);
 				listPubRosterPlayers.add(pubRosterPlayer);
 			}
-			PubRosterPlayers pubRosterPlayers = new PubRosterPlayers(uriInfo.getAbsolutePath(), listPubRosterPlayers);
+			PubRosterPlayers_ByPlayer pubRosterPlayers = new PubRosterPlayers_ByPlayer(uriInfo.getAbsolutePath(), pubPlayer, listPubRosterPlayers);
 			return Response.ok(pubRosterPlayers)
 					.link(uriInfo.getAbsolutePath(), "rosterPlayer")
 					.build();
