@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
-import com.rossotti.basketball.models.Player;
+import com.rossotti.basketball.model.Player;
 
 public interface PlayerDAO {
 	public Player findPlayer(String lastName, String firstName, LocalDate birthDate);

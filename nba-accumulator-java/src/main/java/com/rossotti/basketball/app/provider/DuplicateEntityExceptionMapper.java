@@ -1,10 +1,10 @@
-package com.rossotti.basketball.app.providers;
+package com.rossotti.basketball.app.provider;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import com.rossotti.basketball.dao.exceptions.DuplicateEntityException;
+import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 
 @Provider
 public class DuplicateEntityExceptionMapper implements ExceptionMapper<DuplicateEntityException>{

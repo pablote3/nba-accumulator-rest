@@ -7,13 +7,13 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
-import com.rossotti.basketball.app.providers.DuplicateEntityExceptionMapper;
-import com.rossotti.basketball.app.providers.JsonProvider;
-import com.rossotti.basketball.app.providers.NoSuchEntityExceptionMapper;
-import com.rossotti.basketball.app.resources.OfficialResource;
-import com.rossotti.basketball.app.resources.PlayerResource;
-import com.rossotti.basketball.app.resources.RosterPlayerResource;
-import com.rossotti.basketball.app.resources.TeamResource;
+import com.rossotti.basketball.app.provider.DuplicateEntityExceptionMapper;
+import com.rossotti.basketball.app.provider.JsonProvider;
+import com.rossotti.basketball.app.provider.NoSuchEntityExceptionMapper;
+import com.rossotti.basketball.app.resource.OfficialResource;
+import com.rossotti.basketball.app.resource.PlayerResource;
+import com.rossotti.basketball.app.resource.RosterPlayerResource;
+import com.rossotti.basketball.app.resource.TeamResource;
 
 public class AccumulatorApp extends Application {
 	protected final Set<Class<?>> classes = new HashSet<>();

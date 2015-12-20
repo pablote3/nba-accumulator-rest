@@ -1,4 +1,4 @@
-package com.rossotti.basketball.dao.exceptions;
+package com.rossotti.basketball.dao.exception;
 
 /**
  * Exception thrown when attempting to create an entity that already exists.

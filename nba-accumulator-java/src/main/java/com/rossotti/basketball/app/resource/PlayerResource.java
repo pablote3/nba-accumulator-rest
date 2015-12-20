@@ -1,4 +1,4 @@
-package com.rossotti.basketball.app.resources;
+package com.rossotti.basketball.app.resource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.dao.PlayerDAO;
-import com.rossotti.basketball.dao.exceptions.DuplicateEntityException;
-import com.rossotti.basketball.models.Player;
+import com.rossotti.basketball.dao.exception.DuplicateEntityException;
+import com.rossotti.basketball.model.Player;
 import com.rossotti.basketball.pub.PubPlayer;
 import com.rossotti.basketball.pub.PubPlayers;
 

@@ -11,9 +11,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.rossotti.basketball.models.Player;
-import com.rossotti.basketball.models.RosterPlayer;
-import com.rossotti.basketball.models.RosterPlayer.Position;
+import com.rossotti.basketball.model.Player;
+import com.rossotti.basketball.model.RosterPlayer;
+import com.rossotti.basketball.model.RosterPlayer.Position;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"config/applicationContextTest.xml"})

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
-import com.rossotti.basketball.models.Team;
+import com.rossotti.basketball.model.Team;
 
 public interface TeamDAO {
 	public Team findTeam(String key, LocalDate asOfDate);

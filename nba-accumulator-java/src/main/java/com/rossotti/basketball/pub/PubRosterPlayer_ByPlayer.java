@@ -9,7 +9,7 @@ import org.joda.time.format.DateTimeFormatter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.rossotti.basketball.models.RosterPlayer.Position;
+import com.rossotti.basketball.model.RosterPlayer.Position;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class PubRosterPlayer_ByPlayer {

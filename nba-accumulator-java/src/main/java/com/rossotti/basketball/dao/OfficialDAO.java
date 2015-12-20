@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
-import com.rossotti.basketball.models.Official;
+import com.rossotti.basketball.model.Official;
 
 public interface OfficialDAO {
 	public Official findOfficial(String lastName, String firstName, LocalDate asOfDate);

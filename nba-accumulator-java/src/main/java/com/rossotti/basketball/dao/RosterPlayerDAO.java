@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
-import com.rossotti.basketball.models.RosterPlayer;
+import com.rossotti.basketball.model.RosterPlayer;
 
 public interface RosterPlayerDAO {
 	public RosterPlayer findRosterPlayer(String lastName, String firstName, LocalDate birthDate, LocalDate asOfDate);

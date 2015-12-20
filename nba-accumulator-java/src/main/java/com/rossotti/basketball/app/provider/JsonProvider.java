@@ -1,4 +1,4 @@
-package com.rossotti.basketball.app.providers;
+package com.rossotti.basketball.app.provider;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.ext.Provider;

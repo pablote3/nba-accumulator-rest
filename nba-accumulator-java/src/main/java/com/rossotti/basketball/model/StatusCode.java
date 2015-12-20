@@ -1,4 +1,4 @@
-package com.rossotti.basketball.models;
+package com.rossotti.basketball.model;
 
 public enum StatusCode {
 	Found,

@@ -9,8 +9,8 @@ import org.joda.time.format.DateTimeFormatter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.rossotti.basketball.models.Team.Conference;
-import com.rossotti.basketball.models.Team.Division;
+import com.rossotti.basketball.model.Team.Conference;
+import com.rossotti.basketball.model.Team.Division;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class PubTeam {

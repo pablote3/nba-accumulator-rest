@@ -24,10 +24,10 @@
 		<property name="dataSource" ref="dataSource" />
 		<property name="annotatedClasses">
 			<list>
-				<value>com.rossotti.basketball.models.Team</value>
-				<value>com.rossotti.basketball.models.Official</value>
-				<value>com.rossotti.basketball.models.Player</value>
-				<value>com.rossotti.basketball.models.RosterPlayer</value>
+				<value>com.rossotti.basketball.model.Team</value>
+				<value>com.rossotti.basketball.model.Official</value>
+				<value>com.rossotti.basketball.model.Player</value>
+				<value>com.rossotti.basketball.model.RosterPlayer</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

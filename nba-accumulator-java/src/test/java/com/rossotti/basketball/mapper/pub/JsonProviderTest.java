@@ -1,4 +1,4 @@
-package com.rossotti.basketball.util;
+package com.rossotti.basketball.mapper.pub;
 
 import java.io.IOException;
 
@@ -14,7 +14,7 @@ import org.junit.Test;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rossotti.basketball.app.providers.JsonProvider;
+import com.rossotti.basketball.app.provider.JsonProvider;
 
 public class JsonProviderTest {
 	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();

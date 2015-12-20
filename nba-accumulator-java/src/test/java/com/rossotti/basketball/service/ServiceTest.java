@@ -1,4 +1,4 @@
-package com.rossotti.basketball;
+package com.rossotti.basketball.service;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -13,11 +13,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.rossotti.basketball.app.resources.TeamResource;
+import com.rossotti.basketball.app.resource.TeamResource;
 import com.rossotti.basketball.dao.TeamDAO;
-import com.rossotti.basketball.models.Team;
-import com.rossotti.basketball.models.Team.Conference;
-import com.rossotti.basketball.models.Team.Division;
+import com.rossotti.basketball.model.Team;
+import com.rossotti.basketball.model.Team.Conference;
+import com.rossotti.basketball.model.Team.Division;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ServiceTest {
