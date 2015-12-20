@@ -24,6 +24,7 @@ import org.joda.time.format.DateTimeFormatter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rossotti.basketball.pub.PubRosterPlayer;
 import com.rossotti.basketball.pub.PubRosterPlayer_ByPlayer;
+import com.rossotti.basketball.pub.PubRosterPlayer_ByTeam;
 
 @Entity
 @Table (name="rosterPlayer")
@@ -160,7 +161,7 @@ public class RosterPlayer {
 												path(this.getPlayer().getFirstName()).
 												path(this.getPlayer().getBirthdate().toString(fmt)).
 												path(this.getFromDate().toString(fmt)).build();
-		return new PubRosterPlayer( self,
+		return new PubRosterPlayer(self,
 							this.fromDate,
 							this.toDate,
 							this.position,
@@ -176,11 +177,26 @@ public class RosterPlayer {
 												path(this.getPlayer().getFirstName()).
 												path(this.getPlayer().getBirthdate().toString(fmt)).
 												path(this.getFromDate().toString(fmt)).build();
-		return new PubRosterPlayer_ByPlayer( self,
+		return new PubRosterPlayer_ByPlayer(self,
 							this.fromDate,
 							this.toDate,
 							this.position,
 							this.number,
 							this.getTeam().toPubTeam(uriInfo));
+	}
+
+	public PubRosterPlayer_ByTeam toPubRosterPlayer_ByTeam(UriInfo uriInfo) {
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
+		URI self = uriInfo.getBaseUriBuilder().path("rosterPlayers").
+												path(this.getPlayer().getLastName()).
+												path(this.getPlayer().getFirstName()).
+												path(this.getTeam().getTeamKey()).
+												path(this.getFromDate().toString(fmt)).build();
+		return new PubRosterPlayer_ByTeam(self,
+							this.fromDate,
+							this.toDate,
+							this.position,
+							this.number,
+							this.getPlayer().toPubPlayer(uriInfo));
 	}
 }

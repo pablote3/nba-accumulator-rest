@@ -28,8 +28,10 @@ import com.rossotti.basketball.models.RosterPlayer;
 import com.rossotti.basketball.pub.PubPlayer;
 import com.rossotti.basketball.pub.PubRosterPlayer;
 import com.rossotti.basketball.pub.PubRosterPlayer_ByPlayer;
-import com.rossotti.basketball.pub.PubRosterPlayers;
+import com.rossotti.basketball.pub.PubRosterPlayer_ByTeam;
 import com.rossotti.basketball.pub.PubRosterPlayers_ByPlayer;
+import com.rossotti.basketball.pub.PubRosterPlayers_ByTeam;
+import com.rossotti.basketball.pub.PubTeam;
 
 @Service
 @Path("/rosterPlayers")
@@ -39,7 +41,7 @@ public class RosterPlayerResource {
 	private RosterPlayerDAO rosterPlayerDAO;
 
 	@GET
-	@Path("/birthdate/{lastName}/{firstName}/{birthdate}/{asOfDate}")
+	@Path("/player/{lastName}/{firstName}/{birthdate}/{asOfDate}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findRosterPlayerByPlayer(@Context UriInfo uriInfo, 
 											@PathParam("lastName") String lastName,
@@ -52,7 +54,7 @@ public class RosterPlayerResource {
 			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
 			RosterPlayer rosterPlayer = rosterPlayerDAO.findRosterPlayer(lastName, firstName, birthdate, asOfDate);
 			if (rosterPlayer.isFound()) {
-				PubRosterPlayer_ByPlayer pubRosterPlayer = rosterPlayer.toPubRosterPlayer_ByPlayer(uriInfo);
+				PubRosterPlayer pubRosterPlayer = rosterPlayer.toPubRosterPlayer(uriInfo);
 				return Response.ok(pubRosterPlayer)
 					.link(uriInfo.getAbsolutePath(), "rosterPlayer")
 					.build();
@@ -133,14 +135,15 @@ public class RosterPlayerResource {
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 		LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
 		List<RosterPlayer> listRosterPlayers = rosterPlayerDAO.findRosterPlayers(teamKey, asOfDate);
+		PubTeam pubTeam = listRosterPlayers.get(0).getTeam().toPubTeam(uriInfo);
 		if (listRosterPlayers.size() > 0) {
-			List<PubRosterPlayer> listPubRosterPlayers = new ArrayList<PubRosterPlayer>();
+			List<PubRosterPlayer_ByTeam> listPubRosterPlayers = new ArrayList<PubRosterPlayer_ByTeam>();
 			for (RosterPlayer rosterPlayer : listRosterPlayers) {
-				PubRosterPlayer pubRosterPlayer = rosterPlayer.toPubRosterPlayer(uriInfo);
+				PubRosterPlayer_ByTeam pubRosterPlayer = rosterPlayer.toPubRosterPlayer_ByTeam(uriInfo);
 				listPubRosterPlayers.add(pubRosterPlayer);
 			}
-			PubRosterPlayers pubRosterPlayers = new PubRosterPlayers(uriInfo.getAbsolutePath(), listPubRosterPlayers);
-			return Response.ok(pubRosterPlayers)
+			PubRosterPlayers_ByTeam pubRosterTeams = new PubRosterPlayers_ByTeam(uriInfo.getAbsolutePath(), pubTeam, listPubRosterPlayers);
+			return Response.ok(pubRosterTeams)
 					.link(uriInfo.getAbsolutePath(), "rosterPlayer")
 					.build();
 		}
