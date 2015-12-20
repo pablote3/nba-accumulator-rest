@@ -158,11 +158,9 @@ public class RosterPlayer {
 												path(this.getPlayer().getLastName()).
 												path(this.getPlayer().getFirstName()).
 												path(this.getPlayer().getBirthdate().toString(fmt)).
-												path(this.getFromDate().toString(fmt)).
-												path(this.getToDate().toString(fmt)).build();
+												path(this.getFromDate().toString(fmt)).build();
 		return new PubRosterPlayer( self,
 							this.fromDate,
-							this.toDate,
 							this.position,
 							this.number,
 							this.getPlayer().toPubPlayer(uriInfo),

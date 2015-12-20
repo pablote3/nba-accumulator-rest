@@ -134,13 +134,11 @@ public class Official {
 		self = uriInfo.getBaseUriBuilder().path("officials").
 											path(this.getLastName()).
 											path(this.getFirstName()).
-											path(this.getFromDate().toString(fmt)).
-											path(this.getToDate().toString(fmt)).build();
+											path(this.getFromDate().toString(fmt)).build();
 		return new PubOfficial( self,
 							this.lastName,
 							this.firstName,
 							this.fromDate,
-							this.toDate,
 							this.number);
 	}
 }

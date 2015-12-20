@@ -17,7 +17,6 @@ public class PubOfficial {
 	private final String lastName;
 	private final String firstName;
 	private final String fromDate;
-	private final String toDate;
 	private final String number;
 
 	@JsonCreator
@@ -25,14 +24,12 @@ public class PubOfficial {
 					@JsonProperty("lastName") String lastName,
 					@JsonProperty("firstName") String firstName,
 					@JsonProperty("fromDate") LocalDate fromDate,
-					@JsonProperty("toDate") LocalDate toDate,
 					@JsonProperty("number") String number) {
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		this.self = self;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.fromDate = fromDate.toString(fmt);
-		this.toDate = toDate.toString(fmt);
 		this.number = number;
 	}
 
@@ -47,9 +44,6 @@ public class PubOfficial {
 	}
 	public String getFromDate() {
 		return fromDate;
-	}
-	public String getToDate() {
-		return toDate;
 	}
 	public String getNumber() {
 		return number;

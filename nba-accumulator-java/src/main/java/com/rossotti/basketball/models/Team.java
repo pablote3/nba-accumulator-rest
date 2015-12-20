@@ -227,15 +227,13 @@ public class Team {
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		self = uriInfo.getBaseUriBuilder().path("teams").
 											path(this.getTeamKey()).
-											path(this.getFromDate().toString(fmt)).
-											path(this.getToDate().toString(fmt)).build();
+											path(this.getFromDate().toString(fmt)).build();
 		return new PubTeam( self,
 							this.teamKey,
 							this.firstName,
 							this.lastName,
 							this.fullName,
 							this.fromDate,
-							this.toDate,
 							this.abbr,
 							this.conference,
 							this.division,

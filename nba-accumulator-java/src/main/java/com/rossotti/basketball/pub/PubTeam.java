@@ -22,7 +22,6 @@ public class PubTeam {
 	private final String fullName;
 	private final String abbr;
 	private final String fromDate;
-	private final String toDate;
 	private final String conference;
 	private final String division;
 	private final String city;
@@ -36,7 +35,6 @@ public class PubTeam {
 					@JsonProperty("lastName") String lastName,
 					@JsonProperty("fullName") String fullName,
 					@JsonProperty("fromDate") LocalDate fromDate,
-					@JsonProperty("toDate") LocalDate toDate,
 					@JsonProperty("abbr") String abbr,
 					@JsonProperty("conference") Conference conference,
 					@JsonProperty("division") Division division,
@@ -51,7 +49,6 @@ public class PubTeam {
 		this.fullName = fullName;
 		this.abbr = abbr;
 		this.fromDate = fromDate.toString(fmt);
-		this.toDate = toDate.toString(fmt);
 		this.conference = conference.name();
 		this.division = division.name();
 		this.city = city;
@@ -79,9 +76,6 @@ public class PubTeam {
 	}
 	public String getFromDate() {
 		return fromDate;
-	}
-	public String getToDate() {
-		return toDate;
 	}
 	public String getConference() {
 		return conference;

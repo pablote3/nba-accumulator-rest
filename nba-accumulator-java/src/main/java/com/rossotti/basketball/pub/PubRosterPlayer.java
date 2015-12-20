@@ -16,7 +16,6 @@ public class PubRosterPlayer {
 
 	private final URI self;
 	private final String fromDate;
-	private final String toDate;
 	private final String position;
 	private final String number;
 	private final PubTeam team;
@@ -25,7 +24,6 @@ public class PubRosterPlayer {
 	@JsonCreator
 	public PubRosterPlayer(@JsonProperty("self") URI self,
 					@JsonProperty("fromDate") LocalDate fromDate,
-					@JsonProperty("toDate") LocalDate toDate,
 					@JsonProperty("position") Position position,
 					@JsonProperty("number") String number,
 					@JsonProperty("player") PubPlayer player,
@@ -33,7 +31,6 @@ public class PubRosterPlayer {
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		this.self = self;
 		this.fromDate = fromDate.toString(fmt);
-		this.toDate = toDate.toString(fmt);
 		this.position = position.name();
 		this.number = number;
 		this.player = player;
@@ -45,9 +42,6 @@ public class PubRosterPlayer {
 	}
 	public String getFromDate() {
 		return fromDate;
-	}
-	public String getToDate() {
-		return toDate;
 	}
 	public String getPosition() {
 		return position;
