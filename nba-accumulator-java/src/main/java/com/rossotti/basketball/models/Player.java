@@ -153,7 +153,7 @@ public class Player {
 
 	public String toString() {
 		return new StringBuffer()
-			.append("\n" + "  id: " + this.id)
+			.append("\n" + "  id: " + this.id + "\n")
 			.append("  lastName: " + this.lastName + "\n")
 			.append("  firstName: " + this.firstName + "\n")
 			.append("  birthdate: " + this.birthdate + "\n")

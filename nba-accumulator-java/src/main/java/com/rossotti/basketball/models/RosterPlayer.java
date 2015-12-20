@@ -141,7 +141,7 @@ public class RosterPlayer {
 
 	public String toString() {
 		return new StringBuffer()
-			.append("\n" + "  id: " + this.id)
+			.append("\n" + "  id: " + this.id + "\n")
 			.append("  lastName: " + player.getLastName() + "\n")
 			.append("  firstName: " + player.getFirstName() + "\n")
 			.append("  birthDate: " + player.getBirthdate() + "\n")
