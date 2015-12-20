@@ -27,63 +27,35 @@ public class TeamDaoTest {
 	//'harlem-globetrotters', '2009-07-01', '2010-06-30', 'Harlem Globetrotters'
 	
 	@Test
-	public void findTeamByKey_MatchFromDate() {
-		Team findTeam = teamDAO.findTeam("harlem-globetrotters", new LocalDate("2009-07-01"), new LocalDate("2009-07-01"));
+	public void findTeamByKey_Found_FromDate() {
+		Team findTeam = teamDAO.findTeam("harlem-globetrotters", new LocalDate("2009-07-01"));
 		Assert.assertEquals("Harlem Globetrotters", findTeam.getFullName());
 		Assert.assertTrue(findTeam.isFound());
 	}
 
 	@Test
-	public void findTeamByKey_MatchToDate() {
-		Team findTeam = teamDAO.findTeam("harlem-globetrotters", new LocalDate("2010-06-30"), new LocalDate("2010-06-30"));
-		Assert.assertEquals("Harlem Globetrotters", findTeam.getFullName());
-		Assert.assertTrue(findTeam.isFound());
-	}
-
-	@Test
-	public void findTeamByKey_MatchDateRange() {
-		Team findTeam = teamDAO.findTeam("harlem-globetrotters", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"));
+	public void findTeamByKey_Found_ToDate() {
+		Team findTeam = teamDAO.findTeam("harlem-globetrotters", new LocalDate("2010-06-30"));
 		Assert.assertEquals("Harlem Globetrotters", findTeam.getFullName());
 		Assert.assertTrue(findTeam.isFound());
 	}
 
 	@Test
 	public void findTeamByKey_NotFound_TeamKey() {
-		Team findTeam = teamDAO.findTeam("harlem-hoopers", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"));
+		Team findTeam = teamDAO.findTeam("harlem-hoopers", new LocalDate("2009-07-01"));
 		Assert.assertTrue(findTeam.isNotFound());
 	}
 
 	@Test
 	public void findTeamByKey_NotFound_BeforeAsOfDate() {
-		Team findTeam = teamDAO.findTeam("harlem-globetrotters", new LocalDate("2009-06-30"), new LocalDate("2009-06-30"));
+		Team findTeam = teamDAO.findTeam("harlem-globetrotters", new LocalDate("2009-06-30"));
 		Assert.assertTrue(findTeam.isNotFound());
 	}
 
 	@Test
 	public void findTeamByKey_NotFound_AfterAsOfDate() {
-		Team findTeam = teamDAO.findTeam("harlem-globetrotters", new LocalDate("2010-07-01"), new LocalDate("2010-07-01"));
+		Team findTeam = teamDAO.findTeam("harlem-globetrotters", new LocalDate("2010-07-01"));
 		Assert.assertTrue(findTeam.isNotFound());
-	}
-
-	//'chicago-zephyrs', '2009-07-01', '9999-12-31', 'Chicago Zephyrs'
-	//'Luke', 'Puzdrakiewicz', '2002-02-20', 'Luke Puzdrakiewicz'
-
-	@Test
-	public void findTeamByKey_RosterPlayer_InsideDateRange() {
-		Team team = teamDAO.findTeam("chicago-zephyrs", new LocalDate("2009-07-01"), new LocalDate("9999-12-31"));
-		Assert.assertEquals("Chicago Zephyrs", team.getFullName());
-		Assert.assertEquals(new LocalDate("2009-11-30"), team.getRosterPlayers().get(0).getFromDate());
-		Assert.assertEquals("Luke", team.getRosterPlayers().get(0).getPlayer().getFirstName());
-		Assert.assertEquals(3, team.getRosterPlayers().size());
-	}
-
-	@Test
-	public void findTeamByKey_MatchRosterPlayer_OutsideDateRange() {
-		Team team = teamDAO.findTeam("chicago-zephyrs", new LocalDate("2009-07-01"), new LocalDate("2009-10-29"));
-		Assert.assertEquals("Chicago Zephyrs", team.getFullName());
-		Assert.assertEquals(new LocalDate("2009-11-30"), team.getRosterPlayers().get(0).getFromDate());
-		Assert.assertEquals("Luke", team.getRosterPlayers().get(0).getPlayer().getFirstName());
-		Assert.assertEquals(3, team.getRosterPlayers().size());
 	}
 
 	//'st-louis-bombers', '2009-07-01', '2010-06-30', 'St. Louis Bombers'
@@ -103,13 +75,13 @@ public class TeamDaoTest {
 	
 	@Test
 	public void findTeamsByDateRange_Found() {
-		List<Team> teams = teamDAO.findTeams(new LocalDate("2009-10-31"), new LocalDate("2010-06-30"));
+		List<Team> teams = teamDAO.findTeams(new LocalDate("2009-10-31"));
 		Assert.assertEquals(3, teams.size());
 	}
 
 	@Test
 	public void findTeamsByDateRange_NotFound() {
-		List<Team> teams = teamDAO.findTeams(new LocalDate("1909-10-31"), new LocalDate("1910-06-30"));
+		List<Team> teams = teamDAO.findTeams(new LocalDate("1909-10-31"));
 		Assert.assertEquals(0, teams.size());
 	}
 
@@ -118,7 +90,7 @@ public class TeamDaoTest {
 	@Test
 	public void createTeam_Created_AsOfDate() {
 		Team createTeam = teamDAO.createTeam(createMockTeam("seattle-supersonics", new LocalDate("2012-07-01"), new LocalDate("9999-12-31"), "Seattle Supersonics"));
-		Team findTeam = teamDAO.findTeam("seattle-supersonics", new LocalDate("2012-07-01"), new LocalDate("2012-07-01"));
+		Team findTeam = teamDAO.findTeam("seattle-supersonics", new LocalDate("2012-07-01"));
 		Assert.assertTrue(createTeam.isCreated());
 		Assert.assertEquals("Seattle Supersonics", findTeam.getFullName());
 	}
@@ -126,7 +98,7 @@ public class TeamDaoTest {
 	@Test
 	public void createTeam_Created_DateRange() {
 		Team createTeam = teamDAO.createTeam(createMockTeam("baltimore-bullets", new LocalDate("2006-07-01"), new LocalDate("2006-07-02"), "Baltimore Bullets2"));
-		Team findTeam = teamDAO.findTeam("baltimore-bullets", new LocalDate("2006-07-01"), new LocalDate("2006-07-02"));
+		Team findTeam = teamDAO.findTeam("baltimore-bullets", new LocalDate("2006-07-01"));
 		Assert.assertTrue(createTeam.isCreated());
 		Assert.assertEquals("Baltimore Bullets2", findTeam.getFullName());
 	}
@@ -148,7 +120,7 @@ public class TeamDaoTest {
 	@Test
 	public void updateTeam() {
 		teamDAO.updateTeam(updateMockTeam("st-louis-bombers", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"), "St. Louis Bombiers"));
-		Team team = teamDAO.findTeam("st-louis-bombers", new LocalDate("2010-05-30"), new LocalDate("2010-05-30"));
+		Team team = teamDAO.findTeam("st-louis-bombers", new LocalDate("2010-05-30"));
 		Assert.assertEquals("St. Louis Bombiers", team.getFullName());
 	}
 
@@ -167,15 +139,15 @@ public class TeamDaoTest {
 
 	@Test
 	public void deleteTeam_Deleted() {
-		Team deleteTeam = teamDAO.deleteTeam("rochester-royals", new LocalDate("2009-06-30"), new LocalDate("2009-06-30"));
-		Team findTeam = teamDAO.findTeam("rochester-royals", new LocalDate("2009-06-30"), new LocalDate("2009-06-30"));
+		Team deleteTeam = teamDAO.deleteTeam("rochester-royals", new LocalDate("2009-06-30"));
+		Team findTeam = teamDAO.findTeam("rochester-royals", new LocalDate("2009-06-30"));
 		Assert.assertTrue(deleteTeam.isDeleted());
 		Assert.assertTrue(findTeam.isNotFound());
 	}
 
 	@Test
 	public void deleteTeam_NotFound() {
-		Team deleteTeam = teamDAO.deleteTeam("rochester-royales", new LocalDate("2009-07-01"), new LocalDate("2009-07-01"));
+		Team deleteTeam = teamDAO.deleteTeam("rochester-royales", new LocalDate("2009-07-01"));
 		Assert.assertTrue(deleteTeam.isNotFound());
 	}
 

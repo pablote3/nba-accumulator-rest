@@ -38,17 +38,15 @@ public class TeamResource {
 	private TeamDAO teamDAO;
 
 	@GET
-	@Path("/{key}/{fromDate}/{toDate}")
+	@Path("/{key}/{asOfDate}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findTeamByKeyDate(@Context UriInfo uriInfo, 
 									@PathParam("key") String key, 
-									@PathParam("fromDate") String fromDateString, 
-									@PathParam("toDate") String toDateString) {
+									@PathParam("asOfDate") String asOfDateString) {
 		try {
 			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate fromDate = formatter.parseLocalDate(fromDateString);
-			LocalDate toDate = formatter.parseLocalDate(toDateString);
-			Team team = teamDAO.findTeam(key, fromDate, toDate);
+			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+			Team team = teamDAO.findTeam(key, asOfDate);
 			if (team.isFound()) {
 				PubTeam pubTeam = team.toPubTeam(uriInfo);
 				return Response.ok(pubTeam)
@@ -65,40 +63,16 @@ public class TeamResource {
 			throw new BadRequestException("asOfDate must be yyyy-MM-dd format", e);
 		}
 	}
-	
-	@GET
-	@Path("/{key}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response findTeamsByKey(@Context UriInfo uriInfo, 
-									@PathParam("key") String key) {
-		List<Team> listTeams = teamDAO.findTeams(key);
-		if (listTeams.size() > 0) {
-			List<PubTeam> listPubTeams = new ArrayList<PubTeam>();
-			for (Team team : listTeams) {
-				PubTeam pubTeam = team.toPubTeam(uriInfo);
-				listPubTeams.add(pubTeam);
-			}
-			PubTeams pubTeams = new PubTeams(uriInfo.getAbsolutePath(), listPubTeams);
-			return Response.ok(pubTeams)
-				.link(uriInfo.getAbsolutePath(), "team")
-				.build();
-		}
-		else {
-			return Response.status(404).build();
-		}
-	}
 
 	@GET
-	@Path("/{fromDate}/{toDate}")
+	@Path("/{asOfDate}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findTeamsByDate(@Context UriInfo uriInfo, 
-									@PathParam("fromDate") String fromDateString, 
-									@PathParam("toDate") String toDateString) {
+									@PathParam("asOfDate") String asOfDateString) {
 		try {
 			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate fromDate = formatter.parseLocalDate(fromDateString);
-			LocalDate toDate = formatter.parseLocalDate(toDateString);
-			List<Team> listTeams = teamDAO.findTeams(fromDate, toDate);
+			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+			List<Team> listTeams = teamDAO.findTeams(asOfDate);
 			if (listTeams.size() > 0) {
 				List<PubTeam> listPubTeams = new ArrayList<PubTeam>();
 				for (Team team : listTeams) {
@@ -123,7 +97,7 @@ public class TeamResource {
 	public Response createTeam(@Context UriInfo uriInfo, Team createTeam) {
 		try {
 			Team team = teamDAO.createTeam(createTeam);
-			if (team.isDeleted()) {
+			if (team.isCreated()) {
 				return Response.created(uriInfo.getAbsolutePath()).build();
 			}
 			else {
@@ -156,16 +130,14 @@ public class TeamResource {
 	}
 	
 	@DELETE
-	@Path("/{key}/{fromDate}/{toDate}")
+	@Path("/{key}/{asOfDate}")
 	public Response deleteTeam(@Context UriInfo uriInfo, 
 								@PathParam("key") String key, 
-								@PathParam("fromDate") String fromDateString, 
-								@PathParam("toDate") String toDateString) {
+								@PathParam("asOfDate") String asOfDateString) {
 		try {
 			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate fromDate = formatter.parseLocalDate(fromDateString);
-			LocalDate toDate = formatter.parseLocalDate(toDateString);
-			Team team = teamDAO.deleteTeam(key, fromDate, toDate);
+			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+			Team team = teamDAO.deleteTeam(key, asOfDate);
 			if (team.isDeleted()) {
 				return Response.noContent().build();
 			}

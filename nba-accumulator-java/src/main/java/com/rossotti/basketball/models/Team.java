@@ -214,10 +214,11 @@ public class Team {
 
 	public String toString() {
 		return new StringBuffer()
-			.append("\n" + "  id: " + this.id)
-			.append("  teamKey: " + this.teamKey)
+			.append("\n" + "  id: " + this.id + "\n")
+			.append("  teamKey: " + this.teamKey + "\n")
 			.append("  fromDate: " + this.fromDate + "\n")
 			.append("  toDate: " + this.toDate + "\n")
+			.append("  statusCode: " + this.statusCode)
 			.toString();
 	}
 

@@ -22,11 +22,11 @@ public class TeamDAOImpl implements TeamDAO {
 	private SessionFactory sessionFactory;
 
 	@Override
-	public Team findTeam(String teamKey, LocalDate fromDate, LocalDate toDate) {
+	public Team findTeam(String teamKey, LocalDate asOfDate) {
 		Team team = (Team)getSessionFactory().getCurrentSession().createCriteria(Team.class)
 			.add(Restrictions.eq("teamKey", teamKey))
-			.add(Restrictions.le("fromDate", fromDate))
-			.add(Restrictions.ge("toDate", toDate))
+			.add(Restrictions.le("fromDate", asOfDate))
+			.add(Restrictions.ge("toDate", asOfDate))
 			.uniqueResult();
 		if (team == null) {
 			team = new Team(StatusCode.NotFound);
@@ -36,10 +36,10 @@ public class TeamDAOImpl implements TeamDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Team> findTeams(LocalDate fromDate, LocalDate toDate) {
+	public List<Team> findTeams(LocalDate asOfDate) {
 		List<Team> teams = getSessionFactory().getCurrentSession().createCriteria(Team.class)
-			.add(Restrictions.le("fromDate", fromDate))
-			.add(Restrictions.ge("toDate", toDate))
+			.add(Restrictions.le("fromDate", asOfDate))
+			.add(Restrictions.ge("toDate", asOfDate))
 			.list();
 		if (teams == null) {
 			teams = new ArrayList<Team>();
@@ -61,7 +61,7 @@ public class TeamDAOImpl implements TeamDAO {
 
 	@Override
 	public Team createTeam(Team createTeam) {
-		Team team = findTeam(createTeam.getTeamKey(), createTeam.getFromDate(), createTeam.getToDate());
+		Team team = findTeam(createTeam.getTeamKey(), createTeam.getFromDate());
 		if (team.isNotFound()) {
 			getSessionFactory().getCurrentSession().persist(createTeam);
 			createTeam.setStatusCode(StatusCode.Created);
@@ -74,7 +74,7 @@ public class TeamDAOImpl implements TeamDAO {
 
 	@Override
 	public Team updateTeam(Team updateTeam) {
-		Team team = findTeam(updateTeam.getTeamKey(), updateTeam.getFromDate(), updateTeam.getToDate());
+		Team team = findTeam(updateTeam.getTeamKey(), updateTeam.getFromDate());
 		if (team.isFound()) {
 			team.setLastName(updateTeam.getLastName());
 			team.setFirstName(updateTeam.getFirstName());
@@ -87,14 +87,15 @@ public class TeamDAOImpl implements TeamDAO {
 			team.setCity(updateTeam.getCity());
 			team.setState(updateTeam.getState());
 			team.setSiteName(updateTeam.getSiteName());
+			team.setStatusCode(StatusCode.Updated);
 			getSessionFactory().getCurrentSession().persist(team);
 		}
 		return team;
 	}
 
 	@Override
-	public Team deleteTeam(String teamKey, LocalDate fromDate, LocalDate toDate) {
-		Team team = findTeam(teamKey, fromDate, toDate);
+	public Team deleteTeam(String teamKey, LocalDate asOfDate) {
+		Team team = findTeam(teamKey, asOfDate);
 		if (team.isFound()) {
 			getSessionFactory().getCurrentSession().delete(team);
 			team = new Team(StatusCode.Deleted);
