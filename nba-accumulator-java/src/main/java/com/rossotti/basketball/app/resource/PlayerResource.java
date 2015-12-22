@@ -93,7 +93,7 @@ public class PlayerResource {
 	public Response createPlayer(@Context UriInfo uriInfo, Player createPlayer) {
 		try {
 			Player player = playerDAO.createPlayer(createPlayer);
-			if (player.isDeleted()) {
+			if (player.isCreated()) {
 				return Response.created(uriInfo.getAbsolutePath()).build();
 			}
 			else {
