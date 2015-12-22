@@ -190,6 +190,7 @@ public class RosterPlayerResource {
 		}
 	}
 
+//	cannot delete or update parent row - foreign key constraints fail
 //	@DELETE
 //	@Path("/{lastName}/{firstName}/{birthdate}/{asOfDate}")
 //	public Response deleteRosterPlayer(@Context UriInfo uriInfo, 
