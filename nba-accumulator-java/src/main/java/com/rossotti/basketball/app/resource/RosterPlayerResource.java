@@ -7,6 +7,7 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -157,7 +158,7 @@ public class RosterPlayerResource {
 	public Response createRosterPlayer(@Context UriInfo uriInfo, RosterPlayer createRosterPlayer) {
 		try {
 			RosterPlayer rosterPlayer = rosterPlayerDAO.createRosterPlayer(createRosterPlayer);
-			if (rosterPlayer.isDeleted()) {
+			if (rosterPlayer.isCreated()) {
 				return Response.created(uriInfo.getAbsolutePath()).build();
 			}
 			else {
@@ -170,46 +171,48 @@ public class RosterPlayerResource {
 		}
 	}
 
-//	@PUT
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	public Response updatePlayer(Player updatePlayer) {
-//		try {
-//			Player player = playerDAO.updatePlayer(updatePlayer);
-//			if (player.isUpdated()) {
-//				return Response.noContent().build();
-//			}
-//			else if (player.isNotFound()) {
-//				return Response.status(404).build();
-//			}
-//			else {
-//				return Response.status(500).build();
-//			}
-//		} catch (PropertyValueException e) {
-//			throw new BadRequestException("missing required field(s)", e);
-//		}
-//	}
-//	
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response updateRosterPlayer(RosterPlayer updateRosterPlayer) {
+		try {
+			RosterPlayer rosterPlayer = rosterPlayerDAO.updateRosterPlayer(updateRosterPlayer);
+			if (rosterPlayer.isUpdated()) {
+				return Response.noContent().build();
+			}
+			else if (rosterPlayer.isNotFound()) {
+				return Response.status(404).build();
+			}
+			else {
+				return Response.status(500).build();
+			}
+		} catch (PropertyValueException e) {
+			throw new BadRequestException("missing required field(s)", e);
+		}
+	}
+
 //	@DELETE
-//	@Path("/{lastName}/{firstName}/{birthdate}")
-//	public Response deletePlayer(@Context UriInfo uriInfo, 
-//								@PathParam("lastName") String lastName, 
-//								@PathParam("firstName") String firstName, 
-//								@PathParam("birthdate") String birthdateString) {
+//	@Path("/{lastName}/{firstName}/{birthdate}/{asOfDate}")
+//	public Response deleteRosterPlayer(@Context UriInfo uriInfo, 
+//									@PathParam("lastName") String lastName, 
+//									@PathParam("firstName") String firstName, 
+//									@PathParam("birthdate") String birthdateString, 
+//									@PathParam("asOfdate") String asOfDateString) {
 //		try {
 //			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 //			LocalDate birthdate = formatter.parseLocalDate(birthdateString);
-//			Player player = playerDAO.deletePlayer(lastName, firstName, birthdate);
-//			if (player.isDeleted()) {
+//			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+//			RosterPlayer rosterPlayer = rosterPlayerDAO.deleteRosterPlayer(lastName, firstName, birthdate, asOfDate);
+//			if (rosterPlayer.isDeleted()) {
 //				return Response.noContent().build();
 //			}
-//			else if (player.isNotFound()){
+//			else if (rosterPlayer.isNotFound()){
 //				return Response.status(404).build();
 //			}
 //			else {
 //				return Response.status(500).build();
 //			}
 //		} catch (IllegalArgumentException e) {
-//			throw new BadRequestException("birthdate must be yyyy-MM-dd format", e);
+//			throw new BadRequestException("dates must be yyyy-MM-dd format", e);
 //		}
 //	}
 }
