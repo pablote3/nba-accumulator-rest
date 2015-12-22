@@ -21,7 +21,6 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rossotti.basketball.pub.PubRosterPlayer;
 import com.rossotti.basketball.pub.PubRosterPlayer_ByPlayer;
 import com.rossotti.basketball.pub.PubRosterPlayer_ByTeam;
@@ -91,7 +90,6 @@ public class RosterPlayer {
 
 	@Column(name="fromDate", nullable=false)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-	@JsonProperty("from_date")
 	private LocalDate fromDate;
 	public LocalDate getFromDate()  {
 		return fromDate;
@@ -102,7 +100,6 @@ public class RosterPlayer {
 
 	@Column(name="toDate", nullable=false)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-	@JsonProperty("to_date")
 	private LocalDate toDate;
 	public LocalDate getToDate()  {
 		return toDate;
@@ -112,7 +109,6 @@ public class RosterPlayer {
 	}
 
 	@Column(name="number", length=3, nullable=false)
-	@JsonProperty("number")
 	private String number;
 	public String getNumber() {
 		return number;
@@ -123,7 +119,6 @@ public class RosterPlayer {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name="position", length=5, nullable=false)
-	@JsonProperty("position")
 	private Position position;
 	public Position getPosition() {
 		return position;

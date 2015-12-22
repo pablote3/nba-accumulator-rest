@@ -23,7 +23,6 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rossotti.basketball.pub.PubTeam;
 
 @Entity
@@ -79,7 +78,6 @@ public class Team {
 	}
 
 	@Column(name="teamKey", length=35, nullable=false)
-	@JsonProperty("team_id")
 	private String teamKey;
 	public String getTeamKey() {
 		return teamKey;
@@ -90,7 +88,6 @@ public class Team {
 
 	@Column(name="fromDate", nullable=false)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-	@JsonProperty("from_date")
 	private LocalDate fromDate;
 	public LocalDate getFromDate()  {
 		return fromDate;
@@ -101,7 +98,6 @@ public class Team {
 
 	@Column(name="toDate", nullable=false)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-	@JsonProperty("to_date")
 	private LocalDate toDate;
 	public LocalDate getToDate()  {
 		return toDate;
@@ -111,7 +107,6 @@ public class Team {
 	}
 
 	@Column(name="firstName", length=15, nullable=false)
-	@JsonProperty("first_name")
 	private String firstName;
 	public String getFirstName() {
 		return firstName;
@@ -121,7 +116,6 @@ public class Team {
 	}
 
 	@Column(name="lastName", length=20, nullable=false)
-	@JsonProperty("last_name")
 	private String lastName;
 	public String getLastName() {
 		return lastName;
@@ -131,7 +125,6 @@ public class Team {
 	}
 
 	@Column(name="fullName", length=35, nullable=false)
-	@JsonProperty("full_name")
 	private String fullName;
 	public String getFullName() {
 		return fullName;
@@ -141,7 +134,6 @@ public class Team {
 	}
 
 	@Column(name="abbr", length=5, nullable=false)
-	@JsonProperty("abbreviation")
 	private String abbr;
 	public String getAbbr() {
 		return abbr;
@@ -185,7 +177,6 @@ public class Team {
 	}
 
 	@Column(name="siteName", length=30, nullable=false)
-	@JsonProperty("site_name")
 	private String siteName;
 	public String getSiteName() {
 		return siteName;

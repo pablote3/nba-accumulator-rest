@@ -23,7 +23,6 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rossotti.basketball.pub.PubPlayer;
 
 @Entity
@@ -81,7 +80,6 @@ public class Player {
 	}
 
 	@Column(name="lastName", length=20, nullable=false)
-	@JsonProperty("last_name")
 	private String lastName;
 	public String getLastName() {
 		return lastName;
@@ -91,7 +89,6 @@ public class Player {
 	}
 
 	@Column(name="firstName", length=20, nullable=false)
-	@JsonProperty("first_name")
 	private String firstName;
 	public String getFirstName() {
 		return firstName;
@@ -102,7 +99,6 @@ public class Player {
 
 	@Column(name="birthdate", nullable=false)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-	@JsonProperty("birthdate")
 	private LocalDate birthdate;
 	public LocalDate getBirthdate()  {
 		return birthdate;
@@ -112,7 +108,6 @@ public class Player {
 	}
 
 	@Column(name="displayName", length=40, nullable=false)
-	@JsonProperty("display_name")
 	private String displayName;
 	public String getDisplayName() {
 		return displayName;
@@ -122,7 +117,6 @@ public class Player {
 	}
 
 	@Column(name="height", nullable=true)
-	@JsonProperty("height_in")
 	private Short height;
 	public Short getHeight() {
 		return height;
@@ -132,7 +126,6 @@ public class Player {
 	}
 
 	@Column(name="weight", nullable=true)
-	@JsonProperty("weight_lb")
 	private Short weight;
 	public Short getWeight() {
 		return weight;
@@ -142,7 +135,6 @@ public class Player {
 	}
 
 	@Column(name="birthplace", length=40, nullable=true)
-	@JsonProperty("birthplace")
 	private String birthplace;
 	public String getBirthplace() {
 		return birthplace;

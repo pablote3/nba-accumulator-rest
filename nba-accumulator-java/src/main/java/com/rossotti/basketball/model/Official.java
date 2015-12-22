@@ -19,7 +19,6 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rossotti.basketball.pub.PubOfficial;
 
 @Entity
@@ -66,7 +65,6 @@ public class Official {
 	}
 
 	@Column(name="lastName", length=25, nullable=false)
-	@JsonProperty("last_name")
 	private String lastName;
 	public String getLastName() {
 		return lastName;
@@ -76,7 +74,6 @@ public class Official {
 	}
 
 	@Column(name="firstName", length=25, nullable=false)
-	@JsonProperty("first_name")
 	private String firstName;
 	public String getFirstName() {
 		return firstName;
@@ -87,7 +84,6 @@ public class Official {
 
 	@Column(name="fromDate", nullable=false)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-	@JsonProperty("from_date")
 	private LocalDate fromDate;
 	public LocalDate getFromDate()  {
 		return fromDate;
@@ -98,7 +94,6 @@ public class Official {
 
 	@Column(name="toDate", nullable=false)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-	@JsonProperty("to_date")
 	private LocalDate toDate;
 	public LocalDate getToDate()  {
 		return toDate;
@@ -108,7 +103,6 @@ public class Official {
 	}
 
 	@Column(name="number", length=3, nullable=false)
-	@JsonProperty("number")
 	private String number;
 	public String getNumber() {
 		return number;
