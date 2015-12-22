@@ -70,7 +70,7 @@ public class Player {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="playerId")
+	@Column(name="id")
 	private Long id;
 	public Long getId() {
 		return id;
