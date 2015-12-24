@@ -67,6 +67,15 @@ public class Team {
 		this.rosterPlayers = rosterPlayers;
 	}
 
+	@OneToMany(mappedBy="team", fetch = FetchType.LAZY)
+	private List<BoxScore> boxScores = new ArrayList<BoxScore>();
+	public List<BoxScore> getBoxScores()  {
+		return boxScores;
+	}
+	public void setBoxScores(List<BoxScore> boxScores)  {
+		this.boxScores = boxScores;
+	}
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
