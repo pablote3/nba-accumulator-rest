@@ -36,6 +36,8 @@
 				<value>com.rossotti.basketball.model.Official</value>
 				<value>com.rossotti.basketball.model.Player</value>
 				<value>com.rossotti.basketball.model.RosterPlayer</value>
+				<value>com.rossotti.basketball.model.Game</value>
+				<value>com.rossotti.basketball.model.BoxScore</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
