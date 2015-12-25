@@ -16,7 +16,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 
 @Entity
 @Table (name="game")
@@ -87,14 +87,14 @@ public class Game {
 		this.id = id;
 	}
 
-	@Column(name="date", nullable=false)
+	@Column(name="gameDate", nullable=false)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
-	private DateTime date;
-	public DateTime getDate() {
-		return date;
+	private LocalDateTime gameDate;
+	public LocalDateTime getGameDate() {
+		return gameDate;
 	}
-	public void setDate(DateTime date) {
-		this.date = date;
+	public void setGameDate(LocalDateTime gameDate) {
+		this.gameDate = gameDate;
 	}
 
 	@Enumerated(EnumType.STRING)
@@ -133,10 +133,10 @@ public class Game {
 	public String toString() {
 		return new StringBuffer()
 			.append("\r" + "  id: " + this.id + "\n")
-			.append("  date: " + this.date + "\n")
+			.append("  gameDate: " + this.gameDate + "\n")
 			.append("  status: " + this.status + "\n")
 			.append("  seasonType: " + this.seasonType + "\n")
-			.append("  statusCode" + this.statusCode)
+			.append("  statusCode: " + this.statusCode)
 			.toString();
 	}
 }
