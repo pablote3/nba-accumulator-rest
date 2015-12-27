@@ -28,12 +28,14 @@ public class DateTimeUtil {
 		return dateTimeFormatter.parseLocalDateTime(strDateTime);
 	}
 
-	static public LocalDateTime getLocalDateTimeMin(String strDateTime) {
-		return dateTimeFormatter.parseLocalDateTime(strDateTime + " 01:00");
+	static public LocalDateTime getLocalDateTimeMin(LocalDate localDate) {
+		String stringDate = DateTimeUtil.getStringDate(localDate);
+		return dateTimeFormatter.parseLocalDateTime(stringDate + " 00:00");
 	}
 
-	static public LocalDateTime getLocalDateTimeMax(String strDateTime) {
-		return dateTimeFormatter.parseLocalDateTime(strDateTime + " 23:59");
+	static public LocalDateTime getLocalDateTimeMax(LocalDate localDate) {
+		String stringDate = DateTimeUtil.getStringDate(localDate);
+		return dateTimeFormatter.parseLocalDateTime(stringDate + " 23:59");
 	}
 
 	static public String getSeason(LocalDate date) {

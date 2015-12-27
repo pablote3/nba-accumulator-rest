@@ -30,4 +30,16 @@ public class DateTimeUtilTest {
 		LocalDateTime dateTime = DateTimeUtil.getLocalDateTime("2014-06-30 10:30");
 		Assert.assertEquals(new LocalDateTime("2014-06-30T10:30"), dateTime);
 	}
+	
+	@Test
+	public void getLocalDateTimeMin() {
+		LocalDateTime dateTime = DateTimeUtil.getLocalDateTimeMin(new LocalDate("2014-06-30"));
+		Assert.assertEquals(new LocalDateTime("2014-06-30T00:00"), dateTime);
+	}
+
+	@Test
+	public void getLocalDateTimeMax() {
+		LocalDateTime dateTime = DateTimeUtil.getLocalDateTimeMax(new LocalDate("2014-06-30"));
+		Assert.assertEquals(new LocalDateTime("2014-06-30T23:59"), dateTime);
+	}
 }
