@@ -16,10 +16,9 @@ import javax.ws.rs.core.UriInfo;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import com.rossotti.basketball.pub.PubOfficial;
+import com.rossotti.basketball.util.DateTimeUtil;
 
 @Entity
 @Table (name="official", uniqueConstraints=@UniqueConstraint(columnNames={"lastName", "firstName", "fromDate", "toDate"}))
@@ -124,11 +123,10 @@ public class Official {
 
 	public PubOfficial toPubOfficial(UriInfo uriInfo) {
 		URI self;
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		self = uriInfo.getBaseUriBuilder().path("officials").
 											path(this.getLastName()).
 											path(this.getFirstName()).
-											path(this.getFromDate().toString(fmt)).build();
+											path(DateTimeUtil.getStringDate(this.getFromDate())).build();
 		return new PubOfficial( self,
 							this.lastName,
 							this.firstName,

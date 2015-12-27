@@ -19,8 +19,6 @@ import javax.ws.rs.core.UriInfo;
 
 import org.hibernate.PropertyValueException;
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +27,7 @@ import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.model.Team;
 import com.rossotti.basketball.pub.PubTeam;
 import com.rossotti.basketball.pub.PubTeams;
+import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
 @Path("/teams")
@@ -44,8 +43,7 @@ public class TeamResource {
 									@PathParam("key") String key, 
 									@PathParam("asOfDate") String asOfDateString) {
 		try {
-			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
 			Team team = teamDAO.findTeam(key, asOfDate);
 			if (team.isFound()) {
 				PubTeam pubTeam = team.toPubTeam(uriInfo);
@@ -70,8 +68,7 @@ public class TeamResource {
 	public Response findTeamsByDate(@Context UriInfo uriInfo, 
 									@PathParam("asOfDate") String asOfDateString) {
 		try {
-			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
 			List<Team> listTeams = teamDAO.findTeams(asOfDate);
 			if (listTeams.size() > 0) {
 				List<PubTeam> listPubTeams = new ArrayList<PubTeam>();
@@ -135,8 +132,7 @@ public class TeamResource {
 								@PathParam("key") String key, 
 								@PathParam("asOfDate") String asOfDateString) {
 		try {
-			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
 			Team team = teamDAO.deleteTeam(key, asOfDate);
 			if (team.isDeleted()) {
 				return Response.noContent().build();

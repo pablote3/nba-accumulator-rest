@@ -58,6 +58,12 @@ public class GameDaoTest {
 		Long findId = gameDAO.findIdByDateTeam(new LocalDate("2015-10-27"), "chicago-zephyrs");
 		Assert.assertEquals(1L, findId.longValue());
 	}
+	
+	@Test
+	public void findGame_NotFound_GameDate() {
+		Long findId = gameDAO.findIdByDateTeam(new LocalDate("2015-10-26"), "chicago-zephyrs");
+		Assert.assertEquals(0L, findId.longValue());
+	}
 
 //	@Test
 //	public void findGame_NotFound_GameDate() {

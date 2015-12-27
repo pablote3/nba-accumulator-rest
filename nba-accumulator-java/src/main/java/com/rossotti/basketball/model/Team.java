@@ -20,10 +20,9 @@ import javax.ws.rs.core.UriInfo;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import com.rossotti.basketball.pub.PubTeam;
+import com.rossotti.basketball.util.DateTimeUtil;
 
 @Entity
 @Table (name="team", uniqueConstraints=@UniqueConstraint(columnNames={"teamKey", "fromDate", "toDate"}))
@@ -60,19 +59,19 @@ public class Team {
 
 	@OneToMany(mappedBy="team", fetch = FetchType.LAZY)
 	private List<RosterPlayer> rosterPlayers = new ArrayList<RosterPlayer>();
-	public List<RosterPlayer> getRosterPlayers()  {
+	public List<RosterPlayer> getRosterPlayers() {
 		return rosterPlayers;
 	}
-	public void setRosterPlayers(List<RosterPlayer> rosterPlayers)  {
+	public void setRosterPlayers(List<RosterPlayer> rosterPlayers) {
 		this.rosterPlayers = rosterPlayers;
 	}
 
 	@OneToMany(mappedBy="team", fetch = FetchType.LAZY)
 	private List<BoxScore> boxScores = new ArrayList<BoxScore>();
-	public List<BoxScore> getBoxScores()  {
+	public List<BoxScore> getBoxScores() {
 		return boxScores;
 	}
-	public void setBoxScores(List<BoxScore> boxScores)  {
+	public void setBoxScores(List<BoxScore> boxScores) {
 		this.boxScores = boxScores;
 	}
 
@@ -98,7 +97,7 @@ public class Team {
 	@Column(name="fromDate", nullable=false)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
 	private LocalDate fromDate;
-	public LocalDate getFromDate()  {
+	public LocalDate getFromDate() {
 		return fromDate;
 	}
 	public void setFromDate(LocalDate fromDate) {
@@ -108,7 +107,7 @@ public class Team {
 	@Column(name="toDate", nullable=false)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
 	private LocalDate toDate;
-	public LocalDate getToDate()  {
+	public LocalDate getToDate() {
 		return toDate;
 	}
 	public void setToDate(LocalDate toDate) {
@@ -224,10 +223,9 @@ public class Team {
 
 	public PubTeam toPubTeam(UriInfo uriInfo) {
 		URI self;
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		self = uriInfo.getBaseUriBuilder().path("teams").
 											path(this.getTeamKey()).
-											path(this.getFromDate().toString(fmt)).build();
+											path(DateTimeUtil.getStringDate(this.getFromDate())).build();
 		return new PubTeam( self,
 							this.teamKey,
 							this.firstName,

@@ -3,14 +3,13 @@ package com.rossotti.basketball.pub;
 import java.net.URI;
 
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rossotti.basketball.model.Team.Conference;
 import com.rossotti.basketball.model.Team.Division;
+import com.rossotti.basketball.util.DateTimeUtil;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class PubTeam {
@@ -41,14 +40,13 @@ public class PubTeam {
 					@JsonProperty("city") String city,
 					@JsonProperty("state") String state,
 					@JsonProperty("siteName") String siteName) {
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		this.self = self;
 		this.key = key;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.fullName = fullName;
 		this.abbr = abbr;
-		this.fromDate = fromDate.toString(fmt);
+		this.fromDate = DateTimeUtil.getStringDate(fromDate);
 		this.conference = conference.name();
 		this.division = division.name();
 		this.city = city;

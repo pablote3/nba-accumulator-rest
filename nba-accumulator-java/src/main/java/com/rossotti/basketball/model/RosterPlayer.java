@@ -18,12 +18,11 @@ import javax.ws.rs.core.UriInfo;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import com.rossotti.basketball.pub.PubRosterPlayer;
 import com.rossotti.basketball.pub.PubRosterPlayer_ByPlayer;
 import com.rossotti.basketball.pub.PubRosterPlayer_ByTeam;
+import com.rossotti.basketball.util.DateTimeUtil;
 
 @Entity
 @Table (name="rosterPlayer")
@@ -150,12 +149,11 @@ public class RosterPlayer {
 	}
 
 	public PubRosterPlayer toPubRosterPlayer(UriInfo uriInfo) {
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		URI self = uriInfo.getBaseUriBuilder().path("rosterPlayers").
 												path(this.getPlayer().getLastName()).
 												path(this.getPlayer().getFirstName()).
-												path(this.getPlayer().getBirthdate().toString(fmt)).
-												path(this.getFromDate().toString(fmt)).build();
+												path(DateTimeUtil.getStringDate(this.getPlayer().getBirthdate())).
+												path(DateTimeUtil.getStringDate(this.getFromDate())).build();
 		return new PubRosterPlayer(self,
 							this.fromDate,
 							this.toDate,
@@ -166,12 +164,11 @@ public class RosterPlayer {
 	}
 
 	public PubRosterPlayer_ByPlayer toPubRosterPlayer_ByPlayer(UriInfo uriInfo) {
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		URI self = uriInfo.getBaseUriBuilder().path("rosterPlayers").
 												path(this.getPlayer().getLastName()).
 												path(this.getPlayer().getFirstName()).
-												path(this.getPlayer().getBirthdate().toString(fmt)).
-												path(this.getFromDate().toString(fmt)).build();
+												path(DateTimeUtil.getStringDate(this.getPlayer().getBirthdate())).
+												path(DateTimeUtil.getStringDate(this.getFromDate())).build();
 		return new PubRosterPlayer_ByPlayer(self,
 							this.fromDate,
 							this.toDate,
@@ -181,12 +178,11 @@ public class RosterPlayer {
 	}
 
 	public PubRosterPlayer_ByTeam toPubRosterPlayer_ByTeam(UriInfo uriInfo) {
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		URI self = uriInfo.getBaseUriBuilder().path("rosterPlayers").
 												path(this.getPlayer().getLastName()).
 												path(this.getPlayer().getFirstName()).
 												path(this.getTeam().getTeamKey()).
-												path(this.getFromDate().toString(fmt)).build();
+												path(DateTimeUtil.getStringDate(this.getFromDate())).build();
 		return new PubRosterPlayer_ByTeam(self,
 							this.fromDate,
 							this.toDate,

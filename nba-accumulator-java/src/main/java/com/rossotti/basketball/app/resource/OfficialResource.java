@@ -19,8 +19,6 @@ import javax.ws.rs.core.UriInfo;
 
 import org.hibernate.PropertyValueException;
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +27,7 @@ import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.model.Official;
 import com.rossotti.basketball.pub.PubOfficial;
 import com.rossotti.basketball.pub.PubOfficials;
+import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
 @Path("/officials")
@@ -45,8 +44,7 @@ public class OfficialResource {
 										@PathParam("firstName") String firstName,
 										@PathParam("asOfDate") String asOfDateString) {
 		try {
-			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
 			Official official = officialDAO.findOfficial(lastName, firstName, asOfDate);
 			if (official.isFound()) {
 				PubOfficial pubOfficial = official.toPubOfficial(uriInfo);
@@ -94,8 +92,7 @@ public class OfficialResource {
 	public Response findOfficialsByDate(@Context UriInfo uriInfo, 
 										@PathParam("asOfDate") String asOfDateString) {
 		try {
-			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
 			List<Official> listOfficials = officialDAO.findOfficials(asOfDate);
 			if (listOfficials.size() > 0) {
 				List<PubOfficial> listPubOfficials = new ArrayList<PubOfficial>();
@@ -160,8 +157,7 @@ public class OfficialResource {
 								@PathParam("firstName") String firstName,
 								@PathParam("asOfDate") String asOfDateString) {
 		try {
-			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
 			Official official = officialDAO.deleteOfficial(lastName, firstName, asOfDate);
 			if (official.isDeleted()) {
 				return Response.noContent().build();

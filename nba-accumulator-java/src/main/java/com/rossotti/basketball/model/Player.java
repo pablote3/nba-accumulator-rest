@@ -20,10 +20,9 @@ import javax.ws.rs.core.UriInfo;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import com.rossotti.basketball.pub.PubPlayer;
+import com.rossotti.basketball.util.DateTimeUtil;
 
 @Entity
 @Table (name="player", uniqueConstraints=@UniqueConstraint(columnNames={"lastName", "firstName", "birthdate"}))
@@ -155,11 +154,10 @@ public class Player {
 
 	public PubPlayer toPubPlayer(UriInfo uriInfo) {
 		URI self;
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		self = uriInfo.getBaseUriBuilder().path("players").
 											path(this.getLastName()).
 											path(this.getFirstName()).
-											path(this.getBirthdate().toString(fmt)).build();
+											path(DateTimeUtil.getStringDate(this.getBirthdate())).build();
 		return new PubPlayer( self,
 							this.lastName,
 							this.firstName,

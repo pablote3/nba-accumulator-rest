@@ -3,13 +3,12 @@ package com.rossotti.basketball.pub;
 import java.net.URI;
 
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rossotti.basketball.model.RosterPlayer.Position;
+import com.rossotti.basketball.util.DateTimeUtil;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class PubRosterPlayer {
@@ -30,10 +29,9 @@ public class PubRosterPlayer {
 					@JsonProperty("number") String number,
 					@JsonProperty("player") PubPlayer player,
 					@JsonProperty("team") PubTeam team) {
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		this.self = self;
-		this.fromDate = fromDate.toString(fmt);
-		this.toDate = toDate.toString(fmt);
+		this.fromDate = DateTimeUtil.getStringDate(fromDate);
+		this.toDate = DateTimeUtil.getStringDate(toDate);
 		this.position = position.name();
 		this.number = number;
 		this.player = player;

@@ -18,8 +18,6 @@ import javax.ws.rs.core.UriInfo;
 
 import org.hibernate.PropertyValueException;
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +31,7 @@ import com.rossotti.basketball.pub.PubRosterPlayer_ByTeam;
 import com.rossotti.basketball.pub.PubRosterPlayers_ByPlayer;
 import com.rossotti.basketball.pub.PubRosterPlayers_ByTeam;
 import com.rossotti.basketball.pub.PubTeam;
+import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
 @Path("/rosterPlayers")
@@ -50,9 +49,8 @@ public class RosterPlayerResource {
 											@PathParam("birthdate") String birthdateString,
 											@PathParam("asOfDate") String asOfDateString) {
 		try {
-			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate birthdate = formatter.parseLocalDate(birthdateString);
-			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+			LocalDate birthdate = DateTimeUtil.getLocalDate(birthdateString);
+			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
 			RosterPlayer rosterPlayer = rosterPlayerDAO.findRosterPlayer(lastName, firstName, birthdate, asOfDate);
 			if (rosterPlayer.isFound()) {
 				PubRosterPlayer pubRosterPlayer = rosterPlayer.toPubRosterPlayer(uriInfo);
@@ -80,8 +78,7 @@ public class RosterPlayerResource {
 											@PathParam("teamKey") String teamKey,
 											@PathParam("asOfDate") String asOfDateString) {
 		try {
-			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
 			RosterPlayer rosterPlayer = rosterPlayerDAO.findRosterPlayer(lastName, firstName, teamKey, asOfDate);
 			if (rosterPlayer.isFound()) {
 				PubRosterPlayer pubRosterPlayer = rosterPlayer.toPubRosterPlayer(uriInfo);
@@ -107,8 +104,7 @@ public class RosterPlayerResource {
 											@PathParam("lastName") String lastName, 
 											@PathParam("firstName") String firstName,
 											@PathParam("birthdate") String birthdateString) {
-		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-		LocalDate birthdate = formatter.parseLocalDate(birthdateString);
+		LocalDate birthdate = DateTimeUtil.getLocalDate(birthdateString);
 		List<RosterPlayer> listRosterPlayers = rosterPlayerDAO.findRosterPlayers(lastName, firstName, birthdate);
 		PubPlayer pubPlayer = listRosterPlayers.get(0).getPlayer().toPubPlayer(uriInfo);
 		if (listRosterPlayers.size() > 0) {
@@ -133,8 +129,7 @@ public class RosterPlayerResource {
 	public Response findRosterPlayersByTeamKey(@Context UriInfo uriInfo, 
 											@PathParam("teamKey") String teamKey,
 											@PathParam("asOfDate") String asOfDateString) {
-		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-		LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+		LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
 		List<RosterPlayer> listRosterPlayers = rosterPlayerDAO.findRosterPlayers(teamKey, asOfDate);
 		PubTeam pubTeam = listRosterPlayers.get(0).getTeam().toPubTeam(uriInfo);
 		if (listRosterPlayers.size() > 0) {
@@ -199,9 +194,8 @@ public class RosterPlayerResource {
 //									@PathParam("birthdate") String birthdateString, 
 //									@PathParam("asOfdate") String asOfDateString) {
 //		try {
-//			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-//			LocalDate birthdate = formatter.parseLocalDate(birthdateString);
-//			LocalDate asOfDate = formatter.parseLocalDate(asOfDateString);
+//			LocalDate birthdate = DateTimeUtil.getLocalDate(birthdateString);
+//			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
 //			RosterPlayer rosterPlayer = rosterPlayerDAO.deleteRosterPlayer(lastName, firstName, birthdate, asOfDate);
 //			if (rosterPlayer.isDeleted()) {
 //				return Response.noContent().build();

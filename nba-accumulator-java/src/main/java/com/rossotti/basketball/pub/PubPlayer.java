@@ -3,12 +3,11 @@ package com.rossotti.basketball.pub;
 import java.net.URI;
 
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rossotti.basketball.util.DateTimeUtil;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class PubPlayer {
@@ -31,11 +30,10 @@ public class PubPlayer {
 					@JsonProperty("height") Short height,
 					@JsonProperty("weight") Short weight,
 					@JsonProperty("birthplace") String birthplace) {
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		this.self = self;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.birthdate = birthdate.toString(fmt);
+		this.birthdate = DateTimeUtil.getStringDate(birthdate);
 		this.displayName = displayName;
 		this.height = String.valueOf(height);
 		this.weight = String.valueOf(weight);

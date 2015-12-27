@@ -19,8 +19,6 @@ import javax.ws.rs.core.UriInfo;
 
 import org.hibernate.PropertyValueException;
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +27,7 @@ import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.model.Player;
 import com.rossotti.basketball.pub.PubPlayer;
 import com.rossotti.basketball.pub.PubPlayers;
+import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
 @Path("/players")
@@ -45,8 +44,7 @@ public class PlayerResource {
 											@PathParam("firstName") String firstName,
 											@PathParam("birthdate") String birthdateString) {
 		try {
-			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate birthdate = formatter.parseLocalDate(birthdateString);
+			LocalDate birthdate = DateTimeUtil.getLocalDate(birthdateString);
 			Player player = playerDAO.findPlayer(lastName, firstName, birthdate);
 			if (player.isFound()) {
 				PubPlayer pubPlayer = player.toPubPlayer(uriInfo);
@@ -132,8 +130,7 @@ public class PlayerResource {
 								@PathParam("firstName") String firstName, 
 								@PathParam("birthdate") String birthdateString) {
 		try {
-			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-			LocalDate birthdate = formatter.parseLocalDate(birthdateString);
+			LocalDate birthdate = DateTimeUtil.getLocalDate(birthdateString);
 			Player player = playerDAO.deletePlayer(lastName, firstName, birthdate);
 			if (player.isDeleted()) {
 				return Response.noContent().build();
