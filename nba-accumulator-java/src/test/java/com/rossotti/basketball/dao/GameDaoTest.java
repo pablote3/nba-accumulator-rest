@@ -27,15 +27,15 @@ public class GameDaoTest {
 	//1, 1, 1, 'Home', 'Win' : 'chicago-zephyrs'
 	//1, 2, 2, 'Away', 'Loss' : 'harlem-globetrotters'
 	
-	//2, '2015-10-27 20:00:00.0', 'Scheduled'
+	//2, '2015-10-27 21:00:00.0', 'Scheduled'
 	//2, 3, 3, 'Home', 'Win' : 'st-louis-bombers'
 	//2, 5, 4, 'Away', 'Loss' : 'salinas-cowboys'
 	
-	//3, '2015-10-27 20:00:00.0', 'Scheduled'
+	//3, '2015-10-27 20:30:00.0', 'Scheduled'
 	//3, 6, 5, 'Home', 'Win' : 'baltimore-bullets'
 	//3, 7, 6, 'Away', 'Loss' : 'cleveland-rebels'
 	
-	//4, '2015-10-27 20:00:00.0', 'Scheduled'
+	//4, '2015-10-28 20:00:00.0', 'Scheduled'
 	//4, 7, 1, 'Home', 'Win' : 'chicago-zephyrs'
 	//4, 8, 3, 'Away', 'Loss' : 'st-louis-bombers'
 
@@ -54,15 +54,46 @@ public class GameDaoTest {
 	}
 
 	@Test
-	public void findGame_Found() {
+	public void findIdByDateTeam_Found() {
 		Long findId = gameDAO.findIdByDateTeam(new LocalDate("2015-10-27"), "chicago-zephyrs");
 		Assert.assertEquals(1L, findId.longValue());
 	}
 	
 	@Test
-	public void findGame_NotFound_GameDate() {
+	public void findIdByDateTeam_NotFound_GameDate() {
 		Long findId = gameDAO.findIdByDateTeam(new LocalDate("2015-10-26"), "chicago-zephyrs");
 		Assert.assertEquals(0L, findId.longValue());
+	}
+
+	@Test
+	public void findIdByDateTeam_NotFound_Team() {
+		Long findId = gameDAO.findIdByDateTeam(new LocalDate("2015-10-27"), "chicago-zephyres");
+		Assert.assertEquals(0L, findId.longValue());
+	}
+
+	@Test
+	public void findIdsByDateRangeSize_Size0() {
+		List<Long> findIds = gameDAO.findIdsByDateRangeSize(new LocalDate("2015-10-27"), 0);
+		Assert.assertEquals(4, findIds.size());
+		Assert.assertTrue(findIds.contains(1L));
+		Assert.assertTrue(findIds.contains(2L));
+		Assert.assertTrue(findIds.contains(3L));
+		Assert.assertTrue(findIds.contains(4L));
+	}
+
+	@Test
+	public void findIdsByDateRangeSize_Size1() {
+		List<Long> findIds = gameDAO.findIdsByDateRangeSize(new LocalDate("2015-10-27"), 1);
+		Assert.assertEquals(1, findIds.size());
+		Assert.assertTrue(findIds.contains(1L));
+	}
+
+	@Test
+	public void findIdsByDateRangeSize_Size2() {
+		List<Long> findIds = gameDAO.findIdsByDateRangeSize(new LocalDate("2015-10-27"), 2);
+		Assert.assertEquals(2, findIds.size());
+		Assert.assertTrue(findIds.contains(1L));
+		Assert.assertTrue(findIds.contains(3L));
 	}
 
 //	@Test

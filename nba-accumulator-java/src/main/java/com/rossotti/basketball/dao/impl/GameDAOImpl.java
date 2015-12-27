@@ -1,7 +1,11 @@
 package com.rossotti.basketball.dao.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -32,14 +36,13 @@ public class GameDAOImpl implements GameDAO {
 	}
 	
 	public Long findIdByDateTeam(LocalDate gameDate, String teamKey) {
-		String stringDate = DateTimeUtil.getStringDate(gameDate);
-		LocalDateTime fromTime = DateTimeUtil.getLocalDateTimeMin(stringDate);
-		LocalDateTime toTime = DateTimeUtil.getLocalDateTimeMax(stringDate);
+		LocalDateTime fromDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
+		LocalDateTime toDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
 		String sql = 	"select game " +
 						"from Game game " +
 						"left join game.boxScores boxScores " +
 						"inner join boxScores.team team " +
-						"where game.gameDate between '" + fromTime + "' and '" + toTime +"' " +
+						"where game.gameDate between '" + fromDateTime + "' and '" + toDateTime +"' " +
 						"and team.teamKey = '" + teamKey + "'";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
 		Game game = (Game)query.uniqueResult();
@@ -50,27 +53,25 @@ public class GameDAOImpl implements GameDAO {
 		}
 	}
 
-//	public List<Long> findIdsByDateRangeSize(String propDate, String propSize) {
-//		Query<Game> query = null;
-//		int maxRows = Integer.parseInt(propSize);
-//		if (maxRows > 0)
-//			query.setMaxRows(maxRows);
-//
-//		LocalDate maxDate = DateTimeUtil.getDateMaxSeason(DateTimeUtil.createDateFromStringDate(propDate));
-//
-//		query.where().between("date", propDate, maxDate);
-//		query.orderBy("t0.date asc");
-//		List<Game> games = query.findList();
-//
-//		List<Long> gameIds = null;
-//		if (games.size() > 0) {
-//			gameIds = new ArrayList<Long>();
-//			for (int i = 0; i < games.size(); i++) {
-//				gameIds.add(games.get(i).getId());
-//			}
-//		}
-//		return gameIds;
-//	}
+	@SuppressWarnings("unchecked")
+	public List<Long> findIdsByDateRangeSize(LocalDate gameDate, int maxRows) {
+		LocalDateTime gameDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
+		LocalDateTime maxDateTime = DateTimeUtil.getLocalDateTimeSeasonMax(gameDate);
+		List<Game> games = getSessionFactory().getCurrentSession().createCriteria(Game.class)
+				.add(Restrictions.between("gameDate", gameDateTime, maxDateTime))
+				.addOrder(Order.asc("gameDate"))
+				.setMaxResults(maxRows)
+				.list();
+
+		List<Long> gameIds = null;
+		if (games.size() > 0) {
+			gameIds = new ArrayList<Long>();
+			for (int i = 0; i < games.size(); i++) {
+				gameIds.add(games.get(i).getId());
+			}
+		}
+		return gameIds;
+	}
 
 //	@Override
 //	public Game findGame(LocalDate gameDate, String teamKey) {
