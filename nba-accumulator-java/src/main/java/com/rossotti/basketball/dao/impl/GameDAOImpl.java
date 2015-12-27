@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rossotti.basketball.dao.GameDAO;
 import com.rossotti.basketball.model.Game;
+import com.rossotti.basketball.model.Game.Status;
 import com.rossotti.basketball.model.StatusCode;
 import com.rossotti.basketball.util.DateTimeUtil;
 
@@ -63,9 +64,27 @@ public class GameDAOImpl implements GameDAO {
 				.setMaxResults(maxRows)
 				.list();
 
-		List<Long> gameIds = null;
+		List<Long> gameIds = new ArrayList<Long>();
 		if (games.size() > 0) {
-			gameIds = new ArrayList<Long>();
+			for (int i = 0; i < games.size(); i++) {
+				gameIds.add(games.get(i).getId());
+			}
+		}
+		return gameIds;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Long> findIdsByDateScheduled(LocalDate gameDate) {
+		LocalDateTime minDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
+		LocalDateTime maxDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
+		List<Game> games = getSessionFactory().getCurrentSession().createCriteria(Game.class)
+				.add(Restrictions.between("gameDate", minDateTime, maxDateTime))
+				.add(Restrictions.eq("status", Status.Scheduled))
+				.addOrder(Order.asc("gameDate"))
+				.list();
+
+		List<Long> gameIds = new ArrayList<Long>();
+		if (games.size() > 0) {
 			for (int i = 0; i < games.size(); i++) {
 				gameIds.add(games.get(i).getId());
 			}

@@ -95,6 +95,26 @@ public class GameDaoTest {
 		Assert.assertTrue(findIds.contains(1L));
 		Assert.assertTrue(findIds.contains(3L));
 	}
+	
+	@Test
+	public void findIdsByDateRangeSize_NotFound() {
+		List<Long> findIds = gameDAO.findIdsByDateRangeSize(new LocalDate("2015-10-29"), 2);
+		Assert.assertEquals(0, findIds.size());
+	}
+
+	@Test
+	public void findIdsByDateScheduled_Found() {
+		List<Long> findIds = gameDAO.findIdsByDateScheduled(new LocalDate("2015-10-27"));
+		Assert.assertEquals(2, findIds.size());
+		Assert.assertTrue(findIds.contains(2L));
+		Assert.assertTrue(findIds.contains(3L));
+	}
+
+	@Test
+	public void findIdsByDateScheduled_NotFound() {
+		List<Long> findIds = gameDAO.findIdsByDateScheduled(new LocalDate("2015-10-26"));
+		Assert.assertEquals(0, findIds.size());
+	}
 
 //	@Test
 //	public void findGame_NotFound_GameDate() {
