@@ -92,6 +92,26 @@ public class GameDAOImpl implements GameDAO {
 		return gameIds;
 	}
 
+	@SuppressWarnings("unchecked")
+	public LocalDateTime findPreviousGameDateTimeByDateTeam(LocalDate gameDate, String teamKey) {
+		LocalDateTime gameDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
+		String sql = 	"select game " +
+						"from Game game " +
+						"left join game.boxScores boxScores " +
+						"inner join boxScores.team team " +
+						"where game.gameDate <= '" + gameDateTime + "' " +
+						"and team.teamKey = '" + teamKey + "' " +
+						"order by gameDate desc";
+		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		List<Game> games = query.list();
+		
+		LocalDateTime lastGameDateTime = null;
+		if (games.size() > 0) {
+			lastGameDateTime = games.get(0).getGameDate();
+		}
+		return lastGameDateTime;
+	}
+
 //	@Override
 //	public Game findGame(LocalDate gameDate, String teamKey) {
 //		String date = DateTimeUtil.getStringDate(gameDate);

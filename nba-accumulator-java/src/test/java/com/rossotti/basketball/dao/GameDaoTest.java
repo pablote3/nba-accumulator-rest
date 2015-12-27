@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.PropertyValueException;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,11 +75,12 @@ public class GameDaoTest {
 	@Test
 	public void findIdsByDateRangeSize_Size0() {
 		List<Long> findIds = gameDAO.findIdsByDateRangeSize(new LocalDate("2015-10-27"), 0);
-		Assert.assertEquals(4, findIds.size());
+		Assert.assertEquals(5, findIds.size());
 		Assert.assertTrue(findIds.contains(1L));
 		Assert.assertTrue(findIds.contains(2L));
 		Assert.assertTrue(findIds.contains(3L));
 		Assert.assertTrue(findIds.contains(4L));
+		Assert.assertTrue(findIds.contains(5L));
 	}
 
 	@Test
@@ -98,7 +100,7 @@ public class GameDaoTest {
 	
 	@Test
 	public void findIdsByDateRangeSize_NotFound() {
-		List<Long> findIds = gameDAO.findIdsByDateRangeSize(new LocalDate("2015-10-29"), 2);
+		List<Long> findIds = gameDAO.findIdsByDateRangeSize(new LocalDate("2015-11-01"), 2);
 		Assert.assertEquals(0, findIds.size());
 	}
 
@@ -114,6 +116,18 @@ public class GameDaoTest {
 	public void findIdsByDateScheduled_NotFound() {
 		List<Long> findIds = gameDAO.findIdsByDateScheduled(new LocalDate("2015-10-26"));
 		Assert.assertEquals(0, findIds.size());
+	}
+
+	@Test
+	public void findPreviousGameDateTimeByDateTeam_Found() {
+		LocalDateTime dateTime = gameDAO.findPreviousGameDateTimeByDateTeam(new LocalDate("2015-10-30"), "st-louis-bombers");
+		Assert.assertEquals(new LocalDateTime("2015-10-28T20:00:00.0"), dateTime);
+	}
+
+	@Test
+	public void findPreviousGameDateTimeByDateTeam_NotFound() {
+		LocalDateTime dateTime = gameDAO.findPreviousGameDateTimeByDateTeam(new LocalDate("2015-10-27"), "st-louis-bombers");
+		Assert.assertEquals(null, dateTime);
 	}
 
 //	@Test

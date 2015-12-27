@@ -38,3 +38,7 @@ insert into boxScore (id, location, gameId, teamId) VALUES(6, 'Away', 3, 6);
 insert into game VALUES(4, '2015-10-28 20:00:00.0', 'Regular', 'Scheduled');
 insert into boxScore (id, location, gameId, teamId) VALUES(7, 'Home', 4, 1);
 insert into boxScore (id, location, gameId, teamId) VALUES(8, 'Away', 4, 3);
+
+insert into game VALUES(5, '2015-10-30 10:00:00.0', 'Regular', 'Scheduled');
+insert into boxScore (id, location, gameId, teamId) VALUES(9, 'Home', 5, 5);
+insert into boxScore (id, location, gameId, teamId) VALUES(10, 'Away', 5, 3);
