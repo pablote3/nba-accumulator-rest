@@ -42,4 +42,88 @@ public class DateTimeUtilTest {
 		LocalDateTime dateTime = DateTimeUtil.getLocalDateTimeMax(new LocalDate("2014-06-30"));
 		Assert.assertEquals(new LocalDateTime("2014-06-30T23:59"), dateTime);
 	}
+
+	@Test
+	public void getLocalDateSeasonMin_SeasonStart() {
+		LocalDate date = DateTimeUtil.getLocalDateSeasonMin(new LocalDate("2013-07-01"));
+		Assert.assertEquals(new LocalDate("2013-07-01"), date);
+	}
+	@Test
+	public void getLocalDateSeasonMin_YearEnd() {
+		LocalDate date = DateTimeUtil.getLocalDateSeasonMin(new LocalDate("2013-12-31"));
+		Assert.assertEquals(new LocalDate("2013-07-01"), date);
+	}
+	@Test
+	public void getLocalDateSeasonMin_YearStart() {
+		LocalDate date = DateTimeUtil.getLocalDateSeasonMin(new LocalDate("2014-01-01"));
+		Assert.assertEquals(new LocalDate("2013-07-01"), date);
+	}
+	@Test
+	public void getLocalDateSeasonMin_SeasonEnd() {
+		LocalDate date = DateTimeUtil.getLocalDateSeasonMin(new LocalDate("2014-06-30"));
+		Assert.assertEquals(new LocalDate("2013-07-01"), date);
+	}
+
+	@Test
+	public void getLocalDateSeasonMax_SeasonStart() {
+		LocalDate date = DateTimeUtil.getLocalDateSeasonMax(new LocalDate("2014-07-01"));
+		Assert.assertEquals(new LocalDate("2015-06-30"), date);
+	}
+	@Test
+	public void getLocalDateSeasonMax_YearEnd() {
+		LocalDate date = DateTimeUtil.getLocalDateSeasonMax(new LocalDate("2014-12-31"));
+		Assert.assertEquals(new LocalDate("2015-06-30"), date);
+	}
+	@Test
+	public void getLocalDateSeasonMax_YearStart() {
+		LocalDate date = DateTimeUtil.getLocalDateSeasonMax(new LocalDate("2015-01-01"));
+		Assert.assertEquals(new LocalDate("2015-06-30"), date);
+	}
+	@Test
+	public void getLocalDateSeasonMax_SeasonEnd() {
+		LocalDate date = DateTimeUtil.getLocalDateSeasonMax(new LocalDate("2015-06-30"));
+		Assert.assertEquals(new LocalDate("2015-06-30"), date);
+	}
+
+	@Test
+	public void getLocalDateTimeSeasonMin_SeasonStart() {
+		LocalDateTime dateTime = DateTimeUtil.getLocalDateTimeSeasonMin(new LocalDate("2013-07-01"));
+		Assert.assertEquals(new LocalDateTime("2013-07-01T00:00"), dateTime);
+	}
+	@Test
+	public void getLocalDateTimeSeasonMin_YearEnd() {
+		LocalDateTime dateTime = DateTimeUtil.getLocalDateTimeSeasonMin(new LocalDate("2013-12-31"));
+		Assert.assertEquals(new LocalDateTime("2013-07-01T00:00"), dateTime);
+	}
+	@Test
+	public void getLocalDateTimeSeasonMin_YearStart() {
+		LocalDateTime dateTime = DateTimeUtil.getLocalDateTimeSeasonMin(new LocalDate("2014-01-01"));
+		Assert.assertEquals(new LocalDateTime("2013-07-01T00:00"), dateTime);
+	}
+	@Test
+	public void getLocalDateTimeSeasonMin_SeasonEnd() {
+		LocalDateTime dateTime = DateTimeUtil.getLocalDateTimeSeasonMin(new LocalDate("2014-06-30"));
+		Assert.assertEquals(new LocalDateTime("2013-07-01T00:00"), dateTime);
+	}
+
+	@Test
+	public void getLocalDateTimeSeasonMax_SeasonStart() {
+		LocalDateTime dateTime = DateTimeUtil.getLocalDateTimeSeasonMax(new LocalDate("2014-07-01"));
+		Assert.assertEquals(new LocalDateTime("2015-06-30T23:59"), dateTime);
+	}
+	@Test
+	public void getLocalDateTimeSeasonMax_YearEnd() {
+		LocalDateTime dateTime = DateTimeUtil.getLocalDateTimeSeasonMax(new LocalDate("2014-12-31"));
+		Assert.assertEquals(new LocalDateTime("2015-06-30T23:59"), dateTime);
+	}
+	@Test
+	public void getLocalDateTimeSeasonMax_YearStart() {
+		LocalDateTime dateTime = DateTimeUtil.getLocalDateTimeSeasonMax(new LocalDate("2015-01-01"));
+		Assert.assertEquals(new LocalDateTime("2015-06-30T23:59"), dateTime);
+	}
+	@Test
+	public void getLocalDateTimeSeasonMax_SeasonEnd() {
+		LocalDateTime dateTime = DateTimeUtil.getLocalDateTimeSeasonMax(new LocalDate("2015-06-30"));
+		Assert.assertEquals(new LocalDateTime("2015-06-30T23:59"), dateTime);
+	}
 }
