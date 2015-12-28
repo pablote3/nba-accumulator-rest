@@ -35,7 +35,19 @@ public class GameDAOImpl implements GameDAO {
 		}
 		return game;
 	}
-	
+
+//	@Override
+//	public Game findById(List<Long> ids) {
+//		
+//	    List<Game> sparseGames = query.findList();
+//	    
+//	    List<Game> games = new ArrayList<Game>();
+//	    for (int i = 0; i < sparseGames.size(); i++) {
+//			games.add(Game.findById(sparseGames.get(i).getId()));
+//		}
+//	    return games;
+//	}
+
 	public Long findIdByDateTeam(LocalDate gameDate, String teamKey) {
 		LocalDateTime fromDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
 		LocalDateTime toDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
@@ -100,6 +112,7 @@ public class GameDAOImpl implements GameDAO {
 						"left join game.boxScores boxScores " +
 						"inner join boxScores.team team " +
 						"where game.gameDate <= '" + gameDateTime + "' " +
+						"and game.status = '" + Status.Completed + "' " +
 						"and team.teamKey = '" + teamKey + "' " +
 						"order by gameDate desc";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
@@ -110,6 +123,30 @@ public class GameDAOImpl implements GameDAO {
 			lastGameDateTime = games.get(0).getGameDate();
 		}
 		return lastGameDateTime;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Long> findByDateTeamSeason(LocalDate gameDate, String teamKey) {
+		LocalDateTime fromDateTime = DateTimeUtil.getLocalDateTimeSeasonMin(gameDate);
+		LocalDateTime toDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
+		String sql = 	"select game " +
+						"from Game game " +
+						"left join game.boxScores boxScores " +
+						"inner join boxScores.team team " +
+						"where game.gameDate between '" + fromDateTime + "' and '" + toDateTime +"' " +
+						"and game.status in ('" + Status.Completed + "', '" + Status.Scheduled + "') " + 
+						"and team.teamKey = '" + teamKey + "' " +
+						"order by gameDate asc";
+		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		List<Game> games = query.list();
+
+		List<Long> gameIds = new ArrayList<Long>();
+		if (games.size() > 0) {
+			for (int i = 0; i < games.size(); i++) {
+				gameIds.add(games.get(i).getId());
+			}
+		}
+		return gameIds;
 	}
 
 //	@Override

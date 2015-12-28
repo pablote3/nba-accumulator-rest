@@ -74,13 +74,11 @@ public class GameDaoTest {
 
 	@Test
 	public void findIdsByDateRangeSize_Size0() {
-		List<Long> findIds = gameDAO.findIdsByDateRangeSize(new LocalDate("2015-10-27"), 0);
-		Assert.assertEquals(5, findIds.size());
-		Assert.assertTrue(findIds.contains(1L));
-		Assert.assertTrue(findIds.contains(2L));
-		Assert.assertTrue(findIds.contains(3L));
+		List<Long> findIds = gameDAO.findIdsByDateRangeSize(new LocalDate("2015-10-28"), 0);
+		Assert.assertEquals(3, findIds.size());
 		Assert.assertTrue(findIds.contains(4L));
 		Assert.assertTrue(findIds.contains(5L));
+		Assert.assertTrue(findIds.contains(6L));
 	}
 
 	@Test
@@ -107,8 +105,7 @@ public class GameDaoTest {
 	@Test
 	public void findIdsByDateScheduled_Found() {
 		List<Long> findIds = gameDAO.findIdsByDateScheduled(new LocalDate("2015-10-27"));
-		Assert.assertEquals(2, findIds.size());
-		Assert.assertTrue(findIds.contains(2L));
+		Assert.assertEquals(1, findIds.size());
 		Assert.assertTrue(findIds.contains(3L));
 	}
 
@@ -121,13 +118,27 @@ public class GameDaoTest {
 	@Test
 	public void findPreviousGameDateTimeByDateTeam_Found() {
 		LocalDateTime dateTime = gameDAO.findPreviousGameDateTimeByDateTeam(new LocalDate("2015-10-30"), "st-louis-bombers");
-		Assert.assertEquals(new LocalDateTime("2015-10-28T20:00:00.0"), dateTime);
+		Assert.assertEquals(new LocalDateTime("2015-10-27T21:00:00.0"), dateTime);
 	}
 
 	@Test
 	public void findPreviousGameDateTimeByDateTeam_NotFound() {
 		LocalDateTime dateTime = gameDAO.findPreviousGameDateTimeByDateTeam(new LocalDate("2015-10-27"), "st-louis-bombers");
 		Assert.assertEquals(null, dateTime);
+	}
+
+	@Test
+	public void findByDateTeamSeason_Found() {
+		List<Long> findIds = gameDAO.findByDateTeamSeason(new LocalDate("2015-10-29"), "st-louis-bombers");
+		Assert.assertEquals(2, findIds.size());
+		Assert.assertTrue(findIds.contains(2L));
+		Assert.assertTrue(findIds.contains(4L));
+	}
+
+	@Test
+	public void findByDateTeamSeason_NotFound() {
+		List<Long> findIds = gameDAO.findByDateTeamSeason(new LocalDate("2015-09-29"), "st-louis-bombers");
+		Assert.assertEquals(0, findIds.size());
 	}
 
 //	@Test

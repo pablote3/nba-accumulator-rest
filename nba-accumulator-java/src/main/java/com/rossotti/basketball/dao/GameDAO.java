@@ -13,6 +13,7 @@ public interface GameDAO {
 	public List<Long> findIdsByDateRangeSize(LocalDate gameDate, int maxRows);
 	public List<Long> findIdsByDateScheduled(LocalDate gameDate);
 	public LocalDateTime findPreviousGameDateTimeByDateTeam(LocalDate gameDate, String teamKey);
+	public List<Long> findByDateTeamSeason(LocalDate gameDate, String teamKey);
 //	public List<Game> findGames(LocalDate gameDate);
 //	public Game createGame(Game game);
 //	public Game updateGame(Game game);
