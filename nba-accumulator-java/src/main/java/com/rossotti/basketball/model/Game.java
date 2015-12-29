@@ -3,6 +3,7 @@ package com.rossotti.basketball.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -52,13 +53,19 @@ public class Game {
 		return statusCode == StatusCode.Deleted;
 	}
 
-	@OneToMany(mappedBy="game", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy="game", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	private List<BoxScore> boxScores = new ArrayList<BoxScore>();
-	public List<BoxScore> getBoxScores()  {
+	public List<BoxScore> getBoxScores() {
 		return boxScores;
 	}
-	public void setBoxScores(List<BoxScore> boxScores)  {
+	public void setBoxScores(List<BoxScore> boxScores) {
 		this.boxScores = boxScores;
+	}
+	public void addBoxScore(BoxScore boxScore) {
+		this.getBoxScores().add(boxScore);
+	}
+	public void removeBoxScore(BoxScore boxScore) {
+		this.getBoxScores().remove(boxScore);
 	}
 
 //	@OneToMany(mappedBy="game", cascade=CascadeType.ALL)

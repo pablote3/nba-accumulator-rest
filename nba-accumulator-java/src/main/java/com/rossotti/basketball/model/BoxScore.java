@@ -1,10 +1,10 @@
 package com.rossotti.basketball.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +15,8 @@ import javax.persistence.Table;
 @Entity
 @Table (name="boxScore")
 public class BoxScore {
+
+	public BoxScore() {}
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -27,8 +29,8 @@ public class BoxScore {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="gameId")
+	@ManyToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="gameId", referencedColumnName="id", nullable=false)
 	private Game game;
 	public Game getGame() {
 		return game;
@@ -37,7 +39,7 @@ public class BoxScore {
 		this.game = game;
 	}
 
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne()
 	@JoinColumn(name="teamId")
 	private Team team;
 	public Team getTeam() {
@@ -335,7 +337,7 @@ public class BoxScore {
 
 	public String toString() {
 		return new StringBuffer()
-			.append("\n" + this.team + "\n")
+//			.append("\n" + this.team + "\n")
 			.append("  id: " + this.id)
 			.append("  location: " + this.location)
 			.append("  result: " + this.result)
