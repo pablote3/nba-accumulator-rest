@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rossotti.basketball.dao.GameDAO;
+import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.model.Game;
 import com.rossotti.basketball.model.Game.Status;
 import com.rossotti.basketball.model.StatusCode;
@@ -55,7 +56,7 @@ public class GameDAOImpl implements GameDAO {
 		LocalDateTime toDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
 		String sql = 	"select game " +
 						"from Game game " +
-						"left join game.boxScores boxScores " +
+						"inner join game.boxScores boxScores " +
 						"inner join boxScores.team team " +
 						"where game.gameDate between '" + fromDateTime + "' and '" + toDateTime +"' " +
 						"and team.teamKey = '" + teamKey + "'";
@@ -162,51 +163,19 @@ public class GameDAOImpl implements GameDAO {
 		return games.size();
 	}
 
-//	@Override
-//	public Game findGame(LocalDate gameDate, String teamKey) {
-//		String date = DateTimeUtil.getStringDate(gameDate);
-//		
-//		String sql = 	"select game " +
-//				"from Game game " +
-//				"inner join game.boxScores boxScore " +
-//				"inner join boxScore.team team " +
-//				"where game.date >= '" + gameDate + "' " +
-////				"and game.date <= '" + gameDate + "' " +
-//				"and boxScore.team.teamKey = '" + teamKey + "'";
-//		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
-//		Game game = (Game)query.uniqueResult();
-//		if (game == null) {
-//			game = new Game(StatusCode.NotFound);
-//		}
-//		return game;
-//	}
+	@Override
+	public Game createGame(Game createGame) {
+		Long id = findIdByDateTeam(DateTimeUtil.getLocalDate(createGame.getGameDate()), createGame.getBoxScores().get(0).getTeam().getTeamKey());
+		if (id == 0L) {
+			getSessionFactory().getCurrentSession().persist(createGame);
+			createGame.setStatusCode(StatusCode.Created);
+		}
+		else {
+			throw new DuplicateEntityException();
+		}
+		return createGame;
+	}
 
-//	@SuppressWarnings("unchecked")
-//	@Override
-//	public List<Game> findGames(LocalDate gameDate) {
-//		List<Game> games = getSessionFactory().getCurrentSession().createCriteria(Game.class)
-//			.add(Restrictions.eq("lastName", lastName))
-//			.add(Restrictions.eq("firstName", firstName))
-//			.list();
-//		if (games == null) {
-//			games = new ArrayList<Game>();
-//		}
-//		return games;
-//	}
-//
-//	@Override
-//	public Game createGame(Game createGame) {
-//		Game game = findGame(createGame.getLastName(), createGame.getFirstName(), createGame.getBirthdate());
-//		if (game.isNotFound()) {
-//			getSessionFactory().getCurrentSession().persist(createGame);
-//			createGame.setStatusCode(StatusCode.Created);
-//		}
-//		else {
-//			throw new DuplicateEntityException();
-//		}
-//		return createGame;
-//	}
-//
 //	@Override
 //	public Game updateGame(Game updateGame) {
 //		Game game = findGame(updateGame.getLastName(), updateGame.getFirstName(), updateGame.getBirthdate());

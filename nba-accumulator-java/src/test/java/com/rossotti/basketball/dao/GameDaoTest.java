@@ -15,8 +15,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.rossotti.basketball.dao.exception.DuplicateEntityException;
+import com.rossotti.basketball.model.BoxScore;
+import com.rossotti.basketball.model.BoxScore.Location;
 import com.rossotti.basketball.model.Game;
+import com.rossotti.basketball.model.Game.SeasonType;
 import com.rossotti.basketball.model.Game.Status;
+import com.rossotti.basketball.model.Team;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"config/applicationContextTest.xml"})
@@ -45,8 +49,9 @@ public class GameDaoTest {
 	public void findGameById_Found() {
 		Game findGame = gameDAO.findById(1L);
 		Assert.assertEquals(Status.Completed, findGame.getStatus());
-		Assert.assertEquals(2, findGame.getBoxScores().size());
 		Assert.assertTrue(findGame.isFound());
+		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGame.getGameDate());
+		Assert.assertEquals("chicago-zephyrs", findGame.getBoxScores().get(0).getTeam().getTeamKey());
 	}
 
 	@Test
@@ -164,63 +169,32 @@ public class GameDaoTest {
 		Assert.assertEquals(1, games);
 	}
 
-//	@Test
-//	public void findGame_NotFound_GameDate() {
-//		Game findGame = gameDAO.findGame(new LocalDate("2015-10-26"), "atlanta-hawks");
-//		Assert.assertTrue(findGame.isNotFound());
-//	}
-//
-//	@Test
-//	public void findGameByName_NotFound_TeamKey() {
-//		Game findGame = gameDAO.findGame(new LocalDate("2015-10-27"), "atlanta-hawkers");
-//		Assert.assertTrue(findGame.isNotFound());
-//	}
+	//'2015-10-10 21:00', 'chicago-zephyrs', 'harlem-globetrotters'
 
-	//'Thad', 'Puzdrakiewicz', '1966-06-02', 'Thad Puzdrakiewicz'
-	//'Thad', 'Puzdrakiewicz', '2000-03-13', 'Thad Puzdrakiewicz'
+	@Test
+	public void createGame_Created() {
+		Game game = createMockGame(new LocalDateTime("2015-10-10T21:00"), 1L, "chicago-zephyrs", 2L, "harlem-globetrotters");
+		Game createGame = gameDAO.createGame(game);
+		Long gameId = gameDAO.findIdByDateTeam(new LocalDate("2015-10-10"), "chicago-zephyrs");
+		Game findGame = gameDAO.findById(gameId);
+		Assert.assertTrue(createGame.isCreated());
+		Assert.assertEquals(2, findGame.getBoxScores().size());
+		Assert.assertEquals(Location.Home, findGame.getBoxScores().get(0).getLocation());
+		Assert.assertEquals("Harlem Globetrotters", findGame.getBoxScores().get(1).getTeam().getFullName());
+	}
 
-//	@Test
-//	public void findGamesByName_Found() {
-//		List<Game> findGames = gameDAO.findGames("Puzdrakiewicz","Luke");
-//		Assert.assertEquals(1, findGames.size());
-//	}
-//
-//	@Test
-//	public void findGamesByName_NotFound() {
-//		List<Game> findGames = gameDAO.findGames("Puzdrakiewicz", "Thady");
-//		Assert.assertEquals(0, findGames.size());
-//	}
+	@Test(expected=DuplicateEntityException.class)
+	public void createGame_Duplicate() {
+		Game game = createMockGame(new LocalDateTime("2015-10-27T20:00"), 1L, "chicago-zephyrs", 2L, "harlem-globetrotters");
+		gameDAO.createGame(game);
+	}
 
-	//'Michelle', 'Puzdrakiewicz', '1969-09-08', 'Michelle Puzdrakiewicz'
-
-//	@Test
-//	public void createGame_Created_UniqueName() {
-//		Game createGame = gameDAO.createGame(createMockGame("Puzdrakiewicz", "Fred", new LocalDate("1968-11-08"), "Fred Puzdrakiewicz"));
-//		Game findGame = gameDAO.findGame("Puzdrakiewicz", "Fred", new LocalDate("1968-11-08"));
-//		Assert.assertTrue(createGame.isCreated());
-//		Assert.assertEquals("Fred Puzdrakiewicz", findGame.getDisplayName());
-//	}
-//
-//	@Test
-//	public void createGame_Created_UniqueBirthdate() {
-//		Game createGame = gameDAO.createGame(createMockGame("Puzdrakiewicz", "Michelle", new LocalDate("1969-09-09"), "Michelle Puzdrakiewicz2"));
-//		Game findGame = gameDAO.findGame("Puzdrakiewicz", "Michelle", new LocalDate("1969-09-09"));
-//		Assert.assertTrue(createGame.isCreated());
-//		Assert.assertEquals("Michelle Puzdrakiewicz2", findGame.getDisplayName());
-//	}
-//
-//	@Test(expected=DuplicateEntityException.class)
-//	public void createGame_Duplicate_IdenticalBirthdate() {
-//		gameDAO.createGame(createMockGame("Puzdrakiewicz", "Michelle", new LocalDate("1969-09-08"), "Michelle Puzdrakiewicz"));
-//	}
-//
-//	@Test(expected=PropertyValueException.class)
-//	public void createGame_Exception_MissingRequiredData() {
-//		Game createGame = new Game();
-//		createGame.setLastName("missing-required-data");
-//		createGame.setFirstName("missing-required-data");
-//		gameDAO.createGame(createGame);
-//	}
+	@Test(expected=PropertyValueException.class)
+	public void createGame_Exception_MissingRequiredData() {
+		Game game = createMockGame(new LocalDateTime("2015-10-11T21:00"), 1L, "chicago-zephyrs", 2L, "harlem-globetrotters");
+		game.getBoxScores().get(0).setLocation(null);
+		gameDAO.createGame(game);
+	}
 
 	//'Thad', 'Puzdrakiewicz', '1966-06-10', 'Thad Puzdrakiewicz'
 
@@ -260,18 +234,31 @@ public class GameDaoTest {
 //		Assert.assertTrue(deleteGame.isNotFound());
 //	}
 
-//	private Game createMockGame(String lastName, String firstName, LocalDate birthdate, String displayName) {
-//		Game game = new Game();
-//		game.setLastName(lastName);
-//		game.setFirstName(firstName);
-//		game.setBirthdate(birthdate);
-//		game.setDisplayName(displayName);
-//		game.setHeight((short)79);
-//		game.setWeight((short)195);
-//		game.setBirthplace("Monroe, Louisiana, USA");
-//		return game;
-//	}
-//	
+	private Game createMockGame(LocalDateTime gameDate, Long teamIdHome, String teamKeyHome, Long teamIdAway, String teamKeyAway) {
+		Game game = new Game();
+		game.setGameDate(gameDate);
+		game.setSeasonType(SeasonType.Regular);
+		game.setStatus(Status.Scheduled);
+		game.addBoxScore(createMockBoxScore(game, teamIdHome, teamKeyHome, Location.Home));
+		game.addBoxScore(createMockBoxScore(game, teamIdAway, teamKeyAway, Location.Away));
+		return game;
+	}
+
+	private BoxScore createMockBoxScore(Game game, Long teamId, String teamKey, Location location) {
+		BoxScore boxScore = new BoxScore();
+		boxScore.setGame(game);
+		boxScore.setTeam(createMockTeam(teamId, teamKey));
+		boxScore.setLocation(location);
+		return boxScore;
+	}
+	
+	private Team createMockTeam(Long teamId, String teamKey) {
+		Team team = new Team();
+		team.setId(teamId);
+		team.setTeamKey(teamKey);
+		return team;
+	}
+
 //	private Game updateMockGame(String lastName, String firstName, LocalDate birthdate, String displayName) {
 //		Game game = new Game();
 //		game.setLastName(lastName);
