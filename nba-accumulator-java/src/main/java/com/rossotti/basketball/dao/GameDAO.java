@@ -9,6 +9,7 @@ import com.rossotti.basketball.model.Game;
 
 public interface GameDAO {
 	public Game findById(Long id);
+	public List<Game> findById(List<Long> ids);
 	public Long findIdByDateTeam(LocalDate gameDate, String teamKey);
 	public List<Long> findIdsByDateRangeSize(LocalDate gameDate, int maxRows);
 	public List<Long> findIdsByDateScheduled(LocalDate gameDate);

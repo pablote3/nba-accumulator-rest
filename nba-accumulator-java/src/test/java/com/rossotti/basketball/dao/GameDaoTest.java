@@ -1,5 +1,6 @@
 package com.rossotti.basketball.dao;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.PropertyValueException;
@@ -52,6 +53,22 @@ public class GameDaoTest {
 	public void findGameById_NotFound() {
 		Game findGame = gameDAO.findById(0L);
 		Assert.assertTrue(findGame.isNotFound());
+	}
+
+	@Test
+	public void findGamesById_Found() {
+		List<Long> ids = Arrays.asList(2L, 4L);
+		List<Game> games = gameDAO.findById(ids);
+		Assert.assertEquals(2, games.size());
+		Assert.assertEquals(new LocalDateTime("2015-10-27T21:00"), games.get(0).getGameDate());
+		Assert.assertEquals("st-louis-bombers", games.get(0).getBoxScores().get(0).getTeam().getTeamKey());
+	}
+
+	@Test
+	public void findGamesById_NotFound() {
+		List<Long> ids = Arrays.asList(10L);
+		List<Game> games = gameDAO.findById(ids);
+		Assert.assertEquals(0, games.size());
 	}
 
 	@Test

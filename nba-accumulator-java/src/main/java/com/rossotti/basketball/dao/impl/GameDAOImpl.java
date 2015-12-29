@@ -36,17 +36,19 @@ public class GameDAOImpl implements GameDAO {
 		return game;
 	}
 
-//	@Override
-//	public Game findById(List<Long> ids) {
-//		
-//	    List<Game> sparseGames = query.findList();
-//	    
-//	    List<Game> games = new ArrayList<Game>();
-//	    for (int i = 0; i < sparseGames.size(); i++) {
-//			games.add(Game.findById(sparseGames.get(i).getId()));
-//		}
-//	    return games;
-//	}
+	@Override
+	public List<Game> findById(List<Long> ids) {
+		List<Game> games = new ArrayList<Game>();
+		for (int i = 0; i < ids.size(); i++) {
+			Game game = (Game)getSessionFactory().getCurrentSession().createCriteria(Game.class)
+					.add(Restrictions.eq("id", ids.get(i)))
+					.uniqueResult();
+			if (game != null) {
+				games.add(game);
+			}
+		}
+		return games;
+	}
 
 	public Long findIdByDateTeam(LocalDate gameDate, String teamKey) {
 		LocalDateTime fromDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
