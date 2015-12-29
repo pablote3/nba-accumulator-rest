@@ -149,6 +149,17 @@ public class GameDAOImpl implements GameDAO {
 		return gameIds;
 	}
 
+	@SuppressWarnings("unchecked")
+	public int findCountGamesByDateScheduled(LocalDate gameDate) {
+		LocalDateTime fromDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
+		LocalDateTime toDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
+		List<Game> games = getSessionFactory().getCurrentSession().createCriteria(Game.class)
+				.add(Restrictions.between("gameDate", fromDateTime, toDateTime))
+				.add(Restrictions.eq("status", Status.Scheduled))
+				.list();
+		return games.size();
+	}
+
 //	@Override
 //	public Game findGame(LocalDate gameDate, String teamKey) {
 //		String date = DateTimeUtil.getStringDate(gameDate);

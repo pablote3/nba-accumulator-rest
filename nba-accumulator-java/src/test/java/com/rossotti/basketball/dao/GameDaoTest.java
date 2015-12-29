@@ -141,6 +141,12 @@ public class GameDaoTest {
 		Assert.assertEquals(0, findIds.size());
 	}
 
+	@Test
+	public void findCountGamesByDateScheduled() {
+		int games = gameDAO.findCountGamesByDateScheduled(new LocalDate("2015-10-27"));
+		Assert.assertEquals(1, games);
+	}
+
 //	@Test
 //	public void findGame_NotFound_GameDate() {
 //		Game findGame = gameDAO.findGame(new LocalDate("2015-10-26"), "atlanta-hawks");
