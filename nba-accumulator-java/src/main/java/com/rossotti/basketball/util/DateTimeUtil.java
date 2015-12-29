@@ -24,6 +24,10 @@ public class DateTimeUtil {
 		return dateFormatter.parseLocalDate(strDate);
 	}
 
+	static public LocalDate getLocalDate(LocalDateTime dateTime) {
+		return dateTime.toLocalDate();
+	}
+
 	static public LocalDateTime getLocalDateTime(String strDateTime) {
 		return dateTimeFormatter.parseLocalDateTime(strDateTime);
 	}

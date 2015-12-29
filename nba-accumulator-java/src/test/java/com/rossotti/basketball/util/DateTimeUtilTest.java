@@ -20,9 +20,15 @@ public class DateTimeUtilTest {
 	}
 
 	@Test
-	public void getLocalDate() {
+	public void getLocalDate_FromString() {
 		LocalDate date = DateTimeUtil.getLocalDate("2014-06-30");
 		Assert.assertEquals(new LocalDate("2014-06-30"), date);
+	}
+
+	@Test
+	public void getLocalDate_FromLocalDateTime() {
+		LocalDateTime dateTime = DateTimeUtil.getLocalDateTime("2014-06-30 10:30");
+		Assert.assertEquals(new LocalDate("2014-06-30"), DateTimeUtil.getLocalDate(dateTime));
 	}
 
 	@Test
