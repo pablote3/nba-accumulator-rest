@@ -46,121 +46,92 @@ public class GameDaoTest {
 	//4, 8, 3, 'Away', 'Loss' : 'st-louis-bombers'
 
 	@Test
-	public void findGameById_Found() {
-		Game findGame = gameDAO.findById(1L);
-		Assert.assertEquals(Status.Completed, findGame.getStatus());
+	public void findByDateTeam_Found() {
+		Game findGame = gameDAO.findByDateTeam(new LocalDate("2015-10-27"), "chicago-zephyrs");
 		Assert.assertTrue(findGame.isFound());
 		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGame.getGameDate());
-		Assert.assertEquals("chicago-zephyrs", findGame.getBoxScores().get(0).getTeam().getTeamKey());
+		Assert.assertEquals("harlem-globetrotters", findGame.getBoxScores().get(1).getTeam().getTeamKey());
 	}
 
 	@Test
-	public void findGameById_NotFound() {
-		Game findGame = gameDAO.findById(0L);
+	public void findByDateTeam_NotFound_GameDate() {
+		Game findGame = gameDAO.findByDateTeam(new LocalDate("2015-10-26"), "chicago-zephyrs");
 		Assert.assertTrue(findGame.isNotFound());
 	}
 
 	@Test
-	public void findGamesById_Found() {
-		List<Long> ids = Arrays.asList(2L, 4L);
-		List<Game> games = gameDAO.findById(ids);
-		Assert.assertEquals(2, games.size());
-		Assert.assertEquals(new LocalDateTime("2015-10-27T21:00"), games.get(0).getGameDate());
-		Assert.assertEquals("st-louis-bombers", games.get(0).getBoxScores().get(0).getTeam().getTeamKey());
+	public void findByDateTeam_NotFound_Team() {
+		Game findGame = gameDAO.findByDateTeam(new LocalDate("2015-10-27"), "chicago-zephyres");
+		Assert.assertTrue(findGame.isNotFound());
 	}
 
 	@Test
-	public void findGamesById_NotFound() {
-		List<Long> ids = Arrays.asList(10L);
-		List<Game> games = gameDAO.findById(ids);
-		Assert.assertEquals(0, games.size());
+	public void findByDateRangeSize_Size0() {
+		List<Game> findGames = gameDAO.findByDateRangeSize(new LocalDate("2015-10-28"), 0);
+		Assert.assertEquals(3, findGames.size());
+		Assert.assertEquals(new LocalDateTime("2015-10-28T20:00"), findGames.get(0).getGameDate());
+		Assert.assertEquals(new LocalDateTime("2015-10-29T20:00"), findGames.get(1).getGameDate());
+		Assert.assertEquals(new LocalDateTime("2015-10-30T10:00"), findGames.get(2).getGameDate());
 	}
 
 	@Test
-	public void findIdByDateTeam_Found() {
-		Long findId = gameDAO.findIdByDateTeam(new LocalDate("2015-10-27"), "chicago-zephyrs");
-		Assert.assertEquals(1L, findId.longValue());
+	public void findByDateRangeSize_Size1() {
+		List<Game> findGames = gameDAO.findByDateRangeSize(new LocalDate("2015-10-27"), 1);
+		Assert.assertEquals(1, findGames.size());
+		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGames.get(0).getGameDate());
+	}
+
+	@Test
+	public void findByDateRangeSize_Size2() {
+		List<Game> findGames = gameDAO.findByDateRangeSize(new LocalDate("2015-10-27"), 2);
+		Assert.assertEquals(2, findGames.size());
+		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGames.get(0).getGameDate());
+		Assert.assertEquals(new LocalDateTime("2015-10-27T20:30"), findGames.get(1).getGameDate());
 	}
 	
 	@Test
-	public void findIdByDateTeam_NotFound_GameDate() {
-		Long findId = gameDAO.findIdByDateTeam(new LocalDate("2015-10-26"), "chicago-zephyrs");
-		Assert.assertEquals(0L, findId.longValue());
+	public void findByDateRangeSize_NotFound() {
+		List<Game> findGames = gameDAO.findByDateRangeSize(new LocalDate("2015-11-01"), 2);
+		Assert.assertEquals(0, findGames.size());
 	}
 
 	@Test
-	public void findIdByDateTeam_NotFound_Team() {
-		Long findId = gameDAO.findIdByDateTeam(new LocalDate("2015-10-27"), "chicago-zephyres");
-		Assert.assertEquals(0L, findId.longValue());
+	public void findByDateScheduled_Found() {
+		List<Game> findGames = gameDAO.findByDateScheduled(new LocalDate("2015-10-27"));
+		Assert.assertEquals(1, findGames.size());
+		Assert.assertEquals(new LocalDateTime("2015-10-27T20:30"), findGames.get(0).getGameDate());
 	}
 
 	@Test
-	public void findIdsByDateRangeSize_Size0() {
-		List<Long> findIds = gameDAO.findIdsByDateRangeSize(new LocalDate("2015-10-28"), 0);
-		Assert.assertEquals(3, findIds.size());
-		Assert.assertTrue(findIds.contains(4L));
-		Assert.assertTrue(findIds.contains(5L));
-		Assert.assertTrue(findIds.contains(6L));
+	public void findByDateScheduled_NotFound() {
+		List<Game> findGames = gameDAO.findByDateScheduled(new LocalDate("2015-10-26"));
+		Assert.assertEquals(0, findGames.size());
 	}
 
 	@Test
-	public void findIdsByDateRangeSize_Size1() {
-		List<Long> findIds = gameDAO.findIdsByDateRangeSize(new LocalDate("2015-10-27"), 1);
-		Assert.assertEquals(1, findIds.size());
-		Assert.assertTrue(findIds.contains(1L));
-	}
-
-	@Test
-	public void findIdsByDateRangeSize_Size2() {
-		List<Long> findIds = gameDAO.findIdsByDateRangeSize(new LocalDate("2015-10-27"), 2);
-		Assert.assertEquals(2, findIds.size());
-		Assert.assertTrue(findIds.contains(1L));
-		Assert.assertTrue(findIds.contains(3L));
-	}
-	
-	@Test
-	public void findIdsByDateRangeSize_NotFound() {
-		List<Long> findIds = gameDAO.findIdsByDateRangeSize(new LocalDate("2015-11-01"), 2);
-		Assert.assertEquals(0, findIds.size());
-	}
-
-	@Test
-	public void findIdsByDateScheduled_Found() {
-		List<Long> findIds = gameDAO.findIdsByDateScheduled(new LocalDate("2015-10-27"));
-		Assert.assertEquals(1, findIds.size());
-		Assert.assertTrue(findIds.contains(3L));
-	}
-
-	@Test
-	public void findIdsByDateScheduled_NotFound() {
-		List<Long> findIds = gameDAO.findIdsByDateScheduled(new LocalDate("2015-10-26"));
-		Assert.assertEquals(0, findIds.size());
-	}
-
-	@Test
-	public void findPreviousGameDateTimeByDateTeam_Found() {
+	public void findPreviousByDateTeam_Found() {
 		LocalDateTime dateTime = gameDAO.findPreviousGameDateTimeByDateTeam(new LocalDate("2015-10-30"), "st-louis-bombers");
 		Assert.assertEquals(new LocalDateTime("2015-10-27T21:00:00.0"), dateTime);
 	}
 
 	@Test
-	public void findPreviousGameDateTimeByDateTeam_NotFound() {
+	public void findPreviousByDateTeam_NotFound() {
 		LocalDateTime dateTime = gameDAO.findPreviousGameDateTimeByDateTeam(new LocalDate("2015-10-27"), "st-louis-bombers");
 		Assert.assertEquals(null, dateTime);
 	}
 
 	@Test
 	public void findByDateTeamSeason_Found() {
-		List<Long> findIds = gameDAO.findByDateTeamSeason(new LocalDate("2015-10-29"), "st-louis-bombers");
-		Assert.assertEquals(2, findIds.size());
-		Assert.assertTrue(findIds.contains(2L));
-		Assert.assertTrue(findIds.contains(4L));
+		List<Game> findGames = gameDAO.findByDateTeamSeason(new LocalDate("2015-10-28"), "st-louis-bombers");
+		Assert.assertEquals(2, findGames.size());
+		Assert.assertEquals(new LocalDateTime("2015-10-27T21:00"), findGames.get(0).getGameDate());
+		Assert.assertEquals(new LocalDateTime("2015-10-28T20:00"), findGames.get(1).getGameDate());
 	}
 
 	@Test
 	public void findByDateTeamSeason_NotFound() {
-		List<Long> findIds = gameDAO.findByDateTeamSeason(new LocalDate("2015-09-29"), "st-louis-bombers");
-		Assert.assertEquals(0, findIds.size());
+		List<Game> findGames = gameDAO.findByDateTeamSeason(new LocalDate("2015-09-29"), "st-louis-bombers");
+		Assert.assertEquals(0, findGames.size());
 	}
 
 	@Test
@@ -175,8 +146,7 @@ public class GameDaoTest {
 	public void createGame_Created() {
 		Game game = createMockGame(new LocalDateTime("2015-10-10T21:00"), 1L, "chicago-zephyrs", 2L, "harlem-globetrotters");
 		Game createGame = gameDAO.createGame(game);
-		Long gameId = gameDAO.findIdByDateTeam(new LocalDate("2015-10-10"), "chicago-zephyrs");
-		Game findGame = gameDAO.findById(gameId);
+		Game findGame = gameDAO.findByDateTeam(new LocalDate("2015-10-10"), "chicago-zephyrs");
 		Assert.assertTrue(createGame.isCreated());
 		Assert.assertEquals(2, findGame.getBoxScores().size());
 		Assert.assertEquals(Location.Home, findGame.getBoxScores().get(0).getLocation());
@@ -270,4 +240,26 @@ public class GameDaoTest {
 //		game.setBirthplace("Monroe, Louisiana, USA");
 //		return game;
 //	}
+	
+	public static BoxScore getBoxScoreStats(BoxScore boxScore, BoxScore stats) {
+		boxScore.setMinutes(stats.getMinutes());
+        boxScore.setPoints(stats.getPoints());
+        boxScore.setAssists(stats.getAssists());
+        boxScore.setTurnovers(stats.getTurnovers());
+        boxScore.setSteals(stats.getSteals());
+        boxScore.setBlocks(stats.getBlocks());
+        boxScore.setFieldGoalAttempts(stats.getFieldGoalAttempts());
+        boxScore.setFieldGoalMade(stats.getFieldGoalMade());
+        boxScore.setFieldGoalPercent(stats.getFieldGoalPercent());
+        boxScore.setThreePointAttempts(stats.getThreePointAttempts());
+        boxScore.setThreePointMade(stats.getThreePointMade());
+        boxScore.setThreePointPercent(stats.getThreePointPercent());
+        boxScore.setFreeThrowAttempts(stats.getFreeThrowAttempts());
+        boxScore.setFreeThrowMade(stats.getFreeThrowMade());
+        boxScore.setFreeThrowPercent(stats.getFreeThrowPercent());
+        boxScore.setReboundsOffense(stats.getReboundsOffense());
+        boxScore.setReboundsDefense(stats.getReboundsDefense());
+        boxScore.setPersonalFouls(stats.getPersonalFouls());
+    	return boxScore;
+    }
 }

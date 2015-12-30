@@ -26,32 +26,7 @@ public class GameDAOImpl implements GameDAO {
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	@Override
-	public Game findById(Long id) {
-		Game game = (Game)getSessionFactory().getCurrentSession().createCriteria(Game.class)
-			.add(Restrictions.eq("id", id))
-			.uniqueResult();
-		if (game == null) {
-			game = new Game(StatusCode.NotFound);
-		}
-		return game;
-	}
-
-	@Override
-	public List<Game> findById(List<Long> ids) {
-		List<Game> games = new ArrayList<Game>();
-		for (int i = 0; i < ids.size(); i++) {
-			Game game = (Game)getSessionFactory().getCurrentSession().createCriteria(Game.class)
-					.add(Restrictions.eq("id", ids.get(i)))
-					.uniqueResult();
-			if (game != null) {
-				games.add(game);
-			}
-		}
-		return games;
-	}
-
-	public Long findIdByDateTeam(LocalDate gameDate, String teamKey) {
+	public Game findByDateTeam(LocalDate gameDate, String teamKey) {
 		LocalDateTime fromDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
 		LocalDateTime toDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
 		String sql = 	"select game " +
@@ -61,50 +36,83 @@ public class GameDAOImpl implements GameDAO {
 						"where game.gameDate between '" + fromDateTime + "' and '" + toDateTime +"' " +
 						"and team.teamKey = '" + teamKey + "'";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
-		Game game = (Game)query.uniqueResult();
-		if (game == null) {
-			return 0L;
+		Game findGame = (Game)query.uniqueResult();
+		if (findGame == null) {
+			return new Game(StatusCode.NotFound);
 		} else {
-			return game.getId();
+			Game game = (Game)getSessionFactory().getCurrentSession().createCriteria(Game.class)
+				.add(Restrictions.eq("id", findGame.getId()))
+				.uniqueResult();
+			return game;
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Long> findIdsByDateRangeSize(LocalDate gameDate, int maxRows) {
+	public List<Game> findByDateTeamSeason(LocalDate gameDate, String teamKey) {
+		LocalDateTime fromDateTime = DateTimeUtil.getLocalDateTimeSeasonMin(gameDate);
+		LocalDateTime toDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
+		String sql = 	"select game " +
+						"from Game game " +
+						"left join game.boxScores boxScores " +
+						"inner join boxScores.team team " +
+						"where game.gameDate between '" + fromDateTime + "' and '" + toDateTime +"' " +
+						"and game.status in ('" + Status.Completed + "', '" + Status.Scheduled + "') " + 
+						"and team.teamKey = '" + teamKey + "' " +
+						"order by gameDate asc";
+		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		List<Game> findGames = query.list();
+		List<Game> games = new ArrayList<Game>();
+		if (findGames != null) {
+			for (int i = 0; i < findGames.size(); i++) {
+				Game game = (Game)getSessionFactory().getCurrentSession().createCriteria(Game.class)
+					.add(Restrictions.eq("id", findGames.get(i).getId()))
+					.uniqueResult();
+				games.add(game);
+			}
+		}
+		return games;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Game> findByDateRangeSize(LocalDate gameDate, int maxRows) {
 		LocalDateTime gameDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
 		LocalDateTime maxDateTime = DateTimeUtil.getLocalDateTimeSeasonMax(gameDate);
-		List<Game> games = getSessionFactory().getCurrentSession().createCriteria(Game.class)
+		List<Game> findGames = getSessionFactory().getCurrentSession().createCriteria(Game.class)
 				.add(Restrictions.between("gameDate", gameDateTime, maxDateTime))
 				.addOrder(Order.asc("gameDate"))
 				.setMaxResults(maxRows)
 				.list();
-
-		List<Long> gameIds = new ArrayList<Long>();
-		if (games.size() > 0) {
-			for (int i = 0; i < games.size(); i++) {
-				gameIds.add(games.get(i).getId());
+		List<Game> games = new ArrayList<Game>();
+		if (findGames != null) {
+			for (int i = 0; i < findGames.size(); i++) {
+				Game game = (Game)getSessionFactory().getCurrentSession().createCriteria(Game.class)
+					.add(Restrictions.eq("id", findGames.get(i).getId()))
+					.uniqueResult();
+				games.add(game);
 			}
 		}
-		return gameIds;
+		return games;
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Long> findIdsByDateScheduled(LocalDate gameDate) {
+	public List<Game> findByDateScheduled(LocalDate gameDate) {
 		LocalDateTime minDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
 		LocalDateTime maxDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
-		List<Game> games = getSessionFactory().getCurrentSession().createCriteria(Game.class)
+		List<Game> findGames = getSessionFactory().getCurrentSession().createCriteria(Game.class)
 				.add(Restrictions.between("gameDate", minDateTime, maxDateTime))
 				.add(Restrictions.eq("status", Status.Scheduled))
 				.addOrder(Order.asc("gameDate"))
 				.list();
-
-		List<Long> gameIds = new ArrayList<Long>();
-		if (games.size() > 0) {
-			for (int i = 0; i < games.size(); i++) {
-				gameIds.add(games.get(i).getId());
+		List<Game> games = new ArrayList<Game>();
+		if (findGames != null) {
+			for (int i = 0; i < findGames.size(); i++) {
+				Game game = (Game)getSessionFactory().getCurrentSession().createCriteria(Game.class)
+					.add(Restrictions.eq("id", findGames.get(i).getId()))
+					.uniqueResult();
+				games.add(game);
 			}
 		}
-		return gameIds;
+		return games;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -129,30 +137,6 @@ public class GameDAOImpl implements GameDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Long> findByDateTeamSeason(LocalDate gameDate, String teamKey) {
-		LocalDateTime fromDateTime = DateTimeUtil.getLocalDateTimeSeasonMin(gameDate);
-		LocalDateTime toDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
-		String sql = 	"select game " +
-						"from Game game " +
-						"left join game.boxScores boxScores " +
-						"inner join boxScores.team team " +
-						"where game.gameDate between '" + fromDateTime + "' and '" + toDateTime +"' " +
-						"and game.status in ('" + Status.Completed + "', '" + Status.Scheduled + "') " + 
-						"and team.teamKey = '" + teamKey + "' " +
-						"order by gameDate asc";
-		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
-		List<Game> games = query.list();
-
-		List<Long> gameIds = new ArrayList<Long>();
-		if (games.size() > 0) {
-			for (int i = 0; i < games.size(); i++) {
-				gameIds.add(games.get(i).getId());
-			}
-		}
-		return gameIds;
-	}
-
-	@SuppressWarnings("unchecked")
 	public int findCountGamesByDateScheduled(LocalDate gameDate) {
 		LocalDateTime fromDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
 		LocalDateTime toDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
@@ -165,8 +149,8 @@ public class GameDAOImpl implements GameDAO {
 
 	@Override
 	public Game createGame(Game createGame) {
-		Long id = findIdByDateTeam(DateTimeUtil.getLocalDate(createGame.getGameDate()), createGame.getBoxScores().get(0).getTeam().getTeamKey());
-		if (id == 0L) {
+		Game game = findByDateTeam(DateTimeUtil.getLocalDate(createGame.getGameDate()), createGame.getBoxScores().get(0).getTeam().getTeamKey());
+		if (game.isNotFound()) {
 			getSessionFactory().getCurrentSession().persist(createGame);
 			createGame.setStatusCode(StatusCode.Created);
 		}
@@ -178,21 +162,43 @@ public class GameDAOImpl implements GameDAO {
 
 //	@Override
 //	public Game updateGame(Game updateGame) {
-//		Game game = findGame(updateGame.getLastName(), updateGame.getFirstName(), updateGame.getBirthdate());
-//		if (game.isFound()) {
-//			game.setLastName(updateGame.getLastName());
-//			game.setFirstName(updateGame.getFirstName());
-//			game.setBirthdate(updateGame.getBirthdate());
-//			game.setDisplayName(updateGame.getDisplayName());
-//			game.setHeight(updateGame.getHeight());
-//			game.setWeight(updateGame.getWeight());
-//			game.setBirthplace(updateGame.getBirthplace());
-//			game.setStatusCode(StatusCode.Updated);
-//			getSessionFactory().getCurrentSession().persist(game);
+//		Long id = findIdByDateTeam(DateTimeUtil.getLocalDate(updateGame.getGameDate()), updateGame.getBoxScores().get(0).getTeam().getTeamKey());
+//		if (id > 0L) {
+//			Game game = findById(id);
+//			if (game.isFound()) {
+//				game.setStatus(updateGame.getStatus());
+//				for (int i = 0; i < game.getBoxScores().size(); i++) {
+//					if (game.getBoxScores().get(i).getLocation()) {
+//						
+//					}
+//				}
+//				
+//				boxScore.setMinutes(stats.getMinutes());
+//		        boxScore.setPoints(stats.getPoints());
+//		        boxScore.setAssists(stats.getAssists());
+//		        boxScore.setTurnovers(stats.getTurnovers());
+//		        boxScore.setSteals(stats.getSteals());
+//		        boxScore.setBlocks(stats.getBlocks());
+//		        boxScore.setFieldGoalAttempts(stats.getFieldGoalAttempts());
+//		        boxScore.setFieldGoalMade(stats.getFieldGoalMade());
+//		        boxScore.setFieldGoalPercent(stats.getFieldGoalPercent());
+//		        boxScore.setThreePointAttempts(stats.getThreePointAttempts());
+//		        boxScore.setThreePointMade(stats.getThreePointMade());
+//		        boxScore.setThreePointPercent(stats.getThreePointPercent());
+//		        boxScore.setFreeThrowAttempts(stats.getFreeThrowAttempts());
+//		        boxScore.setFreeThrowMade(stats.getFreeThrowMade());
+//		        boxScore.setFreeThrowPercent(stats.getFreeThrowPercent());
+//		        boxScore.setReboundsOffense(stats.getReboundsOffense());
+//		        boxScore.setReboundsDefense(stats.getReboundsDefense());
+//		        boxScore.setPersonalFouls(stats.getPersonalFouls());
+//
+//				game.setStatusCode(StatusCode.Updated);
+//				getSessionFactory().getCurrentSession().persist(game);
+//			}
 //		}
 //		return game;
 //	}
-//
+
 //	@Override
 //	public Game deleteGame(LocalDate gameDate, String teamKey) {
 //		Game game = findGame(lastName, firstName, birthdate);

@@ -8,13 +8,11 @@ import org.joda.time.LocalDateTime;
 import com.rossotti.basketball.model.Game;
 
 public interface GameDAO {
-	public Game findById(Long id);
-	public List<Game> findById(List<Long> ids);
-	public Long findIdByDateTeam(LocalDate gameDate, String teamKey);
-	public List<Long> findIdsByDateRangeSize(LocalDate gameDate, int maxRows);
-	public List<Long> findIdsByDateScheduled(LocalDate gameDate);
+	public Game findByDateTeam(LocalDate gameDate, String teamKey);
+	public List<Game> findByDateTeamSeason(LocalDate gameDate, String teamKey);
+	public List<Game> findByDateRangeSize(LocalDate gameDate, int maxRows);
+	public List<Game> findByDateScheduled(LocalDate gameDate);
 	public LocalDateTime findPreviousGameDateTimeByDateTeam(LocalDate gameDate, String teamKey);
-	public List<Long> findByDateTeamSeason(LocalDate gameDate, String teamKey);
 	public int findCountGamesByDateScheduled(LocalDate gameDate);
 	public Game createGame(Game game);
 //	public Game updateGame(Game game);
