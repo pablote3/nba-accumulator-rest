@@ -15,6 +15,6 @@ public interface GameDAO {
 	public LocalDateTime findPreviousGameDateTimeByDateTeam(LocalDate gameDate, String teamKey);
 	public int findCountGamesByDateScheduled(LocalDate gameDate);
 	public Game createGame(Game game);
-//	public Game updateGame(Game game);
-//	public Game deleteGame(LocalDate gameDate, String teamKey);
+	public Game updateGame(Game game);
+	public Game deleteGame(LocalDate gameDate, String teamKey);
 }

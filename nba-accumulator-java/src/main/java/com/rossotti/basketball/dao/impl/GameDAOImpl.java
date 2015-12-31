@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rossotti.basketball.dao.GameDAO;
 import com.rossotti.basketball.dao.exception.DuplicateEntityException;
+import com.rossotti.basketball.model.BoxScore;
+import com.rossotti.basketball.model.BoxScore.Location;
 import com.rossotti.basketball.model.Game;
 import com.rossotti.basketball.model.Game.Status;
 import com.rossotti.basketball.model.StatusCode;
@@ -160,54 +162,73 @@ public class GameDAOImpl implements GameDAO {
 		return createGame;
 	}
 
-//	@Override
-//	public Game updateGame(Game updateGame) {
-//		Long id = findIdByDateTeam(DateTimeUtil.getLocalDate(updateGame.getGameDate()), updateGame.getBoxScores().get(0).getTeam().getTeamKey());
-//		if (id > 0L) {
-//			Game game = findById(id);
-//			if (game.isFound()) {
-//				game.setStatus(updateGame.getStatus());
-//				for (int i = 0; i < game.getBoxScores().size(); i++) {
-//					if (game.getBoxScores().get(i).getLocation()) {
-//						
-//					}
-//				}
-//				
-//				boxScore.setMinutes(stats.getMinutes());
-//		        boxScore.setPoints(stats.getPoints());
-//		        boxScore.setAssists(stats.getAssists());
-//		        boxScore.setTurnovers(stats.getTurnovers());
-//		        boxScore.setSteals(stats.getSteals());
-//		        boxScore.setBlocks(stats.getBlocks());
-//		        boxScore.setFieldGoalAttempts(stats.getFieldGoalAttempts());
-//		        boxScore.setFieldGoalMade(stats.getFieldGoalMade());
-//		        boxScore.setFieldGoalPercent(stats.getFieldGoalPercent());
-//		        boxScore.setThreePointAttempts(stats.getThreePointAttempts());
-//		        boxScore.setThreePointMade(stats.getThreePointMade());
-//		        boxScore.setThreePointPercent(stats.getThreePointPercent());
-//		        boxScore.setFreeThrowAttempts(stats.getFreeThrowAttempts());
-//		        boxScore.setFreeThrowMade(stats.getFreeThrowMade());
-//		        boxScore.setFreeThrowPercent(stats.getFreeThrowPercent());
-//		        boxScore.setReboundsOffense(stats.getReboundsOffense());
-//		        boxScore.setReboundsDefense(stats.getReboundsDefense());
-//		        boxScore.setPersonalFouls(stats.getPersonalFouls());
-//
-//				game.setStatusCode(StatusCode.Updated);
-//				getSessionFactory().getCurrentSession().persist(game);
-//			}
-//		}
-//		return game;
-//	}
+	@Override
+	public Game updateGame(Game updateGame) {
+		Game findGame = findByDateTeam(DateTimeUtil.getLocalDate(updateGame.getGameDate()), updateGame.getBoxScores().get(0).getTeam().getTeamKey());
+		if (findGame.isFound()) {
+			findGame.setStatus(updateGame.getStatus());
 
-//	@Override
-//	public Game deleteGame(LocalDate gameDate, String teamKey) {
-//		Game game = findGame(lastName, firstName, birthdate);
-//		if (game.isFound()) {
-//			getSessionFactory().getCurrentSession().delete(game);
-//			game = new Game(StatusCode.Deleted);
-//		}
-//		return game;
-//	}
+			int findHomeBoxScoreId = findGame.getBoxScores().get(0).getLocation().equals(Location.Home) ? 1 : 0;
+			BoxScore findHomeBoxScore = findGame.getBoxScores().get(findHomeBoxScoreId);
+			int updateHomeBoxScoreId = updateGame.getBoxScores().get(0).getLocation().equals(Location.Home) ? 1 : 0;
+			BoxScore updateHomeBoxScore = updateGame.getBoxScores().get(updateHomeBoxScoreId);
+			findHomeBoxScore.setMinutes(updateHomeBoxScore.getMinutes());
+			findHomeBoxScore.setPoints(updateHomeBoxScore.getPoints());
+			findHomeBoxScore.setAssists(updateHomeBoxScore.getAssists());
+			findHomeBoxScore.setTurnovers(updateHomeBoxScore.getTurnovers());
+			findHomeBoxScore.setSteals(updateHomeBoxScore.getSteals());
+			findHomeBoxScore.setBlocks(updateHomeBoxScore.getBlocks());
+			findHomeBoxScore.setFieldGoalAttempts(updateHomeBoxScore.getFieldGoalAttempts());
+			findHomeBoxScore.setFieldGoalMade(updateHomeBoxScore.getFieldGoalMade());
+			findHomeBoxScore.setFieldGoalPercent(updateHomeBoxScore.getFieldGoalPercent());
+			findHomeBoxScore.setThreePointAttempts(updateHomeBoxScore.getThreePointAttempts());
+			findHomeBoxScore.setThreePointMade(updateHomeBoxScore.getThreePointMade());
+			findHomeBoxScore.setThreePointPercent(updateHomeBoxScore.getThreePointPercent());
+			findHomeBoxScore.setFreeThrowAttempts(updateHomeBoxScore.getFreeThrowAttempts());
+			findHomeBoxScore.setFreeThrowMade(updateHomeBoxScore.getFreeThrowMade());
+			findHomeBoxScore.setFreeThrowPercent(updateHomeBoxScore.getFreeThrowPercent());
+			findHomeBoxScore.setReboundsOffense(updateHomeBoxScore.getReboundsOffense());
+			findHomeBoxScore.setReboundsDefense(updateHomeBoxScore.getReboundsDefense());
+			findHomeBoxScore.setPersonalFouls(updateHomeBoxScore.getPersonalFouls());
+
+			int findAwayBoxScoreId = findGame.getBoxScores().get(0).getLocation().equals(Location.Away) ? 1 : 0;
+			BoxScore findAwayBoxScore = findGame.getBoxScores().get(findAwayBoxScoreId);
+			int updateAwayBoxScoreId = updateGame.getBoxScores().get(0).getLocation().equals(Location.Away) ? 1 : 0;
+			BoxScore updateAwayBoxScore = updateGame.getBoxScores().get(updateAwayBoxScoreId);
+			findAwayBoxScore.setMinutes(updateAwayBoxScore.getMinutes());
+			findAwayBoxScore.setPoints(updateAwayBoxScore.getPoints());
+			findAwayBoxScore.setAssists(updateAwayBoxScore.getAssists());
+			findAwayBoxScore.setTurnovers(updateAwayBoxScore.getTurnovers());
+			findAwayBoxScore.setSteals(updateAwayBoxScore.getSteals());
+			findAwayBoxScore.setBlocks(updateAwayBoxScore.getBlocks());
+			findAwayBoxScore.setFieldGoalAttempts(updateAwayBoxScore.getFieldGoalAttempts());
+			findAwayBoxScore.setFieldGoalMade(updateAwayBoxScore.getFieldGoalMade());
+			findAwayBoxScore.setFieldGoalPercent(updateAwayBoxScore.getFieldGoalPercent());
+			findAwayBoxScore.setThreePointAttempts(updateAwayBoxScore.getThreePointAttempts());
+			findAwayBoxScore.setThreePointMade(updateAwayBoxScore.getThreePointMade());
+			findAwayBoxScore.setThreePointPercent(updateAwayBoxScore.getThreePointPercent());
+			findAwayBoxScore.setFreeThrowAttempts(updateAwayBoxScore.getFreeThrowAttempts());
+			findAwayBoxScore.setFreeThrowMade(updateAwayBoxScore.getFreeThrowMade());
+			findAwayBoxScore.setFreeThrowPercent(updateAwayBoxScore.getFreeThrowPercent());
+			findAwayBoxScore.setReboundsOffense(updateAwayBoxScore.getReboundsOffense());
+			findAwayBoxScore.setReboundsDefense(updateAwayBoxScore.getReboundsDefense());
+			findAwayBoxScore.setPersonalFouls(updateAwayBoxScore.getPersonalFouls());
+
+			findGame.setStatusCode(StatusCode.Updated);
+			getSessionFactory().getCurrentSession().persist(findGame);
+		}
+		return findGame;
+	}
+
+	@Override
+	public Game deleteGame(LocalDate gameDate, String teamKey) {
+		Game game = findByDateTeam(gameDate, teamKey);
+		if (game.isFound()) {
+			getSessionFactory().getCurrentSession().delete(game);
+			game = new Game(StatusCode.Deleted);
+		}
+		return game;
+	}
 
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;

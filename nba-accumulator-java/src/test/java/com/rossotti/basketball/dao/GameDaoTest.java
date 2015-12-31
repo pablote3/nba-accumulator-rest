@@ -1,6 +1,5 @@
 package com.rossotti.basketball.dao;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.PropertyValueException;
@@ -10,7 +9,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -140,8 +138,6 @@ public class GameDaoTest {
 		Assert.assertEquals(1, games);
 	}
 
-	//'2015-10-10 21:00', 'chicago-zephyrs', 'harlem-globetrotters'
-
 	@Test
 	public void createGame_Created() {
 		Game game = createMockGame(new LocalDateTime("2015-10-10T21:00"), 1L, "chicago-zephyrs", 2L, "harlem-globetrotters");
@@ -166,43 +162,39 @@ public class GameDaoTest {
 		gameDAO.createGame(game);
 	}
 
-	//'Thad', 'Puzdrakiewicz', '1966-06-10', 'Thad Puzdrakiewicz'
+	@Test
+	public void updateGame_Updated() {
+		Game findGame = gameDAO.findByDateTeam(new LocalDate("2015-10-27"), "st-louis-bombers");
+		updateMockBoxScoreHome(findGame);
+		updateMockBoxScoreAway(findGame);
+		Game updateGame = gameDAO.updateGame(findGame);
+		Assert.assertTrue(updateGame.isUpdated());
+		Game game = gameDAO.findByDateTeam(new LocalDate("2015-10-27"), "st-louis-bombers");
+		BoxScore homeBoxScore = game.getBoxScores().get(game.getBoxScores().get(0).getLocation().equals(Location.Home) ? 1 : 0);
+		BoxScore awayBoxScore = game.getBoxScores().get(game.getBoxScores().get(0).getLocation().equals(Location.Away) ? 1 : 0);
+		Assert.assertTrue(homeBoxScore.getFreeThrowMade().equals((short)10));
+		Assert.assertTrue(awayBoxScore.getFreeThrowMade().equals((short)18));
+	}
 
-//	@Test
-//	public void updateGame_Updated() {
-//		Game updateGame = gameDAO.updateGame(updateMockGame("Puzdrakiewicz", "Thad", new LocalDate("1966-06-02"), "Thad Puzdrakiewicz"));
-//		Game findGame = gameDAO.findGame("Puzdrakiewicz", "Thad", new LocalDate("1966-06-02"));
-//		Assert.assertTrue(updateGame.isUpdated());
-//		Assert.assertEquals((short)215, findGame.getWeight().shortValue());
-//	}
-//
-//	@Test
-//	public void updateGame_NotFound() {
-//		Game updateGame = gameDAO.updateGame(updateMockGame("Puzdrakiewicz", "Thad", new LocalDate("2009-06-21"), "Thad Puzdrakiewicz"));
-//		Assert.assertTrue(updateGame.isNotFound());
-//	}
-//
-//	@Test(expected=DataIntegrityViolationException.class)
-//	public void updateGame_Exception_MissingRequiredData() {
-//		Game updateGame = updateMockGame("Puzdrakiewicz", "Thad", new LocalDate("1966-06-02"), null);
-//		gameDAO.updateGame(updateGame);
-//	}
+	@Test
+	public void updateGame_NotFound() {
+		Game updateGame = gameDAO.updateGame(createMockGame(new LocalDateTime("2015-10-10T21:00"), 1L, "chicago-zephyriers", 2L, "harlem-globetrottered"));
+		Assert.assertTrue(updateGame.isNotFound());
+	}
 
-	//'Junior', 'Puzdrakiewicz', '1966-06-10', 'Junior Puzdrakiewicz'
+	@Test
+	public void deleteGame_Deleted() {
+		Game deleteGame = gameDAO.deleteGame(new LocalDate("2015-10-15"), "baltimore-bullets");
+		Game findGame = gameDAO.findByDateTeam(new LocalDate("2015-10-15"), "baltimore-bullets");
+		Assert.assertTrue(deleteGame.isDeleted());
+		Assert.assertTrue(findGame.isNotFound());
+	}
 
-//	@Test
-//	public void deleteGame_Deleted() {
-//		Game deleteGame = gameDAO.deleteGame("Puzdrakiewicz", "Junior", new LocalDate("1966-06-10"));
-//		Game findGame = gameDAO.findGame("Puzdrakiewicz", "Junior", new LocalDate("1966-06-10"));
-//		Assert.assertTrue(deleteGame.isDeleted());
-//		Assert.assertTrue(findGame.isNotFound());
-//	}
-//
-//	@Test
-//	public void deleteGame_NotFound() {
-//		Game deleteGame = gameDAO.deleteGame("Puzdrakiewicz", "Juni", new LocalDate("1966-06-10"));
-//		Assert.assertTrue(deleteGame.isNotFound());
-//	}
+	@Test
+	public void deleteGame_NotFound() {
+		Game deleteGame = gameDAO.deleteGame(new LocalDate("2015-10-15"), "baltimore-bulletiers");
+		Assert.assertTrue(deleteGame.isNotFound());
+	}
 
 	private Game createMockGame(LocalDateTime gameDate, Long teamIdHome, String teamKeyHome, Long teamIdAway, String teamKeyAway) {
 		Game game = new Game();
@@ -222,44 +214,56 @@ public class GameDaoTest {
 		return boxScore;
 	}
 	
+	private void updateMockBoxScoreHome(Game game) {
+		int homeBoxScoreId = game.getBoxScores().get(0).getLocation().equals(Location.Home) ? 1 : 0;
+		BoxScore homeBoxScore = game.getBoxScores().get(homeBoxScoreId);
+		homeBoxScore.setMinutes((short)240);
+		homeBoxScore.setPoints((short)98);
+		homeBoxScore.setAssists((short)14);
+		homeBoxScore.setTurnovers((short)5);
+		homeBoxScore.setSteals((short)7);
+		homeBoxScore.setBlocks((short)5);
+		homeBoxScore.setFieldGoalAttempts((short)44);
+		homeBoxScore.setFieldGoalMade((short)22);
+		homeBoxScore.setFieldGoalPercent((float).500);
+		homeBoxScore.setThreePointAttempts((short)10);
+		homeBoxScore.setThreePointMade((short)6);
+		homeBoxScore.setThreePointPercent((float).6);
+		homeBoxScore.setFreeThrowAttempts((short)20);
+		homeBoxScore.setFreeThrowMade((short)10);
+		homeBoxScore.setFreeThrowPercent((float).500);
+		homeBoxScore.setReboundsOffense((short)25);
+		homeBoxScore.setReboundsDefense((short)5);
+		homeBoxScore.setPersonalFouls((short)18);
+	}
+	
+	private void updateMockBoxScoreAway(Game game) {
+		int awayBoxScoreId = game.getBoxScores().get(0).getLocation().equals(Location.Away) ? 1 : 0;
+		BoxScore awayBoxScore = game.getBoxScores().get(awayBoxScoreId);
+		awayBoxScore.setMinutes((short)240);
+		awayBoxScore.setPoints((short)98);
+		awayBoxScore.setAssists((short)14);
+		awayBoxScore.setTurnovers((short)5);
+		awayBoxScore.setSteals((short)7);
+		awayBoxScore.setBlocks((short)5);
+		awayBoxScore.setFieldGoalAttempts((short)44);
+		awayBoxScore.setFieldGoalMade((short)22);
+		awayBoxScore.setFieldGoalPercent((float).500);
+		awayBoxScore.setThreePointAttempts((short)10);
+		awayBoxScore.setThreePointMade((short)6);
+		awayBoxScore.setThreePointPercent((float).6);
+		awayBoxScore.setFreeThrowAttempts((short)20);
+		awayBoxScore.setFreeThrowMade((short)18);
+		awayBoxScore.setFreeThrowPercent((float).500);
+		awayBoxScore.setReboundsOffense((short)25);
+		awayBoxScore.setReboundsDefense((short)5);
+		awayBoxScore.setPersonalFouls((short)18);
+	}
+	
 	private Team createMockTeam(Long teamId, String teamKey) {
 		Team team = new Team();
 		team.setId(teamId);
 		team.setTeamKey(teamKey);
 		return team;
 	}
-
-//	private Game updateMockGame(String lastName, String firstName, LocalDate birthdate, String displayName) {
-//		Game game = new Game();
-//		game.setLastName(lastName);
-//		game.setFirstName(firstName);
-//		game.setBirthdate(birthdate);
-//		game.setDisplayName(displayName);
-//		game.setHeight((short)79);
-//		game.setWeight((short)215);
-//		game.setBirthplace("Monroe, Louisiana, USA");
-//		return game;
-//	}
-	
-	public static BoxScore getBoxScoreStats(BoxScore boxScore, BoxScore stats) {
-		boxScore.setMinutes(stats.getMinutes());
-        boxScore.setPoints(stats.getPoints());
-        boxScore.setAssists(stats.getAssists());
-        boxScore.setTurnovers(stats.getTurnovers());
-        boxScore.setSteals(stats.getSteals());
-        boxScore.setBlocks(stats.getBlocks());
-        boxScore.setFieldGoalAttempts(stats.getFieldGoalAttempts());
-        boxScore.setFieldGoalMade(stats.getFieldGoalMade());
-        boxScore.setFieldGoalPercent(stats.getFieldGoalPercent());
-        boxScore.setThreePointAttempts(stats.getThreePointAttempts());
-        boxScore.setThreePointMade(stats.getThreePointMade());
-        boxScore.setThreePointPercent(stats.getThreePointPercent());
-        boxScore.setFreeThrowAttempts(stats.getFreeThrowAttempts());
-        boxScore.setFreeThrowMade(stats.getFreeThrowMade());
-        boxScore.setFreeThrowPercent(stats.getFreeThrowPercent());
-        boxScore.setReboundsOffense(stats.getReboundsOffense());
-        boxScore.setReboundsDefense(stats.getReboundsDefense());
-        boxScore.setPersonalFouls(stats.getPersonalFouls());
-    	return boxScore;
-    }
 }
