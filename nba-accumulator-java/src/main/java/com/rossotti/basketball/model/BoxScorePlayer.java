@@ -1,27 +1,21 @@
 package com.rossotti.basketball.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table (name="boxScore")
-public class BoxScore {
+@Table (name="boxScorePlayer")
+public class BoxScorePlayer {
 
-	public BoxScore() {}
+	public BoxScorePlayer() {}
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -34,67 +28,52 @@ public class BoxScore {
 		this.id = id;
 	}
 
-	@ManyToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="gameId", referencedColumnName="id", nullable=false)
-	private Game game;
-	public Game getGame() {
-		return game;
+	@ManyToOne()
+	@JoinColumn(name="boxScoreId", referencedColumnName="id", nullable=false)
+	private BoxScore boxScore;
+	public BoxScore getBoxScore() {
+		return boxScore;
 	}
-	public void setGame(Game game) {
-		this.game = game;
+	public void setBoxScore(BoxScore boxScore) {
+		this.boxScore = boxScore;
 	}
 
 	@ManyToOne()
-	@JoinColumn(name="teamId")
-	private Team team;
-	public Team getTeam() {
-		return team;
+	@JoinColumn(name="rosterPlayerId", referencedColumnName="id", nullable=false)
+	private RosterPlayer rosterPlayer;
+	public RosterPlayer getRosterPlayer() {
+		return rosterPlayer;
 	}
-	public void setTeam(Team team) {
-		this.team = team;
-	}
-
-	@OneToMany(mappedBy="boxScore", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-	private List<BoxScorePlayer> boxScorePlayers = new ArrayList<BoxScorePlayer>();
-	public List<BoxScorePlayer> getBoxScorePlayers()  {
-		return boxScorePlayers;
-	}
-	public void setBoxScorePlayers(List<BoxScorePlayer> boxScorePlayers)  {
-		this.boxScorePlayers = boxScorePlayers;
-	}
-	public void addBoxScorePlayer(BoxScorePlayer boxScorePlayer)  {
-		this.getBoxScorePlayers().add(boxScorePlayer);
-	}
-	public void removeBoxScorePlayer(BoxScorePlayer boxScorePlayer)  {
-		this.getBoxScorePlayers().remove(boxScorePlayer);
+	public void setRosterPlayer(RosterPlayer rosterPlayer) {
+		this.rosterPlayer = rosterPlayer;
 	}
 
 	@Enumerated(EnumType.STRING)
-	@Column(name="location", length=5, nullable=false)
-	private Location location;
-	public Location getLocation() {
-		return location;
+	@Column(name="position", length=5, nullable=false)
+	private Position position;
+	public Position getPosition() {
+		return position;
 	}
-	public void setLocation(Location location) {
-		this.location = location;
+	public void setPosition(Position position) {
+		this.position = position;
 	}
-	public enum Location {
-		Home,
-		Away
+	public enum Position {
+		PG,
+		SG,
+		SF,
+		PF,
+		C,
+		G,
+		F
 	}
 
-	@Enumerated(EnumType.STRING)
-	@Column(name="result", length=4, nullable=true)
-	private Result result;
-	public Result getResult() {
-		return result;
+	@Column(name="starter", nullable=true)
+	private boolean starter;
+	public boolean getStarter() {
+		return starter;
 	}
-	public void setResult(Result result) {
-		this.result = result;
-	}
-	public enum Result {
-		Win,
-		Loss
+	public void setStarter(boolean starter) {
+		this.starter = starter;
 	}
 
 	@Column(name="minutes", nullable=true)
@@ -259,93 +238,10 @@ public class BoxScore {
 		this.personalFouls = personalFouls;
 	}
 
-	@Column(name="pointsPeriod1", nullable=true)
-	private Short pointsPeriod1;
-	public Short getPointsPeriod1() {
-		return pointsPeriod1;
-	}
-	public void setPointsPeriod1(Short pointsPeriod1) {
-		this.pointsPeriod1 = pointsPeriod1;
-	}
-
-	@Column(name="pointsPeriod2", nullable=true)
-	private Short pointsPeriod2;
-	public Short getPointsPeriod2() {
-		return pointsPeriod2;
-	}
-	public void setPointsPeriod2(Short pointsPeriod2) {
-		this.pointsPeriod2 = pointsPeriod2;
-	}
-
-	@Column(name="pointsPeriod3", nullable=true)
-	private Short pointsPeriod3;
-	public Short getPointsPeriod3() {
-		return pointsPeriod3;
-	}
-	public void setPointsPeriod3(Short pointsPeriod3) {
-		this.pointsPeriod3 = pointsPeriod3;
-	}
-
-	@Column(name="pointsPeriod4", nullable=true)
-	private Short pointsPeriod4;
-	public Short getPointsPeriod4() {
-		return pointsPeriod4;
-	}
-	public void setPointsPeriod4(Short pointsPeriod4) {
-		this.pointsPeriod4 = pointsPeriod4;
-	}
-
-	@Column(name="pointsPeriod5", nullable=true)
-	private Short pointsPeriod5;
-	public Short getPointsPeriod5() {
-		return pointsPeriod5;
-	}
-	public void setPointsPeriod5(Short pointsPeriod5) {
-		this.pointsPeriod5 = pointsPeriod5;
-	}
-
-	@Column(name="pointsPeriod6", nullable=true)
-	private Short pointsPeriod6;
-	public Short getPointsPeriod6() {
-		return pointsPeriod6;
-	}
-	public void setPointsPeriod6(Short pointsPeriod6) {
-		this.pointsPeriod6 = pointsPeriod6;
-	}
-
-	@Column(name="pointsPeriod7", nullable=true)
-	private Short pointsPeriod7;
-	public Short getPointsPeriod7() {
-		return pointsPeriod7;
-	}
-	public void setPointsPeriod7(Short pointsPeriod7) {
-		this.pointsPeriod7 = pointsPeriod7;
-	}
-
-	@Column(name="pointsPeriod8", nullable=true)
-	private Short pointsPeriod8;
-	public Short getPointsPeriod8() {
-		return pointsPeriod8;
-	}
-	public void setPointsPeriod8(Short pointsPeriod8) {
-		this.pointsPeriod8 = pointsPeriod8;
-	}
-
-	@Column(name="daysOff", nullable=true)
-	private Short daysOff;
-	public Short getDaysOff() {
-		return daysOff;
-	}
-	public void setDaysOff(Short daysOff) {
-		this.daysOff = daysOff;
-	}
-
 	public String toString() {
 		return new StringBuffer()
-			.append("\n" + this.team + "\n")
 			.append("  id: " + this.id)
-			.append("  location: " + this.location)
-			.append("  result: " + this.result)
+			.append("  position: " + this.position)
 			.append("  points: " + this.points)
 			.append("  assists: " + this.assists)
 			.append("  turnovers: " + this.turnovers)

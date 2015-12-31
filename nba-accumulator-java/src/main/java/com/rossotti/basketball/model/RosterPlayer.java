@@ -1,7 +1,10 @@
 package com.rossotti.basketball.model;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.ws.rs.core.UriInfo;
@@ -85,6 +89,21 @@ public class RosterPlayer {
 	}
 	public void setPlayer(Player player) {
 		this.player = player;
+	}
+
+	@OneToMany(mappedBy="rosterPlayer", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	private List<BoxScorePlayer> boxScorePlayers = new ArrayList<BoxScorePlayer>();
+	public List<BoxScorePlayer> getBoxScorePlayers()  {
+		return boxScorePlayers;
+	}
+	public void setBoxScorePlayers(List<BoxScorePlayer> boxScorePlayers)  {
+		this.boxScorePlayers = boxScorePlayers;
+	}
+	public void addBoxScorePlayer(BoxScorePlayer boxScorePlayer)  {
+		this.getBoxScorePlayers().add(boxScorePlayer);
+	}
+	public void removeBoxScorePlayer(BoxScorePlayer boxScorePlayer)  {
+		this.getBoxScorePlayers().remove(boxScorePlayer);
 	}
 
 	@Column(name="fromDate", nullable=false)

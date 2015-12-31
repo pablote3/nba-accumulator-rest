@@ -24,29 +24,32 @@ insert into rosterPlayer VALUES(2, '2009-10-30', '21', 'PG', '2009-11-03', 1, 1)
 insert into rosterPlayer VALUES(3, '2009-10-30', '12', 'C', '2009-11-04', 2, 1);
 
 insert into game VALUES(1, '2015-10-27 20:00:00.0', 'Regular', 'Completed');
-insert into boxScore (id, location, result, gameId, teamId) VALUES(1, 'Home', 'Win', 1, 1);
-insert into boxScore (id, location, result, gameId, teamId) VALUES(2, 'Away', 'Loss', 1, 2);
+insert into boxScore (id, gameId, teamId, location, result, points) VALUES(1, 1, 1, 'Home', 'Win', 114);
+insert into boxScorePlayer(id, boxScoreId, rosterPlayerId, position, starter, points) VALUES(1, 1, 1, 'SG', true, 12);
+insert into boxScore (id, gameId, teamId, location, result, points) VALUES(2, 1, 2, 'Away', 'Loss', 98);
+insert into boxScorePlayer(id, boxScoreId, rosterPlayerId, position, starter, points) VALUES(2, 2, 2, 'PG', false, 0);
+insert into boxScorePlayer(id, boxScoreId, rosterPlayerId, position, starter, points) VALUES(3, 2, 3, 'C', true, 5);
 
 insert into game VALUES(2, '2015-10-27 21:00:00.0', 'Regular', 'Completed');
-insert into boxScore (id, location, gameId, teamId) VALUES(3, 'Home', 2, 3);
-insert into boxScore (id, location, gameId, teamId) VALUES(4, 'Away', 2, 4);
+insert into boxScore (id, gameId, teamId, location, result, points) VALUES(3, 2, 3, 'Home', 'Loss', 102);
+insert into boxScore (id, gameId, teamId, location, result, points) VALUES(4, 2, 4, 'Away', 'Win', 104);
 
 insert into game VALUES(3, '2015-10-27 20:30:00.0', 'Regular', 'Scheduled');
-insert into boxScore (id, location, gameId, teamId) VALUES(5, 'Home', 3, 5);
-insert into boxScore (id, location, gameId, teamId) VALUES(6, 'Away', 3, 6);
+insert into boxScore (id, gameId, teamId, location) VALUES(5, 3, 5, 'Home');
+insert into boxScore (id, gameId, teamId, location) VALUES(6, 3, 6, 'Away');
 
 insert into game VALUES(4, '2015-10-28 20:00:00.0', 'Regular', 'Scheduled');
-insert into boxScore (id, location, gameId, teamId) VALUES(7, 'Home', 4, 1);
-insert into boxScore (id, location, gameId, teamId) VALUES(8, 'Away', 4, 3);
+insert into boxScore (id, gameId, teamId, location) VALUES(7, 4, 1, 'Home');
+insert into boxScore (id, gameId, teamId, location) VALUES(8, 4, 3, 'Away');
 
 insert into game VALUES(5, '2015-10-29 20:00:00.0', 'Regular', 'Postponed');
-insert into boxScore (id, location, gameId, teamId) VALUES(9, 'Home', 5, 5);
-insert into boxScore (id, location, gameId, teamId) VALUES(10, 'Away', 5, 3);
+insert into boxScore (id, gameId, teamId, location) VALUES(9, 5, 5, 'Home');
+insert into boxScore (id, gameId, teamId, location) VALUES(10, 5, 3, 'Away');
 
 insert into game VALUES(6, '2015-10-30 10:00:00.0', 'Regular', 'Scheduled');
-insert into boxScore (id, location, gameId, teamId) VALUES(11, 'Home', 6, 5);
-insert into boxScore (id, location, gameId, teamId) VALUES(12, 'Away', 6, 3);
+insert into boxScore (id, gameId, teamId, location) VALUES(11, 6, 5, 'Home');
+insert into boxScore (id, gameId, teamId, location) VALUES(12, 6, 3, 'Away');
 
 insert into game VALUES(7, '2015-10-15 10:00:00.0', 'Regular', 'Scheduled');
-insert into boxScore (id, location, gameId, teamId) VALUES(13, 'Home', 7, 6);
-insert into boxScore (id, location, gameId, teamId) VALUES(14, 'Away', 7, 5);
+insert into boxScore (id, gameId, teamId, location) VALUES(13, 7, 6, 'Home');
+insert into boxScore (id, gameId, teamId, location) VALUES(14, 7, 5, 'Away');
