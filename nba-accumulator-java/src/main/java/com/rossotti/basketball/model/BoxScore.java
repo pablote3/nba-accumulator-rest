@@ -342,14 +342,14 @@ public class BoxScore {
 
 	public String toString() {
 		return new StringBuffer()
-			.append("\n" + this.team + "\n")
-			.append("  id: " + this.id)
-			.append("  location: " + this.location)
-			.append("  result: " + this.result)
-			.append("  points: " + this.points)
-			.append("  assists: " + this.assists)
-			.append("  turnovers: " + this.turnovers)
-			.append("  steals: " + this.steals)
+			.append("\n" + this.team.getTeamKey() + "\n")
+			.append("  id: " + this.id + "\n")
+			.append("  location: " + this.location + "\n")
+			.append("  result: " + this.result + "\n")
+			.append("  points: " + this.points + "\n")
+			.append("  assists: " + this.assists + "\n")
+			.append("  turnovers: " + this.turnovers + "\n")
+			.append("  steals: " + this.steals + "\n")
 			.append("  blocks: " + this.blocks)
 			.toString();
 	}

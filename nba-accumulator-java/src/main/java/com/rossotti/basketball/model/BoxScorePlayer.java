@@ -240,12 +240,12 @@ public class BoxScorePlayer {
 
 	public String toString() {
 		return new StringBuffer()
-			.append("  id: " + this.id)
-			.append("  position: " + this.position)
-			.append("  points: " + this.points)
-			.append("  assists: " + this.assists)
-			.append("  turnovers: " + this.turnovers)
-			.append("  steals: " + this.steals)
+			.append("  id: " + this.id + "\n")
+			.append("  position: " + this.position + "\n")
+			.append("  points: " + this.points + "\n")
+			.append("  assists: " + this.assists + "\n")
+			.append("  turnovers: " + this.turnovers + "\n")
+			.append("  steals: " + this.steals + "\n")
 			.append("  blocks: " + this.blocks)
 			.toString();
 	}
