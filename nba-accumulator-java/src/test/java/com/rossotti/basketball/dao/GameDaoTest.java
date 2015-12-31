@@ -49,6 +49,11 @@ public class GameDaoTest {
 		Assert.assertTrue(findGame.isFound());
 		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGame.getGameDate());
 		Assert.assertEquals("harlem-globetrotters", findGame.getBoxScores().get(1).getTeam().getTeamKey());
+		Assert.assertTrue(findGame.getBoxScores().get(1).getPoints().equals((short)98));
+		Assert.assertEquals(2, findGame.getBoxScores().get(1).getBoxScorePlayers().size());
+		Assert.assertTrue(findGame.getBoxScores().get(1).getBoxScorePlayers().get(1).getPoints().equals((short)5));
+		Assert.assertEquals("21", findGame.getBoxScores().get(1).getBoxScorePlayers().get(0).getRosterPlayer().getNumber());
+		Assert.assertEquals("Luke", findGame.getBoxScores().get(1).getBoxScorePlayers().get(0).getRosterPlayer().getPlayer().getFirstName());
 	}
 
 	@Test

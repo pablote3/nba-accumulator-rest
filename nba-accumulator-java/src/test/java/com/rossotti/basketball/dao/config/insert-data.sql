@@ -19,9 +19,9 @@ insert into player VALUES(3, '2000-03-13', 'Sacramento, CA, USA', 'Thad Puzdraki
 insert into player VALUES(4, '1969-09-08', 'Sacramento, CA, USA', 'Michelle Puzdrakiewicz', 'Michelle', 75, 'Puzdrakiewicz', 170);
 insert into player VALUES(5, '1966-06-10', 'Sacramento, CA, USA', 'Junior Puzdrakiewicz', 'Junior', 80, 'Puzdrakiewicz', 240);
 
-insert into rosterPlayer VALUES(1, '2009-11-30', '21', 'SG', '9999-12-31', 1, 1);
-insert into rosterPlayer VALUES(2, '2009-10-30', '21', 'PG', '2009-11-03', 1, 1);
-insert into rosterPlayer VALUES(3, '2009-10-30', '12', 'C', '2009-11-04', 2, 1);
+insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(1, 1, 1, '2009-11-30', '9999-12-31', '21', 'SG');
+insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(2, 1, 1, '2009-10-30', '2009-11-03', '21', 'PG');
+insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(3, 2, 1, '2009-10-30', '2009-11-04', '12', 'C');
 
 insert into game VALUES(1, '2015-10-27 20:00:00.0', 'Regular', 'Completed');
 insert into boxScore (id, gameId, teamId, location, result, points) VALUES(1, 1, 1, 'Home', 'Win', 114);
