@@ -66,10 +66,10 @@ public class RosterPlayerDaoTest {
 
 	@Test
 	public void findRosterPlayerByNameTeam_Found() {
-		RosterPlayer findRosterPlayer = rosterPlayerDAO.findRosterPlayer("Puzdrakiewicz", "Luke", "chicago-zephyrs", new LocalDate("2009-10-30"));
+		RosterPlayer findRosterPlayer = rosterPlayerDAO.findRosterPlayer("Puzdrakiewicz", "Luke", "salinas-cowboys", new LocalDate("2009-10-30"));
 		Assert.assertEquals("Luke Puzdrakiewicz", findRosterPlayer.getPlayer().getDisplayName());
 		Assert.assertEquals(Position.PG, findRosterPlayer.getPosition());
-		Assert.assertEquals("CHI",  findRosterPlayer.getTeam().getAbbr());
+		Assert.assertEquals("SAL",  findRosterPlayer.getTeam().getAbbr());
 		Assert.assertTrue(findRosterPlayer.isFound());
 	}
 
@@ -124,7 +124,7 @@ public class RosterPlayerDaoTest {
 
 	@Test
 	public void findRosterPlayersByTeam_Found() {
-		List<RosterPlayer> findRosterPlayers = rosterPlayerDAO.findRosterPlayers("chicago-zephyrs", new LocalDate("2009-10-30"));
+		List<RosterPlayer> findRosterPlayers = rosterPlayerDAO.findRosterPlayers("salinas-cowboys", new LocalDate("2009-10-30"));
 		Assert.assertEquals(2, findRosterPlayers.size());
 	}
 
