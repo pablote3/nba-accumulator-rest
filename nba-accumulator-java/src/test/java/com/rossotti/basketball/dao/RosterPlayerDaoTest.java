@@ -141,7 +141,7 @@ public class RosterPlayerDaoTest {
 
 	@Test
 	public void updateRosterPlayer_Updated() {
-		RosterPlayer updateRosterPlayer = rosterPlayerDAO.updateRosterPlayer(updateMockRosterPlayer("Puzdrakiewicz", "Thad", Position.G, new LocalDate("1966-06-02"), new LocalDate("2009-10-30"), new LocalDate("2009-11-04")));
+		RosterPlayer updateRosterPlayer = rosterPlayerDAO.updateRosterPlayer(getMockRosterPlayer("Puzdrakiewicz", "Thad", Position.G, new LocalDate("1966-06-02"), new LocalDate("2009-10-30"), new LocalDate("2009-11-04")));
 		RosterPlayer findRosterPlayer = rosterPlayerDAO.findRosterPlayer("Puzdrakiewicz", "Thad", new LocalDate("1966-06-02"), new LocalDate("2009-10-30"));
 		Assert.assertTrue(updateRosterPlayer.isUpdated());
 		Assert.assertEquals(Position.G, findRosterPlayer.getPosition());
@@ -149,29 +149,33 @@ public class RosterPlayerDaoTest {
 
 	@Test
 	public void updatePlayer_NotFound() {
-		RosterPlayer updateRosterPlayer = rosterPlayerDAO.updateRosterPlayer(updateMockRosterPlayer("Puzdrakiewicz", "Thad", Position.G, new LocalDate("1966-06-02"), new LocalDate("2009-10-29"), new LocalDate("2009-11-04")));
+		RosterPlayer updateRosterPlayer = rosterPlayerDAO.updateRosterPlayer(getMockRosterPlayer("Puzdrakiewicz", "Thad", Position.G, new LocalDate("1966-06-02"), new LocalDate("2009-10-29"), new LocalDate("2009-11-04")));
 		Assert.assertTrue(updateRosterPlayer.isNotFound());
 	}
 
 	@Test(expected=DataIntegrityViolationException.class)
 	public void updatePlayer_Exception_MissingRequiredData() {
-		RosterPlayer updateRosterPlayer = rosterPlayerDAO.updateRosterPlayer(updateMockRosterPlayer("Puzdrakiewicz", "Thad", null, new LocalDate("1966-06-02"), new LocalDate("2009-10-30"), new LocalDate("2009-11-04")));
+		RosterPlayer updateRosterPlayer = rosterPlayerDAO.updateRosterPlayer(getMockRosterPlayer("Puzdrakiewicz", "Thad", null, new LocalDate("1966-06-02"), new LocalDate("2009-10-30"), new LocalDate("2009-11-04")));
 		rosterPlayerDAO.updateRosterPlayer(updateRosterPlayer);
 	}
 
 	// Delete tests - execute in service layer
 
-	private RosterPlayer updateMockRosterPlayer(String lastName, String firstName, Position position, LocalDate birthdate, LocalDate fromDate, LocalDate toDate) {
+	private RosterPlayer getMockRosterPlayer(String lastName, String firstName, Position position, LocalDate birthdate, LocalDate fromDate, LocalDate toDate) {
+		RosterPlayer rosterPlayer = new RosterPlayer();
+		rosterPlayer.setPlayer(getMockPlayer(lastName, firstName, birthdate));
+		rosterPlayer.setFromDate(fromDate);
+		rosterPlayer.setToDate(toDate);
+		rosterPlayer.setPosition(position);
+		rosterPlayer.setNumber("99");
+		return rosterPlayer;
+	}
+
+	private Player getMockPlayer(String lastName, String firstName, LocalDate birthdate) {
 		Player player = new Player();
 		player.setLastName(lastName);
 		player.setFirstName(firstName);
 		player.setBirthdate(birthdate);
-		RosterPlayer rosterPlayer = new RosterPlayer();
-		rosterPlayer.setFromDate(fromDate);
-		rosterPlayer.setToDate(toDate);
-		rosterPlayer.setNumber("99");
-		rosterPlayer.setPosition(position);
-		rosterPlayer.setPlayer(player);
-		return rosterPlayer;
+		return player;
 	}
 }
