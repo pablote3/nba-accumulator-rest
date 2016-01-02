@@ -45,7 +45,7 @@ public class BoxScore {
 	}
 
 	@ManyToOne()
-	@JoinColumn(name="teamId")
+	@JoinColumn(name="teamId", referencedColumnName="id", nullable=false)
 	private Team team;
 	public Team getTeam() {
 		return team;
