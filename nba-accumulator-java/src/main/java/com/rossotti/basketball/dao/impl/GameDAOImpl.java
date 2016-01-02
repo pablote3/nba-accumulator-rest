@@ -190,7 +190,11 @@ public class GameDAOImpl implements GameDAO {
 			findHomeBoxScore.setReboundsOffense(updateHomeBoxScore.getReboundsOffense());
 			findHomeBoxScore.setReboundsDefense(updateHomeBoxScore.getReboundsDefense());
 			findHomeBoxScore.setPersonalFouls(updateHomeBoxScore.getPersonalFouls());
-
+			findHomeBoxScore.setBoxScorePlayers(updateHomeBoxScore.getBoxScorePlayers());
+			for (int i = 0; i < findHomeBoxScore.getBoxScorePlayers().size(); i++) {
+				findHomeBoxScore.getBoxScorePlayers().get(i).setBoxScore(findHomeBoxScore);
+			}
+			
 			int findAwayBoxScoreId = findGame.getBoxScores().get(0).getLocation().equals(Location.Away) ? 1 : 0;
 			BoxScore findAwayBoxScore = findGame.getBoxScores().get(findAwayBoxScoreId);
 			int updateAwayBoxScoreId = updateGame.getBoxScores().get(0).getLocation().equals(Location.Away) ? 1 : 0;
@@ -213,6 +217,10 @@ public class GameDAOImpl implements GameDAO {
 			findAwayBoxScore.setReboundsOffense(updateAwayBoxScore.getReboundsOffense());
 			findAwayBoxScore.setReboundsDefense(updateAwayBoxScore.getReboundsDefense());
 			findAwayBoxScore.setPersonalFouls(updateAwayBoxScore.getPersonalFouls());
+			findAwayBoxScore.setBoxScorePlayers(updateAwayBoxScore.getBoxScorePlayers());
+			for (int i = 0; i < findAwayBoxScore.getBoxScorePlayers().size(); i++) {
+				findAwayBoxScore.getBoxScorePlayers().get(i).setBoxScore(findAwayBoxScore);
+			}
 
 			findGame.setStatusCode(StatusCode.Updated);
 			getSessionFactory().getCurrentSession().persist(findGame);

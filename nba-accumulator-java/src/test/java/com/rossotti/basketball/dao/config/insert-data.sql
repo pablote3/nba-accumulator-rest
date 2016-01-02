@@ -22,6 +22,7 @@ insert into player VALUES(5, '1966-06-10', 'Sacramento, CA, USA', 'Junior Puzdra
 insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(1, 1, 1, '2009-11-30', '9999-12-31', '21', 'SG');
 insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(2, 1, 4, '2009-10-30', '2009-11-03', '21', 'PG');
 insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(3, 2, 4, '2009-10-30', '2009-11-04', '12', 'C');
+insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(4, 3, 5, '2009-10-30', '9999-12-31', '9', 'PG');
 
 insert into game VALUES(1, '2015-10-27 20:00:00.0', 'Regular', 'Completed');
 insert into boxScore (id, gameId, teamId, location, result, points) VALUES(1, 1, 1, 'Home', 'Win', 114);
@@ -31,8 +32,8 @@ insert into boxScorePlayer(id, boxScoreId, rosterPlayerId, position, starter, po
 insert into boxScorePlayer(id, boxScoreId, rosterPlayerId, position, starter, points) VALUES(3, 2, 3, 'C', true, 5);
 
 insert into game VALUES(2, '2015-10-27 21:00:00.0', 'Regular', 'Scheduled');
-insert into boxScore (id, gameId, teamId, location, result, points) VALUES(3, 2, 4, 'Home', 'Loss', 102);
-insert into boxScore (id, gameId, teamId, location, result, points) VALUES(4, 2, 5, 'Away', 'Win', 104);
+insert into boxScore (id, gameId, teamId, location) VALUES(3, 2, 4, 'Home');
+insert into boxScore (id, gameId, teamId, location) VALUES(4, 2, 5, 'Away');
 
 insert into game VALUES(3, '2015-10-27 20:30:00.0', 'Regular', 'Scheduled');
 insert into boxScore (id, gameId, teamId, location) VALUES(5, 3, 5, 'Home');
