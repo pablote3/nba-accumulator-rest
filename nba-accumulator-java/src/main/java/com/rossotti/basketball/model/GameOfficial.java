@@ -13,7 +13,6 @@ import javax.persistence.Table;
 @Entity
 @Table (name="gameOfficial")
 public class GameOfficial {
-
 	public GameOfficial() {}
 
 	@Id

@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -31,7 +30,6 @@ public class Official {
 	public Official() {
 		setStatusCode(StatusCode.Found);
 	}
-
 	public Official(StatusCode statusCode) {
 		setStatusCode(statusCode);
 	}
@@ -58,7 +56,17 @@ public class Official {
 		return statusCode == StatusCode.Deleted;
 	}
 
-	@OneToMany(mappedBy="official", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private Long id;
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	@OneToMany(mappedBy="official", fetch = FetchType.LAZY)
 	private List<GameOfficial> gameOfficials = new ArrayList<GameOfficial>();
 	public List<GameOfficial> getGameOfficials() {
 		return gameOfficials;
@@ -71,16 +79,6 @@ public class Official {
 	}
 	public void removeGameOfficial(GameOfficial gameOfficial) {
 		this.getGameOfficials().remove(gameOfficial);
-	}
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id;
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	@Column(name="lastName", length=25, nullable=false)

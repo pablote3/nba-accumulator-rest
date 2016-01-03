@@ -14,7 +14,6 @@ import javax.persistence.Table;
 @Entity
 @Table (name="boxScorePlayer")
 public class BoxScorePlayer {
-
 	public BoxScorePlayer() {}
 
 	@Id

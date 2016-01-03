@@ -34,7 +34,6 @@ public class RosterPlayer {
 	public RosterPlayer() {
 		setStatusCode(StatusCode.Found);
 	}
-
 	public RosterPlayer(StatusCode statusCode) {
 		setStatusCode(statusCode);
 	}
@@ -60,7 +59,7 @@ public class RosterPlayer {
 	public Boolean isDeleted() {
 		return statusCode == StatusCode.Deleted;
 	}
-	
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
@@ -71,8 +70,8 @@ public class RosterPlayer {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="teamId")
+	@ManyToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="teamId", referencedColumnName="id", nullable=false)
 	private Team team;
 	public Team getTeam() {
 		return team;
@@ -81,8 +80,8 @@ public class RosterPlayer {
 		this.team = team;
 	}
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="playerId")
+	@ManyToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="playerId", referencedColumnName="id", nullable=false)
 	private Player player;
 	public Player getPlayer() {
 		return player;
@@ -156,7 +155,7 @@ public class RosterPlayer {
 
 	public String toString() {
 		return new StringBuffer()
-			.append("\n" + "  id: " + this.id + "\n")
+			.append("\r" + "  id: " + this.id + "\n")
 			.append("  lastName: " + player.getLastName() + "\n")
 			.append("  firstName: " + player.getFirstName() + "\n")
 			.append("  birthDate: " + player.getBirthdate() + "\n")

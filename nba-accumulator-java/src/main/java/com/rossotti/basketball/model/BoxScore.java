@@ -20,7 +20,6 @@ import javax.persistence.Table;
 @Entity
 @Table (name="boxScore")
 public class BoxScore {
-
 	public BoxScore() {}
 
 	@Id
@@ -34,7 +33,7 @@ public class BoxScore {
 		this.id = id;
 	}
 
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne()
 	@JoinColumn(name="gameId", referencedColumnName="id", nullable=false)
 	private Game game;
 	public Game getGame() {

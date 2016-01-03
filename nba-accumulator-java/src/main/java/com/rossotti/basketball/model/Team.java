@@ -30,7 +30,6 @@ public class Team {
 	public Team() {
 		setStatusCode(StatusCode.Found);
 	}
-
 	public Team(StatusCode statusCode) {
 		setStatusCode(statusCode);
 	}
@@ -57,6 +56,16 @@ public class Team {
 		return statusCode == StatusCode.Deleted;
 	}
 
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private Long id;
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	@OneToMany(mappedBy="team", fetch = FetchType.LAZY)
 	private List<RosterPlayer> rosterPlayers = new ArrayList<RosterPlayer>();
 	public List<RosterPlayer> getRosterPlayers() {
@@ -73,16 +82,6 @@ public class Team {
 	}
 	public void setBoxScores(List<BoxScore> boxScores) {
 		this.boxScores = boxScores;
-	}
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Long id;
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	@Column(name="teamKey", length=35, nullable=false)

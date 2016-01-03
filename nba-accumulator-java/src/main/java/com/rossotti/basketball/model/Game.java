@@ -22,11 +22,9 @@ import org.joda.time.LocalDateTime;
 @Entity
 @Table (name="game")
 public class Game {
-
 	public Game() {
 		setStatusCode(StatusCode.Found);
 	}
-
 	public Game(StatusCode statusCode) {
 		setStatusCode(statusCode);
 	}
@@ -51,6 +49,17 @@ public class Game {
 	}
 	public Boolean isDeleted() {
 		return statusCode == StatusCode.Deleted;
+	}
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="id")
+	private Long id;
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	@OneToMany(mappedBy="game", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
@@ -81,17 +90,6 @@ public class Game {
 	}
 	public void removeGameOfficial(GameOfficial gameOfficial) {
 		this.getGameOfficials().remove(gameOfficial);
-	}
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
-	private Long id;
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	@Column(name="gameDate", nullable=false)

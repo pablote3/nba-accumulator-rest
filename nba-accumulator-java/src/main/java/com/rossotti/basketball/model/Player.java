@@ -27,11 +27,9 @@ import com.rossotti.basketball.util.DateTimeUtil;
 @Entity
 @Table (name="player", uniqueConstraints=@UniqueConstraint(columnNames={"lastName", "firstName", "birthdate"}))
 public class Player {
-
 	public Player() {
 		setStatusCode(StatusCode.Found);
 	}
-
 	public Player(StatusCode statusCode) {
 		setStatusCode(statusCode);
 	}
@@ -58,15 +56,6 @@ public class Player {
 		return statusCode == StatusCode.Deleted;
 	}
 
-	@OneToMany(mappedBy="player", fetch = FetchType.LAZY)
-	private List<RosterPlayer> rosterPlayers = new ArrayList<RosterPlayer>();
-	public List<RosterPlayer> getRosterPlayers()  {
-		return rosterPlayers;
-	}
-	public void setRosterPlayers(List<RosterPlayer> rosterPlayers)  {
-		this.rosterPlayers = rosterPlayers;
-	}
-
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id")
@@ -76,6 +65,15 @@ public class Player {
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	@OneToMany(mappedBy="player", fetch = FetchType.LAZY)
+	private List<RosterPlayer> rosterPlayers = new ArrayList<RosterPlayer>();
+	public List<RosterPlayer> getRosterPlayers()  {
+		return rosterPlayers;
+	}
+	public void setRosterPlayers(List<RosterPlayer> rosterPlayers)  {
+		this.rosterPlayers = rosterPlayers;
 	}
 
 	@Column(name="lastName", length=20, nullable=false)
