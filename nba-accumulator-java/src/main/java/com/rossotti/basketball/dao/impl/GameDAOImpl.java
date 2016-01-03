@@ -35,7 +35,7 @@ public class GameDAOImpl implements GameDAO {
 						"from Game game " +
 						"inner join game.boxScores boxScores " +
 						"inner join boxScores.team team " +
-						"where game.gameDate between '" + fromDateTime + "' and '" + toDateTime +"' " +
+						"where game.gameDateTime between '" + fromDateTime + "' and '" + toDateTime +"' " +
 						"and team.teamKey = '" + teamKey + "'";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
 		Game findGame = (Game)query.uniqueResult();
@@ -57,10 +57,10 @@ public class GameDAOImpl implements GameDAO {
 						"from Game game " +
 						"left join game.boxScores boxScores " +
 						"inner join boxScores.team team " +
-						"where game.gameDate between '" + fromDateTime + "' and '" + toDateTime +"' " +
+						"where game.gameDateTime between '" + fromDateTime + "' and '" + toDateTime +"' " +
 						"and game.status in ('" + Status.Completed + "', '" + Status.Scheduled + "') " + 
 						"and team.teamKey = '" + teamKey + "' " +
-						"order by gameDate asc";
+						"order by gameDateTime asc";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
 		List<Game> findGames = query.list();
 		List<Game> games = new ArrayList<Game>();
@@ -80,8 +80,8 @@ public class GameDAOImpl implements GameDAO {
 		LocalDateTime gameDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
 		LocalDateTime maxDateTime = DateTimeUtil.getLocalDateTimeSeasonMax(gameDate);
 		List<Game> findGames = getSessionFactory().getCurrentSession().createCriteria(Game.class)
-				.add(Restrictions.between("gameDate", gameDateTime, maxDateTime))
-				.addOrder(Order.asc("gameDate"))
+				.add(Restrictions.between("gameDateTime", gameDateTime, maxDateTime))
+				.addOrder(Order.asc("gameDateTime"))
 				.setMaxResults(maxRows)
 				.list();
 		List<Game> games = new ArrayList<Game>();
@@ -101,9 +101,9 @@ public class GameDAOImpl implements GameDAO {
 		LocalDateTime minDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
 		LocalDateTime maxDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
 		List<Game> findGames = getSessionFactory().getCurrentSession().createCriteria(Game.class)
-				.add(Restrictions.between("gameDate", minDateTime, maxDateTime))
+				.add(Restrictions.between("gameDateTime", minDateTime, maxDateTime))
 				.add(Restrictions.eq("status", Status.Scheduled))
-				.addOrder(Order.asc("gameDate"))
+				.addOrder(Order.asc("gameDateTime"))
 				.list();
 		List<Game> games = new ArrayList<Game>();
 		if (findGames != null) {
@@ -124,16 +124,16 @@ public class GameDAOImpl implements GameDAO {
 						"from Game game " +
 						"left join game.boxScores boxScores " +
 						"inner join boxScores.team team " +
-						"where game.gameDate <= '" + gameDateTime + "' " +
+						"where game.gameDateTime <= '" + gameDateTime + "' " +
 						"and game.status = '" + Status.Completed + "' " +
 						"and team.teamKey = '" + teamKey + "' " +
-						"order by gameDate desc";
+						"order by gameDateTime desc";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
 		List<Game> games = query.list();
 		
 		LocalDateTime lastGameDateTime = null;
 		if (games.size() > 0) {
-			lastGameDateTime = games.get(0).getGameDate();
+			lastGameDateTime = games.get(0).getGameDateTime();
 		}
 		return lastGameDateTime;
 	}
@@ -143,7 +143,7 @@ public class GameDAOImpl implements GameDAO {
 		LocalDateTime fromDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
 		LocalDateTime toDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
 		List<Game> games = getSessionFactory().getCurrentSession().createCriteria(Game.class)
-				.add(Restrictions.between("gameDate", fromDateTime, toDateTime))
+				.add(Restrictions.between("gameDateTime", fromDateTime, toDateTime))
 				.add(Restrictions.eq("status", Status.Scheduled))
 				.list();
 		return games.size();
@@ -151,7 +151,7 @@ public class GameDAOImpl implements GameDAO {
 
 	@Override
 	public Game createGame(Game createGame) {
-		Game game = findByDateTeam(DateTimeUtil.getLocalDate(createGame.getGameDate()), createGame.getBoxScores().get(0).getTeam().getTeamKey());
+		Game game = findByDateTeam(DateTimeUtil.getLocalDate(createGame.getGameDateTime()), createGame.getBoxScores().get(0).getTeam().getTeamKey());
 		if (game.isNotFound()) {
 			getSessionFactory().getCurrentSession().persist(createGame);
 			createGame.setStatusCode(StatusCode.Created);
@@ -164,7 +164,7 @@ public class GameDAOImpl implements GameDAO {
 
 	@Override
 	public Game updateGame(Game updateGame) {
-		Game findGame = findByDateTeam(DateTimeUtil.getLocalDate(updateGame.getGameDate()), updateGame.getBoxScores().get(0).getTeam().getTeamKey());
+		Game findGame = findByDateTeam(DateTimeUtil.getLocalDate(updateGame.getGameDateTime()), updateGame.getBoxScores().get(0).getTeam().getTeamKey());
 		if (findGame.isFound()) {
 			findGame.setStatus(updateGame.getStatus());
 

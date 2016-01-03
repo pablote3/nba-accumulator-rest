@@ -38,7 +38,7 @@ public class GameDaoTest {
 		Game findGame = gameDAO.findByDateTeam(new LocalDate("2015-10-27"), "chicago-zephyrs");
 		Assert.assertTrue(findGame.isFound());
 		Assert.assertEquals("QuestionableCall", findGame.getGameOfficials().get(2).getOfficial().getLastName());
-		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGame.getGameDate());
+		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGame.getGameDateTime());
 		Assert.assertEquals("harlem-globetrotters", findGame.getBoxScores().get(1).getTeam().getTeamKey());
 		Assert.assertTrue(findGame.getBoxScores().get(1).getPoints().equals((short)98));
 		Assert.assertEquals(2, findGame.getBoxScores().get(1).getBoxScorePlayers().size());
@@ -63,24 +63,24 @@ public class GameDaoTest {
 	public void findByDateRangeSize_Size0() {
 		List<Game> findGames = gameDAO.findByDateRangeSize(new LocalDate("2015-10-28"), 0);
 		Assert.assertEquals(3, findGames.size());
-		Assert.assertEquals(new LocalDateTime("2015-10-28T20:00"), findGames.get(0).getGameDate());
-		Assert.assertEquals(new LocalDateTime("2015-10-29T20:00"), findGames.get(1).getGameDate());
-		Assert.assertEquals(new LocalDateTime("2015-10-30T10:00"), findGames.get(2).getGameDate());
+		Assert.assertEquals(new LocalDateTime("2015-10-28T20:00"), findGames.get(0).getGameDateTime());
+		Assert.assertEquals(new LocalDateTime("2015-10-29T20:00"), findGames.get(1).getGameDateTime());
+		Assert.assertEquals(new LocalDateTime("2015-10-30T10:00"), findGames.get(2).getGameDateTime());
 	}
 
 	@Test
 	public void findByDateRangeSize_Size1() {
 		List<Game> findGames = gameDAO.findByDateRangeSize(new LocalDate("2015-10-27"), 1);
 		Assert.assertEquals(1, findGames.size());
-		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGames.get(0).getGameDate());
+		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGames.get(0).getGameDateTime());
 	}
 
 	@Test
 	public void findByDateRangeSize_Size2() {
 		List<Game> findGames = gameDAO.findByDateRangeSize(new LocalDate("2015-10-27"), 2);
 		Assert.assertEquals(2, findGames.size());
-		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGames.get(0).getGameDate());
-		Assert.assertEquals(new LocalDateTime("2015-10-27T20:30"), findGames.get(1).getGameDate());
+		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGames.get(0).getGameDateTime());
+		Assert.assertEquals(new LocalDateTime("2015-10-27T20:30"), findGames.get(1).getGameDateTime());
 	}
 	
 	@Test
@@ -93,7 +93,7 @@ public class GameDaoTest {
 	public void findByDateScheduled_Found() {
 		List<Game> findGames = gameDAO.findByDateScheduled(new LocalDate("2015-10-28"));
 		Assert.assertEquals(1, findGames.size());
-		Assert.assertEquals(new LocalDateTime("2015-10-28T20:00"), findGames.get(0).getGameDate());
+		Assert.assertEquals(new LocalDateTime("2015-10-28T20:00"), findGames.get(0).getGameDateTime());
 	}
 
 	@Test
@@ -118,8 +118,8 @@ public class GameDaoTest {
 	public void findByDateTeamSeason_Found() {
 		List<Game> findGames = gameDAO.findByDateTeamSeason(new LocalDate("2015-10-28"), "chicago-zephyrs");
 		Assert.assertEquals(2, findGames.size());
-		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGames.get(0).getGameDate());
-		Assert.assertEquals(new LocalDateTime("2015-10-28T20:00"), findGames.get(1).getGameDate());
+		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGames.get(0).getGameDateTime());
+		Assert.assertEquals(new LocalDateTime("2015-10-28T20:00"), findGames.get(1).getGameDateTime());
 	}
 
 	@Test
@@ -162,8 +162,8 @@ public class GameDaoTest {
 	public void updateGame_Updated() {
 		Game findGame = gameDAO.findByDateTeam(new LocalDate("2015-10-27"), "salinas-cowboys");
 		findGame.addGameOfficial(getMockGameOfficial(4L, 1L, "LateCall", "Joe"));
-//		findGame.addGameOfficial(getMockGameOfficial(5L, 3L, "MissedCall", "Mike"));
-//		findGame.addGameOfficial(getMockGameOfficial(6L, 5L, "TerribleCall", "Limo"));
+		findGame.addGameOfficial(getMockGameOfficial(5L, 3L, "MissedCall", "Mike"));
+		findGame.addGameOfficial(getMockGameOfficial(6L, 5L, "TerribleCall", "Limo"));
 		updateMockBoxScoreHome(findGame);
 		updateMockBoxScoreAway(findGame);
 		Game updateGame = gameDAO.updateGame(findGame);
@@ -201,9 +201,9 @@ public class GameDaoTest {
 		Assert.assertTrue(deleteGame.isNotFound());
 	}
 
-	private Game createMockGame(LocalDateTime gameDate, Long teamIdHome, String teamKeyHome, Long teamIdAway, String teamKeyAway) {
+	private Game createMockGame(LocalDateTime gameDateTime, Long teamIdHome, String teamKeyHome, Long teamIdAway, String teamKeyAway) {
 		Game game = new Game();
-		game.setGameDate(gameDate);
+		game.setGameDateTime(gameDateTime);
 		game.setSeasonType(SeasonType.Regular);
 		game.setStatus(Status.Scheduled);
 		game.addBoxScore(createMockBoxScore(game, teamIdHome, teamKeyHome, Location.Home));

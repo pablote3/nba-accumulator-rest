@@ -92,14 +92,14 @@ public class Game {
 		this.getGameOfficials().remove(gameOfficial);
 	}
 
-	@Column(name="gameDate", nullable=false)
+	@Column(name="gameDateTime", nullable=false)
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
-	private LocalDateTime gameDate;
-	public LocalDateTime getGameDate() {
-		return gameDate;
+	private LocalDateTime gameDateTime;
+	public LocalDateTime getGameDateTime() {
+		return gameDateTime;
 	}
-	public void setGameDate(LocalDateTime gameDate) {
-		this.gameDate = gameDate;
+	public void setGameDateTime(LocalDateTime gameDateTime) {
+		this.gameDateTime = gameDateTime;
 	}
 
 	@Enumerated(EnumType.STRING)
@@ -138,7 +138,7 @@ public class Game {
 	public String toString() {
 		return new StringBuffer()
 			.append("\r" + "  id: " + this.id + "\n")
-			.append("  gameDate: " + this.gameDate + "\n")
+			.append("  gameDateTime: " + this.gameDateTime + "\n")
 			.append("  status: " + this.status + "\n")
 			.append("  seasonType: " + this.seasonType + "\n")
 			.append("  statusCode: " + this.statusCode)
