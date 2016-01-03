@@ -25,12 +25,13 @@
 		<property name="annotatedClasses">
 			<list>
 				<value>com.rossotti.basketball.model.Team</value>
-				<value>com.rossotti.basketball.model.Official</value>
 				<value>com.rossotti.basketball.model.Player</value>
 				<value>com.rossotti.basketball.model.RosterPlayer</value>
 				<value>com.rossotti.basketball.model.Game</value>
 				<value>com.rossotti.basketball.model.BoxScore</value>
 				<value>com.rossotti.basketball.model.BoxScorePlayer</value>
+				<value>com.rossotti.basketball.model.Official</value>
+				<value>com.rossotti.basketball.model.GameOfficial</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

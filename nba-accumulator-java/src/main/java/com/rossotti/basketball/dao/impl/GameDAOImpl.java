@@ -168,6 +168,11 @@ public class GameDAOImpl implements GameDAO {
 		if (findGame.isFound()) {
 			findGame.setStatus(updateGame.getStatus());
 
+			findGame.setGameOfficials(updateGame.getGameOfficials());
+			for (int i = 0; i < findGame.getGameOfficials().size(); i++) {
+				findGame.getGameOfficials().get(i).setGame(findGame);
+			}
+
 			int findHomeBoxScoreId = findGame.getBoxScores().get(0).getLocation().equals(Location.Home) ? 1 : 0;
 			BoxScore findHomeBoxScore = findGame.getBoxScores().get(findHomeBoxScoreId);
 			int updateHomeBoxScoreId = updateGame.getBoxScores().get(0).getLocation().equals(Location.Home) ? 1 : 0;
@@ -194,7 +199,7 @@ public class GameDAOImpl implements GameDAO {
 			for (int i = 0; i < findHomeBoxScore.getBoxScorePlayers().size(); i++) {
 				findHomeBoxScore.getBoxScorePlayers().get(i).setBoxScore(findHomeBoxScore);
 			}
-			
+
 			int findAwayBoxScoreId = findGame.getBoxScores().get(0).getLocation().equals(Location.Away) ? 1 : 0;
 			BoxScore findAwayBoxScore = findGame.getBoxScores().get(findAwayBoxScoreId);
 			int updateAwayBoxScoreId = updateGame.getBoxScores().get(0).getLocation().equals(Location.Away) ? 1 : 0;

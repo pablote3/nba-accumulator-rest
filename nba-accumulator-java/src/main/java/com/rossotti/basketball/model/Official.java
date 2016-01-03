@@ -1,14 +1,19 @@
 package com.rossotti.basketball.model;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
@@ -51,6 +56,21 @@ public class Official {
 	}
 	public Boolean isDeleted() {
 		return statusCode == StatusCode.Deleted;
+	}
+
+	@OneToMany(mappedBy="official", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	private List<GameOfficial> gameOfficials = new ArrayList<GameOfficial>();
+	public List<GameOfficial> getGameOfficials() {
+		return gameOfficials;
+	}
+	public void setGameOfficials(List<GameOfficial> gameOfficials) {
+		this.gameOfficials = gameOfficials;
+	}
+	public void addGameOfficial(GameOfficial gameOfficial) {
+		this.getGameOfficials().add(gameOfficial);
+	}
+	public void removeGameOfficial(GameOfficial gameOfficial) {
+		this.getGameOfficials().remove(gameOfficial);
 	}
 
 	@Id
@@ -112,7 +132,7 @@ public class Official {
 
 	public String toString() {
 		return new StringBuffer()
-			.append("\n" + "  id: " + this.id + "\n")
+			.append("\r" + "  id: " + this.id + "\n")
 			.append("  lastName: " + this.lastName + "\n")
 			.append("  firstName: " + this.firstName + "\n")
 			.append("  fromDate: " + this.fromDate + "\n")

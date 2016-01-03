@@ -20,6 +20,8 @@ import com.rossotti.basketball.model.BoxScorePlayer.Position;
 import com.rossotti.basketball.model.Game;
 import com.rossotti.basketball.model.Game.SeasonType;
 import com.rossotti.basketball.model.Game.Status;
+import com.rossotti.basketball.model.GameOfficial;
+import com.rossotti.basketball.model.Official;
 import com.rossotti.basketball.model.Player;
 import com.rossotti.basketball.model.RosterPlayer;
 import com.rossotti.basketball.model.Team;
@@ -31,26 +33,11 @@ public class GameDaoTest {
 	@Autowired
 	private GameDAO gameDAO;
 
-	//1, '2015-10-27 20:00:00.0', 'Completed'
-	//1, 1, 1, 'Home', 'Win' : 'chicago-zephyrs'
-	//1, 2, 2, 'Away', 'Loss' : 'harlem-globetrotters'
-	
-	//2, '2015-10-27 21:00:00.0', 'Scheduled'
-	//2, 3, 3, 'Home', 'Win' : 'st-louis-bombers'
-	//2, 5, 4, 'Away', 'Loss' : 'salinas-cowboys'
-	
-	//3, '2015-10-27 20:30:00.0', 'Scheduled'
-	//3, 6, 5, 'Home', 'Win' : 'baltimore-bullets'
-	//3, 7, 6, 'Away', 'Loss' : 'cleveland-rebels'
-	
-	//4, '2015-10-28 20:00:00.0', 'Scheduled'
-	//4, 7, 1, 'Home', 'Win' : 'chicago-zephyrs'
-	//4, 8, 3, 'Away', 'Loss' : 'st-louis-bombers'
-
 	@Test
 	public void findByDateTeam_Found() {
 		Game findGame = gameDAO.findByDateTeam(new LocalDate("2015-10-27"), "chicago-zephyrs");
 		Assert.assertTrue(findGame.isFound());
+		Assert.assertEquals("QuestionableCall", findGame.getGameOfficials().get(2).getOfficial().getLastName());
 		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGame.getGameDate());
 		Assert.assertEquals("harlem-globetrotters", findGame.getBoxScores().get(1).getTeam().getTeamKey());
 		Assert.assertTrue(findGame.getBoxScores().get(1).getPoints().equals((short)98));
@@ -174,6 +161,9 @@ public class GameDaoTest {
 	@Test
 	public void updateGame_Updated() {
 		Game findGame = gameDAO.findByDateTeam(new LocalDate("2015-10-27"), "salinas-cowboys");
+		findGame.addGameOfficial(getMockGameOfficial(4L, 1L, "LateCall", "Joe"));
+//		findGame.addGameOfficial(getMockGameOfficial(5L, 3L, "MissedCall", "Mike"));
+//		findGame.addGameOfficial(getMockGameOfficial(6L, 5L, "TerribleCall", "Limo"));
 		updateMockBoxScoreHome(findGame);
 		updateMockBoxScoreAway(findGame);
 		Game updateGame = gameDAO.updateGame(findGame);
@@ -232,8 +222,8 @@ public class GameDaoTest {
 	private void updateMockBoxScoreHome(Game game) {
 		int homeBoxScoreId = game.getBoxScores().get(0).getLocation().equals(Location.Home) ? 1 : 0;
 		BoxScore homeBoxScore = game.getBoxScores().get(homeBoxScoreId);
-		homeBoxScore.addBoxScorePlayer(createMockBoxScorePlayerHome_0(homeBoxScore));
-		homeBoxScore.addBoxScorePlayer(createMockBoxScorePlayerHome_1(homeBoxScore));
+		homeBoxScore.addBoxScorePlayer(createMockBoxScorePlayerHome_0());
+		homeBoxScore.addBoxScorePlayer(createMockBoxScorePlayerHome_1());
 		homeBoxScore.setMinutes((short)240);
 		homeBoxScore.setPoints((short)98);
 		homeBoxScore.setAssists((short)14);
@@ -257,7 +247,7 @@ public class GameDaoTest {
 	private void updateMockBoxScoreAway(Game game) {
 		int awayBoxScoreId = game.getBoxScores().get(0).getLocation().equals(Location.Away) ? 1 : 0;
 		BoxScore awayBoxScore = game.getBoxScores().get(awayBoxScoreId);
-		awayBoxScore.addBoxScorePlayer(createMockBoxScorePlayerAway(awayBoxScore));
+		awayBoxScore.addBoxScorePlayer(createMockBoxScorePlayerAway());
 		awayBoxScore.setMinutes((short)240);
 		awayBoxScore.setPoints((short)98);
 		awayBoxScore.setAssists((short)14);
@@ -276,6 +266,24 @@ public class GameDaoTest {
 		awayBoxScore.setReboundsOffense((short)25);
 		awayBoxScore.setReboundsDefense((short)5);
 		awayBoxScore.setPersonalFouls((short)18);
+	}
+
+	private GameOfficial getMockGameOfficial(Long gameOfficialId, Long officialId, String lastName, String firstName) {
+		GameOfficial gameOfficial = new GameOfficial();
+		gameOfficial.setId(gameOfficialId);
+		gameOfficial.setOfficial(getMockOfficial(officialId, lastName, firstName));
+		return gameOfficial;
+	}
+
+	private Official getMockOfficial(Long officialId, String lastName, String firstName) {
+		Official official = new Official();
+		official.setId(officialId);
+		official.setLastName(lastName);
+		official.setFirstName(firstName);
+		official.setFromDate(new LocalDate("2012-02-16"));
+		official.setToDate(new LocalDate("9999-12-31"));
+		official.setNumber("66");
+		return official;
 	}
 
 	private Team getMockTeam(Long teamId, String teamKey) {
@@ -304,9 +312,8 @@ public class GameDaoTest {
 		return rosterPlayer;
 	}
 
-	private BoxScorePlayer createMockBoxScorePlayerHome_0(BoxScore boxScore) {
+	private BoxScorePlayer createMockBoxScorePlayerHome_0() {
 		BoxScorePlayer homeBoxScorePlayer = new BoxScorePlayer();
-		homeBoxScorePlayer.setBoxScore(boxScore);
 		homeBoxScorePlayer.setRosterPlayer(getMockRosterPlayer(2L, "Puzdrakiewicz", "Luke", new LocalDate("2002-02-20"), new LocalDate("2009-11-30"), new LocalDate("9999-12-31")));
 		homeBoxScorePlayer.setPosition(Position.F);
 		homeBoxScorePlayer.setStarter(true);
@@ -331,9 +338,8 @@ public class GameDaoTest {
 		return homeBoxScorePlayer;
 	}
 
-	private BoxScorePlayer createMockBoxScorePlayerHome_1(BoxScore boxScore) {
+	private BoxScorePlayer createMockBoxScorePlayerHome_1() {
 		BoxScorePlayer homeBoxScorePlayer = new BoxScorePlayer();
-		homeBoxScorePlayer.setBoxScore(boxScore);
 		homeBoxScorePlayer.setRosterPlayer(getMockRosterPlayer(3L, "Puzdrakiewicz", "Thad", new LocalDate("1966-06-02"), new LocalDate("2009-11-04"), new LocalDate("2009-10-30")));
 		homeBoxScorePlayer.setPosition(Position.C);
 		homeBoxScorePlayer.setStarter(false);
@@ -358,9 +364,8 @@ public class GameDaoTest {
 		return homeBoxScorePlayer;
 	}
 
-	private BoxScorePlayer createMockBoxScorePlayerAway(BoxScore boxScore) {
+	private BoxScorePlayer createMockBoxScorePlayerAway() {
 		BoxScorePlayer awayBoxScorePlayer = new BoxScorePlayer();
-		awayBoxScorePlayer.setBoxScore(boxScore);
 		awayBoxScorePlayer.setRosterPlayer(getMockRosterPlayer(4L, "Puzdrakiewicz", "Junior", new LocalDate("1966-06-10"), new LocalDate("2009-10-30"), new LocalDate("9999-12-31")));
 		awayBoxScorePlayer.setPosition(Position.SG);
 		awayBoxScorePlayer.setStarter(false);

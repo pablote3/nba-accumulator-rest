@@ -25,6 +25,9 @@ insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, positi
 insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(4, 3, 5, '2009-10-30', '9999-12-31', '9', 'PG');
 
 insert into game VALUES(1, '2015-10-27 20:00:00.0', 'Regular', 'Completed');
+insert into gameOfficial (id, gameId, officialId) VALUES(1, 1, 2);
+insert into gameOfficial (id, gameId, officialId) VALUES(2, 1, 3);
+insert into gameOfficial (id, gameId, officialId) VALUES(3, 1, 4);
 insert into boxScore (id, gameId, teamId, location, result, points) VALUES(1, 1, 1, 'Home', 'Win', 114);
 insert into boxScorePlayer(id, boxScoreId, rosterPlayerId, position, starter, points) VALUES(1, 1, 1, 'SG', true, 12);
 insert into boxScore (id, gameId, teamId, location, result, points) VALUES(2, 1, 2, 'Away', 'Loss', 98);
