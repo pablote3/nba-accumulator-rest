@@ -8,9 +8,15 @@ import org.junit.Test;
 public class DateTimeUtilTest {
 
 	@Test
-	public void getStringDate() {
+	public void getStringDate_FromDate() {
 		String date = DateTimeUtil.getStringDate(new LocalDate(2013, 3, 30));
 		Assert.assertEquals("2013-03-30", date);
+	}
+
+	@Test
+	public void getStringDate_FromDateTime() {
+		String dateTime = DateTimeUtil.getStringDate(new LocalDateTime(2013, 3, 30, 10, 30));
+		Assert.assertEquals("2013-03-30", dateTime);
 	}
 
 	@Test

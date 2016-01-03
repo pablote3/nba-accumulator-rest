@@ -14,6 +14,10 @@ public class DateTimeUtil {
 		return date.toString(dateFormatter);
 	}
 
+	static public String getStringDate(LocalDateTime dateTime) {
+		return dateTime.toString(dateFormatter);
+	}
+
 	static public String getStringDateTime(LocalDateTime dateTime) {
 		return dateTime.toString(dateTimeFormatter);
 	}
