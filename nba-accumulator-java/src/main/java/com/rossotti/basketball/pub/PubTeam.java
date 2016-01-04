@@ -13,7 +13,6 @@ import com.rossotti.basketball.util.DateTimeUtil;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class PubTeam {
-
 	private final URI self;
 	private final String key;
 	private final String firstName;

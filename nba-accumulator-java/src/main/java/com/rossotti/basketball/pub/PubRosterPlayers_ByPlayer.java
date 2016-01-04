@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PubRosterPlayers_ByPlayer {
-
 	private final URI self;
 	private final PubPlayer player;
 	private final List<PubRosterPlayer_ByPlayer> rosterPlayers = new ArrayList<>();

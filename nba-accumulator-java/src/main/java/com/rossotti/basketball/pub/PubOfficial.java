@@ -11,7 +11,6 @@ import com.rossotti.basketball.util.DateTimeUtil;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class PubOfficial {
-
 	private final URI self;
 	private final String lastName;
 	private final String firstName;

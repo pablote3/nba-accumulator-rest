@@ -12,7 +12,6 @@ import com.rossotti.basketball.util.DateTimeUtil;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class PubRosterPlayer_ByTeam {
-
 	private final URI self;
 	private final String fromDate;
 	private final String toDate;
