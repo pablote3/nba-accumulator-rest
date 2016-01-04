@@ -10,6 +10,7 @@ import javax.ws.rs.core.Application;
 import com.rossotti.basketball.app.provider.DuplicateEntityExceptionMapper;
 import com.rossotti.basketball.app.provider.JsonProvider;
 import com.rossotti.basketball.app.provider.NoSuchEntityExceptionMapper;
+import com.rossotti.basketball.app.resource.GameResource;
 import com.rossotti.basketball.app.resource.OfficialResource;
 import com.rossotti.basketball.app.resource.PlayerResource;
 import com.rossotti.basketball.app.resource.RosterPlayerResource;
@@ -30,6 +31,7 @@ public class AccumulatorApp extends Application {
 		classes.add(OfficialResource.class);
 		classes.add(PlayerResource.class);
 		classes.add(RosterPlayerResource.class);
+		classes.add(GameResource.class);
 
 		// Providers
 		classes.add(JsonProvider.class);
