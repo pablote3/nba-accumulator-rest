@@ -10,6 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.ws.rs.core.UriInfo;
+
+import com.rossotti.basketball.pub.PubBoxScorePlayer;
 
 @Entity
 @Table (name="boxScorePlayer")
@@ -247,5 +250,30 @@ public class BoxScorePlayer {
 			.append("  steals: " + this.steals + "\n")
 			.append("  blocks: " + this.blocks)
 			.toString();
+	}
+
+	public PubBoxScorePlayer toPubBoxScorePlayer(UriInfo uriInfo) {
+		return new PubBoxScorePlayer(
+				this.getPosition(),
+				this.getStarter(),
+				this.getMinutes(),
+				this.getPoints(),
+				this.getAssists(),
+				this.getTurnovers(),
+				this.getSteals(),
+				this.getBlocks(),
+				this.getFieldGoalAttempts(),
+				this.getFieldGoalMade(),
+				this.getFieldGoalPercent(),
+				this.getThreePointAttempts(),
+				this.getThreePointMade(),
+				this.getThreePointPercent(),
+				this.getFreeThrowAttempts(),
+				this.getFreeThrowMade(),
+				this.getFreeThrowPercent(),
+				this.getReboundsOffense(),
+				this.getReboundsDefense(),
+				this.getPersonalFouls(),
+				this.getRosterPlayer().toPubRosterPlayer(uriInfo));
 	}
 }

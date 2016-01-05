@@ -6,13 +6,11 @@ import java.util.List;
 import org.joda.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rossotti.basketball.model.Game.SeasonType;
 import com.rossotti.basketball.model.Game.Status;
 import com.rossotti.basketball.util.DateTimeUtil;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
 public class PubGame {
 
 	private final URI self;

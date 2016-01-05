@@ -1,17 +1,14 @@
 package com.rossotti.basketball.pub;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.rossotti.basketball.model.BoxScore.Location;
-import com.rossotti.basketball.model.BoxScore.Result;
+import com.rossotti.basketball.model.BoxScorePlayer.Position;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class PubBoxScore {
-	private final String location;
-	private final String result;
+public class PubBoxScorePlayer {
+	private final String position;
+	private final String starter;
 	private final String minutes;
 	private final String points;
 	private final String assists;
@@ -30,21 +27,11 @@ public class PubBoxScore {
 	private final String reboundsOffense;
 	private final String reboundsDefense;
 	private final String personalFouls;
-	private final String pointsPeriod1;
-	private final String pointsPeriod2;
-	private final String pointsPeriod3;
-	private final String pointsPeriod4;
-	private final String pointsPeriod5;
-	private final String pointsPeriod6;
-	private final String pointsPeriod7;
-	private final String pointsPeriod8;
-	private final String daysOff;
-	private final List<PubBoxScorePlayer> boxScorePlayers;
-	private final PubTeam team;
+	private final PubRosterPlayer rosterPlayer;
 
 	@JsonCreator
-	public PubBoxScore(@JsonProperty("location") Location location,
-					@JsonProperty("result") Result result,
+	public PubBoxScorePlayer(@JsonProperty("position") Position position,
+					@JsonProperty("starter") Boolean starter,
 					@JsonProperty("minutes") Short minutes,
 					@JsonProperty("points") Short points,
 					@JsonProperty("assists") Short assists,
@@ -63,19 +50,9 @@ public class PubBoxScore {
 					@JsonProperty("reboundsOffense") Short reboundsOffense,
 					@JsonProperty("reboundsDefense") Short reboundsDefense,
 					@JsonProperty("personalFouls") Short personalFouls,
-					@JsonProperty("pointsPeriod1") Short pointsPeriod1,
-					@JsonProperty("pointsPeriod2") Short pointsPeriod2,
-					@JsonProperty("pointsPeriod3") Short pointsPeriod3,
-					@JsonProperty("pointsPeriod4") Short pointsPeriod4,
-					@JsonProperty("pointsPeriod5") Short pointsPeriod5,
-					@JsonProperty("pointsPeriod6") Short pointsPeriod6,
-					@JsonProperty("pointsPeriod7") Short pointsPeriod7,
-					@JsonProperty("pointsPeriod8") Short pointsPeriod8,
-					@JsonProperty("daysOff") Short daysOff,
-					@JsonProperty("boxScorePlayers") List<PubBoxScorePlayer> boxScorePlayers,
-					@JsonProperty("team") PubTeam team) {
-		this.location = location.name();
-		this.result = result.name();
+					@JsonProperty("rosterPlayer") PubRosterPlayer rosterPlayer) {
+		this.position = position.name();
+		this.starter = String.valueOf(starter);
 		this.minutes = String.valueOf(minutes);
 		this.points = String.valueOf(points);
 		this.assists = String.valueOf(assists);
@@ -94,24 +71,14 @@ public class PubBoxScore {
 		this.reboundsOffense = String.valueOf(reboundsOffense);
 		this.reboundsDefense = String.valueOf(reboundsDefense);
 		this.personalFouls = String.valueOf(personalFouls);
-		this.pointsPeriod1 = String.valueOf(pointsPeriod1);
-		this.pointsPeriod2 = String.valueOf(pointsPeriod2);
-		this.pointsPeriod3 = String.valueOf(pointsPeriod3);
-		this.pointsPeriod4 = String.valueOf(pointsPeriod4);
-		this.pointsPeriod5 = String.valueOf(pointsPeriod5);
-		this.pointsPeriod6 = String.valueOf(pointsPeriod6);
-		this.pointsPeriod7 = String.valueOf(pointsPeriod7);
-		this.pointsPeriod8 = String.valueOf(pointsPeriod8);
-		this.daysOff = String.valueOf(daysOff);
-		this.boxScorePlayers = boxScorePlayers;
-		this.team = team;
+		this.rosterPlayer = rosterPlayer;
 	}
 
-	public String getLocation() {
-		return location;
+	public String getPosition() {
+		return position;
 	}
-	public String getResult() {
-		return result;
+	public String getStarter() {
+		return starter;
 	}
 	public String getMinutes() {
 		return minutes;
@@ -167,37 +134,7 @@ public class PubBoxScore {
 	public String getPersonalFouls() {
 		return personalFouls;
 	}
-	public String getPointsPeriod1() {
-		return pointsPeriod1;
-	}
-	public String getPointsPeriod2() {
-		return pointsPeriod2;
-	}
-	public String getPointsPeriod3() {
-		return pointsPeriod3;
-	}
-	public String getPointsPeriod4() {
-		return pointsPeriod4;
-	}
-	public String getPointsPeriod5() {
-		return pointsPeriod5;
-	}
-	public String getPointsPeriod6() {
-		return pointsPeriod6;
-	}
-	public String getPointsPeriod7() {
-		return pointsPeriod7;
-	}
-	public String getPointsPeriod8() {
-		return pointsPeriod8;
-	}
-	public String getDaysOff() {
-		return daysOff;
-	}
-	public List<PubBoxScorePlayer> getBoxScorePlayers() {
-		return boxScorePlayers;
-	}
-	public PubTeam getTeam() {
-		return team;
+	public PubRosterPlayer getRosterPlayer() {
+		return rosterPlayer;
 	}
 }

@@ -1,5 +1,6 @@
 package com.rossotti.basketball.model;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +16,14 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.ws.rs.core.UriInfo;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDateTime;
+
+import com.rossotti.basketball.pub.PubBoxScore;
+import com.rossotti.basketball.pub.PubGame;
+import com.rossotti.basketball.util.DateTimeUtil;
 
 @Entity
 @Table (name="game")
@@ -143,5 +149,25 @@ public class Game {
 			.append("  seasonType: " + this.seasonType + "\n")
 			.append("  statusCode: " + this.statusCode)
 			.toString();
+	}
+
+	public PubGame toPubGame(UriInfo uriInfo, String teamKey) {
+		URI self = uriInfo.getBaseUriBuilder().path("games").
+											path(DateTimeUtil.getStringDate(this.getGameDateTime())).
+											path(teamKey).build();
+
+		List<PubBoxScore> listPubBoxScore = new ArrayList<PubBoxScore>();
+		if (this.getBoxScores().size() > 0) {
+			for (BoxScore boxScore : this.getBoxScores()) {
+				PubBoxScore pubBoxScore = boxScore.toPubBoxScore(uriInfo);
+				listPubBoxScore.add(pubBoxScore);
+			}
+		}
+
+		return new PubGame(self,
+						this.gameDateTime,
+						this.status,
+						this.seasonType,
+						listPubBoxScore);
 	}
 }
