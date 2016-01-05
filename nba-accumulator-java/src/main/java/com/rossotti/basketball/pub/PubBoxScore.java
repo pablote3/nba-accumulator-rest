@@ -75,7 +75,7 @@ public class PubBoxScore {
 					@JsonProperty("boxScorePlayers") List<PubBoxScorePlayer> boxScorePlayers,
 					@JsonProperty("team") PubTeam team) {
 		this.location = location.name();
-		this.result = result.name();
+		this.result = result != null ? result.name() : String.valueOf(Result.Inc);
 		this.minutes = String.valueOf(minutes);
 		this.points = String.valueOf(points);
 		this.assists = String.valueOf(assists);

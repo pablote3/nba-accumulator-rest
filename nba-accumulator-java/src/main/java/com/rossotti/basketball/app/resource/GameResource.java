@@ -26,6 +26,7 @@ import com.rossotti.basketball.dao.GameDAO;
 import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.model.Game;
 import com.rossotti.basketball.pub.PubGame;
+import com.rossotti.basketball.pub.PubGames;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
@@ -62,29 +63,29 @@ public class GameResource {
 		}
 	}
 
-//	@GET
-//	@Path("/{lastName}/{firstName}")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Response findPlayersByName(@Context UriInfo uriInfo, 
-//									@PathParam("lastName") String lastName, 
-//									@PathParam("firstName") String firstName) {
-//		List<Player> listPlayers = playerDAO.findPlayers(lastName, firstName);
-//		if (listPlayers.size() > 0) {
-//			List<PubPlayer> listPubPlayers = new ArrayList<PubPlayer>();
-//			for (Player player : listPlayers) {
-//				PubPlayer pubPlayer = player.toPubPlayer(uriInfo);
-//				listPubPlayers.add(pubPlayer);
-//			}
-//			PubPlayers pubPlayers = new PubPlayers(uriInfo.getAbsolutePath(), listPubPlayers);
-//			return Response.ok(pubPlayers)
-//					.link(uriInfo.getAbsolutePath(), "player")
-//					.build();
-//		}
-//		else {
-//			return Response.status(404).build();
-//		}
-//	}
-//
+	@GET
+	@Path("/{gameDate}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response findGamesByDateScheduled(@Context UriInfo uriInfo, 
+											@PathParam("gameDate") String gameDateString) {
+		LocalDate gameDate = DateTimeUtil.getLocalDate(gameDateString);
+		List<Game> listGames = gameDAO.findByDateScheduled(gameDate);
+		if (listGames.size() > 0) {
+			List<PubGame> listPubGames = new ArrayList<PubGame>();
+			for (Game game : listGames) {
+				PubGame pubGame = game.toPubGame(uriInfo, game.getBoxScores().get(0).getTeam().getTeamKey());
+				listPubGames.add(pubGame);
+			}
+			PubGames pubGames = new PubGames(uriInfo.getAbsolutePath(), listPubGames);
+			return Response.ok(pubGames)
+					.link(uriInfo.getAbsolutePath(), "game")
+					.build();
+		}
+		else {
+			return Response.status(404).build();
+		}
+	}
+
 //	@POST
 //	@Consumes(MediaType.APPLICATION_JSON)
 //	public Response createPlayer(@Context UriInfo uriInfo, Player createPlayer) {

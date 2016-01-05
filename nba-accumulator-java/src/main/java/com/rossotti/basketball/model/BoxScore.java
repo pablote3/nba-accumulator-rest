@@ -97,7 +97,8 @@ public class BoxScore {
 	}
 	public enum Result {
 		Win,
-		Loss
+		Loss,
+		Inc
 	}
 
 	@Column(name="minutes", nullable=true)
