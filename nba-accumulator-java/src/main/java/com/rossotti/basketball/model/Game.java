@@ -23,6 +23,7 @@ import org.joda.time.LocalDateTime;
 
 import com.rossotti.basketball.pub.PubBoxScore;
 import com.rossotti.basketball.pub.PubGame;
+import com.rossotti.basketball.pub.PubOfficial;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Entity
@@ -163,11 +164,18 @@ public class Game {
 				listPubBoxScore.add(pubBoxScore);
 			}
 		}
-
+		List<PubOfficial> listPubOfficial = new ArrayList<PubOfficial>();
+		if (this.getGameOfficials().size() > 0) {
+			for (GameOfficial gameOfficial : this.getGameOfficials()) {
+				PubOfficial pubOfficial = gameOfficial.getOfficial().toPubOfficial(uriInfo);
+				listPubOfficial.add(pubOfficial);
+			}
+		}
 		return new PubGame(self,
 						this.gameDateTime,
 						this.status,
 						this.seasonType,
+						listPubOfficial,
 						listPubBoxScore);
 	}
 }

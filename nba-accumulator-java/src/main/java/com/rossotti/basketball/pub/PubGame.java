@@ -17,6 +17,7 @@ public class PubGame {
 	private final String dateTime;
 	private final String status;
 	private final String seasonType;
+	private final List<PubOfficial> officials;
 	private final List<PubBoxScore> boxScores;
 
 	@JsonCreator
@@ -24,11 +25,13 @@ public class PubGame {
 					@JsonProperty("dateTime") LocalDateTime dateTime,
 					@JsonProperty("status") Status status,
 					@JsonProperty("seasonType") SeasonType seasonType,
+					@JsonProperty("officials") List<PubOfficial> officials,
 					@JsonProperty("boxScores") List<PubBoxScore> boxScores) {
 		this.self = self;
 		this.dateTime = DateTimeUtil.getStringDateTime(dateTime);
 		this.status = status.name();
 		this.seasonType = seasonType.name();
+		this.officials = officials;
 		this.boxScores = boxScores;
 	}
 
@@ -43,6 +46,9 @@ public class PubGame {
 	}
 	public String getSeasonType() {
 		return seasonType;
+	}
+	public List<PubOfficial> getOfficials() {
+		return officials;
 	}
 	public List<PubBoxScore> getBoxScores() {
 		return boxScores;
