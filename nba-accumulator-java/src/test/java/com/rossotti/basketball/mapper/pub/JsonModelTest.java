@@ -8,11 +8,13 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.joda.time.LocalDateTime;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rossotti.basketball.app.provider.JsonProvider;
+import com.rossotti.basketball.model.Game;
 import com.rossotti.basketball.model.Official;
 import com.rossotti.basketball.model.Player;
 import com.rossotti.basketball.model.RosterPlayer;
@@ -72,13 +74,29 @@ public class JsonModelTest {
 
 	@Test
 	public void deserialize_JsonToPojo_RosterPlayer() {
-		InputStream baseJson; 
+		InputStream baseJson;
 		try {
 			Path path =  Paths.get(System.getProperty("config.test")).resolve("rosterPlayer.json");
 			File file = path.toFile();
 			baseJson = new FileInputStream(file);
 			RosterPlayer rosterPlayer = mapper.readValue(baseJson, RosterPlayer.class);
 			Assert.assertEquals(Position.SF, rosterPlayer.getPosition());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void deserialize_JsonToPojo_Game() {
+		InputStream baseJson;
+		try {
+			Path path =  Paths.get(System.getProperty("config.test")).resolve("game.json");
+			File file = path.toFile();
+			baseJson = new FileInputStream(file);
+			Game game = mapper.readValue(baseJson, Game.class);
+			Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), game.getGameDateTime());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
