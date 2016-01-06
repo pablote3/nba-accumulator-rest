@@ -53,7 +53,7 @@ public class GameOfficial {
 	public String toString() {
 		return new StringBuffer()
 			.append("  id: " + this.id + "\n")
-			.append("  officialId: " + this.official.getId() + "\n")
+			.append("  official: " + this.official.toString() + "\n")
 			.toString();
 	}
 	
