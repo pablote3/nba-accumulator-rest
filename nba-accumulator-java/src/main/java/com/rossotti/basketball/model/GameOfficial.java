@@ -9,6 +9,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.ws.rs.core.UriInfo;
+
+import com.rossotti.basketball.pub.PubGameOfficial;
+import com.rossotti.basketball.pub.PubOfficial;
 
 @Entity
 @Table (name="gameOfficial")
@@ -51,5 +55,10 @@ public class GameOfficial {
 			.append("  id: " + this.id + "\n")
 			.append("  officialId: " + this.official.getId() + "\n")
 			.toString();
+	}
+	
+	public PubGameOfficial toPubGameOfficial(UriInfo uriInfo) {
+		PubOfficial pubOfficial = this.getOfficial().toPubOfficial(uriInfo);
+		return new PubGameOfficial(pubOfficial);
 	}
 }
