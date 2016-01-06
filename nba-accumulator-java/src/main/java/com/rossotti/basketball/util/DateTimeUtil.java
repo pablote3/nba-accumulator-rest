@@ -8,7 +8,7 @@ import org.joda.time.format.DateTimeFormatter;
 public class DateTimeUtil {
 
 	static DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-	static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
+	static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm");
 	
 	static public String getStringDate(LocalDate date) {
 		return date.toString(dateFormatter);
@@ -36,12 +36,12 @@ public class DateTimeUtil {
 
 	static public LocalDateTime getLocalDateTimeMin(LocalDate localDate) {
 		String stringDate = DateTimeUtil.getStringDate(localDate);
-		return dateTimeFormatter.parseLocalDateTime(stringDate + " 00:00");
+		return dateTimeFormatter.parseLocalDateTime(stringDate + "T00:00");
 	}
 
 	static public LocalDateTime getLocalDateTimeMax(LocalDate localDate) {
 		String stringDate = DateTimeUtil.getStringDate(localDate);
-		return dateTimeFormatter.parseLocalDateTime(stringDate + " 23:59");
+		return dateTimeFormatter.parseLocalDateTime(stringDate + "T23:59");
 	}
 
 	static public LocalDate getLocalDateSeasonMin(LocalDate localDate) {

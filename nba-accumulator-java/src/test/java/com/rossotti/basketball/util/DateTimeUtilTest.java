@@ -22,7 +22,7 @@ public class DateTimeUtilTest {
 	@Test
 	public void getStringDateTime() {
 		String dateTime = DateTimeUtil.getStringDateTime(new LocalDateTime(2013, 3, 30, 10, 30));
-		Assert.assertEquals("2013-03-30 10:30", dateTime);
+		Assert.assertEquals("2013-03-30T10:30", dateTime);
 	}
 
 	@Test
@@ -33,13 +33,13 @@ public class DateTimeUtilTest {
 
 	@Test
 	public void getLocalDate_FromLocalDateTime() {
-		LocalDateTime dateTime = DateTimeUtil.getLocalDateTime("2014-06-30 10:30");
+		LocalDateTime dateTime = DateTimeUtil.getLocalDateTime("2014-06-30T10:30");
 		Assert.assertEquals(new LocalDate("2014-06-30"), DateTimeUtil.getLocalDate(dateTime));
 	}
 
 	@Test
 	public void getLocalDateTime() {
-		LocalDateTime dateTime = DateTimeUtil.getLocalDateTime("2014-06-30 10:30");
+		LocalDateTime dateTime = DateTimeUtil.getLocalDateTime("2014-06-30T10:30");
 		Assert.assertEquals(new LocalDateTime("2014-06-30T10:30"), dateTime);
 	}
 	
