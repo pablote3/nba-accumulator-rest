@@ -104,45 +104,44 @@ public class GameResource {
 		}
 	}
 
-//	@PUT
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	public Response updatePlayer(Player updatePlayer) {
-//		try {
-//			Player player = playerDAO.updatePlayer(updatePlayer);
-//			if (player.isUpdated()) {
-//				return Response.noContent().build();
-//			}
-//			else if (player.isNotFound()) {
-//				return Response.status(404).build();
-//			}
-//			else {
-//				return Response.status(500).build();
-//			}
-//		} catch (PropertyValueException e) {
-//			throw new BadRequestException("missing required field(s)", e);
-//		}
-//	}
-//	
-//	@DELETE
-//	@Path("/{lastName}/{firstName}/{birthdate}")
-//	public Response deletePlayer(@Context UriInfo uriInfo, 
-//								@PathParam("lastName") String lastName, 
-//								@PathParam("firstName") String firstName, 
-//								@PathParam("birthdate") String birthdateString) {
-//		try {
-//			LocalDate birthdate = DateTimeUtil.getLocalDate(birthdateString);
-//			Player player = playerDAO.deletePlayer(lastName, firstName, birthdate);
-//			if (player.isDeleted()) {
-//				return Response.noContent().build();
-//			}
-//			else if (player.isNotFound()){
-//				return Response.status(404).build();
-//			}
-//			else {
-//				return Response.status(500).build();
-//			}
-//		} catch (IllegalArgumentException e) {
-//			throw new BadRequestException("birthdate must be yyyy-MM-dd format", e);
-//		}
-//	}
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response updateGame(Game updateGame) {
+		try {
+			Game game = gameDAO.updateGame(updateGame);
+			if (game.isUpdated()) {
+				return Response.noContent().build();
+			}
+			else if (game.isNotFound()) {
+				return Response.status(404).build();
+			}
+			else {
+				return Response.status(500).build();
+			}
+		} catch (PropertyValueException e) {
+			throw new BadRequestException("missing required field(s)", e);
+		}
+	}
+
+	@DELETE
+	@Path("/{gameDate}/{teamKey}")
+	public Response deleteGame(@Context UriInfo uriInfo, 
+								@PathParam("gameDate") String gameDateString, 
+								@PathParam("teamKey") String teamKey) {
+		try {
+			LocalDate gameDate = DateTimeUtil.getLocalDate(gameDateString);
+			Game game = gameDAO.deleteGame(gameDate, teamKey);
+			if (game.isDeleted()) {
+				return Response.noContent().build();
+			}
+			else if (game.isNotFound()){
+				return Response.status(404).build();
+			}
+			else {
+				return Response.status(500).build();
+			}
+		} catch (IllegalArgumentException e) {
+			throw new BadRequestException("gameDate must be yyyy-MM-dd format", e);
+		}
+	}
 }
