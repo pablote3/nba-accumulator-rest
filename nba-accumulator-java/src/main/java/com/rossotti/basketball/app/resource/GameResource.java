@@ -86,24 +86,24 @@ public class GameResource {
 		}
 	}
 
-//	@POST
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	public Response createPlayer(@Context UriInfo uriInfo, Player createPlayer) {
-//		try {
-//			Player player = playerDAO.createPlayer(createPlayer);
-//			if (player.isCreated()) {
-//				return Response.created(uriInfo.getAbsolutePath()).build();
-//			}
-//			else {
-//				return Response.status(500).build();
-//			}
-//		} catch (DuplicateEntityException e) {
-//			throw new BadRequestException("player " + createPlayer.getFirstName() + " " + createPlayer.getLastName() + " already exists", e);
-//		} catch (PropertyValueException e) {
-//			throw new BadRequestException("missing required field(s)", e);
-//		}
-//	}
-//
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response createGame(@Context UriInfo uriInfo, Game createGame) {
+		try {
+			Game game = gameDAO.createGame(createGame);
+			if (game.isCreated()) {
+				return Response.created(uriInfo.getAbsolutePath()).build();
+			}
+			else {
+				return Response.status(500).build();
+			}
+		} catch (DuplicateEntityException e) {
+			throw new BadRequestException("game " + createGame.getGameDateTime() + " " + createGame.getBoxScores().get(0).getTeam().getTeamKey() + " already exists", e);
+		} catch (PropertyValueException e) {
+			throw new BadRequestException("missing required field(s)", e);
+		}
+	}
+
 //	@PUT
 //	@Consumes(MediaType.APPLICATION_JSON)
 //	public Response updatePlayer(Player updatePlayer) {

@@ -153,6 +153,9 @@ public class GameDAOImpl implements GameDAO {
 	public Game createGame(Game createGame) {
 		Game game = findByDateTeam(DateTimeUtil.getLocalDate(createGame.getGameDateTime()), createGame.getBoxScores().get(0).getTeam().getTeamKey());
 		if (game.isNotFound()) {
+			for (int i = 0; i < createGame.getBoxScores().size(); i++) {
+				createGame.getBoxScores().get(i).setGame(createGame);
+			}
 			getSessionFactory().getCurrentSession().persist(createGame);
 			createGame.setStatusCode(StatusCode.Created);
 		}

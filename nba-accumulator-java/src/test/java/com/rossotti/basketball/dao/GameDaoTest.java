@@ -206,14 +206,13 @@ public class GameDaoTest {
 		game.setGameDateTime(gameDateTime);
 		game.setSeasonType(SeasonType.Regular);
 		game.setStatus(Status.Scheduled);
-		game.addBoxScore(createMockBoxScore(game, teamIdHome, teamKeyHome, Location.Home));
-		game.addBoxScore(createMockBoxScore(game, teamIdAway, teamKeyAway, Location.Away));
+		game.addBoxScore(createMockBoxScore(teamIdHome, teamKeyHome, Location.Home));
+		game.addBoxScore(createMockBoxScore(teamIdAway, teamKeyAway, Location.Away));
 		return game;
 	}
 
-	private BoxScore createMockBoxScore(Game game, Long teamId, String teamKey, Location location) {
+	private BoxScore createMockBoxScore(Long teamId, String teamKey, Location location) {
 		BoxScore boxScore = new BoxScore();
-		boxScore.setGame(game);
 		boxScore.setTeam(getMockTeam(teamId, teamKey));
 		boxScore.setLocation(location);
 		return boxScore;
