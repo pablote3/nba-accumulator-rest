@@ -96,7 +96,7 @@ public class JsonModelTest {
 			File file = path.toFile();
 			baseJson = new FileInputStream(file);
 			Game game = mapper.readValue(baseJson, Game.class);
-			Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), game.getGameDateTime());
+			Assert.assertEquals(new LocalDateTime("2015-10-28T20:00"), game.getGameDateTime());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
