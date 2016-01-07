@@ -14,7 +14,7 @@ import com.rossotti.basketball.util.DateTimeUtil;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class PubTeam {
 	private final URI self;
-	private final String key;
+	private final String teamKey;
 	private final String firstName;
 	private final String lastName;
 	private final String fullName;
@@ -28,7 +28,7 @@ public class PubTeam {
 
 	@JsonCreator
 	public PubTeam(	@JsonProperty("self") URI self,
-					@JsonProperty("key") String key,
+					@JsonProperty("teamKey") String teamKey,
 					@JsonProperty("firstName") String firstName,
 					@JsonProperty("lastName") String lastName,
 					@JsonProperty("fullName") String fullName,
@@ -40,7 +40,7 @@ public class PubTeam {
 					@JsonProperty("state") String state,
 					@JsonProperty("siteName") String siteName) {
 		this.self = self;
-		this.key = key;
+		this.teamKey = teamKey;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.fullName = fullName;
@@ -56,8 +56,8 @@ public class PubTeam {
 	public URI getSelf() {
 		return self;
 	}
-	public String getKey() {
-		return key;
+	public String getTeamKey() {
+		return teamKey;
 	}
 	public String getFirstName() {
 		return firstName;
