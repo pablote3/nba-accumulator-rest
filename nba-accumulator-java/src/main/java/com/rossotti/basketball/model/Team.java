@@ -231,6 +231,7 @@ public class Team {
 							this.lastName,
 							this.fullName,
 							this.fromDate,
+							this.toDate,
 							this.abbr,
 							this.conference,
 							this.division,
