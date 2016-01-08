@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import javax.ws.rs.core.UriInfo;
 
 import org.hibernate.annotations.Type;
@@ -23,7 +24,7 @@ import com.rossotti.basketball.pub.PubStanding;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Entity
-@Table (name="standing")
+@Table (name="standing", uniqueConstraints=@UniqueConstraint(columnNames={"teamId", "standingDate"}))
 public class Standing {
 	public Standing() {
 		setStatusCode(StatusCode.Found);
