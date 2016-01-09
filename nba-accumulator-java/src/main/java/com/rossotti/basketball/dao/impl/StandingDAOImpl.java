@@ -25,10 +25,9 @@ public class StandingDAOImpl implements StandingDAO {
 	public Standing findStanding(String teamKey, LocalDate asOfDate) {
 		String sql = 	"select s " +
 						"from Standing s " +
-						"inner join rp.team t " +
+						"inner join s.team t " +
 						"where t.teamKey = '" + teamKey + "' " +
-						"and rp.fromDate <= '" + asOfDate + "' " +
-						"and rp.toDate >= '" + asOfDate + "'";
+						"and s.standingDate = '" + asOfDate + "'";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
 		Standing standing = (Standing)query.uniqueResult();
 		if (standing == null) {
@@ -43,8 +42,7 @@ public class StandingDAOImpl implements StandingDAO {
 		String sql = 	"select s " +
 						"from Standing s " +
 						"inner join s.team t " +
-						"where rp.fromDate <= '" + asOfDate + "' " +
-						"and rp.toDate >= '" + asOfDate + "' ";
+						"where s.standingDate = '" + asOfDate + "'";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
 		List<Standing> standings = (List<Standing>)query.list();
 		if (standings == null) {
@@ -70,7 +68,6 @@ public class StandingDAOImpl implements StandingDAO {
 	public Standing updateStanding(Standing s) {
 		Standing standing = findStanding(s.getTeam().getTeamKey(), s.getStandingDate());
 		if (standing.isFound()) {
-			standing.setStandingDate(s.getStandingDate());
 			standing.setRank(s.getRank());
 			standing.setOrdinalRank(s.getOrdinalRank());
 			standing.setGamesWon(s.getGamesWon());
