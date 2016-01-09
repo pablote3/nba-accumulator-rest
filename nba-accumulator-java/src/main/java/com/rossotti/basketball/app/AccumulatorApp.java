@@ -15,6 +15,7 @@ import com.rossotti.basketball.app.resource.OfficialResource;
 import com.rossotti.basketball.app.resource.PlayerResource;
 import com.rossotti.basketball.app.resource.RosterPlayerResource;
 import com.rossotti.basketball.app.resource.TeamResource;
+import com.rossotti.basketball.model.Standing;
 
 public class AccumulatorApp extends Application {
 	protected final Set<Class<?>> classes = new HashSet<>();
@@ -32,6 +33,7 @@ public class AccumulatorApp extends Application {
 		classes.add(PlayerResource.class);
 		classes.add(RosterPlayerResource.class);
 		classes.add(GameResource.class);
+		classes.add(Standing.class);
 
 		// Providers
 		classes.add(JsonProvider.class);
