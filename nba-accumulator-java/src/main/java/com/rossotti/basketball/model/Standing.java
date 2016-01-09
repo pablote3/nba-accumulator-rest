@@ -350,8 +350,8 @@ public class Standing {
 	public PubStanding toPubStanding(UriInfo uriInfo) {
 		URI self;
 		self = uriInfo.getBaseUriBuilder().path("standings").
-											path(DateTimeUtil.getStringDate(this.getStandingDate())).
-											path(this.getTeam().getTeamKey()).build();
+											path(this.getTeam().getTeamKey()).
+											path(DateTimeUtil.getStringDate(this.getStandingDate())).build();
 		return new PubStanding( self,
 								this.standingDate,
 								this.rank,

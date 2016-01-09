@@ -7,11 +7,12 @@ import org.joda.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rossotti.basketball.util.DateTimeUtil;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class PubStanding {
 	private final URI self;
-	private final LocalDate standingDate;
+	private final String standingDate;
 	private final Short rank;
 	private final String ordinalRank;
 	private final Short gamesWon;
@@ -73,7 +74,7 @@ public class PubStanding {
 						@JsonProperty("opptOpptGamesWon") Integer opptOpptGamesWon,
 						@JsonProperty("opptOpptGamesPlayed") Integer opptOpptGamesPlayed) {
 		this.self = self;
-		this.standingDate = standingDate;
+		this.standingDate = DateTimeUtil.getStringDate(standingDate);
 		this.rank = rank;
 		this.ordinalRank = ordinalRank;
 		this.gamesWon = gamesWon;
@@ -107,7 +108,7 @@ public class PubStanding {
 	public URI getSelf() {
 		return self;
 	}
-	public LocalDate getStandingDate() {
+	public String getStandingDate() {
 		return standingDate;
 	}
 	public Short getRank() {
