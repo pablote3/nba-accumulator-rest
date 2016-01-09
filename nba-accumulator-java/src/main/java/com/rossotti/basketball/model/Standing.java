@@ -2,7 +2,6 @@ package com.rossotti.basketball.model;
 
 import java.net.URI;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -65,7 +64,7 @@ public class Standing {
 		this.id = id;
 	}
 
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne()
 	@JoinColumn(name="teamId", referencedColumnName="id", nullable=false)
 	private Team team;
 	public Team getTeam() {
