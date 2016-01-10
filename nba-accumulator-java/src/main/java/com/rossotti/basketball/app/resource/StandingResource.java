@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -84,66 +85,62 @@ public class StandingResource {
 		}
 	}
 
-//	@POST
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	public Response createRosterPlayer(@Context UriInfo uriInfo, RosterPlayer createRosterPlayer) {
-//		try {
-//			RosterPlayer rosterPlayer = standingDAO.createRosterPlayer(createRosterPlayer);
-//			if (rosterPlayer.isCreated()) {
-//				return Response.created(uriInfo.getAbsolutePath()).build();
-//			}
-//			else {
-//				return Response.status(500).build();
-//			}
-//		} catch (DuplicateEntityException e) {
-//			throw new BadRequestException("player " + createRosterPlayer.getPlayer().getFirstName() + " " + createRosterPlayer.getPlayer().getLastName() + " already exists", e);
-//		} catch (PropertyValueException e) {
-//			throw new BadRequestException("missing required field(s)", e);
-//		}
-//	}
-//
-//	@PUT
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	public Response updateRosterPlayer(RosterPlayer updateRosterPlayer) {
-//		try {
-//			RosterPlayer rosterPlayer = standingDAO.updateRosterPlayer(updateRosterPlayer);
-//			if (rosterPlayer.isUpdated()) {
-//				return Response.noContent().build();
-//			}
-//			else if (rosterPlayer.isNotFound()) {
-//				return Response.status(404).build();
-//			}
-//			else {
-//				return Response.status(500).build();
-//			}
-//		} catch (PropertyValueException e) {
-//			throw new BadRequestException("missing required field(s)", e);
-//		}
-//	}
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response createStanding(@Context UriInfo uriInfo, Standing createStanding) {
+		try {
+			Standing standing = standingDAO.createStanding(createStanding);
+			if (standing.isCreated()) {
+				return Response.created(uriInfo.getAbsolutePath()).build();
+			}
+			else {
+				return Response.status(500).build();
+			}
+		} catch (DuplicateEntityException e) {
+			throw new BadRequestException("standing " + createStanding.getTeam().getTeamKey() + " " + createStanding.getStandingDate() + " already exists", e);
+		} catch (PropertyValueException e) {
+			throw new BadRequestException("missing required field(s)", e);
+		}
+	}
 
-//	cannot delete or update parent row - foreign key constraints fail
-//	@DELETE
-//	@Path("/{lastName}/{firstName}/{birthdate}/{asOfDate}")
-//	public Response deleteRosterPlayer(@Context UriInfo uriInfo, 
-//									@PathParam("lastName") String lastName, 
-//									@PathParam("firstName") String firstName, 
-//									@PathParam("birthdate") String birthdateString, 
-//									@PathParam("asOfdate") String asOfDateString) {
-//		try {
-//			LocalDate birthdate = DateTimeUtil.getLocalDate(birthdateString);
-//			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
-//			RosterPlayer rosterPlayer = standingDAO.deleteRosterPlayer(lastName, firstName, birthdate, asOfDate);
-//			if (rosterPlayer.isDeleted()) {
-//				return Response.noContent().build();
-//			}
-//			else if (rosterPlayer.isNotFound()){
-//				return Response.status(404).build();
-//			}
-//			else {
-//				return Response.status(500).build();
-//			}
-//		} catch (IllegalArgumentException e) {
-//			throw new BadRequestException("dates must be yyyy-MM-dd format", e);
-//		}
-//	}
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response updateStanding(Standing updateStanding) {
+		try {
+			Standing standing = standingDAO.updateStanding(updateStanding);
+			if (standing.isUpdated()) {
+				return Response.noContent().build();
+			}
+			else if (standing.isNotFound()) {
+				return Response.status(404).build();
+			}
+			else {
+				return Response.status(500).build();
+			}
+		} catch (PropertyValueException e) {
+			throw new BadRequestException("missing required field(s)", e);
+		}
+	}
+
+	@DELETE
+	@Path("/{teamKey}/{asOfDate}")
+	public Response deleteStanding(@Context UriInfo uriInfo, 
+								@PathParam("teamKey") String teamKey, 
+								@PathParam("asOfDate") String asOfDateString) {
+		try {
+			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
+			Standing standing = standingDAO.deleteStanding(teamKey, asOfDate);
+			if (standing.isDeleted()) {
+				return Response.noContent().build();
+			}
+			else if (standing.isNotFound()){
+				return Response.status(404).build();
+			}
+			else {
+				return Response.status(500).build();
+			}
+		} catch (IllegalArgumentException e) {
+			throw new BadRequestException("asOfDate must be yyyy-MM-dd format", e);
+		}
+	}
 }
