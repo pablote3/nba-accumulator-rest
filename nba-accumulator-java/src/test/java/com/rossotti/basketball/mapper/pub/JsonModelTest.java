@@ -19,6 +19,7 @@ import com.rossotti.basketball.model.Official;
 import com.rossotti.basketball.model.Player;
 import com.rossotti.basketball.model.RosterPlayer;
 import com.rossotti.basketball.model.RosterPlayer.Position;
+import com.rossotti.basketball.model.Standing;
 import com.rossotti.basketball.model.Team;
 
 public class JsonModelTest {
@@ -97,6 +98,22 @@ public class JsonModelTest {
 			baseJson = new FileInputStream(file);
 			Game game = mapper.readValue(baseJson, Game.class);
 			Assert.assertEquals(new LocalDateTime("2015-10-28T20:00"), game.getGameDateTime());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void deserialize_JsonToPojo_Standing() {
+		try {
+			Path path =  Paths.get(System.getProperty("config.test")).resolve("standing.json");
+			File file = path.toFile();
+			InputStream baseJson = new FileInputStream(file);
+			Standing standing = mapper.readValue(baseJson, Standing.class);
+			Assert.assertEquals((short)98, standing.getPointsAgainst().shortValue());
+			baseJson.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
