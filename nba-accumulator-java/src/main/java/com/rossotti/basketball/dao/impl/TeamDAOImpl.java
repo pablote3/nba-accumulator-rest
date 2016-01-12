@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rossotti.basketball.dao.TeamDAO;
-import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.model.StatusCode;
 import com.rossotti.basketball.model.Team;
 
@@ -28,10 +27,12 @@ public class TeamDAOImpl implements TeamDAO {
 			.add(Restrictions.le("fromDate", asOfDate))
 			.add(Restrictions.ge("toDate", asOfDate))
 			.uniqueResult();
-		if (team == null) {
-			team = new Team(StatusCode.NotFound);
+		if (team != null) {
+			return team;
 		}
-		return team;
+		else {
+			return new Team(StatusCode.NotFound);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -61,46 +62,23 @@ public class TeamDAOImpl implements TeamDAO {
 
 	@Override
 	public Team createTeam(Team createTeam) {
-		Team team = findTeam(createTeam.getTeamKey(), createTeam.getFromDate());
-		if (team.isNotFound()) {
-			getSessionFactory().getCurrentSession().persist(createTeam);
-			createTeam.setStatusCode(StatusCode.Created);
-		}
-		else {
-			throw new DuplicateEntityException();
-		}
+		getSessionFactory().getCurrentSession().persist(createTeam);
+		createTeam.setStatusCode(StatusCode.Created);
 		return createTeam;
 	}
 
 	@Override
 	public Team updateTeam(Team updateTeam) {
-		Team team = findTeam(updateTeam.getTeamKey(), updateTeam.getFromDate());
-		if (team.isFound()) {
-			team.setLastName(updateTeam.getLastName());
-			team.setFirstName(updateTeam.getFirstName());
-			team.setFullName(updateTeam.getFullName());
-			team.setAbbr(updateTeam.getAbbr());
-			team.setFromDate(updateTeam.getFromDate());
-			team.setToDate(updateTeam.getToDate());
-			team.setConference(updateTeam.getConference());
-			team.setDivision(updateTeam.getDivision());
-			team.setCity(updateTeam.getCity());
-			team.setState(updateTeam.getState());
-			team.setSiteName(updateTeam.getSiteName());
-			team.setStatusCode(StatusCode.Updated);
-			getSessionFactory().getCurrentSession().persist(team);
-		}
-		return team;
+		getSessionFactory().getCurrentSession().saveOrUpdate(updateTeam);
+		updateTeam.setStatusCode(StatusCode.Updated);
+		return updateTeam;
 	}
 
 	@Override
-	public Team deleteTeam(String teamKey, LocalDate asOfDate) {
-		Team team = findTeam(teamKey, asOfDate);
-		if (team.isFound()) {
-			getSessionFactory().getCurrentSession().delete(team);
-			team = new Team(StatusCode.Deleted);
-		}
-		return team;
+	public Team deleteTeam(Team deleteTeam) {
+		getSessionFactory().getCurrentSession().delete(deleteTeam);
+		deleteTeam.setStatusCode(StatusCode.Deleted);
+		return deleteTeam;
 	}
 
 	public SessionFactory getSessionFactory() {

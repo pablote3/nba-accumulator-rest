@@ -2,17 +2,14 @@ package com.rossotti.basketball.dao;
 
 import java.util.List;
 
-import org.hibernate.PropertyValueException;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.model.Team;
 import com.rossotti.basketball.model.Team.Conference;
 import com.rossotti.basketball.model.Team.Division;
@@ -85,77 +82,35 @@ public class TeamDaoTest {
 		Assert.assertEquals(0, teams.size());
 	}
 
-	//'baltimore-bullets', '2005-07-01', '2006-06-30', 'Baltimore Bullets'
-
 	@Test
-	public void createTeam_Created_AsOfDate() {
-		Team createTeam = teamDAO.createTeam(createMockTeam("seattle-supersonics", new LocalDate("2012-07-01"), new LocalDate("9999-12-31"), "Seattle Supersonics"));
+	public void createTeam() {
+		Team createTeam = teamDAO.createTeam(createMockTeam());
 		Team findTeam = teamDAO.findTeam("seattle-supersonics", new LocalDate("2012-07-01"));
 		Assert.assertTrue(createTeam.isCreated());
 		Assert.assertEquals("Seattle Supersonics", findTeam.getFullName());
 	}
 
 	@Test
-	public void createTeam_Created_DateRange() {
-		Team createTeam = teamDAO.createTeam(createMockTeam("baltimore-bullets", new LocalDate("2006-07-01"), new LocalDate("2006-07-02"), "Baltimore Bullets2"));
-		Team findTeam = teamDAO.findTeam("baltimore-bullets", new LocalDate("2006-07-01"));
-		Assert.assertTrue(createTeam.isCreated());
-		Assert.assertEquals("Baltimore Bullets2", findTeam.getFullName());
-	}
-
-	@Test(expected=DuplicateEntityException.class)
-	public void createTeam_OverlappingDates() {
-		teamDAO.createTeam(createMockTeam("baltimore-bullets", new LocalDate("2005-07-01"), new LocalDate("2005-07-01"), "Baltimore Bullets"));
-	}
-
-	@Test(expected=PropertyValueException.class)
-	public void createTeam_MissingRequiredData() {
-		Team team = new Team();
-		team.setTeamKey("missing-required-data-key");
-		teamDAO.createTeam(team);
-	}
-
-	//'st-louis-bombers', '2009-07-01', '2010-06-30', 'St. Louis Bombers'
-
-	@Test
 	public void updateTeam() {
-		teamDAO.updateTeam(updateMockTeam("st-louis-bombers", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"), "St. Louis Bombiers"));
-		Team team = teamDAO.findTeam("st-louis-bombers", new LocalDate("2010-05-30"));
-		Assert.assertEquals("St. Louis Bombiers", team.getFullName());
+		Team updateTeam = teamDAO.updateTeam(updateMockTeam());
+		Team findTeam = teamDAO.findTeam("st-louis-bombers", new LocalDate("2009-07-01"));
+		Assert.assertTrue(updateTeam.isUpdated());
+		Assert.assertEquals("St. Louis Bombiers", findTeam.getFullName());
 	}
 
 	@Test
-	public void updateTeam_NotFound() {
-		teamDAO.updateTeam(updateMockTeam("st-louis-bombs", new LocalDate("2009-07-01"), new LocalDate("2010-07-01"), "St. Louis Bombiers"));
-	}
-
-	@Test(expected=DataIntegrityViolationException.class)
-	public void updateTeam_MissingRequiredData() {
-		Team team = updateMockTeam("st-louis-bombers", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"), null);
-		teamDAO.updateTeam(team);
-	}
-
-	//'rochester-royals', '2008-07-01', '2009-06-30', 'Rochester Royals'
-
-	@Test
-	public void deleteTeam_Deleted() {
-		Team deleteTeam = teamDAO.deleteTeam("rochester-royals", new LocalDate("2009-06-30"));
-		Team findTeam = teamDAO.findTeam("rochester-royals", new LocalDate("2009-06-30"));
+	public void deleteTeam() {
+		Team deleteTeam = teamDAO.deleteTeam(deleteMockTeam());
+		Team findTeam = teamDAO.findTeam("rochester-royals", new LocalDate("2008-07-01"));
 		Assert.assertTrue(deleteTeam.isDeleted());
 		Assert.assertTrue(findTeam.isNotFound());
 	}
 
-	@Test
-	public void deleteTeam_NotFound() {
-		Team deleteTeam = teamDAO.deleteTeam("rochester-royales", new LocalDate("2009-07-01"));
-		Assert.assertTrue(deleteTeam.isNotFound());
-	}
-
-	private Team createMockTeam(String key, LocalDate fromDate, LocalDate toDate, String fullName) {
+	private Team createMockTeam() {
 		Team team = new Team();
-		team.setTeamKey(key);
-		team.setFromDate(fromDate);
-		team.setToDate(toDate);
+		team.setTeamKey("seattle-supersonics");
+		team.setFromDate(new LocalDate("2012-07-01"));
+		team.setToDate(new LocalDate("9999-12-31"));
 		team.setAbbr("SEA");
 		team.setFirstName("Seattle");
 		team.setLastName("Supersonics");
@@ -164,16 +119,17 @@ public class TeamDaoTest {
 		team.setSiteName("Key Arena");
 		team.setCity("Seattle");
 		team.setState("WA");
-		team.setFullName(fullName);
+		team.setFullName("Seattle Supersonics");
 		return team;
 	}
-	
-	private Team updateMockTeam(String key, LocalDate fromDate, LocalDate toDate, String fullName) {
+
+	private Team updateMockTeam() {
 		Team team = new Team();
-		team.setTeamKey(key);
+		team.setId(3L);
+		team.setTeamKey("st-louis-bombers");
 		team.setAbbr("SLB");
-		team.setFromDate(fromDate);
-		team.setToDate(toDate);
+		team.setFromDate(new LocalDate("2009-07-01"));
+		team.setToDate(new LocalDate("2010-06-30"));
 		team.setFirstName("St. Louis");
 		team.setLastName("Bombiers");
 		team.setConference(Conference.East);
@@ -181,7 +137,25 @@ public class TeamDaoTest {
 		team.setSiteName("St. Louis Arena");
 		team.setCity("St. Louis");
 		team.setState("MO");
-		team.setFullName(fullName);
+		team.setFullName("St. Louis Bombiers");
+		return team;
+	}
+
+	private Team deleteMockTeam() {
+		Team team = new Team();
+		team.setId(7L);
+		team.setTeamKey("rochester-royals");
+		team.setAbbr("ROC");
+		team.setFromDate(new LocalDate("2008-07-01"));
+		team.setToDate(new LocalDate("2009-06-30"));
+		team.setFirstName("Rochester");
+		team.setLastName("Royals");
+		team.setConference(Conference.East);
+		team.setDivision(Division.Atlantic);
+		team.setSiteName("Edgerton Park Arena");
+		team.setCity("Rochester");
+		team.setState("NY");
+		team.setFullName("Rochester Royals");
 		return team;
 	}
 }
