@@ -12,5 +12,5 @@ public interface TeamDAO {
 	public List<Team> findTeams(LocalDate asOfDate);
 	public Team createTeam(Team team);
 	public Team updateTeam(Team team);
-	public Team deleteTeam(Team team);
+	public Team deleteTeam(String key, LocalDate asOfDate);
 }
