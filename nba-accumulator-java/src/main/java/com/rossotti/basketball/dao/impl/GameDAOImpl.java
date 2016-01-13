@@ -231,7 +231,7 @@ public class GameDAOImpl implements GameDAO {
 			}
 
 			findGame.setStatusCode(StatusCode.Updated);
-			getSessionFactory().getCurrentSession().persist(findGame);
+			getSessionFactory().getCurrentSession().saveOrUpdate(findGame);
 		}
 		return findGame;
 	}

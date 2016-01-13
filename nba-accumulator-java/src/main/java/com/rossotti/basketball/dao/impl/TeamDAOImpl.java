@@ -88,7 +88,7 @@ public class TeamDAOImpl implements TeamDAO {
 			team.setState(updateTeam.getState());
 			team.setSiteName(updateTeam.getSiteName());
 			team.setStatusCode(StatusCode.Updated);
-			getSessionFactory().getCurrentSession().persist(team);
+			getSessionFactory().getCurrentSession().saveOrUpdate(team);
 		}
 		return team;
 	}

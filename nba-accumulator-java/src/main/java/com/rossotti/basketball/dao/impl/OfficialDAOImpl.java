@@ -84,7 +84,7 @@ public class OfficialDAOImpl implements OfficialDAO {
 			official.setToDate(updateOfficial.getToDate());
 			official.setNumber(updateOfficial.getNumber());
 			official.setStatusCode(StatusCode.Updated);
-			getSessionFactory().getCurrentSession().persist(official);
+			getSessionFactory().getCurrentSession().saveOrUpdate(official);
 		}
 		return official;
 	}

@@ -114,7 +114,7 @@ public class RosterPlayerDAOImpl implements RosterPlayerDAO {
 			rosterPlayer.setNumber(rp.getNumber());
 			rosterPlayer.setPosition(rp.getPosition());
 			rosterPlayer.setStatusCode(StatusCode.Updated);
-			getSessionFactory().getCurrentSession().persist(rosterPlayer);
+			getSessionFactory().getCurrentSession().saveOrUpdate(rosterPlayer);
 		}
 		return rosterPlayer;
 	}

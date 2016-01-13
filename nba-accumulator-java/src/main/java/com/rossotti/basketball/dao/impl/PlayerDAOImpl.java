@@ -72,7 +72,7 @@ public class PlayerDAOImpl implements PlayerDAO {
 			player.setWeight(updatePlayer.getWeight());
 			player.setBirthplace(updatePlayer.getBirthplace());
 			player.setStatusCode(StatusCode.Updated);
-			getSessionFactory().getCurrentSession().persist(player);
+			getSessionFactory().getCurrentSession().saveOrUpdate(player);
 		}
 		return player;
 	}

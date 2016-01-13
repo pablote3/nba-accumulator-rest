@@ -97,7 +97,7 @@ public class StandingDAOImpl implements StandingDAO {
 			standing.setOpptOpptGamesWon(s.getOpptOpptGamesWon());
 			standing.setOpptOpptGamesPlayed(s.getOpptOpptGamesPlayed());
 			standing.setStatusCode(StatusCode.Updated);
-			getSessionFactory().getCurrentSession().persist(standing);
+			getSessionFactory().getCurrentSession().saveOrUpdate(standing);
 		}
 		return standing;
 	}
