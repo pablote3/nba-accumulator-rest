@@ -24,7 +24,7 @@
 	</bean>
 
 	<jdbc:initialize-database data-source="dataSource">
-		<jdbc:script location="com/rossotti/basketball/dao/config/insert-data.sql"/>
+		<jdbc:script location="classpath:insert-data.sql"/>
 	</jdbc:initialize-database>
 
 	<!-- Session Factory -->

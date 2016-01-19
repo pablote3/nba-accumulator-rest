@@ -16,7 +16,7 @@ import com.rossotti.basketball.model.RosterPlayer;
 import com.rossotti.basketball.model.RosterPlayer.Position;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"config/applicationContextTest.xml"})
+@ContextConfiguration(locations={"classpath:applicationContext.xml"})
 public class RosterPlayerDaoTest {
 
 	@Autowired

@@ -16,7 +16,7 @@ import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.model.Player;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"config/applicationContextTest.xml"})
+@ContextConfiguration(locations={"classpath:applicationContext.xml"})
 public class PlayerDaoTest {
 
 	@Autowired
