@@ -18,7 +18,7 @@ public class RosterClientTest {
 	private RosterClient rosterClient;
 
 	@Test
-	public void retrieveStandings_Found() {
+	public void retrieveRoster_Found() {
 		RosterDTO roster = rosterClient.retrieveRoster("toronto-raptors");
 		Assert.assertEquals("Toronto Raptors", roster.team.getFull_name());
 		RosterPlayerDTO rosterPlayer = roster.players[1];
