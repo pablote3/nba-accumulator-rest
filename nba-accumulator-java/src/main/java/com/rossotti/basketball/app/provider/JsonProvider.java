@@ -1,6 +1,7 @@
 package com.rossotti.basketball.app.provider;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.Produces;
 import javax.ws.rs.ext.Provider;
 
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 @Provider
 @Consumes({"application/json"})
+@Produces({"application/json"})
 public class JsonProvider extends JacksonJsonProvider {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 
