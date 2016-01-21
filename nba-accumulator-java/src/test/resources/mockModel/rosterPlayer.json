@@ -1,0 +1,29 @@
+{
+  "fromDate": "2012-07-01",
+  "toDate": "2013-06-30",
+  "position": "SF",
+  "number": "00",
+  "team": {
+    "teamKey": "boston-celtics",
+    "firstName": "Boston",
+    "lastName": "Celtics",
+    "fullName": "Boston Celtics",
+    "abbr": "BOS",
+    "fromDate": "2012-07-01",
+    "toDate": "9999-12-31",
+    "conference": "East",
+    "division": "Atlantic",
+    "city": "Boston",
+    "state": "MA",
+    "siteName": "TD Garden"
+  },
+  "player": {
+    "lastName": "Puzdrakiewicz",
+    "firstName": "Luke",
+    "birthdate": "2002-02-20",
+    "displayName": "Luke Puzdrakiewicz",
+    "height": "78",
+    "weight": "175",
+    "birthplace": "Sacramento, CA, USA"
+  }
+}

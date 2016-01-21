@@ -1,0 +1,14 @@
+{
+  "teamKey": "boston-celtics",
+  "firstName": "Boston",
+  "lastName": "Celtics",
+  "fullName": "Boston Celtics",
+  "abbr": "BOS",
+  "fromDate": "2012-07-01",
+  "toDate": "9999-12-31",
+  "conference": "East",
+  "division": "Atlantic",
+  "city": "Boston",
+  "state": "MA",
+  "siteName": "TD Garden"
+}
