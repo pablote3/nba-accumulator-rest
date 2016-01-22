@@ -12,15 +12,12 @@ import com.rossotti.basketball.client.dto.StandingsDTO;
 
 @Repository
 public class StandingClient {
-
 	private static final String baseUrl = "https://erikberg.com/nba/standings/";
 	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
+	Client client = ClientBuilder.newBuilder().build().register(XmlStatsFilter.class);
 
 	public StandingsDTO retrieveStandings(String event) {
 		String standingsUrl = baseUrl + event + ".json";
-
-		Client client = ClientBuilder.newBuilder().build();
-		client.register(XmlStatsFilter.class);
 		Response response = client.target(standingsUrl).request().get();
 
 		if (response.getStatus() != 200) {

@@ -12,15 +12,12 @@ import com.rossotti.basketball.client.dto.RosterDTO;
 
 @Repository
 public class RosterClient {
-
 	private static final String baseUrl = "https://erikberg.com/nba/roster/";
 	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
+	Client client = ClientBuilder.newBuilder().build().register(XmlStatsFilter.class);
 
 	public RosterDTO retrieveRoster(String event) {
 		String rosterUrl = baseUrl + event + ".json";
-
-		Client client = ClientBuilder.newBuilder().build();
-		client.register(XmlStatsFilter.class);
 		Response response = client.target(rosterUrl).request().get();
 
 		if (response.getStatus() != 200) {
