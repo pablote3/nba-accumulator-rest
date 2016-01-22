@@ -23,7 +23,7 @@ public class JsonModelTest {
 	@Test
 	public void deserialize_JsonToPojo_Official() {
 		try {
-			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockModel/official.json");
+			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockModel/officialModel.json");
 			Official official = mapper.readValue(baseJson, Official.class);
 			Assert.assertEquals("Cash", official.getLastName());
 			baseJson.close();
@@ -35,7 +35,7 @@ public class JsonModelTest {
 	@Test
 	public void deserialize_JsonToPojo_Team() {
 		try {
-			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockModel/team.json");
+			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockModel/teamModel.json");
 			Team team = mapper.readValue(baseJson, Team.class);
 			Assert.assertEquals("TD Garden", team.getSiteName());
 			baseJson.close();
@@ -47,7 +47,7 @@ public class JsonModelTest {
 	@Test
 	public void deserialize_JsonToPojo_Player() {
 		try {
-			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockModel/player.json");
+			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockModel/playerModel.json");
 			Player player = mapper.readValue(baseJson, Player.class);
 			Assert.assertEquals((short)220, player.getWeight().shortValue());
 			baseJson.close();
@@ -59,7 +59,7 @@ public class JsonModelTest {
 	@Test
 	public void deserialize_JsonToPojo_RosterPlayer() {
 		try {
-			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockModel/rosterPlayer.json");
+			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockModel/rosterPlayerModel.json");
 			RosterPlayer rosterPlayer = mapper.readValue(baseJson, RosterPlayer.class);
 			Assert.assertEquals(Position.SF, rosterPlayer.getPosition());
 			baseJson.close();
@@ -71,7 +71,7 @@ public class JsonModelTest {
 	@Test
 	public void deserialize_JsonToPojo_Game() {
 		try {
-			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockModel/game.json");
+			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockModel/gameModel.json");
 			Game game = mapper.readValue(baseJson, Game.class);
 			Assert.assertEquals(new LocalDateTime("2015-10-28T20:00"), game.getGameDateTime());
 			baseJson.close();
@@ -83,7 +83,7 @@ public class JsonModelTest {
 	@Test
 	public void deserialize_JsonToPojo_Standing() {
 		try {
-			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockModel/standing.json");
+			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockModel/standingModel.json");
 			Standing standing = mapper.readValue(baseJson, Standing.class);
 			Assert.assertEquals((short)98, standing.getPointsAgainst().shortValue());
 			baseJson.close();
