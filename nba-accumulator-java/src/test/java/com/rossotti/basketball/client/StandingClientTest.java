@@ -3,6 +3,7 @@ package com.rossotti.basketball.client;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,9 @@ public class StandingClientTest {
 	@Autowired
 	private StandingClient standingClient;
 
+	@Ignore
 	@Test
-	public void retrieveStandings_Found() {
+	public void retrieveStandings() {
 		StandingsDTO standings = standingClient.retrieveStandings("20130131");
 		Assert.assertEquals(new DateTime("2013-01-31T05:00:00", DateTimeZone.UTC), standings.standings_date);
 		StandingDTO standing = standings.standing[1];

@@ -1,6 +1,7 @@
 package com.rossotti.basketball.client;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,9 @@ public class RosterClientTest {
 	@Autowired
 	private RosterClient rosterClient;
 
+	@Ignore
 	@Test
-	public void retrieveRoster_Found() {
+	public void retrieveRoster() {
 		RosterDTO roster = rosterClient.retrieveRoster("toronto-raptors");
 		Assert.assertEquals("Toronto Raptors", roster.team.getFull_name());
 		RosterPlayerDTO rosterPlayer = roster.players[1];
