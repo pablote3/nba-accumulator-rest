@@ -20,8 +20,8 @@ public class RosterClientTest {
 //	@Ignore
 	@Test
 	public void retrieveRoster() {
-		String roster = clientBean.getClientId();
-		System.out.println("Roster = " + roster);
+		String env = clientBean.getClientInstance().getEnv();
+		System.out.println("Environment = " + env);
 //		RosterDTO roster = rosterClient.retrieveRoster("toronto-raptors");
 //		Assert.assertEquals("Toronto Raptors", roster.team.getFull_name());
 //		RosterPlayerDTO rosterPlayer = roster.players[1];

@@ -60,10 +60,9 @@
 	</bean>
 	
 	<!--  Client Bean -->
-	<bean id="clientInstance" class="com.rossotti.basketball.client.ClientInstance"/>
-	
-	<bean id ="clientBean" class="com.rossotti.basketball.client.ClientBean">
-		<property name="clientId" value="butter"/>
+	<bean id="clientInstance" class="com.rossotti.basketball.client.ClientInstance">
+		<property name="env" value="test"/>
 	</bean>
 	
+	<bean id ="clientBean" class="com.rossotti.basketball.client.ClientBeanTest"/>
 </beans>

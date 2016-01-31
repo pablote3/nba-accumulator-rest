@@ -11,12 +11,12 @@ public class ClientInstance {
 //		return client;
 //	}
 	
-	private String clientId;
+	private String env;
 	
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
+	public void setEnv(String env) {
+		this.env = env;
 	}
-	public String getClientId() {
-		return clientId;
+	public String getEnv() {
+		return env;
 	}
 }

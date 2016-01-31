@@ -20,7 +20,7 @@ public class RosterClient {
 //	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
 	
 	public String retrieveClientId() {
-		return clientBean.getClientId();
+		return clientBean.getClientInstance().getEnv();
 	}
 
 //	public RosterDTO retrieveRoster(String event) {

@@ -2,8 +2,7 @@ package com.rossotti.basketball.client;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class ClientBean {
-	
+public class ClientBeanTest {
 	private ClientInstance clientInstance;
 
 	@Autowired
