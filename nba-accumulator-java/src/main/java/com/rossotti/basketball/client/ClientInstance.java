@@ -5,11 +5,11 @@ import javax.ws.rs.client.ClientBuilder;
 
 public class ClientInstance {
 	//static???
-//	private Client client = ClientBuilder.newBuilder().build().register(XmlStatsFilter.class);
-//
-//	public Client getClient() {
-//		return client;
-//	}
+	private Client client = ClientBuilder.newBuilder().build().register(XmlStatsFilter.class);
+
+	public Client getClient() {
+		return client;
+	}
 	
 	private String env;
 	
