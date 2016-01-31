@@ -64,5 +64,5 @@
 		<property name="env" value="test"/>
 	</bean>
 	
-	<bean id ="clientBean" class="com.rossotti.basketball.client.ClientBeanTest"/>
+	<bean id ="clientBean" class="com.rossotti.basketball.client.ClientBean"/>
 </beans>
