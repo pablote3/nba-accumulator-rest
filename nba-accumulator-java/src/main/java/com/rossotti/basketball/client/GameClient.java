@@ -14,7 +14,7 @@ import com.rossotti.basketball.client.dto.GameDTO;
 public class GameClient {
 	private static final String baseUrl = "https://erikberg.com/nba/boxscore/";
 	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
-	private static Client client = ClientBuilder.newBuilder().build().register(XmlStatsFilter.class);
+	private static Client client = ClientBuilder.newBuilder().build().register(ClientFilter.class);
 
 	public GameDTO retrieveBoxScore(String event) {
 		String boxScoreUrl = baseUrl + event + ".json";

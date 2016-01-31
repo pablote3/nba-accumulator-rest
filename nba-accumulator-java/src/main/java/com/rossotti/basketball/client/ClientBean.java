@@ -1,16 +1,26 @@
 package com.rossotti.basketball.client;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ClientBean {
+
+	private ClientFilter clientFilter;
 	
-	private ClientInstance clientInstance;
+	//static???
+//	private Client client = ClientBuilder.newBuilder().build().register(getClientFilter());
+//
+//	public Client getClient() {
+//		return client;
+//	}
 
 	@Autowired
-	public void setClientInstance(ClientInstance clientInstance) {
-		this.clientInstance = clientInstance;
+	public void setClientFilter(ClientFilter clientFilter) {
+		this.clientFilter = clientFilter;
 	}
-	public ClientInstance getClientInstance() {
-		return clientInstance;
+	public ClientFilter getClientFilter() {
+		return clientFilter;
 	}
 }

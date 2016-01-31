@@ -14,7 +14,7 @@ import com.rossotti.basketball.client.dto.StandingsDTO;
 public class StandingClient {
 	private static final String baseUrl = "https://erikberg.com/nba/standings/";
 	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
-	private static Client client = ClientBuilder.newBuilder().build().register(XmlStatsFilter.class);
+	private static Client client = ClientBuilder.newBuilder().build().register(ClientFilter.class);
 
 	public StandingsDTO retrieveStandings(String event) {
 		String standingsUrl = baseUrl + event + ".json";

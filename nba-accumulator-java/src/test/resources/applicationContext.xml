@@ -60,9 +60,10 @@
 	</bean>
 	
 	<!--  Client Bean -->
-	<bean id="clientInstance" class="com.rossotti.basketball.client.ClientInstance">
-		<property name="env" value="test"/>
-	</bean>
-	
 	<bean id ="clientBean" class="com.rossotti.basketball.client.ClientBean"/>
+	
+	<bean id="clientFilter" class="com.rossotti.basketball.client.ClientFilter">
+		<constructor-arg name="accessToken" value="token200"/>
+		<constructor-arg name="userAgent" value="agentP"/>
+	</bean>
 </beans>
