@@ -17,14 +17,15 @@ public class ResourceLoaderTest {
 	private CustomResourceLoader resourceLoader;
 
 	@Test
-	public void getResourceTest() {
-		String accessToken = null;
-		try {
-			Properties properties = resourceLoader.getProperties();
-			accessToken = properties.getProperty("xmlstats.accessToken");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void getResourceTest_Found() throws IOException {
+		Properties properties = resourceLoader.getProperties();
+		String accessToken = properties.getProperty("xmlstats.accessToken");
 		Assert.assertEquals("testToken", accessToken);
+	}
+
+	@Test
+	public void getResourceTest_PropertyNotFound() throws IOException {
+		Properties properties = resourceLoader.getProperties();
+		properties.getProperty("xmlstats.accessToken");
 	}
 }
