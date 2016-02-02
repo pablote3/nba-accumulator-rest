@@ -66,4 +66,8 @@
 		<constructor-arg name="accessToken" value="token200"/>
 		<constructor-arg name="userAgent" value="agentP"/>
 	</bean>
+	
+	<bean id="resourceLoader" class="com.rossotti.basketball.util.CustomResourceLoader">
+		<property name="resource" value="classpath:service.properties"/>
+	</bean>
 </beans>
