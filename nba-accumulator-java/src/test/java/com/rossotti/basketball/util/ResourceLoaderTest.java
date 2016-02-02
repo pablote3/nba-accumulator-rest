@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations={"classpath:applicationContext.xml"})
 public class ResourceLoaderTest {
 	@Autowired
-	private CustomResourceLoader resourceLoader;
+	private PropertyResourceLoader resourceLoader;
 
 	@Test
 	public void getResourceTest_Found() throws IOException {

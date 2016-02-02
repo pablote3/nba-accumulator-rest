@@ -67,7 +67,7 @@
 		<constructor-arg name="userAgent" value="agentP"/>
 	</bean>
 	
-	<bean id="resourceLoader" class="com.rossotti.basketball.util.CustomResourceLoader">
+	<bean id="resourceLoader" class="com.rossotti.basketball.util.PropertyResourceLoader">
 		<property name="resource" value="classpath:service.properties"/>
 	</bean>
 </beans>

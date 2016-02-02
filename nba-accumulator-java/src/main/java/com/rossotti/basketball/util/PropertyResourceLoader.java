@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 
-public class CustomResourceLoader implements ResourceLoaderAware {
+public class PropertyResourceLoader implements ResourceLoaderAware {
 	private ResourceLoader resourceLoader;
 	private String resource;
 	private Properties properties = new Properties();
+	private String agentToken;
+	private String userAgent;
 
 	@Override
 	public void setResourceLoader(ResourceLoader resourceLoader) {
