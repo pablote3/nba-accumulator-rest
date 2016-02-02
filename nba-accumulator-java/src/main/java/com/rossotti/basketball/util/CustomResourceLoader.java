@@ -8,7 +8,6 @@ import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ResourceLoaderAware;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
 public class CustomResourceLoader implements ResourceLoaderAware {
@@ -27,12 +26,11 @@ public class CustomResourceLoader implements ResourceLoaderAware {
 	}
 
 	public Properties getProperties() throws IOException {
-		Resource banner = resourceLoader.getResource(resource);
-		InputStream in = banner.getInputStream();
-
-		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		InputStream inputStream = resourceLoader.getResource(resource).getInputStream();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 		properties.load(reader);
 		reader.close();
+		inputStream.close();
 		return properties;
 	}
 }
