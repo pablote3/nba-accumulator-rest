@@ -1,5 +1,7 @@
 package com.rossotti.basketball.client;
 
+import javax.ws.rs.core.Response;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,17 +14,18 @@ import com.rossotti.basketball.client.dto.RosterPlayerDTO;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:applicationContext.xml"})
 public class RosterClientTest {
-
-//	private RosterClient rosterClient;
 	@Autowired
 	private ClientBean clientBean;
+	
+	private static final String baseUrl = "https://erikberg.com/nba/roster/";
 
 //	@Ignore
 	@Test
 	public void retrieveRoster() {
-		System.out.println("AccessToken = " + clientBean.getClientFilter().accessToken);
-		System.out.println("UserAgent = " + clientBean.getClientFilter().userAgent);
-//		RosterDTO roster = rosterClient.retrieveRoster("toronto-raptors");
+		String rosterUrl = baseUrl + "toronto-raptors" + ".json";
+//		Response response = clientBean.getClient().target(rosterUrl).request().get();
+
+//		RosterDTO roster = clientBean.retrieveRoster("toronto-raptors");
 //		Assert.assertEquals("Toronto Raptors", roster.team.getFull_name());
 //		RosterPlayerDTO rosterPlayer = roster.players[1];
 //		Assert.assertEquals("Bismack", rosterPlayer.getFirst_name());

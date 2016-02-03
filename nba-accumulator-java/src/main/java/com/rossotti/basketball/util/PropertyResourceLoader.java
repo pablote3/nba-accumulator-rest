@@ -14,14 +14,11 @@ public class PropertyResourceLoader implements ResourceLoaderAware {
 	private ResourceLoader resourceLoader;
 	private String resource;
 	private Properties properties = new Properties();
-	private String agentToken;
-	private String userAgent;
 
 	@Override
 	public void setResourceLoader(ResourceLoader resourceLoader) {
 		this.resourceLoader = resourceLoader;
 	}
-
 	@Autowired
 	public void setResource(String resource) {
 		this.resource = resource;

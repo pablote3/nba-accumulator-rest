@@ -13,15 +13,15 @@ import com.rossotti.basketball.client.dto.RosterDTO;
 
 @Repository
 public class RosterClient {
-	@Autowired
-	private ClientBean clientBean;
+//	@Autowired
+//	private ClientBean clientBean;
 	
 //	private static final String baseUrl = "https://erikberg.com/nba/roster/";
 //	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
 	
-	public String retrieveClientId() {
-		return clientBean.getClientFilter().accessToken;
-	}
+//	public String retrieveClientId() {
+//		return clientBean.getClientFilter().accessToken;
+//	}
 
 //	public RosterDTO retrieveRoster(String event) {
 //		String rosterUrl = baseUrl + event + ".json";

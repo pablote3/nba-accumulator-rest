@@ -63,8 +63,7 @@
 	<bean id ="clientBean" class="com.rossotti.basketball.client.ClientBean"/>
 	
 	<bean id="clientFilter" class="com.rossotti.basketball.client.ClientFilter">
-		<constructor-arg name="accessToken" value="token200"/>
-		<constructor-arg name="userAgent" value="agentP"/>
+		<property name ="resourceProperties" ref="resourceLoader"/>
 	</bean>
 	
 	<bean id="resourceLoader" class="com.rossotti.basketball.util.PropertyResourceLoader">

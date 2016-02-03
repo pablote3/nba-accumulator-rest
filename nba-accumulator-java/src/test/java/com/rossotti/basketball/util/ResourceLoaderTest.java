@@ -20,7 +20,7 @@ public class ResourceLoaderTest {
 	public void getResourceTest_Found() throws IOException {
 		Properties properties = resourceLoader.getProperties();
 		Assert.assertEquals("testToken", properties.getProperty("xmlstats.accessToken"));
-		Assert.assertEquals("testAgent", properties.getProperty("xmlstats.userAgentName"));
+		Assert.assertEquals("testAgent", properties.getProperty("xmlstats.userAgent"));
 	}
 
 	@Test
