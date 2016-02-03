@@ -1,5 +1,6 @@
 package com.rossotti.basketball.client;
 
+import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Response;
 
 import org.junit.Test;
@@ -23,7 +24,10 @@ public class RosterClientTest {
 	@Test
 	public void retrieveRoster() {
 		String rosterUrl = baseUrl + "toronto-raptors" + ".json";
-//		Response response = clientBean.getClient().target(rosterUrl).request().get();
+		Client client = clientBean.getClient();
+		Response response = clientBean.getClient().target(rosterUrl).request().get();
+		System.out.println("Here");
+
 
 //		RosterDTO roster = clientBean.retrieveRoster("toronto-raptors");
 //		Assert.assertEquals("Toronto Raptors", roster.team.getFull_name());

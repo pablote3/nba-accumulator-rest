@@ -23,6 +23,7 @@ public class ClientFilter implements ClientRequestFilter {
 
 	@Override
 	public void filter(final ClientRequestContext requestContext) throws IOException {
+		System.out.println("ClientFilter.filter");
 		String accessToken = getResourceProperties().getProperties().getProperty("xmlstats.accessToken");
 		String authHeader = "Bearer " + accessToken;
 		String userAgent = getResourceProperties().getProperties().getProperty("xmlstats.userAgent");
