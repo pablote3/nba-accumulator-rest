@@ -18,10 +18,6 @@ public class RosterClient {
 	
 //	private static final String baseUrl = "https://erikberg.com/nba/roster/";
 //	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
-	
-//	public String retrieveClientId() {
-//		return clientBean.getClientFilter().accessToken;
-//	}
 
 //	public RosterDTO retrieveRoster(String event) {
 //		String rosterUrl = baseUrl + event + ".json";

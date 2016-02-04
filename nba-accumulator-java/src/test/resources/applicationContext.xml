@@ -60,12 +60,12 @@
 	</bean>
 	
 	<!--  Client Bean -->
-	<bean id ="clientBean" class="com.rossotti.basketball.client.ClientBean"/>
-	
+	<bean id="clientBean" class="com.rossotti.basketball.client.ClientBean"/>
 	<bean id="clientFilter" class="com.rossotti.basketball.client.ClientFilter">
 		<property name ="resourceProperties" ref="resourceLoader"/>
 	</bean>
 	
+	<!--  ResourceLoader Bean -->
 	<bean id="resourceLoader" class="com.rossotti.basketball.util.PropertyResourceLoader">
 		<property name="resource" value="classpath:service.properties"/>
 	</bean>
