@@ -33,7 +33,7 @@ public class ClientBeanTest {
 		Assert.assertEquals(200, response.getStatus());
 	}
 
-//	@Ignore
+	@Ignore
 	@Test
 	public void retrieveStandings() {
 		String standingsUrl = "https://erikberg.com/nba/standings/20130131.json";
