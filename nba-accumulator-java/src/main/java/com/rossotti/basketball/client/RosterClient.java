@@ -3,13 +3,13 @@ package com.rossotti.basketball.client;
 import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rossotti.basketball.app.provider.JsonProvider;
 import com.rossotti.basketball.client.dto.RosterDTO;
 
-@Repository
+@Service
 public class RosterClient {
 	@Autowired
 	private ClientBean clientBean;

@@ -13,10 +13,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:applicationContext.xml"})
 public class RosterClientTest {
+	private static final String baseUrl = "https://erikberg.com/nba/roster/";
+
 	@Autowired
 	private ClientBean clientBean;
-
-	private static final String baseUrl = "https://erikberg.com/nba/roster/";
 
 	@Ignore
 	@Test

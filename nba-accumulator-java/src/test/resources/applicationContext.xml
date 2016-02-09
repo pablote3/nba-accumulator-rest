@@ -60,8 +60,7 @@
 	</bean>
 	
 	<!--  Client Bean -->
-	<bean id="clientBean" class="com.rossotti.basketball.client.ClientBean"/>
-	<bean id="clientFilter" class="com.rossotti.basketball.client.ClientFilter">
+	<bean id="clientBean" class="com.rossotti.basketball.client.ClientBean" scope="singleton">
 		<property name ="resourceProperties" ref="resourceLoader"/>
 	</bean>
 	
