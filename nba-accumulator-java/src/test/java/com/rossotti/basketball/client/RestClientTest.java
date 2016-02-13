@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.rossotti.basketball.util.ResourceLoader;
+import com.rossotti.basketball.util.ThreadSleep;
 
 public class RestClientTest {
 	private Client client;
@@ -17,7 +18,7 @@ public class RestClientTest {
 
 	@Before
 	public void setUp() {
-		sleep(10);
+		ThreadSleep.sleep(10);
 	}
 
 	@Test
@@ -75,13 +76,4 @@ public class RestClientTest {
 //		int status429 = client.target(rosterUrl).request().get().getStatus();
 //		Assert.assertEquals(429, status429);
 //	}
-
-	private void sleep(int nbrSeconds) {
-		try {
-			Thread.sleep(nbrSeconds * 1000);
-		} 
-		catch(InterruptedException ex) {
-			Thread.currentThread().interrupt();
-		}
-	}
 }
