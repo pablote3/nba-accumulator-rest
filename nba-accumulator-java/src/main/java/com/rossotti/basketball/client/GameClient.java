@@ -1,34 +1,27 @@
 package com.rossotti.basketball.client;
 
+import java.util.Properties;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Response;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rossotti.basketball.app.provider.JsonProvider;
 import com.rossotti.basketball.client.dto.GameDTO;
-import com.rossotti.basketball.util.PropertyResourceLoader;
+import com.rossotti.basketball.util.ResourceLoader;
 
 @Service
 public class GameClient {
 	private static Client client;
-	private PropertyResourceLoader resourceProperties;
-	private static final String baseUrl = "https://erikberg.com/nba/boxscore/";
+	private static Properties properties = ResourceLoader.getProperties();
 	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
-
-	@Autowired
-	public void setResourceProperties(PropertyResourceLoader resourceProperties) {
-		this.resourceProperties = resourceProperties;
-	}
-	public PropertyResourceLoader getResourceProperties() {
-		return resourceProperties;
-	}
+	private static final String baseUrl = "https://erikberg.com/nba/boxscore/";
 
 	static {
-		String accessToken = null;
-		String userAgent = null;
+		String accessToken = properties.getProperty("xmlstats.accessToken");
+		String userAgent = properties.getProperty("xmlstats.userAgent");
 		client = RestClient.buildClient(accessToken, userAgent);
 	}
 
