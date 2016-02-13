@@ -13,9 +13,9 @@ public class RestClient {
 		ClientRequestFilter filter = new ClientRequestFilter() {
 			@Override
 			public void filter(ClientRequestContext requestContext) throws IOException {
-				String authHeader = "Bearer " + accessToken;
-				requestContext.getHeaders().add(HttpHeaders.AUTHORIZATION, authHeader);
-			requestContext.getHeaders().add(HttpHeaders.USER_AGENT, userAgent);
+				String authorization = "Bearer " + accessToken;
+				requestContext.getHeaders().add(HttpHeaders.AUTHORIZATION, authorization);
+				requestContext.getHeaders().add(HttpHeaders.USER_AGENT, userAgent);
 			}
 		};
 		return ClientBuilder.newBuilder().build().register(filter);

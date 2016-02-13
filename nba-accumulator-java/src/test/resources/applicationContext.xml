@@ -58,12 +58,7 @@
 	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
-	
-	<!--  Client Bean -->
-	<bean id="clientBean" class="com.rossotti.basketball.client.ClientBean" scope="singleton">
-		<property name ="resourceProperties" ref="resourceLoader"/>
-	</bean>
-	
+
 	<!--  ResourceLoader Bean -->
 	<bean id="resourceLoader" class="com.rossotti.basketball.util.PropertyResourceLoader">
 		<property name="resource" value="classpath:service.properties"/>

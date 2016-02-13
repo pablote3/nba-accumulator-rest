@@ -30,7 +30,6 @@ public class RestClientTest {
 
 	@Before
 	public void setUp() {
-		client = null;
 		sleep(10);
 	}
 	
@@ -54,6 +53,16 @@ public class RestClientTest {
 		Assert.assertEquals(401, status);
 	}
 
+	@Test
+	public void retrieveRoster_404() throws IOException {
+		String accessToken = getResourceProperties().getProperties().getProperty("xmlstats.accessToken");
+		String userAgent = getResourceProperties().getProperties().getProperty("xmlstats.userAgent");
+		client = RestClient.buildClient(accessToken, userAgent);
+		String rosterUrl = "https://erikberg.com/nba/roster/toronto-raps.json";
+		int status = client.target(rosterUrl).request().get().getStatus();
+		Assert.assertEquals(404, status);
+	}
+
 //	@Ignore //could cause ban of IP
 //	@Test
 //	public void retrieveRoster_403() throws IOException {
@@ -64,16 +73,6 @@ public class RestClientTest {
 //		int status = client.target(rosterUrl).request().get().getStatus();
 //		Assert.assertEquals(403, status);
 //	}
-
-	@Test
-	public void retrieveRoster_404() throws IOException {
-		String accessToken = getResourceProperties().getProperties().getProperty("xmlstats.accessToken");
-		String userAgent = getResourceProperties().getProperties().getProperty("xmlstats.userAgent");
-		client = RestClient.buildClient(accessToken, userAgent);
-		String rosterUrl = "https://erikberg.com/nba/roster/toronto-raps.json";
-		int status = client.target(rosterUrl).request().get().getStatus();
-		Assert.assertEquals(404, status);
-	}
 
 //	@Ignore //sending more than 6 requests in a minute is counted against account
 //	@Test
