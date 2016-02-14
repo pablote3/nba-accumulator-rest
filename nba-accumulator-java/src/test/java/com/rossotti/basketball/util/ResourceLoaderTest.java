@@ -1,21 +1,18 @@
 package com.rossotti.basketball.util;
 
-import java.util.Properties;
-
 import org.junit.Assert;
 import org.junit.Test;
 
 public class ResourceLoaderTest {
-	private Properties properties = ResourceLoader.getProperties();
 
 	@Test
 	public void getResourceTest_Found() {
-		Assert.assertNotNull(properties.getProperty("xmlstats.accessToken"));
-		Assert.assertEquals("pablote/2.0 (rossotti.paul@gmail.com)", properties.getProperty("xmlstats.userAgent"));
+		Assert.assertNotNull(ResourceLoader.getInstance().getProperties().getProperty("xmlstats.accessToken"));
+		Assert.assertEquals("pablote/2.0 (rossotti.paul@gmail.com)", ResourceLoader.getInstance().getProperties().getProperty("xmlstats.userAgent"));
 	}
 
 	@Test
 	public void getResourceTest_PropertyNotFound() {
-		Assert.assertNull(properties.getProperty("xmlstats.wrongToken"));
+		Assert.assertNull(ResourceLoader.getInstance().getProperties().getProperty("xmlstats.wrongToken"));
 	}
 }

@@ -5,10 +5,18 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class ResourceLoader {
+
+	private static ResourceLoader instance = new ResourceLoader();
 	private static Properties properties = new Properties();
-	private static InputStream input = null;
+
+	private ResourceLoader(){}
+
+	public static ResourceLoader getInstance(){
+		return instance;
+	}
 
 	static {
+		InputStream input = null;
 		try {
 			input = ClassLoader.getSystemResourceAsStream("service.properties");
 			properties.load(input);
@@ -24,7 +32,8 @@ public class ResourceLoader {
 			}
 		}
 	}
-	public static Properties getProperties() {
+
+	public Properties getProperties() {
 		return properties;
 	}
 }
