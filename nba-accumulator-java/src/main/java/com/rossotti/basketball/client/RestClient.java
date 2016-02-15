@@ -8,16 +8,35 @@ import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
 
+import com.rossotti.basketball.util.ResourceLoader;
+
 public class RestClient {
-	public static Client buildClient(final String accessToken, final String userAgent) {
+	
+	private static RestClient instance = new RestClient();
+	private static Client client;
+
+	private RestClient(){}
+
+	public static RestClient getInstance() {
+		return instance;
+	}
+
+	static {
 		ClientRequestFilter filter = new ClientRequestFilter() {
 			@Override
 			public void filter(ClientRequestContext requestContext) throws IOException {
+				String accessToken = ResourceLoader.getInstance().getProperties().getProperty("xmlstats.accessToken");
+				String userAgent = ResourceLoader.getInstance().getProperties().getProperty("xmlstats.userAgent");
 				String authorization = "Bearer " + accessToken;
 				requestContext.getHeaders().add(HttpHeaders.AUTHORIZATION, authorization);
 				requestContext.getHeaders().add(HttpHeaders.USER_AGENT, userAgent);
 			}
 		};
-		return ClientBuilder.newBuilder().build().register(filter);
+		
+		client = ClientBuilder.newBuilder().build().register(filter);
+	}
+	
+	public Client getClient() {
+		return client;
 	}
 }
