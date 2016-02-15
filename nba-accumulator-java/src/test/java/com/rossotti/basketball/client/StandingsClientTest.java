@@ -17,16 +17,16 @@ public class StandingsClientTest {
 
 	@Test
 	public void retrieveGame_200() throws IOException {
-		String standingsEvent = "20130131";
-		StandingsDTO standings = StandingsClient.retrieveStandings(standingsEvent);
+		String event = "20130131";
+		StandingsDTO standings = StandingsClient.retrieveStandings(event);
 		Assert.assertEquals(200, standings.httpStatus);
 		Assert.assertEquals("miami-heat", standings.standing[0].getTeam_id());
 	}
 
 	@Test
 	public void retrieveGame_404() throws IOException {
-		String standingsEvent = "20130132";
-		StandingsDTO standings = StandingsClient.retrieveStandings(standingsEvent);
+		String event = "20130132";
+		StandingsDTO standings = StandingsClient.retrieveStandings(event);
 		Assert.assertEquals(404, standings.httpStatus);
 	}
 }

@@ -17,16 +17,16 @@ public class GameClientTest {
 
 	@Test
 	public void retrieveGame_200() throws IOException {
-		String gameEvent = "20131101-utah-jazz-at-phoenix-suns";
-		GameDTO game = GameClient.retrieveBoxScore(gameEvent);
+		String event = "20131101-utah-jazz-at-phoenix-suns";
+		GameDTO game = GameClient.retrieveBoxScore(event);
 		Assert.assertEquals(200, game.httpStatus);
 		Assert.assertEquals("Utah Jazz", game.away_team.getFull_name());
 	}
 
 	@Test
 	public void retrieveGame_404() throws IOException {
-		String gameEvent = "20131101-utah-jazz-at-phoenix-sunnys";
-		GameDTO game = GameClient.retrieveBoxScore(gameEvent);
+		String event = "20131101-utah-jazz-at-phoenix-sunnys";
+		GameDTO game = GameClient.retrieveBoxScore(event);
 		Assert.assertEquals(404, game.httpStatus);
 	}
 }

@@ -17,16 +17,16 @@ public class RosterClientTest {
 
 	@Test
 	public void retrieveGame_200() throws IOException {
-		String rosterEvent = "utah-jazz";
-		RosterDTO roster = RosterClient.retrieveRoster(rosterEvent);
+		String event = "utah-jazz";
+		RosterDTO roster = RosterClient.retrieveRoster(event);
 		Assert.assertEquals(200, roster.httpStatus);
 		Assert.assertEquals("Utah Jazz", roster.team.getFull_name());
 	}
 
 	@Test
 	public void retrieveGame_404() throws IOException {
-		String gameEvent = "utah-jazzers";
-		RosterDTO roster = RosterClient.retrieveRoster(gameEvent);
+		String event = "utah-jazzers";
+		RosterDTO roster = RosterClient.retrieveRoster(event);
 		Assert.assertEquals(404, roster.httpStatus);
 	}
 }
