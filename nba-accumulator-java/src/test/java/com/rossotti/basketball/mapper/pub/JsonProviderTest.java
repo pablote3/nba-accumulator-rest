@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rossotti.basketball.app.provider.JsonProvider;
 
 public class JsonProviderTest {
-	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
+	private ObjectMapper mapper = JsonProvider.buildObjectMapper();
 
 	@Test
 	public void deserializeLocalDate_JsonToPojo() {

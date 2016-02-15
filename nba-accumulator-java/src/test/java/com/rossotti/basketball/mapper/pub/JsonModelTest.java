@@ -18,7 +18,7 @@ import com.rossotti.basketball.model.Standing;
 import com.rossotti.basketball.model.Team;
 
 public class JsonModelTest {
-	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
+	private ObjectMapper mapper = JsonProvider.buildObjectMapper();
 
 	@Test
 	public void deserialize_JsonToPojo_Official() {
