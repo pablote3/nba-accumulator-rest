@@ -1,4 +1,4 @@
-package com.rossotti.basketball.mapper.pub;
+package com.rossotti.basketball.mapper;
 
 import java.io.IOException;
 import java.io.InputStream;
