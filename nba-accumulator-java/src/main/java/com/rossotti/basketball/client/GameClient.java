@@ -20,6 +20,7 @@ public class GameClient {
 
 		if (response.getStatus() != 200) {
 			game = new GameDTO();
+			response.readEntity(String.class);
 		} else {
 			try {
 				game = mapper.readValue(response.readEntity(String.class), GameDTO.class);
@@ -28,6 +29,7 @@ public class GameClient {
 			}
 		}
 		game.httpStatus = response.getStatus();
+		response.close();
 		return game;
 	}
 }

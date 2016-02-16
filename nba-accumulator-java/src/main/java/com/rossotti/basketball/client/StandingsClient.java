@@ -20,6 +20,7 @@ public class StandingsClient {
 
 		if (response.getStatus() != 200) {
 			standings = new StandingsDTO();
+			response.readEntity(String.class);
 		} else {
 			try {
 				standings = mapper.readValue(response.readEntity(String.class), StandingsDTO.class);
@@ -28,6 +29,7 @@ public class StandingsClient {
 			}
 		}
 		standings.httpStatus = response.getStatus();
+		response.close();
 		return standings;
 	}
 }

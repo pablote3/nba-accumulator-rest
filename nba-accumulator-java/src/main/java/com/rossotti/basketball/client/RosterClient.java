@@ -20,6 +20,7 @@ public class RosterClient {
 
 		if (response.getStatus() != 200) {
 			roster = new RosterDTO();
+			response.readEntity(String.class);
 		} else {
 			try {
 				roster = mapper.readValue(response.readEntity(String.class), RosterDTO.class);
@@ -28,6 +29,7 @@ public class RosterClient {
 			}
 		}
 		roster.httpStatus = response.getStatus();
+		response.close();
 		return roster;
 	}
 }
