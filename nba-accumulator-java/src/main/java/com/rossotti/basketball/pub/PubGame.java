@@ -14,6 +14,7 @@ import com.rossotti.basketball.util.DateTimeUtil;
 public class PubGame {
 
 	private final URI self;
+	private final URI score;
 	private final String gameDateTime;
 	private final String status;
 	private final String seasonType;
@@ -22,12 +23,14 @@ public class PubGame {
 
 	@JsonCreator
 	public PubGame(@JsonProperty("self") URI self,
+					@JsonProperty("score") URI score,
 					@JsonProperty("gameDateTime") LocalDateTime gameDateTime,
 					@JsonProperty("status") Status status,
 					@JsonProperty("seasonType") SeasonType seasonType,
 					@JsonProperty("gameOfficials") List<PubGameOfficial> gameOfficials,
 					@JsonProperty("boxScores") List<PubBoxScore> boxScores) {
 		this.self = self;
+		this.score = score;
 		this.gameDateTime = DateTimeUtil.getStringDateTime(gameDateTime);
 		this.status = status.name();
 		this.seasonType = seasonType.name();
@@ -37,6 +40,9 @@ public class PubGame {
 
 	public URI getSelf() {
 		return self;
+	}
+	public URI getScore() {
+		return score;
 	}
 	public String getGameDateTime() {
 		return gameDateTime;

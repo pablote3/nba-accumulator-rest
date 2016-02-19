@@ -153,9 +153,16 @@ public class Game {
 	}
 
 	public PubGame toPubGame(UriInfo uriInfo, String teamKey) {
-		URI self = uriInfo.getBaseUriBuilder().path("games").
-											path(DateTimeUtil.getStringDate(this.getGameDateTime())).
-											path(teamKey).build();
+		URI self = uriInfo.getBaseUriBuilder()
+				.path("games")
+				.path(DateTimeUtil.getStringDate(this.getGameDateTime()))
+				.path(teamKey).build();
+
+		URI score = uriInfo.getBaseUriBuilder()
+				.path("score")
+				.path("games")
+				.path(DateTimeUtil.getStringDate(this.getGameDateTime()))
+				.path(teamKey).build();
 
 		List<PubBoxScore> listPubBoxScore = new ArrayList<PubBoxScore>();
 		if (this.getBoxScores().size() > 0) {
@@ -172,6 +179,7 @@ public class Game {
 			}
 		}
 		return new PubGame(self,
+						score,
 						this.gameDateTime,
 						this.status,
 						this.seasonType,
