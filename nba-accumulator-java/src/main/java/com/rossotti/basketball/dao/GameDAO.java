@@ -96,12 +96,12 @@ public class GameDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Game> findByDateScheduled(LocalDate gameDate) {
+	public List<Game> findByDate(LocalDate gameDate) {
 		LocalDateTime minDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
 		LocalDateTime maxDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
 		List<Game> findGames = getSessionFactory().getCurrentSession().createCriteria(Game.class)
 				.add(Restrictions.between("gameDateTime", minDateTime, maxDateTime))
-				.add(Restrictions.eq("status", Status.Scheduled))
+				.addOrder(Order.desc("status"))
 				.addOrder(Order.asc("gameDateTime"))
 				.list();
 		List<Game> games = new ArrayList<Game>();
