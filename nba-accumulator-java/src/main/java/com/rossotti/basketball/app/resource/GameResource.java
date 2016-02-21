@@ -66,10 +66,10 @@ public class GameResource {
 	@GET
 	@Path("/{gameDate}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response findGamesByDateScheduled(@Context UriInfo uriInfo, 
-											@PathParam("gameDate") String gameDateString) {
+	public Response findGamesByGameDate(@Context UriInfo uriInfo, 
+										@PathParam("gameDate") String gameDateString) {
 		LocalDate gameDate = DateTimeUtil.getLocalDate(gameDateString);
-		List<Game> listGames = gameDAO.findByDateScheduled(gameDate);
+		List<Game> listGames = gameDAO.findByDate(gameDate);
 		if (listGames.size() > 0) {
 			List<PubGame> listPubGames = new ArrayList<PubGame>();
 			for (Game game : listGames) {
