@@ -14,6 +14,7 @@ import com.rossotti.basketball.app.resource.GameResource;
 import com.rossotti.basketball.app.resource.OfficialResource;
 import com.rossotti.basketball.app.resource.PlayerResource;
 import com.rossotti.basketball.app.resource.RosterPlayerResource;
+import com.rossotti.basketball.app.resource.ScoreResource;
 import com.rossotti.basketball.app.resource.TeamResource;
 import com.rossotti.basketball.model.Standing;
 
@@ -34,6 +35,7 @@ public class AccumulatorApp extends Application {
 		classes.add(RosterPlayerResource.class);
 		classes.add(GameResource.class);
 		classes.add(Standing.class);
+		classes.add(ScoreResource.class);
 
 		// Providers
 		classes.add(JsonProvider.class);
