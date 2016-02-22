@@ -19,8 +19,8 @@ import com.rossotti.basketball.model.BoxScorePlayer;
 import com.rossotti.basketball.model.BoxScorePlayer.Position;
 import com.rossotti.basketball.model.Game;
 import com.rossotti.basketball.model.Game.SeasonType;
-import com.rossotti.basketball.model.Game.Status;
 import com.rossotti.basketball.model.GameOfficial;
+import com.rossotti.basketball.model.GameStatus;
 import com.rossotti.basketball.model.Official;
 import com.rossotti.basketball.model.Player;
 import com.rossotti.basketball.model.RosterPlayer;
@@ -94,11 +94,11 @@ public class GameDaoTest {
 		List<Game> findGames = gameDAO.findByDate(new LocalDate("2015-10-27"));
 		Assert.assertEquals(3, findGames.size());
 		Assert.assertEquals(new LocalDateTime("2015-10-27T20:30"), findGames.get(0).getGameDateTime());
-		Assert.assertEquals(Status.Scheduled, findGames.get(0).getStatus());
+		Assert.assertEquals(GameStatus.Scheduled, findGames.get(0).getStatus());
 		Assert.assertEquals(new LocalDateTime("2015-10-27T21:00"), findGames.get(1).getGameDateTime());
-		Assert.assertEquals(Status.Scheduled, findGames.get(1).getStatus());
+		Assert.assertEquals(GameStatus.Scheduled, findGames.get(1).getStatus());
 		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGames.get(2).getGameDateTime());
-		Assert.assertEquals(Status.Completed, findGames.get(2).getStatus());
+		Assert.assertEquals(GameStatus.Completed, findGames.get(2).getStatus());
 	}
 
 	@Test
@@ -210,7 +210,7 @@ public class GameDaoTest {
 		Game game = new Game();
 		game.setGameDateTime(gameDateTime);
 		game.setSeasonType(SeasonType.Regular);
-		game.setStatus(Status.Scheduled);
+		game.setStatus(GameStatus.Scheduled);
 		game.addBoxScore(createMockBoxScore(teamIdHome, teamKeyHome, Location.Home));
 		game.addBoxScore(createMockBoxScore(teamIdAway, teamKeyAway, Location.Away));
 		return game;

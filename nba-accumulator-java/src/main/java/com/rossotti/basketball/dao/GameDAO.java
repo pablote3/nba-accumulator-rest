@@ -17,7 +17,7 @@ import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.model.BoxScore;
 import com.rossotti.basketball.model.BoxScore.Location;
 import com.rossotti.basketball.model.Game;
-import com.rossotti.basketball.model.Game.Status;
+import com.rossotti.basketball.model.GameStatus;
 import com.rossotti.basketball.model.StatusCode;
 import com.rossotti.basketball.util.DateTimeUtil;
 
@@ -57,7 +57,7 @@ public class GameDAO {
 						"left join game.boxScores boxScores " +
 						"inner join boxScores.team team " +
 						"where game.gameDateTime between '" + fromDateTime + "' and '" + toDateTime +"' " +
-						"and game.status in ('" + Status.Completed + "', '" + Status.Scheduled + "') " + 
+						"and game.status in ('" + GameStatus.Completed + "', '" + GameStatus.Scheduled + "') " + 
 						"and team.teamKey = '" + teamKey + "' " +
 						"order by gameDateTime asc";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
@@ -124,7 +124,7 @@ public class GameDAO {
 						"left join game.boxScores boxScores " +
 						"inner join boxScores.team team " +
 						"where game.gameDateTime <= '" + gameDateTime + "' " +
-						"and game.status = '" + Status.Completed + "' " +
+						"and game.status = '" + GameStatus.Completed + "' " +
 						"and team.teamKey = '" + teamKey + "' " +
 						"order by gameDateTime desc";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
@@ -143,7 +143,7 @@ public class GameDAO {
 		LocalDateTime toDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
 		List<Game> games = getSessionFactory().getCurrentSession().createCriteria(Game.class)
 				.add(Restrictions.between("gameDateTime", fromDateTime, toDateTime))
-				.add(Restrictions.eq("status", Status.Scheduled))
+				.add(Restrictions.eq("status", GameStatus.Scheduled))
 				.list();
 		return games.size();
 	}

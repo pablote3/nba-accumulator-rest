@@ -111,20 +111,12 @@ public class Game {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name="status", length=9, nullable=false)
-	private Status status;
-	public Status getStatus() {
+	private GameStatus status;
+	public GameStatus getStatus() {
 		return status;
 	}
-	public void setStatus(Status status) {
+	public void setStatus(GameStatus status) {
 		this.status = status;
-	}
-	public enum Status {
-		Scheduled,
-		Finished,
-		Completed,
-		Postponed,
-		Suspended,
-		Cancelled
 	}
 
 	@Enumerated(EnumType.STRING)
@@ -153,16 +145,20 @@ public class Game {
 	}
 
 	public PubGame toPubGame(UriInfo uriInfo, String teamKey) {
-		URI self = uriInfo.getBaseUriBuilder()
-				.path("games")
-				.path(DateTimeUtil.getStringDate(this.getGameDateTime()))
-				.path(teamKey).build();
+		URI scoreLink = null;
 
-		URI score = uriInfo.getBaseUriBuilder()
-				.path("score")
-				.path("games")
-				.path(DateTimeUtil.getStringDate(this.getGameDateTime()))
-				.path(teamKey).build();
+		URI selfLink = uriInfo.getBaseUriBuilder()
+								.path("games")
+								.path(DateTimeUtil.getStringDate(this.getGameDateTime()))
+								.path(teamKey).build();
+
+		if (this.getStatus() == GameStatus.Scheduled) {
+			scoreLink = uriInfo.getBaseUriBuilder()
+								.path("score")
+								.path("games")
+								.path(DateTimeUtil.getStringDate(this.getGameDateTime()))
+								.path(teamKey).build();
+		}
 
 		List<PubBoxScore> listPubBoxScore = new ArrayList<PubBoxScore>();
 		if (this.getBoxScores().size() > 0) {
@@ -178,8 +174,8 @@ public class Game {
 				listPubGameOfficial.add(pubGameOfficial);
 			}
 		}
-		return new PubGame(self,
-						score,
+		return new PubGame(selfLink,
+						scoreLink,
 						this.gameDateTime,
 						this.status,
 						this.seasonType,
