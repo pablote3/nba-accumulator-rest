@@ -7,6 +7,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class DateTimeUtil {
 
+	static DateTimeFormatter dateNakedFormatter = DateTimeFormat.forPattern("yyyyMMdd");
 	static DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 	static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm");
 	
@@ -16,6 +17,10 @@ public class DateTimeUtil {
 
 	static public String getStringDate(LocalDateTime dateTime) {
 		return dateTime.toString(dateFormatter);
+	}
+
+	static public String getStringDateNaked(LocalDateTime dateTime) {
+		return dateTime.toString(dateNakedFormatter);
 	}
 
 	static public String getStringDateTime(LocalDateTime dateTime) {

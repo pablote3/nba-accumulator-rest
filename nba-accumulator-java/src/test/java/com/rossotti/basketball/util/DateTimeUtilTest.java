@@ -26,6 +26,12 @@ public class DateTimeUtilTest {
 	}
 
 	@Test
+	public void getStringDateNaked() {
+		String dateTime = DateTimeUtil.getStringDateNaked(new LocalDateTime(2013, 3, 30, 10, 30));
+		Assert.assertEquals("20130330", dateTime);
+	}
+
+	@Test
 	public void getLocalDate_FromString() {
 		LocalDate date = DateTimeUtil.getLocalDate("2014-06-30");
 		Assert.assertEquals(new LocalDate("2014-06-30"), date);
