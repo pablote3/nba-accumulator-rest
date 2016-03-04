@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rossotti.basketball.app.provider.JsonProvider;
 import com.rossotti.basketball.client.dto.StandingsDTO;
+import com.rossotti.basketball.client.rest.RestClient;
 
 @Service
 public class StandingsClient {
