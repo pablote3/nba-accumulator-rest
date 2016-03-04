@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.rossotti.basketball.model.Game;
 import com.rossotti.basketball.model.GameStatus;
 import com.rossotti.basketball.pub.PubGame;
+import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
 @Path("/score/games")
@@ -31,26 +32,48 @@ public class ScoreResource {
 								@PathParam("gameDate") String gameDateString, 
 								@PathParam("teamKey") String teamKey, 
 								Game game) {
-
-		StringBuilder event = new StringBuilder();
-		event.append(gameDateString + "-");
-		event.append(game.getBoxScores().get(0).getTeam().getTeamKey() + "-at-");
-		event.append(game.getBoxScores().get(1).getTeam().getTeamKey());
-
-		if (game.getStatus().equals(GameStatus.Scheduled)) {
-			logger.info('\n' + "Scheduled game ready to be scored: " + event);
-		
-			PubGame pubGame = game.toPubGame(uriInfo, teamKey);
-			
-			return Response.ok(pubGame)
-				.link(uriInfo.getAbsolutePath(), "game")
-				.build();
-		}
-		else {
-			logger.info('\n' + "" + game.getStatus() + " game not eligible to be scored: " + event);
-			return Response.notModified()
+		try {
+			StringBuilder event = new StringBuilder();
+			event.append(DateTimeUtil.getStringDateNaked(game.getGameDateTime()) + "-");
+			event.append(game.getBoxScores().get(0).getTeam().getTeamKey() + "-at-");
+			event.append(game.getBoxScores().get(1).getTeam().getTeamKey());
+	
+			if (game.getStatus().equals(GameStatus.Scheduled)) {
+				logger.info('\n' + "Scheduled game ready to be scored: " + event);
+	
+//				Properties properties = ResourceLoader.getInstance().getProperties();
+//				String boxScoreSource = properties.getProperty("accumulator.source.boxScore");
+//				System.out.println(boxScoreSource);
+				
+//				if (StringUtils.isNotBlank(boxScoreSource) && boxScoreSource.equalsIgnoreCase("file")) {
+//					String fileBoxScore = ResourceLoader.getInstance().getProperties().getProperty("xmlstats.fileBoxScore");
+//					if (StringUtils.isNotBlank(fileBoxScore) && fileBoxScore.length() > 0) {
+//						logger.info("about to load file");
+//					} else {
+//						throw new PropertyException("xmlstats.fileBoxScore");
+//					}
+//				} else {
+//					throw new PropertyException("accumulator.source.boxScore");
+//				}
+				
+				
+				
+				PubGame pubGame = game.toPubGame(uriInfo, teamKey);
+				
+				return Response.ok(pubGame)
 					.link(uriInfo.getAbsolutePath(), "game")
 					.build();
+			}
+			else {
+				logger.info('\n' + "" + game.getStatus() + " game not eligible to be scored: " + event);
+				return Response.notModified()
+						.link(uriInfo.getAbsolutePath(), "game")
+						.build();
+			}
+		}
+		catch (Exception e) {
+			System.out.println("exception = " + e);
+			return null;
 		}
 	}
 }
