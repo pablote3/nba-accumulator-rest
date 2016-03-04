@@ -18,7 +18,8 @@ public class ResourceLoader {
 	static {
 		InputStream input = null;
 		try {
-			input = ClassLoader.getSystemResourceAsStream("service.properties");
+//			input = getClass().getClassLoader().getResourceAsStream("/WEB-INF/service.properties");
+			input = ResourceLoader.class.getResourceAsStream("/WEB-INF/service.properties");
 			properties.load(input);
 		} catch (IOException ex) {
 			ex.printStackTrace();
