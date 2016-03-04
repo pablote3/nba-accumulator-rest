@@ -1,4 +1,4 @@
-package com.rossotti.basketball.client;
+package com.rossotti.basketball.client.rest;
 
 import java.io.IOException;
 
