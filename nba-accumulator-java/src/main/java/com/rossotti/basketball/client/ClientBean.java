@@ -17,7 +17,7 @@ import com.rossotti.basketball.dao.exception.PropertyException;
 @Repository
 
 @Configuration
-@PropertySource("/WEB-INF/service.properties")
+@PropertySource("/service.properties")
 public class ClientBean {
 	@Autowired
 	private Environment env;

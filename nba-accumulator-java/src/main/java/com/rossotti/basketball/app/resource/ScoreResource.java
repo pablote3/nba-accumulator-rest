@@ -12,8 +12,10 @@ import javax.ws.rs.core.UriInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.rossotti.basketball.client.ClientBean;
 import com.rossotti.basketball.model.Game;
 import com.rossotti.basketball.model.GameStatus;
 import com.rossotti.basketball.pub.PubGame;
@@ -22,6 +24,9 @@ import com.rossotti.basketball.util.DateTimeUtil;
 @Service
 @Path("/score/games")
 public class ScoreResource {
+	@Autowired
+	private ClientBean clientBean;
+	
 	private final Logger logger = LoggerFactory.getLogger(ScoreResource.class);
 
 	@POST
@@ -32,15 +37,22 @@ public class ScoreResource {
 								@PathParam("gameDate") String gameDateString, 
 								@PathParam("teamKey") String teamKey, 
 								Game game) {
+
 		try {
 			StringBuilder event = new StringBuilder();
+			event.append("https://erikberg.com/nba/boxscore/");
 			event.append(DateTimeUtil.getStringDateNaked(game.getGameDateTime()) + "-");
 			event.append(game.getBoxScores().get(0).getTeam().getTeamKey() + "-at-");
-			event.append(game.getBoxScores().get(1).getTeam().getTeamKey());
+			event.append(game.getBoxScores().get(1).getTeam().getTeamKey() + ".json");
 	
 			if (game.getStatus().equals(GameStatus.Scheduled)) {
 				logger.info('\n' + "Scheduled game ready to be scored: " + event);
 	
+				
+//				RestClient client = new RestClient();
+//				GameDTO gameDTO = client.retrieveBoxScore(event.toString());
+				Response response = clientBean.getClient().target(event.toString()).request().get();
+
 //				Properties properties = ResourceLoader.getInstance().getProperties();
 //				String boxScoreSource = properties.getProperty("accumulator.source.boxScore");
 //				System.out.println(boxScoreSource);
@@ -56,7 +68,7 @@ public class ScoreResource {
 //					throw new PropertyException("accumulator.source.boxScore");
 //				}
 				
-				
+				System.out.println(response.getStatus());
 				
 				PubGame pubGame = game.toPubGame(uriInfo, teamKey);
 				
