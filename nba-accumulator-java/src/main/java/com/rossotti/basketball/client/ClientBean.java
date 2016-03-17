@@ -14,13 +14,13 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
-import com.rossotti.basketball.app.resource.ScoreResource;
+import com.rossotti.basketball.client.resource.ScoreResource;
 import com.rossotti.basketball.dao.exception.PropertyException;
 
 @Repository
 
 @Configuration
-@PropertySource("/resources/service.properties")
+@PropertySource("service.properties")
 public class ClientBean {
 	@Autowired
 	private Environment env;
