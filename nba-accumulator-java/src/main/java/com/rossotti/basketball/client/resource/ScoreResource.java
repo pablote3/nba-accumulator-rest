@@ -1,4 +1,4 @@
-package com.rossotti.basketball.app.resource;
+package com.rossotti.basketball.client.resource;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -15,7 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rossotti.basketball.app.provider.JsonProvider;
 import com.rossotti.basketball.client.ClientBean;
+import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.model.Game;
 import com.rossotti.basketball.model.GameStatus;
 import com.rossotti.basketball.pub.PubGame;
@@ -28,6 +31,7 @@ public class ScoreResource {
 	private ClientBean clientBean;
 	
 	private final Logger logger = LoggerFactory.getLogger(ScoreResource.class);
+	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
 
 	@POST
 	@Path("/{gameDate}/{teamKey}")
@@ -47,11 +51,9 @@ public class ScoreResource {
 	
 			if (game.getStatus().equals(GameStatus.Scheduled)) {
 				logger.info('\n' + "Scheduled game ready to be scored: " + event);
-	
-				
-//				RestClient client = new RestClient();
-//				GameDTO gameDTO = client.retrieveBoxScore(event.toString());
-				Response response = clientBean.getClient().target(event.toString()).request().get();
+
+				GameDTO gameDTO = this.retrieveBoxScore(event.toString());
+//				Response response = clientBean.getClient().target(event.toString()).request().get();
 
 //				Properties properties = ResourceLoader.getInstance().getProperties();
 //				String boxScoreSource = properties.getProperty("accumulator.source.boxScore");
@@ -68,7 +70,7 @@ public class ScoreResource {
 //					throw new PropertyException("accumulator.source.boxScore");
 //				}
 				
-				System.out.println(response.getStatus());
+				System.out.println(gameDTO.httpStatus);
 				
 				PubGame pubGame = game.toPubGame(uriInfo, teamKey);
 				
@@ -87,5 +89,25 @@ public class ScoreResource {
 			System.out.println("exception = " + e);
 			return null;
 		}
+	}
+	
+	private GameDTO retrieveBoxScore(String event) {
+		GameDTO game = null;
+
+		Response response = clientBean.getClient().target(event).request().get();
+
+		if (response.getStatus() != 200) {
+			game = new GameDTO();
+			response.readEntity(String.class);
+		} else {
+			try {
+				game = mapper.readValue(response.readEntity(String.class), GameDTO.class);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		game.httpStatus = response.getStatus();
+		response.close();
+		return game;
 	}
 }

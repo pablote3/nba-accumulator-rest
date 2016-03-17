@@ -15,8 +15,8 @@ import com.rossotti.basketball.app.resource.GameResource;
 import com.rossotti.basketball.app.resource.OfficialResource;
 import com.rossotti.basketball.app.resource.PlayerResource;
 import com.rossotti.basketball.app.resource.RosterPlayerResource;
-import com.rossotti.basketball.app.resource.ScoreResource;
 import com.rossotti.basketball.app.resource.TeamResource;
+import com.rossotti.basketball.client.resource.ScoreResource;
 import com.rossotti.basketball.model.Standing;
 
 public class AccumulatorApp extends Application {
