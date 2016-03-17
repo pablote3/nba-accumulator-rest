@@ -1,5 +1,6 @@
 package com.rossotti.basketball.client;
 
+import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,9 @@ public class RestClient {
 
 	public GameDTO retrieveBoxScore(String event) {
 		GameDTO game = null;
-		String baseUrl = "https://erikberg.com/nba/boxscore/";
-		String boxScoreUrl = baseUrl + event + ".json";
 
-		Response response = clientBean.getClient().target(boxScoreUrl).request().get();
+		Client client = clientBean.getClient();
+		Response response = client.target(event).request().get();
 
 		if (response.getStatus() != 200) {
 			game = new GameDTO();
