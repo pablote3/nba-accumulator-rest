@@ -59,6 +59,10 @@
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
 
-	<!-- Client Bean -->
-	<bean id="clientBean" class="com.rossotti.basketball.client.ClientBean" scope="singleton"></bean>
+	<!-- Rest Client Bean -->
+	<bean id="restClientBean" class="com.rossotti.basketball.client.RestClientBean">
+		<property name ="clientBean" ref="clientBean"/>
+	</bean>
+
+	<bean id="clientBean" class="com.rossotti.basketball.client.ClientBean"></bean>
 </beans>

@@ -1,6 +1,5 @@
 package com.rossotti.basketball.client;
 
-import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,7 @@ import com.rossotti.basketball.client.dto.RosterDTO;
 import com.rossotti.basketball.client.dto.StandingsDTO;
 
 @Service
-public class RestClient {
+public class RestClientBean {
 	@Autowired
 	private ClientBean clientBean;
 
@@ -22,8 +21,7 @@ public class RestClient {
 	public GameDTO retrieveBoxScore(String event) {
 		GameDTO game = null;
 
-		Client client = clientBean.getClient();
-		Response response = client.target(event).request().get();
+		Response response = clientBean.getClient().target(event).request().get();
 
 		if (response.getStatus() != 200) {
 			game = new GameDTO();
@@ -42,9 +40,8 @@ public class RestClient {
 
 	public RosterDTO retrieveRoster(String event) {
 		RosterDTO roster = null;
-		String baseUrl = "https://erikberg.com/nba/roster/";
-		String rosterUrl = baseUrl + event + ".json";
-		Response response = clientBean.getClient().target(rosterUrl).request().get();
+
+		Response response = clientBean.getClient().target(event).request().get();
 
 		if (response.getStatus() != 200) {
 			roster = new RosterDTO();
@@ -63,9 +60,8 @@ public class RestClient {
 
 	public StandingsDTO retrieveStandings(String event) {
 		StandingsDTO standings = null;
-		String baseUrl = "https://erikberg.com/nba/standings/";
-		String standingsUrl = baseUrl + event + ".json";
-		Response response = clientBean.getClient().target(standingsUrl).request().get();
+
+		Response response = clientBean.getClient().target(event).request().get();
 
 		if (response.getStatus() != 200) {
 			standings = new StandingsDTO();
@@ -80,5 +76,12 @@ public class RestClient {
 		standings.httpStatus = response.getStatus();
 		response.close();
 		return standings;
+	}
+	
+	public ClientBean getClientBean() {
+		return clientBean;
+	}
+	public void setClientBean(ClientBean clientBean) {
+		this.clientBean = clientBean;
 	}
 }

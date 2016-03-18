@@ -29,20 +29,23 @@ public class ClientBean {
 	private Client client;
 
 	ClientRequestFilter clientFilter = new ClientRequestFilter() {
-			@Override
-			public void filter(ClientRequestContext requestContext) throws PropertyException {
-				String accessToken = env.getProperty("xmlstats.accessToken");
-				String userAgent = env.getProperty("xmlstats.userAgent");
-				String authHeader = "Bearer " + accessToken;
-				requestContext.getHeaders().add(HttpHeaders.AUTHORIZATION, authHeader);
-				requestContext.getHeaders().add(HttpHeaders.USER_AGENT, userAgent);
-			}
-		};
-
-		public Client getClient() {
-			client = ClientBuilder.newBuilder().build();
-			client.register(clientFilter);
-			logger.info('\n' + "Client bean initialized");
-			return client;
+		@Override
+		public void filter(ClientRequestContext requestContext) throws PropertyException {
+			String accessToken = env.getProperty("xmlstats.accessToken");
+			String userAgent = env.getProperty("xmlstats.userAgent");
+			String authHeader = "Bearer " + accessToken;
+			requestContext.getHeaders().add(HttpHeaders.AUTHORIZATION, authHeader);
+			requestContext.getHeaders().add(HttpHeaders.USER_AGENT, userAgent);
 		}
+	};
+
+	public Client getClient() {
+		client = ClientBuilder.newBuilder().build();
+		client.register(clientFilter);
+		logger.info('\n' + "Client bean initialized");
+		return client;
+	}
+	public void setClient(Client client) {
+		this.client = client;
+	}
 }

@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import com.rossotti.basketball.util.ThreadSleep;
 
-public class ClientBeanTest {
+public class ClientTest {
 	private Client client;
 
 	@Before

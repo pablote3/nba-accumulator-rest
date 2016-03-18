@@ -15,9 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rossotti.basketball.app.provider.JsonProvider;
-import com.rossotti.basketball.client.ClientBean;
+import com.rossotti.basketball.client.RestClientBean;
 import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.model.Game;
 import com.rossotti.basketball.model.GameStatus;
@@ -28,10 +26,9 @@ import com.rossotti.basketball.util.DateTimeUtil;
 @Path("/score/games")
 public class ScoreResource {
 	@Autowired
-	private ClientBean clientBean;
+	private RestClientBean restClientBean;
 	
 	private final Logger logger = LoggerFactory.getLogger(ScoreResource.class);
-	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
 
 	@POST
 	@Path("/{gameDate}/{teamKey}")
@@ -52,7 +49,9 @@ public class ScoreResource {
 			if (game.getStatus().equals(GameStatus.Scheduled)) {
 				logger.info('\n' + "Scheduled game ready to be scored: " + event);
 
-				GameDTO gameDTO = this.retrieveBoxScore(event.toString());
+				GameDTO gameDTO = restClientBean.retrieveBoxScore(event.toString());
+//				GameDTO gameDTO = this.retrieveBoxScore(event.toString());
+
 //				Response response = clientBean.getClient().target(event.toString()).request().get();
 
 //				Properties properties = ResourceLoader.getInstance().getProperties();
@@ -89,25 +88,5 @@ public class ScoreResource {
 			System.out.println("exception = " + e);
 			return null;
 		}
-	}
-	
-	private GameDTO retrieveBoxScore(String event) {
-		GameDTO game = null;
-
-		Response response = clientBean.getClient().target(event).request().get();
-
-		if (response.getStatus() != 200) {
-			game = new GameDTO();
-			response.readEntity(String.class);
-		} else {
-			try {
-				game = mapper.readValue(response.readEntity(String.class), GameDTO.class);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		game.httpStatus = response.getStatus();
-		response.close();
-		return game;
 	}
 }
