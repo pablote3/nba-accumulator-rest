@@ -4,7 +4,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import com.rossotti.basketball.dao.exception.PropertyException;
+import com.rossotti.basketball.app.exception.PropertyException;
 
 @Provider
 public class PropertyExceptionMapper implements ExceptionMapper<PropertyException>{

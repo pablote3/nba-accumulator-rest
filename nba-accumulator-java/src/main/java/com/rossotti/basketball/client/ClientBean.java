@@ -14,7 +14,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
-import com.rossotti.basketball.dao.exception.PropertyException;
+import com.rossotti.basketball.app.exception.PropertyException;
 
 @Repository
 

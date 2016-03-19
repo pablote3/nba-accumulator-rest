@@ -1,4 +1,4 @@
-package com.rossotti.basketball.dao.exception;
+package com.rossotti.basketball.app.exception;
 
 /**
  * Exception thrown when unable to evaluate a read property.
