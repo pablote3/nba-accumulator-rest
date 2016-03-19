@@ -14,11 +14,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rossotti.basketball.dao.exception.DuplicateEntityException;
-import com.rossotti.basketball.model.BoxScore;
-import com.rossotti.basketball.model.BoxScore.Location;
-import com.rossotti.basketball.model.Game;
-import com.rossotti.basketball.model.GameStatus;
-import com.rossotti.basketball.model.StatusCode;
+import com.rossotti.basketball.dao.model.BoxScore;
+import com.rossotti.basketball.dao.model.Game;
+import com.rossotti.basketball.dao.model.GameStatus;
+import com.rossotti.basketball.dao.model.StatusCode;
+import com.rossotti.basketball.dao.model.BoxScore.Location;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Repository

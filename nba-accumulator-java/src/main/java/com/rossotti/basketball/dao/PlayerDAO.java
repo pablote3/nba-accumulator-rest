@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rossotti.basketball.dao.exception.DuplicateEntityException;
-import com.rossotti.basketball.model.Player;
-import com.rossotti.basketball.model.StatusCode;
+import com.rossotti.basketball.dao.model.Player;
+import com.rossotti.basketball.dao.model.StatusCode;
 
 @Repository
 @Transactional

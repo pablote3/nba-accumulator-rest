@@ -13,9 +13,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.rossotti.basketball.dao.exception.DuplicateEntityException;
-import com.rossotti.basketball.model.Team;
-import com.rossotti.basketball.model.Team.Conference;
-import com.rossotti.basketball.model.Team.Division;
+import com.rossotti.basketball.dao.model.Team;
+import com.rossotti.basketball.dao.model.Team.Conference;
+import com.rossotti.basketball.dao.model.Team.Division;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:applicationContext.xml"})

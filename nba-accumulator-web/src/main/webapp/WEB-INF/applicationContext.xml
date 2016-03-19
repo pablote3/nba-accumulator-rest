@@ -24,15 +24,15 @@
 		<property name="dataSource" ref="dataSource" />
 		<property name="annotatedClasses">
 			<list>
-				<value>com.rossotti.basketball.model.Team</value>
-				<value>com.rossotti.basketball.model.Player</value>
-				<value>com.rossotti.basketball.model.RosterPlayer</value>
-				<value>com.rossotti.basketball.model.Game</value>
-				<value>com.rossotti.basketball.model.BoxScore</value>
-				<value>com.rossotti.basketball.model.BoxScorePlayer</value>
-				<value>com.rossotti.basketball.model.Official</value>
-				<value>com.rossotti.basketball.model.GameOfficial</value>
-				<value>com.rossotti.basketball.model.Standing</value>
+				<value>com.rossotti.basketball.dao.model.Team</value>
+				<value>com.rossotti.basketball.dao.model.Player</value>
+				<value>com.rossotti.basketball.dao.model.RosterPlayer</value>
+				<value>com.rossotti.basketball.dao.model.Game</value>
+				<value>com.rossotti.basketball.dao.model.BoxScore</value>
+				<value>com.rossotti.basketball.dao.model.BoxScorePlayer</value>
+				<value>com.rossotti.basketball.dao.model.Official</value>
+				<value>com.rossotti.basketball.dao.model.GameOfficial</value>
+				<value>com.rossotti.basketball.dao.model.Standing</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

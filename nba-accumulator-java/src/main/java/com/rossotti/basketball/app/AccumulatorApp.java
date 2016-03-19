@@ -11,13 +11,13 @@ import com.rossotti.basketball.app.provider.DuplicateEntityExceptionMapper;
 import com.rossotti.basketball.app.provider.JsonProvider;
 import com.rossotti.basketball.app.provider.NoSuchEntityExceptionMapper;
 import com.rossotti.basketball.app.provider.PropertyExceptionMapper;
-import com.rossotti.basketball.app.resource.GameResource;
-import com.rossotti.basketball.app.resource.OfficialResource;
-import com.rossotti.basketball.app.resource.PlayerResource;
-import com.rossotti.basketball.app.resource.RosterPlayerResource;
-import com.rossotti.basketball.app.resource.TeamResource;
 import com.rossotti.basketball.client.resource.ScoreResource;
-import com.rossotti.basketball.model.Standing;
+import com.rossotti.basketball.dao.resource.GameResource;
+import com.rossotti.basketball.dao.resource.OfficialResource;
+import com.rossotti.basketball.dao.resource.PlayerResource;
+import com.rossotti.basketball.dao.resource.RosterPlayerResource;
+import com.rossotti.basketball.dao.resource.StandingResource;
+import com.rossotti.basketball.dao.resource.TeamResource;
 
 public class AccumulatorApp extends Application {
 	protected final Set<Class<?>> classes = new HashSet<>();
@@ -35,7 +35,7 @@ public class AccumulatorApp extends Application {
 		classes.add(PlayerResource.class);
 		classes.add(RosterPlayerResource.class);
 		classes.add(GameResource.class);
-		classes.add(Standing.class);
+		classes.add(StandingResource.class);
 		classes.add(ScoreResource.class);
 
 		// Providers

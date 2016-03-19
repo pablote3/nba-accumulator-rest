@@ -20,9 +20,9 @@ import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.client.RestClientBean;
 import com.rossotti.basketball.client.dto.GameDTO;
-import com.rossotti.basketball.model.Game;
-import com.rossotti.basketball.model.GameStatus;
-import com.rossotti.basketball.pub.PubGame;
+import com.rossotti.basketball.dao.model.Game;
+import com.rossotti.basketball.dao.model.GameStatus;
+import com.rossotti.basketball.dao.pub.PubGame;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service

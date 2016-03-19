@@ -13,18 +13,18 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.rossotti.basketball.dao.exception.DuplicateEntityException;
-import com.rossotti.basketball.model.BoxScore;
-import com.rossotti.basketball.model.BoxScore.Location;
-import com.rossotti.basketball.model.BoxScorePlayer;
-import com.rossotti.basketball.model.BoxScorePlayer.Position;
-import com.rossotti.basketball.model.Game;
-import com.rossotti.basketball.model.Game.SeasonType;
-import com.rossotti.basketball.model.GameOfficial;
-import com.rossotti.basketball.model.GameStatus;
-import com.rossotti.basketball.model.Official;
-import com.rossotti.basketball.model.Player;
-import com.rossotti.basketball.model.RosterPlayer;
-import com.rossotti.basketball.model.Team;
+import com.rossotti.basketball.dao.model.BoxScore;
+import com.rossotti.basketball.dao.model.BoxScorePlayer;
+import com.rossotti.basketball.dao.model.Game;
+import com.rossotti.basketball.dao.model.GameOfficial;
+import com.rossotti.basketball.dao.model.GameStatus;
+import com.rossotti.basketball.dao.model.Official;
+import com.rossotti.basketball.dao.model.Player;
+import com.rossotti.basketball.dao.model.RosterPlayer;
+import com.rossotti.basketball.dao.model.Team;
+import com.rossotti.basketball.dao.model.BoxScore.Location;
+import com.rossotti.basketball.dao.model.BoxScorePlayer.Position;
+import com.rossotti.basketball.dao.model.Game.SeasonType;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:applicationContext.xml"})
