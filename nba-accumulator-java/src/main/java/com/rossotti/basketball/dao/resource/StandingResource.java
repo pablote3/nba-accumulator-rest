@@ -1,4 +1,4 @@
-package com.rossotti.basketball.app.resource;
+package com.rossotti.basketball.dao.resource;
 
 import java.util.ArrayList;
 import java.util.List;

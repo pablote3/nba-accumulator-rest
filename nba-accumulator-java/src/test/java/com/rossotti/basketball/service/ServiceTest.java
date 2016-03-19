@@ -13,8 +13,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.rossotti.basketball.app.resource.TeamResource;
 import com.rossotti.basketball.dao.TeamDAO;
+import com.rossotti.basketball.dao.resource.TeamResource;
 import com.rossotti.basketball.model.Team;
 import com.rossotti.basketball.model.Team.Conference;
 import com.rossotti.basketball.model.Team.Division;
