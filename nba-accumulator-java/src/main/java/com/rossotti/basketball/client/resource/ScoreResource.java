@@ -41,7 +41,6 @@ public class ScoreResource {
 
 		try {
 			StringBuilder event = new StringBuilder();
-			event.append("https://erikberg.com/nba/boxscore/");
 			event.append(DateTimeUtil.getStringDateNaked(game.getGameDateTime()) + "-");
 			event.append(game.getBoxScores().get(0).getTeam().getTeamKey() + "-at-");
 			event.append(game.getBoxScores().get(1).getTeam().getTeamKey() + ".json");

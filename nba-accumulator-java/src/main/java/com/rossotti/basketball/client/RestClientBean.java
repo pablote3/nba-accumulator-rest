@@ -10,6 +10,7 @@ import com.rossotti.basketball.app.provider.JsonProvider;
 import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.client.dto.RosterDTO;
 import com.rossotti.basketball.client.dto.StandingsDTO;
+import com.rossotti.basketball.client.dto.StatsDTO;
 
 @Service
 public class RestClientBean {
@@ -18,66 +19,41 @@ public class RestClientBean {
 
 	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
 
-	public GameDTO retrieveBoxScore(String event) {
-		GameDTO game = null;
-
-		Response response = clientBean.getClient().target(event).request().get();
-
+	private StatsDTO retrieveStats(String url, StatsDTO statsDTO) {
+		Response response = clientBean.getClient().target(url).request().get();
+		
 		if (response.getStatus() != 200) {
-			game = new GameDTO();
 			response.readEntity(String.class);
 		} else {
 			try {
-				game = mapper.readValue(response.readEntity(String.class), GameDTO.class);
+				statsDTO = mapper.readValue(response.readEntity(String.class), statsDTO.getClass());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		game.httpStatus = response.getStatus();
+		statsDTO.httpStatus = response.getStatus();
 		response.close();
-		return game;
+		return statsDTO;
+	}
+
+	public GameDTO retrieveBoxScore(String event) {
+		GameDTO gameDTO = new GameDTO();;
+		String boxScoreUrl = "https://erikberg.com/nba/boxscore/" + event + ".json";
+		return (GameDTO)retrieveStats(boxScoreUrl, gameDTO);
 	}
 
 	public RosterDTO retrieveRoster(String event) {
-		RosterDTO roster = null;
-
-		Response response = clientBean.getClient().target(event).request().get();
-
-		if (response.getStatus() != 200) {
-			roster = new RosterDTO();
-			response.readEntity(String.class);
-		} else {
-			try {
-				roster = mapper.readValue(response.readEntity(String.class), RosterDTO.class);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		roster.httpStatus = response.getStatus();
-		response.close();
-		return roster;
+		RosterDTO rosterDTO = new RosterDTO();
+		String rosterUrl = "https://erikberg.com/nba/roster/" + event + ".json";
+		return (RosterDTO)retrieveStats(rosterUrl, rosterDTO);
 	}
 
 	public StandingsDTO retrieveStandings(String event) {
-		StandingsDTO standings = null;
-
-		Response response = clientBean.getClient().target(event).request().get();
-
-		if (response.getStatus() != 200) {
-			standings = new StandingsDTO();
-			response.readEntity(String.class);
-		} else {
-			try {
-				standings = mapper.readValue(response.readEntity(String.class), StandingsDTO.class);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		standings.httpStatus = response.getStatus();
-		response.close();
-		return standings;
+		StandingsDTO standingsDTO = new StandingsDTO();
+		String standingsUrl = "https://erikberg.com/nba/standings/" + event + ".json";
+		return (StandingsDTO)retrieveStats(standingsUrl, standingsDTO);
 	}
-	
+
 	public ClientBean getClientBean() {
 		return clientBean;
 	}

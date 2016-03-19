@@ -26,7 +26,7 @@ public class RosterClientTest {
 
 	@Test
 	public void retrieveRoster_200() throws IOException {
-		String event = "https://erikberg.com/nba/roster/toronto-raptors.json";
+		String event = "toronto-raptors";
 		RosterDTO roster = restClientBean.retrieveRoster(event);
 		Assert.assertEquals(200, roster.httpStatus);
 		Assert.assertEquals("Toronto Raptors", roster.team.getFull_name());
@@ -34,7 +34,7 @@ public class RosterClientTest {
 
 	@Test
 	public void retrieveRoster_404() throws IOException {
-		String event = "https://erikberg.com/nba/roster/toronto-raptiers.json";
+		String event = "toronto-raptiers";
 		RosterDTO roster = restClientBean.retrieveRoster(event);
 		Assert.assertEquals(404, roster.httpStatus);
 	}

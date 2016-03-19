@@ -26,7 +26,7 @@ public class StandingsClientTest {
 
 	@Test
 	public void retrieveStandings_200() throws IOException {
-		String event = "https://erikberg.com/nba/standings/20160216.json";
+		String event = "20160216";
 		StandingsDTO standings = restClientBean.retrieveStandings(event);
 		Assert.assertEquals(200, standings.httpStatus);
 		Assert.assertEquals("cleveland-cavaliers", standings.standing[0].getTeam_id());
@@ -34,7 +34,7 @@ public class StandingsClientTest {
 
 	@Test
 	public void retrieveStandings_404() throws IOException {
-		String event = "https://erikberg.com/nba/standings/20160236.json";
+		String event = "20160236";
 		StandingsDTO standings = restClientBean.retrieveStandings(event);
 		Assert.assertEquals(404, standings.httpStatus);
 	}

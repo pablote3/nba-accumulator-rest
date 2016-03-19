@@ -26,7 +26,7 @@ public class GameClientTest {
 
 	@Test
 	public void retrieveGame_200() throws IOException {
-		String event = "https://erikberg.com/nba/boxscore/20160311-houston-rockets-at-boston-celtics.json";
+		String event = "20160311-houston-rockets-at-boston-celtics";
 		GameDTO game = restClientBean.retrieveBoxScore(event);
 		Assert.assertEquals(200, game.httpStatus);
 		Assert.assertEquals("Houston Rockets", game.away_team.getFull_name());
@@ -34,7 +34,7 @@ public class GameClientTest {
 
 	@Test
 	public void retrieveGame_404() throws IOException {
-		String event = "https://erikberg.com/nba/boxscore/20160311-boston-celtics-at-houston-rocketeers.json";
+		String event = "20160311-boston-celtics-at-houston-rocketeers";
 		GameDTO game = restClientBean.retrieveBoxScore(event);
 		Assert.assertEquals(404, game.httpStatus);
 	}

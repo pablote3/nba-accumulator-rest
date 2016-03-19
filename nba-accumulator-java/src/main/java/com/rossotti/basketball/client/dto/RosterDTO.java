@@ -1,7 +1,6 @@
 package com.rossotti.basketball.client.dto;
 
-public class RosterDTO {
-	public int httpStatus;
+public class RosterDTO extends StandingsDTO {
 	public TeamDTO team;
 	public RosterPlayerDTO[] players;
 }
