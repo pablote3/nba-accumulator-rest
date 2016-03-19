@@ -14,7 +14,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
-import com.rossotti.basketball.client.resource.ScoreResource;
 import com.rossotti.basketball.dao.exception.PropertyException;
 
 @Repository
@@ -25,7 +24,7 @@ public class ClientBean {
 	@Autowired
 	private Environment env;
 	
-	private final Logger logger = LoggerFactory.getLogger(ScoreResource.class);
+	private final Logger logger = LoggerFactory.getLogger(ClientBean.class);
 	private Client client;
 
 	ClientRequestFilter clientFilter = new ClientRequestFilter() {
