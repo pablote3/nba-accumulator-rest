@@ -13,6 +13,9 @@ import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.client.RestClientBean;
@@ -24,9 +27,15 @@ import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
 @Path("/score/games")
+
+@Configuration
+@PropertySource("service.properties")
 public class ScoreResource {
 	@Autowired
-	private RestClientBean restClientBean;
+	private RestClientBean restClient;
+	
+	@Autowired
+	private Environment env;
 	
 	private final Logger logger = LoggerFactory.getLogger(ScoreResource.class);
 
@@ -43,19 +52,14 @@ public class ScoreResource {
 			StringBuilder event = new StringBuilder();
 			event.append(DateTimeUtil.getStringDateNaked(game.getGameDateTime()) + "-");
 			event.append(game.getBoxScores().get(0).getTeam().getTeamKey() + "-at-");
-			event.append(game.getBoxScores().get(1).getTeam().getTeamKey() + ".json");
+			event.append(game.getBoxScores().get(1).getTeam().getTeamKey());
 	
 			if (game.getStatus().equals(GameStatus.Scheduled)) {
 				logger.info('\n' + "Scheduled game ready to be scored: " + event);
 
-				GameDTO gameDTO = restClientBean.retrieveBoxScore(event.toString());
-//				GameDTO gameDTO = this.retrieveBoxScore(event.toString());
-
-//				Response response = clientBean.getClient().target(event.toString()).request().get();
-
-//				Properties properties = ResourceLoader.getInstance().getProperties();
-//				String boxScoreSource = properties.getProperty("accumulator.source.boxScore");
-//				System.out.println(boxScoreSource);
+				GameDTO gameDTO = restClient.retrieveBoxScore(event.toString());
+				String boxScoreSource = env.getProperty("accumulator.source.boxScore");
+				System.out.println(boxScoreSource);
 				
 //				if (StringUtils.isNotBlank(boxScoreSource) && boxScoreSource.equalsIgnoreCase("file")) {
 //					String fileBoxScore = ResourceLoader.getInstance().getProperties().getProperty("xmlstats.fileBoxScore");
