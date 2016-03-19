@@ -11,7 +11,7 @@ import com.rossotti.basketball.app.provider.DuplicateEntityExceptionMapper;
 import com.rossotti.basketball.app.provider.JsonProvider;
 import com.rossotti.basketball.app.provider.NoSuchEntityExceptionMapper;
 import com.rossotti.basketball.app.provider.PropertyExceptionMapper;
-import com.rossotti.basketball.client.resource.ScoreResource;
+import com.rossotti.basketball.app.resource.ScoreResource;
 import com.rossotti.basketball.dao.resource.GameResource;
 import com.rossotti.basketball.dao.resource.OfficialResource;
 import com.rossotti.basketball.dao.resource.PlayerResource;
