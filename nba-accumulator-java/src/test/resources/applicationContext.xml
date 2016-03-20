@@ -58,11 +58,4 @@
 	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
-
-	<!-- Rest Client Bean -->
-	<bean id="restClientBean" class="com.rossotti.basketball.client.RestClientBean">
-		<property name ="clientBean" ref="clientBean"/>
-	</bean>
-
-	<bean id="clientBean" class="com.rossotti.basketball.client.ClientBean"></bean>
 </beans>
