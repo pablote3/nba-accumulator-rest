@@ -1,4 +1,4 @@
-package com.rossotti.basketball.mapper;
+package com.rossotti.basketball.dao.model;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +17,7 @@ import com.rossotti.basketball.dao.model.Standing;
 import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.dao.model.RosterPlayer.Position;
 
-public class JsonModelTest {
+public class JsonMapperTest {
 	private ObjectMapper mapper = JsonProvider.buildObjectMapper();
 
 	@Test
