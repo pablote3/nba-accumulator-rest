@@ -9,20 +9,16 @@ import javax.ws.rs.core.HttpHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.app.exception.PropertyException;
+import com.rossotti.basketball.app.resource.PropertyBean;
 
-@Repository
+@Service
 
-@Configuration
-@PropertySource("service.properties")
 public class ClientBean {
 	@Autowired
-	private Environment env;
+	private PropertyBean propertyBean;
 	
 	private final Logger logger = LoggerFactory.getLogger(ClientBean.class);
 	private Client client;
@@ -30,8 +26,8 @@ public class ClientBean {
 	ClientRequestFilter clientFilter = new ClientRequestFilter() {
 		@Override
 		public void filter(ClientRequestContext requestContext) throws PropertyException {
-			String accessToken = env.getProperty("xmlstats.accessToken");
-			String userAgent = env.getProperty("xmlstats.userAgent");
+			String accessToken = propertyBean.getProperty("xmlstats.accessToken");
+			String userAgent = propertyBean.getProperty("xmlstats.userAgent");
 			String authHeader = "Bearer " + accessToken;
 			requestContext.getHeaders().add(HttpHeaders.AUTHORIZATION, authHeader);
 			requestContext.getHeaders().add(HttpHeaders.USER_AGENT, userAgent);
