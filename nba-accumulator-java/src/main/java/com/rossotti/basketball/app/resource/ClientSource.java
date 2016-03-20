@@ -1,6 +1,6 @@
 package com.rossotti.basketball.app.resource;
 
-public enum ClientResource {
+public enum ClientSource {
 	File,
 	Api;
 }
