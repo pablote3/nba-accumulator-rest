@@ -58,7 +58,7 @@ public class ScoreResource {
 				logger.info('\n' + "Scheduled game ready to be scored: " + event);
 
 				GameDTO gameDTO = restClient.retrieveBoxScore(event.toString());
-				String boxScoreSource = env.getProperty("accumulator.source.boxScore");
+				ClientResource boxScoreSource = ClientResource.valueOf(env.getProperty("accumulator.source.boxScore"));
 				System.out.println(boxScoreSource);
 				
 //				if (StringUtils.isNotBlank(boxScoreSource) && boxScoreSource.equalsIgnoreCase("file")) {
