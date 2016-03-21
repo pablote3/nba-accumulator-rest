@@ -1,5 +1,7 @@
 package com.rossotti.basketball.app.resource;
 
+import java.io.File;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +34,15 @@ public class PropertyBean {
 		}
 		return http;
 	}
-	
+
+	public String getProperty_Path(String propertyName) {
+		String path = getProperty_String(propertyName);
+		if (!new File(path).exists()) {
+			throw new PropertyException(propertyName);
+		}
+		return path;
+	}
+
 	public ClientSource getProperty_ClientSource(String propertyName) {
 		String property = getProperty_String(propertyName);
 		ClientSource clientSource = null;

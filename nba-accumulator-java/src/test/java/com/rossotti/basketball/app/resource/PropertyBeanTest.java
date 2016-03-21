@@ -48,6 +48,24 @@ public class PropertyBeanTest {
 	}
 
 	@Test
+	public void getProperty_Path_Valid() {
+		String prop = propertyBean.getProperty_Path("accumulator.path.valid");
+		Assert.assertEquals("/usr/bin", prop);
+	}
+	@Test(expected=PropertyException.class)
+	public void getProperty_Path_Invalid() {
+		propertyBean.getProperty_Path("accumulator.path.invalid");
+	}
+	@Test(expected=PropertyException.class)
+	public void getProperty_Path_Empty() {
+		propertyBean.getProperty_Path("accumulator.path.empty");
+	}
+	@Test(expected=PropertyException.class)
+	public void getProperty_Path_Null() {
+		propertyBean.getProperty_Path("accumulator.path.null");
+	}
+
+	@Test
 	public void getProperty_ClientSource_Valid_Api() {
 		ClientSource prop = propertyBean.getProperty_ClientSource("accumulator.clientsource.valid.api");
 		Assert.assertEquals(ClientSource.Api, prop);
