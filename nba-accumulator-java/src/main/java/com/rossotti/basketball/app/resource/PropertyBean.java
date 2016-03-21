@@ -17,11 +17,30 @@ public class PropertyBean {
 	@Autowired
 	private Environment env;
 
-	public String getProperty(String propertyName) {
+	public String getProperty_String(String propertyName) {
 		String property = env.getProperty(propertyName);
 		if (StringUtils.isEmpty(property)) {
 			throw new PropertyException(propertyName);
 		}
 		return property;
+	}
+
+	public String getProperty_Http(String propertyName) {
+		String http = getProperty_String(propertyName);
+		if (!StringUtils.startsWith(http, "https://")) {
+			throw new PropertyException(propertyName);
+		}
+		return http;
+	}
+	
+	public ClientSource getProperty_ClientSource(String propertyName) {
+		String property = getProperty_String(propertyName);
+		ClientSource clientSource = null;
+		try {
+			clientSource = ClientSource.valueOf(property);
+		} catch (IllegalArgumentException e) {
+			throw new PropertyException(propertyName);
+		}
+		return clientSource;
 	}
 }

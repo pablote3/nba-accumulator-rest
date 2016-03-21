@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import com.rossotti.basketball.app.exception.PropertyException;
 import com.rossotti.basketball.client.RestClientBean;
 import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.dao.model.Game;
@@ -28,14 +30,15 @@ import com.rossotti.basketball.util.DateTimeUtil;
 @Service
 @Path("/score/games")
 
-@Configuration
-@PropertySource("service.properties")
+//@Configuration
+//@PropertySource("service.properties")
 public class ScoreResource {
 	@Autowired
-	private RestClientBean restClient;
+	private RestClientBean restClientBean;
 	
 	@Autowired
-	private Environment env;
+	private PropertyBean propertyBean;
+//	private Environment env;
 	
 	private final Logger logger = LoggerFactory.getLogger(ScoreResource.class);
 
@@ -57,19 +60,15 @@ public class ScoreResource {
 			if (game.getStatus().equals(GameStatus.Scheduled)) {
 				logger.info('\n' + "Scheduled game ready to be scored: " + event);
 
-				GameDTO gameDTO = restClient.retrieveBoxScore(event.toString());
-				ClientResource boxScoreSource = ClientResource.valueOf(env.getProperty("accumulator.source.boxScore"));
-				System.out.println(boxScoreSource);
+				GameDTO gameDTO = null;
+//				GameDTO gameDTO = restClientBean.retrieveBoxScore(event.toString());
 				
-//				if (StringUtils.isNotBlank(boxScoreSource) && boxScoreSource.equalsIgnoreCase("file")) {
-//					String fileBoxScore = ResourceLoader.getInstance().getProperties().getProperty("xmlstats.fileBoxScore");
-//					if (StringUtils.isNotBlank(fileBoxScore) && fileBoxScore.length() > 0) {
-//						logger.info("about to load file");
-//					} else {
-//						throw new PropertyException("xmlstats.fileBoxScore");
-//					}
-//				} else {
-//					throw new PropertyException("accumulator.source.boxScore");
+				ClientSource boxScoreSource = ClientSource.valueOf(propertyBean.getProperty_String("accumulator.source.boxScore"));
+				System.out.println(boxScoreSource);
+//				if (boxScoreSource == ClientSource.File) {
+//					String boxScoreFile = PropertyBean.getPropertyString("xmlstats.fileBoxScore");
+//					logger.info("about to load file");
+//					
 //				}
 				
 				System.out.println(gameDTO.httpStatus);

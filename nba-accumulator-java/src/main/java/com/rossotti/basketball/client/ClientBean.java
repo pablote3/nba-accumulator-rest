@@ -26,8 +26,8 @@ public class ClientBean {
 	ClientRequestFilter clientFilter = new ClientRequestFilter() {
 		@Override
 		public void filter(ClientRequestContext requestContext) throws PropertyException {
-			String accessToken = propertyBean.getProperty("xmlstats.accessToken");
-			String userAgent = propertyBean.getProperty("xmlstats.userAgent");
+			String accessToken = propertyBean.getProperty_String("xmlstats.accessToken");
+			String userAgent = propertyBean.getProperty_String("xmlstats.userAgent");
 			String authHeader = "Bearer " + accessToken;
 			requestContext.getHeaders().add(HttpHeaders.AUTHORIZATION, authHeader);
 			requestContext.getHeaders().add(HttpHeaders.USER_AGENT, userAgent);
