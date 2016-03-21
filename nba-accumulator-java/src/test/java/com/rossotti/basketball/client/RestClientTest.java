@@ -35,7 +35,7 @@ public class RestClientTest {
 	}
 	@Test
 	public void retrieveBoxScore_404() throws IOException {
-		String event = "20160311-boston-celtics-at-houston-rocketeers";
+		String event = "20160311-houston-rockets-at-boston-celticsss";
 		GameDTO game = restClientBean.retrieveBoxScore(event);
 		Assert.assertEquals(404, game.httpStatus);
 	}
