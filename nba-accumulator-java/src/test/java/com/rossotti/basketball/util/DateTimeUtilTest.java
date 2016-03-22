@@ -1,5 +1,6 @@
 package com.rossotti.basketball.util;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.junit.Assert;
@@ -41,6 +42,12 @@ public class DateTimeUtilTest {
 	public void getLocalDate_FromLocalDateTime() {
 		LocalDateTime dateTime = DateTimeUtil.getLocalDateTime("2014-06-30T10:30");
 		Assert.assertEquals(new LocalDate("2014-06-30"), DateTimeUtil.getLocalDate(dateTime));
+	}
+
+	@Test
+	public void getLocalDate_FromDateTime() {
+		DateTime dateTime = new DateTime("2016-03-11T19:30:00-05:00");
+		Assert.assertEquals(new LocalDate("2016-03-11"), DateTimeUtil.getLocalDate(dateTime));
 	}
 
 	@Test

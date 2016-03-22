@@ -1,5 +1,6 @@
 package com.rossotti.basketball.util;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -32,6 +33,10 @@ public class DateTimeUtil {
 	}
 
 	static public LocalDate getLocalDate(LocalDateTime dateTime) {
+		return dateTime.toLocalDate();
+	}
+
+	static public LocalDate getLocalDate(DateTime dateTime) {
 		return dateTime.toLocalDate();
 	}
 
