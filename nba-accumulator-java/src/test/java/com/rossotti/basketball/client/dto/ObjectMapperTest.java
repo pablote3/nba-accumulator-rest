@@ -12,7 +12,7 @@ import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.client.dto.RosterDTO;
 import com.rossotti.basketball.client.dto.StandingsDTO;
 
-public class JsonMapperTest {
+public class ObjectMapperTest {
 	private ObjectMapper mapper = JsonProvider.buildObjectMapper();
 
 	@Test
