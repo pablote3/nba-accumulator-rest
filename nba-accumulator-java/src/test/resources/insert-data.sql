@@ -6,6 +6,7 @@ insert into team VALUES(5, 'STL', 'Baltimore', 'East', 'Southeast', 'Baltimore',
 insert into team VALUES(6, 'CLE', 'Relels', 'East', 'Central', 'Cleveland', '2010-07-01', 'Cleveland Rebels', 'Rebels', 'Cleveland Arena', 'OH', 'cleveland-rebels', '9999-12-31');
 insert into team VALUES(7, 'ROC', 'Rochester', 'East', 'Atlantic', 'Rochester', '2008-07-01', 'Rochester Royals', 'Royals', 'Edgerton Park Arena', 'NY', 'rochester-royals', '2009-06-30');
 insert into team VALUES(8, 'STL', 'St. Louis', 'East', 'Southwest', 'St. Louis', '2010-07-01', 'St. Louis Bombers', 'Bombers', 'St. Louis Multiplex', 'MO', 'st-louis-bombers', '2011-06-30');
+insert into team VALUES(10, 'DET', 'Detroit', 'East', 'Central', 'Detroit', '2010-07-01', 'Detroit Pistons', 'Pistons', 'Palace of Auburn Hills', 'MI', 'detroit-pistons', '9999-12-31');
 
 insert into official VALUES(1, 'Joe', '2009-07-01', 'LateCall', '96', '2010-06-30');
 insert into official VALUES(2, 'Mike', '2009-07-01', 'MissedCall', '97', '2010-06-30');
@@ -21,11 +22,19 @@ insert into player VALUES(2, '1966-06-02', 'Sacramento, CA, USA', 'Thad Puzdraki
 insert into player VALUES(3, '2000-03-13', 'Sacramento, CA, USA', 'Thad Puzdrakiewicz', 'Thad', 79, 'Puzdrakiewicz', 180);
 insert into player VALUES(4, '1969-09-08', 'Sacramento, CA, USA', 'Michelle Puzdrakiewicz', 'Michelle', 75, 'Puzdrakiewicz', 170);
 insert into player VALUES(5, '1966-06-10', 'Sacramento, CA, USA', 'Junior Puzdrakiewicz', 'Junior', 80, 'Puzdrakiewicz', 240);
+insert into player VALUES(10, '1990-03-04', 'Saginaw, Michigan, USA', 'Andre Drummond', 'Andre', 79, 'Drummond', 230);
+insert into player VALUES(11, '1989-09-02', 'Philadelphia, Pennsylvania, USA', 'Marcus Morris', 'Marcus', 81, 'Morris', 235);
+insert into player VALUES(12, '1993-02-18', 'Thomaston, Georgia, USA', 'Kentavious Caldwell-Pope', 'Kentavious', 78, 'Caldwell-Pope', 204);
+insert into player VALUES(13, '1990-04-16', 'Pordenone, Italy', 'Reggie Jackson', 'Reggie', 75, 'Jackson', 208);
 
 insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(1, 1, 1, '2009-11-30', '9999-12-31', '21', 'SG');
 insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(2, 1, 4, '2009-10-30', '2009-11-03', '21', 'PG');
 insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(3, 2, 4, '2009-10-30', '2009-11-04', '12', 'C');
 insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(4, 3, 5, '2009-10-30', '9999-12-31', '9', 'PG');
+insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(10, 10, 10, '2015-11-15', '9999-12-31', '21', 'SG');
+insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(11, 11, 10, '2015-10-30', '9999-12-31', '28', 'PG');
+insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(12, 12, 10, '2015-10-30', '2015-12-01', '12', 'C');
+insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(13, 13, 10, '2015-10-30', '9999-12-31', '9', 'PG');
 
 insert into game VALUES(1, '2015-10-27 20:00:00.0', 'Regular', 'Completed');
 insert into gameOfficial (id, gameId, officialId) VALUES(1, 1, 2);
