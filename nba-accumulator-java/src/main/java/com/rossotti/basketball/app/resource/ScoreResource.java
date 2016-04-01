@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,11 @@ import org.springframework.stereotype.Service;
 import com.rossotti.basketball.client.FileClientBean;
 import com.rossotti.basketball.client.RestClientBean;
 import com.rossotti.basketball.client.dto.GameDTO;
+import com.rossotti.basketball.dao.exception.NoSuchEntityException;
+import com.rossotti.basketball.dao.mapper.GameMapperBean;
 import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.model.GameStatus;
+import com.rossotti.basketball.dao.model.Official;
 import com.rossotti.basketball.dao.pub.PubGame;
 import com.rossotti.basketball.util.DateTimeUtil;
 
@@ -31,6 +35,9 @@ public class ScoreResource {
 
 	@Autowired
 	private FileClientBean fileClientBean;
+
+	@Autowired
+	private GameMapperBean gameMapperBean;
 
 	@Autowired
 	private PropertyBean propertyBean;
@@ -56,6 +63,7 @@ public class ScoreResource {
 				logger.info('\n' + "Scheduled game ready to be scored: " + event);
 
 				GameDTO gameDTO = null;
+				LocalDate gameDate = DateTimeUtil.getLocalDate(game.getGameDateTime());
 				ClientSource clientSource = propertyBean.getProperty_ClientSource("accumulator.source.boxScore");
 				if (clientSource == ClientSource.File) {
 					gameDTO = fileClientBean.retrieveBoxScore(event.toString());
@@ -64,7 +72,18 @@ public class ScoreResource {
 					gameDTO = restClientBean.retrieveBoxScore(event.toString());
 				}
 
-				System.out.println(gameDTO.httpStatus);
+				if (gameDTO.httpStatus == 200) {
+					try {
+						game.setStatus(GameStatus.Completed);
+						game.setGameOfficials(gameMapperBean.getGameOfficials(gameDTO.officials, gameDate));
+					} catch (NoSuchEntityException nse) {
+						if (nse.getEntityClass().equals(Official.class)) {
+							logger.info("Exiting game");
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 				
 				PubGame pubGame = game.toPubGame(uriInfo, teamKey);
 				
