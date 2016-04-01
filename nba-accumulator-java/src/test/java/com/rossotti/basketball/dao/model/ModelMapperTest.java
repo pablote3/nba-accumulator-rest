@@ -17,7 +17,7 @@ import com.rossotti.basketball.dao.model.Standing;
 import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.dao.model.RosterPlayer.Position;
 
-public class ObjectMapperTest {
+public class ModelMapperTest {
 	private ObjectMapper mapper = JsonProvider.buildObjectMapper();
 
 	@Test
