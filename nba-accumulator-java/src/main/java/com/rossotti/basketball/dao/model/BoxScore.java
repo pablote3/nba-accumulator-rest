@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.ws.rs.core.UriInfo;
 
+import com.rossotti.basketball.client.dto.BoxScoreDTO;
 import com.rossotti.basketball.dao.pub.PubBoxScore;
 import com.rossotti.basketball.dao.pub.PubBoxScorePlayer;
 
@@ -399,5 +400,26 @@ public class BoxScore {
 				this.getDaysOff(),
 				listPubBoxScorePlayer,
 				this.getTeam().toPubTeam(uriInfo));
+	}
+
+	public void update(BoxScoreDTO stats) {
+		this.setMinutes(stats.getMinutes());
+		this.setPoints(stats.getPoints());
+		this.setAssists(stats.getAssists());
+		this.setTurnovers(stats.getTurnovers());
+		this.setSteals(stats.getSteals());
+		this.setBlocks(stats.getBlocks());
+		this.setFieldGoalAttempts(stats.getField_goals_attempted());
+		this.setFieldGoalMade(stats.getField_goals_made());
+		this.setFieldGoalPercent(stats.getField_goal_percentage());
+		this.setThreePointAttempts(stats.getThree_point_field_goals_attempted());
+		this.setThreePointMade(stats.getThree_point_field_goals_made());
+		this.setThreePointPercent(stats.getThree_point_percentage());
+		this.setFreeThrowAttempts(stats.getFree_throws_attempted());
+		this.setFreeThrowMade(stats.getFree_throws_made());
+		this.setFreeThrowPercent(stats.getFree_throw_percentage());
+		this.setReboundsOffense(stats.getOffensive_rebounds());
+		this.setReboundsDefense(stats.getDefensive_rebounds());
+		this.setPersonalFouls(stats.getPersonal_fouls());
 	}
 }
