@@ -21,9 +21,12 @@ import com.rossotti.basketball.client.RestClientBean;
 import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.mapper.GameMapperBean;
+import com.rossotti.basketball.dao.model.BoxScore;
+import com.rossotti.basketball.dao.model.BoxScore.Result;
 import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.model.GameStatus;
 import com.rossotti.basketball.dao.model.Official;
+import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.pub.PubGame;
 import com.rossotti.basketball.util.DateTimeUtil;
 
@@ -54,31 +57,53 @@ public class ScoreResource {
 								Game game) {
 
 		try {
-			StringBuilder event = new StringBuilder();
-			event.append(DateTimeUtil.getStringDateNaked(game.getGameDateTime()) + "-");
-			event.append(game.getBoxScores().get(0).getTeam().getTeamKey() + "-at-");
-			event.append(game.getBoxScores().get(1).getTeam().getTeamKey());
+			BoxScore awayBoxScore = game.getBoxScoreAway();
+			BoxScore homeBoxScore = game.getBoxScoreHome();
+			String awayTeamKey = awayBoxScore.getTeam().getTeamKey();
+			String homeTeamKey = homeBoxScore.getTeam().getTeamKey();
+			LocalDate gameDate = DateTimeUtil.getLocalDate(game.getGameDateTime());
+			
+			String event = DateTimeUtil.getStringDate(gameDate) + "-" + awayTeamKey + "-at-" + homeTeamKey;
 
 			if (game.getStatus().equals(GameStatus.Scheduled)) {
 				logger.info('\n' + "Scheduled game ready to be scored: " + event);
 
 				GameDTO gameDTO = null;
-				LocalDate gameDate = DateTimeUtil.getLocalDate(game.getGameDateTime());
 				ClientSource clientSource = propertyBean.getProperty_ClientSource("accumulator.source.boxScore");
 				if (clientSource == ClientSource.File) {
-					gameDTO = fileClientBean.retrieveBoxScore(event.toString());
+					gameDTO = fileClientBean.retrieveBoxScore(event);
 				}
 				else if (clientSource == ClientSource.Api) {
-					gameDTO = restClientBean.retrieveBoxScore(event.toString());
+					gameDTO = restClientBean.retrieveBoxScore(event);
 				}
 
 				if (gameDTO.httpStatus == 200) {
 					try {
 						game.setStatus(GameStatus.Completed);
+						awayBoxScore.updateTotals(gameDTO.away_totals);
+						homeBoxScore.updateTotals(gameDTO.home_totals);
+						awayBoxScore.updatePeriodScores(gameDTO.away_period_scores);
+						homeBoxScore.updatePeriodScores(gameDTO.home_period_scores);
+						awayBoxScore.setBoxScorePlayers(gameMapperBean.getBoxScorePlayers(gameDTO.away_stats, gameDate, awayTeamKey));
+						homeBoxScore.setBoxScorePlayers(gameMapperBean.getBoxScorePlayers(gameDTO.home_stats, gameDate, homeTeamKey));
 						game.setGameOfficials(gameMapperBean.getGameOfficials(gameDTO.officials, gameDate));
+						
+						if (gameDTO.away_totals.getPoints() > gameDTO.home_totals.getPoints()) {
+							homeBoxScore.setResult(Result.Loss);
+							awayBoxScore.setResult(Result.Win);
+						}
+						else {
+							homeBoxScore.setResult(Result.Win);
+							awayBoxScore.setResult(Result.Loss);
+						}
+						
+						
 					} catch (NoSuchEntityException nse) {
 						if (nse.getEntityClass().equals(Official.class)) {
 							logger.info("Exiting game");
+						}
+						else if (nse.getEntityClass().equals(RosterPlayer.class)) {
+							logger.info("Rebuild active roster");
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
