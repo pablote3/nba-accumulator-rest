@@ -402,7 +402,7 @@ public class BoxScore {
 				this.getTeam().toPubTeam(uriInfo));
 	}
 
-	public void update(BoxScoreDTO stats) {
+	public void updateTotals(BoxScoreDTO stats) {
 		this.setMinutes(stats.getMinutes());
 		this.setPoints(stats.getPoints());
 		this.setAssists(stats.getAssists());
@@ -421,5 +421,20 @@ public class BoxScore {
 		this.setReboundsOffense(stats.getOffensive_rebounds());
 		this.setReboundsDefense(stats.getDefensive_rebounds());
 		this.setPersonalFouls(stats.getPersonal_fouls());
+	}
+
+	public void updatePeriodScores(int[] periodScores) {
+		this.setPointsPeriod1((short)periodScores[0]);
+		this.setPointsPeriod2((short)periodScores[1]);
+		this.setPointsPeriod3((short)periodScores[2]);
+		this.setPointsPeriod4((short)periodScores[3]);
+		if(periodScores.length > 4)
+			this.setPointsPeriod5((short)periodScores[4]);
+		if(periodScores.length > 5)
+			this.setPointsPeriod6((short)periodScores[5]);
+		if(periodScores.length > 6)
+			this.setPointsPeriod7((short)periodScores[6]);
+		if(periodScores.length > 7)
+			this.setPointsPeriod8((short)periodScores[7]);
 	}
 }
