@@ -83,6 +83,12 @@ public class Game {
 	public void removeBoxScore(BoxScore boxScore) {
 		this.getBoxScores().remove(boxScore);
 	}
+	public BoxScore getBoxScoreAway() {
+		return this.getBoxScores().get(0);
+	}
+	public BoxScore getBoxScoreHome() {
+		return this.getBoxScores().get(1);
+	}
 
 	@OneToMany(mappedBy="game", fetch = FetchType.LAZY)
 	private List<GameOfficial> gameOfficials = new ArrayList<GameOfficial>();
