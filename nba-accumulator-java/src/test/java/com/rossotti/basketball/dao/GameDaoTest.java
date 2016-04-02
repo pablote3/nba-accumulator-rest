@@ -62,10 +62,11 @@ public class GameDaoTest {
 	@Test
 	public void findByDateRangeSize_Size0() {
 		List<Game> findGames = gameDAO.findByDateRangeSize(new LocalDate("2015-10-28"), 0);
-		Assert.assertEquals(3, findGames.size());
+		Assert.assertEquals(4, findGames.size());
 		Assert.assertEquals(new LocalDateTime("2015-10-28T20:00"), findGames.get(0).getGameDateTime());
 		Assert.assertEquals(new LocalDateTime("2015-10-29T20:00"), findGames.get(1).getGameDateTime());
 		Assert.assertEquals(new LocalDateTime("2015-10-30T10:00"), findGames.get(2).getGameDateTime());
+		Assert.assertEquals(new LocalDateTime("2015-11-24T10:00"), findGames.get(3).getGameDateTime());
 	}
 
 	@Test
@@ -85,7 +86,7 @@ public class GameDaoTest {
 	
 	@Test
 	public void findByDateRangeSize_NotFound() {
-		List<Game> findGames = gameDAO.findByDateRangeSize(new LocalDate("2015-11-01"), 2);
+		List<Game> findGames = gameDAO.findByDateRangeSize(new LocalDate("2015-12-01"), 2);
 		Assert.assertEquals(0, findGames.size());
 	}
 
