@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.dao.GameDAO;
+import com.rossotti.basketball.dao.model.Game;
 
 @Service
 public class GameServiceBean {
@@ -14,5 +15,9 @@ public class GameServiceBean {
 
 	public LocalDateTime findPreviousGameDateTime(LocalDate gameDate, String teamKey) {
 		return gameDAO.findPreviousGameDateTimeByDateTeam(gameDate, teamKey);
+	}
+
+	public Game updateGame(Game game) {
+		return gameDAO.updateGame(game);
 	}
 }
