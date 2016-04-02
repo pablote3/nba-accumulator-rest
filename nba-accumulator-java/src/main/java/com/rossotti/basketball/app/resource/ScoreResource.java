@@ -27,6 +27,7 @@ import com.rossotti.basketball.dao.model.GameStatus;
 import com.rossotti.basketball.dao.model.Official;
 import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.pub.PubGame;
+import com.rossotti.basketball.dao.service.GameServiceBean;
 import com.rossotti.basketball.dao.service.OfficialServiceBean;
 import com.rossotti.basketball.dao.service.RosterPlayerServiceBean;
 import com.rossotti.basketball.util.DateTimeUtil;
@@ -39,6 +40,9 @@ public class ScoreResource {
 
 	@Autowired
 	private FileClientBean fileClientBean;
+
+	@Autowired
+	private GameServiceBean gameServiceBean;
 
 	@Autowired
 	private OfficialServiceBean officialServiceBean;
@@ -93,18 +97,27 @@ public class ScoreResource {
 						game.setGameOfficials(officialServiceBean.getGameOfficials(gameDTO.officials, gameDate));
 
 						if (gameDTO.away_totals.getPoints() > gameDTO.home_totals.getPoints()) {
-							homeBoxScore.setResult(Result.Loss);
 							awayBoxScore.setResult(Result.Win);
+							homeBoxScore.setResult(Result.Loss);
 						}
 						else {
-							homeBoxScore.setResult(Result.Win);
 							awayBoxScore.setResult(Result.Loss);
+							homeBoxScore.setResult(Result.Win);
 						}
-						
-						
+
+						awayBoxScore.setDaysOff((short)DateTimeUtil.getDaysBetweenTwoDateTimes(gameServiceBean.findPreviousGameDateTime(gameDate, awayTeamKey), game.getGameDateTime()));
+						homeBoxScore.setDaysOff((short)DateTimeUtil.getDaysBetweenTwoDateTimes(gameServiceBean.findPreviousGameDateTime(gameDate, homeTeamKey), game.getGameDateTime()));
+
+						Game updatedGame = gameServiceBean.updateGame(game);
+						if (updatedGame.isUpdated()) {
+							logger.info("Game Scored " + awayTeamKey +  " " + awayBoxScore.getPoints() + " " + homeTeamKey +  " " + homeBoxScore.getPoints());
+						}
+						else {
+							logger.info("Unable to update game - " + updatedGame.getStatus());
+						}
 					} catch (NoSuchEntityException nse) {
 						if (nse.getEntityClass().equals(Official.class)) {
-							logger.info("Exiting game");
+							logger.info("Official not found");
 						}
 						else if (nse.getEntityClass().equals(RosterPlayer.class)) {
 							logger.info("Rebuild active roster");
