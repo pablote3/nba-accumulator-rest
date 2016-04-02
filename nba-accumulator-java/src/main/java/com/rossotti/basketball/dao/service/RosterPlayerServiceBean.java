@@ -1,4 +1,4 @@
-package com.rossotti.basketball.dao.mapper;
+package com.rossotti.basketball.dao.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,45 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.client.dto.BoxScorePlayerDTO;
-import com.rossotti.basketball.client.dto.OfficialDTO;
-import com.rossotti.basketball.dao.OfficialDAO;
 import com.rossotti.basketball.dao.RosterPlayerDAO;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.BoxScorePlayer;
-import com.rossotti.basketball.dao.model.GameOfficial;
-import com.rossotti.basketball.dao.model.Official;
 import com.rossotti.basketball.dao.model.RosterPlayer;
 
 @Service
-public class GameMapperBean {
-	@Autowired
-	private OfficialDAO officialDAO;
-	
+public class RosterPlayerServiceBean {
 	@Autowired
 	private RosterPlayerDAO rosterPlayerDAO;
-	
-	private final Logger logger = LoggerFactory.getLogger(GameMapperBean.class);
 
-	public List<GameOfficial> getGameOfficials(OfficialDTO[] officials, LocalDate gameDate) {
-		List<GameOfficial> gameOfficials = new ArrayList<GameOfficial>();
-		GameOfficial gameOfficial;
-		Official official;
-		for (int i = 0; i < officials.length; i++) {
-			String lastName = officials[i].getLast_name();
-			String firstName = officials[i].getFirst_name();
-			official = officialDAO.findOfficial(lastName, firstName, gameDate);
-			if (official.isNotFound()) {
-				logger.info("Official not found " + firstName + " " + lastName);
-				throw new NoSuchEntityException(Official.class);
-			}
-			else {
-				gameOfficial = new GameOfficial();
-				gameOfficial.setOfficial(official);
-				gameOfficials.add(gameOfficial);
-			}
-		}
-		return gameOfficials;
-	}
+	private final Logger logger = LoggerFactory.getLogger(RosterPlayerServiceBean.class);
 
 	public List<BoxScorePlayer> getBoxScorePlayers(BoxScorePlayerDTO[] boxScorePlayerDTOs, LocalDate gameDate, String teamKey) {
 		List<BoxScorePlayer> boxScorePlayers = new ArrayList<BoxScorePlayer>();
@@ -93,29 +65,4 @@ public class GameMapperBean {
 		}
 		return boxScorePlayers;
 	}
-
-//	public List<RosterPlayer> getRosterPlayers(Roster xmlStatsRoster) {
-//		RosterPlayerDTO[] rosterPlayerDTOs = xmlStatsRoster.players;
-//		Team team = Team.findByTeamKey(xmlStatsRoster.team.getKey());
-//		List<RosterPlayer> rosterPlayers = new ArrayList<RosterPlayer>();
-//		Player player;
-//		RosterPlayer rosterPlayer;
-//		for (int i = 0; i < rosterPlayerDTOs.length; i++) {
-//			player = new Player();
-//			player.setLastName(rosterPlayerDTOs[i].getLast_name());
-//			player.setFirstName(rosterPlayerDTOs[i].getFirst_name());
-//			player.setDisplayName(rosterPlayerDTOs[i].getDisplay_name());
-//			player.setHeight(rosterPlayerDTOs[i].getHeight_in());
-//			player.setWeight(rosterPlayerDTOs[i].getWeight_lb());
-//			player.setBirthDate(DateTimeUtil.getLocalDateFromDateTime(rosterPlayerDTOs[i].getBirthdate()));
-//			player.setBirthPlace(rosterPlayerDTOs[i].getBirthplace());
-//			rosterPlayer = new RosterPlayer();
-//			rosterPlayer.setPlayer(player);
-//			rosterPlayer.setTeam(team);
-//			rosterPlayer.setNumber(rosterPlayerDTOs[i].getUniform_number());
-//			rosterPlayer.setPosition(Position.valueOf(rosterPlayerDTOs[i].getPosition()));
-//			rosterPlayers.add(rosterPlayer);
-//		}
-//		return rosterPlayers;
-//	}
 }

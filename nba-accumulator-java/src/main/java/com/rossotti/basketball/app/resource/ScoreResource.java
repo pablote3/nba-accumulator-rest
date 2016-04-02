@@ -20,7 +20,6 @@ import com.rossotti.basketball.client.FileClientBean;
 import com.rossotti.basketball.client.RestClientBean;
 import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
-import com.rossotti.basketball.dao.mapper.GameMapperBean;
 import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.BoxScore.Result;
 import com.rossotti.basketball.dao.model.Game;
@@ -28,6 +27,8 @@ import com.rossotti.basketball.dao.model.GameStatus;
 import com.rossotti.basketball.dao.model.Official;
 import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.pub.PubGame;
+import com.rossotti.basketball.dao.service.OfficialServiceBean;
+import com.rossotti.basketball.dao.service.RosterPlayerServiceBean;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
@@ -40,7 +41,10 @@ public class ScoreResource {
 	private FileClientBean fileClientBean;
 
 	@Autowired
-	private GameMapperBean gameMapperBean;
+	private OfficialServiceBean officialServiceBean;
+
+	@Autowired
+	private RosterPlayerServiceBean rosterPlayerServiceBean;
 
 	@Autowired
 	private PropertyBean propertyBean;
@@ -84,10 +88,10 @@ public class ScoreResource {
 						homeBoxScore.updateTotals(gameDTO.home_totals);
 						awayBoxScore.updatePeriodScores(gameDTO.away_period_scores);
 						homeBoxScore.updatePeriodScores(gameDTO.home_period_scores);
-						awayBoxScore.setBoxScorePlayers(gameMapperBean.getBoxScorePlayers(gameDTO.away_stats, gameDate, awayTeamKey));
-						homeBoxScore.setBoxScorePlayers(gameMapperBean.getBoxScorePlayers(gameDTO.home_stats, gameDate, homeTeamKey));
-						game.setGameOfficials(gameMapperBean.getGameOfficials(gameDTO.officials, gameDate));
-						
+						awayBoxScore.setBoxScorePlayers(rosterPlayerServiceBean.getBoxScorePlayers(gameDTO.away_stats, gameDate, awayTeamKey));
+						homeBoxScore.setBoxScorePlayers(rosterPlayerServiceBean.getBoxScorePlayers(gameDTO.home_stats, gameDate, homeTeamKey));
+						game.setGameOfficials(officialServiceBean.getGameOfficials(gameDTO.officials, gameDate));
+
 						if (gameDTO.away_totals.getPoints() > gameDTO.home_totals.getPoints()) {
 							homeBoxScore.setResult(Result.Loss);
 							awayBoxScore.setResult(Result.Win);
