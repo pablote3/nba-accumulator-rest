@@ -1,6 +1,7 @@
 package com.rossotti.basketball.util;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -117,14 +118,15 @@ public class DateTimeUtil {
 //	static public LocalDate getLocalDateFromDateTime(DateTime date) {
 //		return new LocalDate(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
 //	}
-//
-//	static public Long getDaysBetweenTwoDateTimes(DateTime minDate, DateTime maxDate) {
-//		Long days = 0L;
-//		if (minDate != null) {
-//			Duration duration = new Duration(minDate.dayOfMonth().roundFloorCopy(), maxDate.dayOfMonth().roundFloorCopy());
-//			if (duration.getStandardDays() < 30)
-//				days = duration.getStandardDays();
-//		}
-//		return days;
-//	}
+
+	static public int getDaysBetweenTwoDateTimes(DateTime minDate, DateTime maxDate) {
+		int days = Days.ZERO.getDays();
+		if (minDate != null) {
+			int calcDays = Days.daysBetween(minDate, maxDate).getDays();
+			if (calcDays < 30) {
+				days = calcDays;
+			}
+		}
+		return days;
+	}
 }
