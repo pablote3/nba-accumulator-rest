@@ -119,7 +119,7 @@ public class DateTimeUtil {
 //		return new LocalDate(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
 //	}
 
-	static public int getDaysBetweenTwoDateTimes(DateTime minDate, DateTime maxDate) {
+	static public int getDaysBetweenTwoDateTimes(LocalDateTime minDate, LocalDateTime maxDate) {
 		int days = Days.ZERO.getDays();
 		if (minDate != null) {
 			int calcDays = Days.daysBetween(minDate, maxDate).getDays();

@@ -154,32 +154,32 @@ public class DateTimeUtilTest {
 
 	@Test
 	public void calculateDateDiff_23Hours() {
-		DateTime minDate = new DateTime(2013, 3, 31, 19, 0, 0);
-		DateTime maxDate = new DateTime(2013, 4, 01, 18, 0, 0);
+		LocalDateTime minDate = new LocalDateTime("2013-03-31T19:00");
+		LocalDateTime maxDate = new LocalDateTime("2013-04-01T18:00");
 		int days = DateTimeUtil.getDaysBetweenTwoDateTimes(minDate, maxDate);
 		Assert.assertEquals(0, days);
 	}
 
 	@Test
 	public void calculateDateDiff_25Hours() {
-		DateTime minDate = new DateTime(2013, 3, 31, 19, 0, 0);
-		DateTime maxDate = new DateTime(2013, 4, 01, 20, 0, 0);
+		LocalDateTime minDate = new LocalDateTime("2013-03-31T19:00");
+		LocalDateTime maxDate = new LocalDateTime("2013-04-01T20:00");
 		int days = DateTimeUtil.getDaysBetweenTwoDateTimes(minDate, maxDate);
 		Assert.assertEquals(1, days);
 	}
 
 	@Test
 	public void calculateDateDiff_Over30Days() {
-		DateTime minDate = new DateTime(2013, 3, 31, 19, 0, 0);
-		DateTime maxDate = new DateTime(2013, 6, 01, 20, 0, 0);
+		LocalDateTime minDate = new LocalDateTime("2013-03-31T19:00");
+		LocalDateTime maxDate = new LocalDateTime("2013-06-01T20:00");
 		int days = DateTimeUtil.getDaysBetweenTwoDateTimes(minDate, maxDate);
 		Assert.assertEquals(0, days);
 	}
 
 	@Test
 	public void calculateDateDiff_NullMinDate() {
-		DateTime minDate = null;
-		DateTime maxDate = new DateTime(2013, 6, 01, 20, 0, 0);
+		LocalDateTime minDate = null;
+		LocalDateTime maxDate = new LocalDateTime("2013-06-01T20:00");
 		int days = DateTimeUtil.getDaysBetweenTwoDateTimes(minDate, maxDate);
 		Assert.assertEquals(0, days);
 	}
