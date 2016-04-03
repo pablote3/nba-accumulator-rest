@@ -27,9 +27,15 @@ public class DateTimeUtilTest {
 	}
 
 	@Test
-	public void getStringDateNaked() {
+	public void getStringDateNaked_FromDateTime() {
 		String dateTime = DateTimeUtil.getStringDateNaked(new LocalDateTime(2013, 3, 30, 10, 30));
 		Assert.assertEquals("20130330", dateTime);
+	}
+
+	@Test
+	public void getStringDateNaked_FromDate() {
+		String date = DateTimeUtil.getStringDateNaked(new LocalDate(2013, 3, 30));
+		Assert.assertEquals("20130330", date);
 	}
 
 	@Test

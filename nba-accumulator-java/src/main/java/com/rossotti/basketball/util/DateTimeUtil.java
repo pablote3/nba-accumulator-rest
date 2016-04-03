@@ -25,6 +25,10 @@ public class DateTimeUtil {
 		return dateTime.toString(dateNakedFormatter);
 	}
 
+	static public String getStringDateNaked(LocalDate date) {
+		return date.toString(dateNakedFormatter);
+	}
+
 	static public String getStringDateTime(LocalDateTime dateTime) {
 		return dateTime.toString(dateTimeFormatter);
 	}
