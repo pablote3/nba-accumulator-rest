@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,9 +70,10 @@ public class ScoreResource {
 			BoxScore homeBoxScore = game.getBoxScoreHome();
 			String awayTeamKey = awayBoxScore.getTeam().getTeamKey();
 			String homeTeamKey = homeBoxScore.getTeam().getTeamKey();
-			LocalDate gameDate = DateTimeUtil.getLocalDate(game.getGameDateTime());
-			
-			String event = DateTimeUtil.getStringDate(gameDate) + "-" + awayTeamKey + "-at-" + homeTeamKey;
+			LocalDateTime gameDateTime = game.getGameDateTime();
+			LocalDate gameDate = DateTimeUtil.getLocalDate(gameDateTime);
+
+			String event = DateTimeUtil.getStringDateNaked(gameDateTime) + "-" + awayTeamKey + "-at-" + homeTeamKey;
 
 			if (game.getStatus().equals(GameStatus.Scheduled)) {
 				logger.info('\n' + "Scheduled game ready to be scored: " + event);
@@ -105,8 +107,8 @@ public class ScoreResource {
 							homeBoxScore.setResult(Result.Win);
 						}
 
-						awayBoxScore.setDaysOff((short)DateTimeUtil.getDaysBetweenTwoDateTimes(gameServiceBean.findPreviousGameDateTime(gameDate, awayTeamKey), game.getGameDateTime()));
-						homeBoxScore.setDaysOff((short)DateTimeUtil.getDaysBetweenTwoDateTimes(gameServiceBean.findPreviousGameDateTime(gameDate, homeTeamKey), game.getGameDateTime()));
+						awayBoxScore.setDaysOff((short)DateTimeUtil.getDaysBetweenTwoDateTimes(gameServiceBean.findPreviousGameDateTime(gameDate, awayTeamKey), gameDateTime));
+						homeBoxScore.setDaysOff((short)DateTimeUtil.getDaysBetweenTwoDateTimes(gameServiceBean.findPreviousGameDateTime(gameDate, homeTeamKey), gameDateTime));
 
 						Game updatedGame = gameServiceBean.updateGame(game);
 						if (updatedGame.isUpdated()) {
