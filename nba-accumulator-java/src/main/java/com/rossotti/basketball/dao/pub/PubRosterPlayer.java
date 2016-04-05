@@ -3,11 +3,10 @@ package com.rossotti.basketball.dao.pub;
 import java.net.URI;
 
 import org.joda.time.LocalDate;
-
+import com.rossotti.basketball.dao.model.Position;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.rossotti.basketball.dao.model.RosterPlayer.Position;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @JsonIgnoreProperties(ignoreUnknown=true)

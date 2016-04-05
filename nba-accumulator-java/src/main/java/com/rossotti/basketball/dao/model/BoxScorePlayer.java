@@ -59,15 +59,6 @@ public class BoxScorePlayer {
 	public void setPosition(Position position) {
 		this.position = position;
 	}
-	public enum Position {
-		PG,
-		SG,
-		SF,
-		PF,
-		C,
-		G,
-		F
-	}
 
 	@Column(name="starter", nullable=true)
 	private boolean starter;

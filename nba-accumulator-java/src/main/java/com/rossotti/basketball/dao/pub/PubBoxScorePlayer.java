@@ -3,7 +3,7 @@ package com.rossotti.basketball.dao.pub;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.rossotti.basketball.dao.model.BoxScorePlayer.Position;
+import com.rossotti.basketball.dao.model.Position;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class PubBoxScorePlayer {

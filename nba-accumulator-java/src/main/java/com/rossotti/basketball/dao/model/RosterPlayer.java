@@ -143,15 +143,6 @@ public class RosterPlayer {
 	public void setPosition(Position position) {
 		this.position = position;
 	}
-	public enum Position {
-		PG,
-		SG,
-		SF,
-		PF,
-		C,
-		G,
-		F
-	}
 
 	public String toString() {
 		return new StringBuffer()
