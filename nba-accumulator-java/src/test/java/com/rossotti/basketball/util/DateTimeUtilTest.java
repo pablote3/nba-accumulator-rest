@@ -189,4 +189,16 @@ public class DateTimeUtilTest {
 		int days = DateTimeUtil.getDaysBetweenTwoDateTimes(minDate, maxDate);
 		Assert.assertEquals(0, days);
 	}
+
+	@Test
+	public void createDateMinusOneDay_EndOfMonth() {
+		LocalDate date = DateTimeUtil.getDateMinusOneDay(new LocalDate("2013-06-30"));
+		Assert.assertEquals(new LocalDate(2013, 6, 29), date);
+	}
+
+	@Test
+	public void createDateMinusOneDay_BeginingOfMonth() {
+		LocalDate date = DateTimeUtil.getDateMinusOneDay(new LocalDate("2013-07-01"));
+		Assert.assertEquals(new LocalDate(2013, 6, 30), date);
+	}
 }

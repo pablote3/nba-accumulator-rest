@@ -114,11 +114,11 @@ public class DateTimeUtil {
 //			return false;
 //		}
 //	}
-//
-//	static public LocalDate getDateMinusOneDay(LocalDate date) {
-//		return date.minusDays(1);
-//	}
-//
+
+	static public LocalDate getDateMinusOneDay(LocalDate date) {
+		return date.minusDays(1);
+	}
+
 //	static public LocalDate getLocalDateFromDateTime(DateTime date) {
 //		return new LocalDate(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
 //	}
