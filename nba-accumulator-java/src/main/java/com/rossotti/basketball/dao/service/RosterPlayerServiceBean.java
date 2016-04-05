@@ -105,4 +105,12 @@ public class RosterPlayerServiceBean {
 	public RosterPlayer findLatestByPlayerNameBirthdateSeason(LocalDate asOfDate, String lastName, String firstName, LocalDate birthdate) {
 		return rosterPlayerDAO.findRosterPlayer(lastName, firstName, birthdate, asOfDate);
 	}
+
+	public RosterPlayer createRosterPlayer(RosterPlayer rosterPlayer) {
+		return rosterPlayerDAO.createRosterPlayer(rosterPlayer);
+	}
+
+	public RosterPlayer updateRosterPlayer(RosterPlayer rosterPlayer) {
+		return rosterPlayerDAO.updateRosterPlayer(rosterPlayer);
+	}
 }
