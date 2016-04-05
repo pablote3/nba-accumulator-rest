@@ -15,4 +15,8 @@ public class PlayerServiceBean {
 	public Player findByPlayerNameBirthdate(String lastName, String firstName, LocalDate birthdate) {
 		return playerDAO.findPlayer(lastName, firstName, birthdate);
 	}
+
+	public Player createPlayer(Player player) {
+		return playerDAO.createPlayer(player);
+	}
 }
