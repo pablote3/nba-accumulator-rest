@@ -17,7 +17,7 @@ import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.BoxScorePlayer;
 import com.rossotti.basketball.dao.model.Player;
 import com.rossotti.basketball.dao.model.RosterPlayer;
-import com.rossotti.basketball.dao.model.RosterPlayer.Position;
+import com.rossotti.basketball.dao.model.Position;
 import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.util.DateTimeUtil;
 
@@ -47,7 +47,7 @@ public class RosterPlayerServiceBean {
 			else {
 				boxScorePlayer = new BoxScorePlayer();
 				boxScorePlayer.setRosterPlayer(rosterPlayer);
-				boxScorePlayer.setPosition(BoxScorePlayer.Position.valueOf(boxScorePlayerDTOs[i].getPosition()));
+				boxScorePlayer.setPosition(Position.valueOf(boxScorePlayerDTOs[i].getPosition()));
 				boxScorePlayer.setMinutes(boxScorePlayerDTOs[i].getMinutes());
 				boxScorePlayer.setStarter(boxScorePlayerDTOs[i].getIs_starter());
 				boxScorePlayer.setPoints(boxScorePlayerDTOs[i].getPoints());
@@ -96,5 +96,13 @@ public class RosterPlayerServiceBean {
 			rosterPlayers.add(rosterPlayer);
 		}
 		return rosterPlayers;
+	}
+
+	public RosterPlayer findByDatePlayerNameTeam(LocalDate asOfDate, String lastName, String firstName, String teamKey) {
+		return rosterPlayerDAO.findRosterPlayer(lastName, firstName, teamKey, asOfDate);
+	}
+
+	public RosterPlayer findLatestByPlayerNameBirthdateSeason(LocalDate asOfDate, String lastName, String firstName, LocalDate birthdate) {
+		return rosterPlayerDAO.findRosterPlayer(lastName, firstName, birthdate, asOfDate);
 	}
 }
