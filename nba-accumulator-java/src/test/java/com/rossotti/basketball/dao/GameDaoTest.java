@@ -23,7 +23,7 @@ import com.rossotti.basketball.dao.model.Player;
 import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.dao.model.BoxScore.Location;
-import com.rossotti.basketball.dao.model.BoxScorePlayer.Position;
+import com.rossotti.basketball.dao.model.Position;
 import com.rossotti.basketball.dao.model.Game.SeasonType;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -312,7 +312,7 @@ public class GameDaoTest {
 		rosterPlayer.setPlayer(getMockPlayer(lastName, firstName, birthdate));
 		rosterPlayer.setFromDate(fromDate);
 		rosterPlayer.setToDate(toDate);
-		rosterPlayer.setPosition(RosterPlayer.Position.C);
+		rosterPlayer.setPosition(Position.C);
 		rosterPlayer.setNumber("99");
 		return rosterPlayer;
 	}
