@@ -29,7 +29,7 @@ public class RosterPlayerServiceTest {
 	private ObjectMapper mapper = JsonProvider.buildObjectMapper();
 
 	@Test
-	public void mapRosterPlayers_Found() {
+	public void getBoxScorePlayers_Found() {
 		GameDTO gameDTO = null;
 		try {
 			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockClient/gameClient_Valid.json");
@@ -48,7 +48,7 @@ public class RosterPlayerServiceTest {
 	}
 
 	@Test(expected=NoSuchEntityException.class)
-	public void mapRosterPlayers_NotFound() {
+	public void getBoxScorePlayers_NotFound() {
 		GameDTO gameDTO = null;
 		try {
 			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockClient/gameClient_Invalid.json");
