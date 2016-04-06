@@ -67,7 +67,7 @@ public class RosterResource {
 			List<RosterPlayer> activeRosterPlayers = null;
 			String event = teamKey;
 
-			logger.info('\n' + "Team roster ready to be updated: " + event);
+			logger.info('\n' + "Team roster ready to be loaded: " + event);
 
 			RosterDTO rosterDTO = null;
 			ClientSource clientSource = propertyBean.getProperty_ClientSource("accumulator.source.roster");
