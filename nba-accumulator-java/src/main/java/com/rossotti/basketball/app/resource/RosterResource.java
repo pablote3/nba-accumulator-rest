@@ -1,5 +1,6 @@
 package com.rossotti.basketball.app.resource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -13,7 +14,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,20 +22,11 @@ import org.springframework.stereotype.Service;
 import com.rossotti.basketball.client.FileClientBean;
 import com.rossotti.basketball.client.RestClientBean;
 import com.rossotti.basketball.client.dto.RosterDTO;
-import com.rossotti.basketball.client.dto.RosterPlayerDTO;
-import com.rossotti.basketball.dao.exception.DuplicateEntityException;
-import com.rossotti.basketball.dao.exception.NoSuchEntityException;
-import com.rossotti.basketball.dao.model.BoxScore;
-import com.rossotti.basketball.dao.model.BoxScore.Result;
-import com.rossotti.basketball.dao.model.Game;
-import com.rossotti.basketball.dao.model.GameStatus;
-import com.rossotti.basketball.dao.model.Official;
 import com.rossotti.basketball.dao.model.Player;
 import com.rossotti.basketball.dao.model.RosterPlayer;
-import com.rossotti.basketball.dao.pub.PubGame;
+import com.rossotti.basketball.dao.pub.PubRosterPlayer_ByTeam;
 import com.rossotti.basketball.dao.pub.PubRosterPlayers_ByTeam;
-import com.rossotti.basketball.dao.service.GameServiceBean;
-import com.rossotti.basketball.dao.service.OfficialServiceBean;
+import com.rossotti.basketball.dao.pub.PubTeam;
 import com.rossotti.basketball.dao.service.PlayerServiceBean;
 import com.rossotti.basketball.dao.service.RosterPlayerServiceBean;
 import com.rossotti.basketball.util.DateTimeUtil;
@@ -73,6 +64,7 @@ public class RosterResource {
 		try {
 			LocalDate fromDate = DateTimeUtil.getLocalDate(gameDateString);
 			LocalDate toDate = DateTimeUtil.getLocalDateSeasonMax(fromDate);
+			List<RosterPlayer> activeRosterPlayers = null;
 			String event = teamKey;
 
 			logger.info('\n' + "Team roster ready to be updated: " + event);
@@ -87,10 +79,9 @@ public class RosterResource {
 			}
 
 			if (rosterDTO.httpStatus == 200) {
-				List<RosterPlayer> activeRosterPlayers = rosterPlayerServiceBean.getRosterPlayers(rosterDTO.players, fromDate, teamKey);
+				activeRosterPlayers = rosterPlayerServiceBean.getRosterPlayers(rosterDTO.players, fromDate, teamKey);
 				RosterPlayer finderRosterPlayer;
 				Player finderPlayer;
-				StringBuilder sb;
 				for (int i = 0; i < activeRosterPlayers.size(); i++) {
 					RosterPlayer activeRosterPlayer = activeRosterPlayers.get(i);
 					Player activePlayer = activeRosterPlayer.getPlayer();
@@ -123,26 +114,31 @@ public class RosterResource {
 							//player is on another roster for current season
 							finderRosterPlayer.setToDate(DateTimeUtil.getDateMinusOneDay(fromDate));
 							rosterPlayerServiceBean.updateRosterPlayer(finderRosterPlayer);
-							logger.info(generateLogMessage("Player on another team -  " + finderRosterPlayer.getTeam().getAbbr() + " - Terminate", finderRosterPlayer));
+							logger.info(generateLogMessage("Player on another team - Terminate", finderRosterPlayer));
 
-							activeRosterPlayer.setPlayer(finderPlayer);
 							activeRosterPlayer.setFromDate(fromDate);
 							activeRosterPlayer.setToDate(toDate);
 							rosterPlayerServiceBean.createRosterPlayer(activeRosterPlayer);
-							logger.info(generateLogMessage("Player on another team -  " + activeRosterPlayer.getTeam().getAbbr() + " - Add", activeRosterPlayer));
+							logger.info(generateLogMessage("Player on another team - Add", activeRosterPlayer));
 						}
 					}
 					else {
 						//player is on current team roster
-						logger.info(generateLogMessage("Player on current team roster -  ", activeRosterPlayer));
+						logger.info(generateLogMessage("Player on current team roster", activeRosterPlayer));
 					}
 				}
 			}
 
+			PubTeam pubTeam = activeRosterPlayers.get(0).getTeam().toPubTeam(uriInfo);
+			List<PubRosterPlayer_ByTeam> listPubRosterPlayers = new ArrayList<PubRosterPlayer_ByTeam>();
+			for (RosterPlayer rosterPlayer : activeRosterPlayers) {
+				PubRosterPlayer_ByTeam pubRosterPlayer = rosterPlayer.toPubRosterPlayer_ByTeam(uriInfo);
+				listPubRosterPlayers.add(pubRosterPlayer);
+			}
 			PubRosterPlayers_ByTeam pubRosterPlayers = new PubRosterPlayers_ByTeam(uriInfo.getAbsolutePath(), pubTeam, listPubRosterPlayers);
 			return Response.ok(pubRosterPlayers)
-				.link(uriInfo.getAbsolutePath(), "rosterPlayer")
-				.build();
+					.link(uriInfo.getAbsolutePath(), "rosterPlayer")
+					.build();
 		}
 		catch (Exception e) {
 			System.out.println("exception = " + e);
@@ -156,6 +152,7 @@ public class RosterResource {
 		sb.append(FormatUtil.padString(messageType, 40));
 		sb.append(" name = " + FormatUtil.padString(rosterPlayer.getPlayer().getFirstName() + " " + rosterPlayer.getPlayer().getLastName(), 35));
 		sb.append(" dob = " + DateTimeUtil.getStringDate(rosterPlayer.getPlayer().getBirthdate()));
+		sb.append(" team = " + rosterPlayer.getTeam().getAbbr());
 		sb.append(" fromDate = " + DateTimeUtil.getStringDate(rosterPlayer.getFromDate()));
 		sb.append(" toDate = " + DateTimeUtil.getStringDate(rosterPlayer.getToDate()));
 		return sb.toString();
