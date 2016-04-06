@@ -113,4 +113,8 @@ public class RosterPlayerServiceBean {
 	public RosterPlayer updateRosterPlayer(RosterPlayer rosterPlayer) {
 		return rosterPlayerDAO.updateRosterPlayer(rosterPlayer);
 	}
+
+	public List<RosterPlayer> findRosterPlayers(LocalDate asOfDate, String teamKey) {
+		return rosterPlayerDAO.findRosterPlayers(teamKey, asOfDate);
+	}
 }
