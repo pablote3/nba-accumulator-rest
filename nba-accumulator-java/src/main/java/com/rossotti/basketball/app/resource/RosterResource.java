@@ -57,12 +57,12 @@ public class RosterResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response loadRoster(@Context UriInfo uriInfo, 
-								@PathParam("gameDate") String gameDateString, 
+								@PathParam("asOfDate") String asOfDateString, 
 								@PathParam("teamKey") String teamKey, 
 								List<RosterPlayer> rosterPlayers) {
 
 		try {
-			LocalDate fromDate = DateTimeUtil.getLocalDate(gameDateString);
+			LocalDate fromDate = DateTimeUtil.getLocalDate(asOfDateString);
 			LocalDate toDate = DateTimeUtil.getLocalDateSeasonMax(fromDate);
 			List<RosterPlayer> activeRosterPlayers = null;
 			String event = teamKey;
