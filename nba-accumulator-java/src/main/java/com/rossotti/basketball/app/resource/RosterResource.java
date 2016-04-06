@@ -79,6 +79,8 @@ public class RosterResource {
 			}
 
 			if (rosterDTO.httpStatus == 200) {
+				//activate new roster players
+				logger.info("Activate new roster players");
 				activeRosterPlayers = rosterPlayerServiceBean.getRosterPlayers(rosterDTO.players, fromDate, teamKey);
 				RosterPlayer finderRosterPlayer;
 				Player finderPlayer;
@@ -125,6 +127,32 @@ public class RosterResource {
 					else {
 						//player is on current team roster
 						logger.info(generateLogMessage("Player on current team roster", activeRosterPlayer));
+					}
+				}
+				//deactivate terminated roster players
+				logger.info("Deactivate terminated roster players");
+				
+				List<RosterPlayer> priorRosterPlayers = rosterPlayerServiceBean.findRosterPlayers(fromDate, teamKey);
+				boolean foundPlayerOnRoster;
+				for (int i = 0; i < priorRosterPlayers.size(); i++) {
+					RosterPlayer priorRosterPlayer = priorRosterPlayers.get(i);
+					Player priorPlayer = priorRosterPlayer.getPlayer();
+					foundPlayerOnRoster = false;
+					for (int j = 0; j < activeRosterPlayers.size(); j++) {
+						RosterPlayer activeRosterPlayer = activeRosterPlayers.get(j);
+						Player activePlayer = activeRosterPlayer.getPlayer();
+						if (priorPlayer.equals(activePlayer)) {
+							//player is on current team roster
+							logger.info(generateLogMessage("Player on current team roster", priorRosterPlayer));
+							foundPlayerOnRoster = true;
+							break;
+						}
+					}
+					if (!foundPlayerOnRoster) {
+						//player is not on current team roster
+						priorRosterPlayer.setToDate(DateTimeUtil.getDateMinusOneDay(fromDate));
+						rosterPlayerServiceBean.updateRosterPlayer(priorRosterPlayer);
+						logger.info(generateLogMessage("Player is not on current team roster", priorRosterPlayer));
 					}
 				}
 			}
