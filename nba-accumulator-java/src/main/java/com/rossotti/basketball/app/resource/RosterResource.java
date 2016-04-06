@@ -56,7 +56,7 @@ public class RosterResource {
 	@Path("/{gameDate}/{teamKey}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateRoster(@Context UriInfo uriInfo, 
+	public Response loadRoster(@Context UriInfo uriInfo, 
 								@PathParam("gameDate") String gameDateString, 
 								@PathParam("teamKey") String teamKey, 
 								List<RosterPlayer> rosterPlayers) {
