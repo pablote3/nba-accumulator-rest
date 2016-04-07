@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.rossotti.basketball.app.service.StandingsServiceBean;
 import com.rossotti.basketball.client.FileClientBean;
 import com.rossotti.basketball.client.RestClientBean;
 import com.rossotti.basketball.client.dto.StandingsDTO;
@@ -26,7 +27,6 @@ import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.model.Standing;
 import com.rossotti.basketball.dao.pub.PubStanding;
 import com.rossotti.basketball.dao.pub.PubStandings;
-import com.rossotti.basketball.dao.service.StandingsServiceBean;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service

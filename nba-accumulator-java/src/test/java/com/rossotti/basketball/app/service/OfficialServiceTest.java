@@ -1,4 +1,4 @@
-package com.rossotti.basketball.dao.service;
+package com.rossotti.basketball.app.service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rossotti.basketball.app.provider.JsonProvider;
+import com.rossotti.basketball.app.service.OfficialServiceBean;
 import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.client.dto.OfficialDTO;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;

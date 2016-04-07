@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.rossotti.basketball.app.service.PlayerServiceBean;
+import com.rossotti.basketball.app.service.RosterPlayerServiceBean;
 import com.rossotti.basketball.client.FileClientBean;
 import com.rossotti.basketball.client.RestClientBean;
 import com.rossotti.basketball.client.dto.RosterDTO;
@@ -27,8 +29,6 @@ import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.pub.PubRosterPlayer_ByTeam;
 import com.rossotti.basketball.dao.pub.PubRosterPlayers_ByTeam;
 import com.rossotti.basketball.dao.pub.PubTeam;
-import com.rossotti.basketball.dao.service.PlayerServiceBean;
-import com.rossotti.basketball.dao.service.RosterPlayerServiceBean;
 import com.rossotti.basketball.util.DateTimeUtil;
 import com.rossotti.basketball.util.FormatUtil;
 

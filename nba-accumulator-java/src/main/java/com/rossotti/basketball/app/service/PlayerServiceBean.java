@@ -1,4 +1,4 @@
-package com.rossotti.basketball.dao.service;
+package com.rossotti.basketball.app.service;
 
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;

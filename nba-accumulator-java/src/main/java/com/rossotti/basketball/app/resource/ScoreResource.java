@@ -17,6 +17,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.rossotti.basketball.app.service.GameServiceBean;
+import com.rossotti.basketball.app.service.OfficialServiceBean;
+import com.rossotti.basketball.app.service.RosterPlayerServiceBean;
 import com.rossotti.basketball.client.FileClientBean;
 import com.rossotti.basketball.client.RestClientBean;
 import com.rossotti.basketball.client.dto.GameDTO;
@@ -28,9 +31,6 @@ import com.rossotti.basketball.dao.model.GameStatus;
 import com.rossotti.basketball.dao.model.Official;
 import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.pub.PubGame;
-import com.rossotti.basketball.dao.service.GameServiceBean;
-import com.rossotti.basketball.dao.service.OfficialServiceBean;
-import com.rossotti.basketball.dao.service.RosterPlayerServiceBean;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
