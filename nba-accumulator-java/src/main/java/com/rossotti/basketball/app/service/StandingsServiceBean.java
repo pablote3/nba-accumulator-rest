@@ -62,6 +62,10 @@ public class StandingsServiceBean {
 		return standings;
 	}
 
+	public Standing findStanding(String teamKey, LocalDate asOfDate) {
+		return standingDAO.findStanding(teamKey, asOfDate);
+	}
+	
 	public List<Standing> findStandings(LocalDate asOfDate) {
 		return standingDAO.findStandings(asOfDate);
 	}
