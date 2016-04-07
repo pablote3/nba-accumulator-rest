@@ -2,6 +2,7 @@ package com.rossotti.basketball.app.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rossotti.basketball.app.provider.JsonProvider;
 import com.rossotti.basketball.app.service.GameServiceBean;
 import com.rossotti.basketball.client.dto.GameDTO;
+import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -39,5 +41,11 @@ public class GameServiceTest {
 		String awayTeamKey = gameDTO.away_team.getTeam_id();
 		LocalDateTime previousGameDate = gameServiceBean.findPreviousGameDateTime(gameDate, awayTeamKey);
 		Assert.assertEquals(new LocalDateTime("2015-11-24T10:00"), previousGameDate);
+	}
+
+	@Test
+	public void findByDateTeamSeason_Found() {
+		List<Game> previousGames = gameServiceBean.findByDateTeamSeason(new LocalDate(2015, 10, 29), "baltimore-bullets");
+		Assert.assertEquals(3, previousGames.size());
 	}
 }
