@@ -66,6 +66,10 @@ public class StandingsServiceBean {
 		return standingDAO.findStandings(asOfDate);
 	}
 
+	public Standing createStanding(Standing standing) {
+		return standingDAO.createStanding(standing);
+	}
+
 	public Standing deleteStanding(String teamKey, LocalDate asOfDate) {
 		return standingDAO.deleteStanding(teamKey, asOfDate);
 	}
