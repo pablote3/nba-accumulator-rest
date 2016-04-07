@@ -381,6 +381,7 @@ public class Standing {
 								this.opptGamesWon,
 								this.opptGamesPlayed,
 								this.opptOpptGamesWon,
-								this.opptOpptGamesPlayed);
+								this.opptOpptGamesPlayed,
+								this.getTeam().toPubTeam(uriInfo));
 	}
 }

@@ -41,6 +41,7 @@ public class PubStanding {
 	private final Integer opptGamesPlayed;
 	private final Integer opptOpptGamesWon;
 	private final Integer opptOpptGamesPlayed;
+	private final PubTeam team;
 
 	@JsonCreator
 	public PubStanding(	@JsonProperty("self") URI self,
@@ -72,7 +73,8 @@ public class PubStanding {
 						@JsonProperty("opptGamesWon") Integer opptGamesWon,
 						@JsonProperty("opptGamesPlayed") Integer opptGamesPlayed,
 						@JsonProperty("opptOpptGamesWon") Integer opptOpptGamesWon,
-						@JsonProperty("opptOpptGamesPlayed") Integer opptOpptGamesPlayed) {
+						@JsonProperty("opptOpptGamesPlayed") Integer opptOpptGamesPlayed,
+						@JsonProperty("team") PubTeam team) {
 		this.self = self;
 		this.standingDate = DateTimeUtil.getStringDate(standingDate);
 		this.rank = rank;
@@ -103,6 +105,7 @@ public class PubStanding {
 		this.opptGamesPlayed = opptGamesPlayed;
 		this.opptOpptGamesWon = opptOpptGamesWon;
 		this.opptOpptGamesPlayed = opptOpptGamesPlayed;
+		this.team = team;
 	}
 
 	public URI getSelf() {
@@ -194,5 +197,8 @@ public class PubStanding {
 	}
 	public Integer getOpptOpptGamesPlayed() {
 		return opptOpptGamesPlayed;
+	}
+	public PubTeam getTeam() {
+		return team;
 	}
 }
