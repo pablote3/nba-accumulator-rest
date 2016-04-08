@@ -22,7 +22,7 @@ import com.rossotti.basketball.util.DateTimeUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:applicationContext.xml"})
-public class GameServiceTest {
+public class GameServiceBeanTest {
 	@Autowired
 	private GameServiceBean gameServiceBean;
 

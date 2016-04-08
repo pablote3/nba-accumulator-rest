@@ -14,23 +14,23 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rossotti.basketball.app.provider.JsonProvider;
-import com.rossotti.basketball.app.service.RosterPlayerServiceBean;
-import com.rossotti.basketball.client.dto.BoxScorePlayerDTO;
+import com.rossotti.basketball.app.service.OfficialServiceBean;
 import com.rossotti.basketball.client.dto.GameDTO;
+import com.rossotti.basketball.client.dto.OfficialDTO;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
-import com.rossotti.basketball.dao.model.BoxScorePlayer;
+import com.rossotti.basketball.dao.model.GameOfficial;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:applicationContext.xml"})
-public class RosterPlayerServiceTest {
+public class OfficialServiceBeanTest {
 	@Autowired
-	private RosterPlayerServiceBean rosterPlayerServiceBean;
+	private OfficialServiceBean officialServiceBean;
 
 	private ObjectMapper mapper = JsonProvider.buildObjectMapper();
 
 	@Test
-	public void getBoxScorePlayers_Found() {
+	public void mapGameOfficials_Found() {
 		GameDTO gameDTO = null;
 		try {
 			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockClient/gameClient_Valid.json");
@@ -38,18 +38,16 @@ public class RosterPlayerServiceTest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		OfficialDTO[] officialsDTO = gameDTO.officials;
 		LocalDate gameDate = DateTimeUtil.getLocalDate(gameDTO.event_information.getStart_date_time());
-		String awayTeamKey = gameDTO.away_team.getTeam_id();
-		BoxScorePlayerDTO[] awayBoxScorePlayerDTO = gameDTO.away_stats;
-		List<BoxScorePlayer> awayBoxScorePlayers = rosterPlayerServiceBean.getBoxScorePlayers(awayBoxScorePlayerDTO, gameDate, awayTeamKey);
-		Assert.assertEquals(4, awayBoxScorePlayers.size());
-		Assert.assertEquals((short)4, awayBoxScorePlayers.get(2).getReboundsDefense().shortValue());
-		Assert.assertEquals("12", awayBoxScorePlayers.get(2).getRosterPlayer().getNumber());
-		Assert.assertEquals("Caldwell-Pope", awayBoxScorePlayers.get(2).getRosterPlayer().getPlayer().getLastName());
+		List<GameOfficial> officials = officialServiceBean.getGameOfficials(officialsDTO, gameDate);
+		Assert.assertEquals(3, officials.size());
+		Assert.assertEquals("Roe", officials.get(2).getOfficial().getLastName());
+		Assert.assertEquals("45", officials.get(2).getOfficial().getNumber());
 	}
 
 	@Test(expected=NoSuchEntityException.class)
-	public void getBoxScorePlayers_NotFound() {
+	public void mapGameOfficials_NotFound() {
 		GameDTO gameDTO = null;
 		try {
 			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockClient/gameClient_Invalid.json");
@@ -57,9 +55,8 @@ public class RosterPlayerServiceTest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		BoxScorePlayerDTO[] awayBoxScorePlayerDTO = gameDTO.away_stats;
+		OfficialDTO[] officialsDTO = gameDTO.officials;
 		LocalDate gameDate = DateTimeUtil.getLocalDate(gameDTO.event_information.getStart_date_time());
-		String awayTeamKey = gameDTO.away_team.getTeam_id();
-		rosterPlayerServiceBean.getBoxScorePlayers(awayBoxScorePlayerDTO, gameDate, awayTeamKey);
+		officialServiceBean.getGameOfficials(officialsDTO, gameDate);
 	}
 }
