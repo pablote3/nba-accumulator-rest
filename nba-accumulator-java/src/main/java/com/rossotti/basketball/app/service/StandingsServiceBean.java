@@ -1,9 +1,15 @@
 package com.rossotti.basketball.app.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +17,11 @@ import com.rossotti.basketball.client.dto.StandingDTO;
 import com.rossotti.basketball.client.dto.StandingsDTO;
 import com.rossotti.basketball.dao.StandingDAO;
 import com.rossotti.basketball.dao.TeamDAO;
+import com.rossotti.basketball.dao.model.BoxScore;
+import com.rossotti.basketball.dao.model.BoxScore.Result;
+import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.model.Standing;
+import com.rossotti.basketball.dao.model.StandingRecord;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
@@ -21,6 +31,11 @@ public class StandingsServiceBean {
 
 	@Autowired
 	private TeamDAO teamDAO;
+
+	@Autowired
+	private GameServiceBean gameServiceBean;
+
+	private final Logger logger = LoggerFactory.getLogger(StandingsServiceBean.class);
 
 	public List<Standing> getStandings(StandingsDTO standingsDTO) {
 		LocalDate asOfDate = DateTimeUtil.getLocalDate(standingsDTO.standings_date);
@@ -58,7 +73,6 @@ public class StandingsServiceBean {
 			standing.setPointDifferentialPerGame(standingDTO.getPoint_differential_per_game());
 			standings.add(standing);
 		}
-
 		return standings;
 	}
 
@@ -80,5 +94,73 @@ public class StandingsServiceBean {
 
 	public Standing deleteStanding(String teamKey, LocalDate asOfDate) {
 		return standingDAO.deleteStanding(teamKey, asOfDate);
+	}
+
+	public void calculateStrengthOfSchedule(Standing standing, Map<String, StandingRecord> standingsMap) {
+		String teamKey = standing.getTeam().getTeamKey();
+		BoxScore opptBoxScore;
+		Integer opptHeadToHead;
+		Integer opptGamesWon = 0;
+		Integer opptGamesPlayed = 0;
+		Integer opptOpptGamesWon = 0;
+		Integer opptOpptGamesPlayed = 0;
+		List<Game> completeGames = gameServiceBean.findByDateTeamSeason(standing.getStandingDate(), teamKey);
+
+		Map<String, StandingRecord> headToHeadMap = new HashMap<String, StandingRecord>();
+		for (int i = 0; i < completeGames.size(); i++) {
+			int opptBoxScoreId = completeGames.get(i).getBoxScores().get(0).getTeam().getTeamKey().equals(teamKey) ? 1 : 0;
+			opptBoxScore = completeGames.get(i).getBoxScores().get(opptBoxScoreId);
+			String opptTeamKey = opptBoxScore.getTeam().getTeamKey();
+			opptHeadToHead = opptBoxScore.getResult() != null && opptBoxScore.getResult().equals(Result.Win) ? 1 : 0;
+			if (headToHeadMap.get(opptTeamKey) == null) {
+				headToHeadMap.put(opptTeamKey, new StandingRecord(opptHeadToHead, 1, standingsMap.get(teamKey).getGamesWon(), standingsMap.get(teamKey).getGamesPlayed()));
+			}
+			else {
+				headToHeadMap.get(opptTeamKey).setGamesWon(headToHeadMap.get(opptTeamKey).getGamesWon() + opptHeadToHead);
+				headToHeadMap.get(opptTeamKey).setGamesPlayed(headToHeadMap.get(opptTeamKey).getGamesPlayed() + 1);
+				headToHeadMap.get(opptTeamKey).setOpptGamesWon(headToHeadMap.get(opptTeamKey).getOpptGamesWon() + standingsMap.get(teamKey).getGamesWon());
+				headToHeadMap.get(opptTeamKey).setOpptGamesPlayed(headToHeadMap.get(opptTeamKey).getOpptGamesPlayed() + standingsMap.get(teamKey).getGamesPlayed());
+			}
+		}
+
+		for (int i = 0; i < completeGames.size(); i++) {
+			int opptBoxScoreId = completeGames.get(i).getBoxScores().get(0).getTeam().getTeamKey().equals(teamKey) ? 1 : 0;
+			opptBoxScore = completeGames.get(i).getBoxScores().get(opptBoxScoreId);
+			String opptTeamKey = opptBoxScore.getTeam().getTeamKey();
+
+			opptGamesWon = opptGamesWon + standingsMap.get(opptTeamKey).getGamesWon() - headToHeadMap.get(opptTeamKey).getGamesWon();
+			opptGamesPlayed = opptGamesPlayed + standingsMap.get(opptTeamKey).getGamesPlayed() - headToHeadMap.get(opptTeamKey).getGamesPlayed();
+			opptOpptGamesWon = opptOpptGamesWon + standingsMap.get(opptTeamKey).getOpptGamesWon() - headToHeadMap.get(opptTeamKey).getOpptGamesWon();
+			opptOpptGamesPlayed = opptOpptGamesPlayed + standingsMap.get(opptTeamKey).getOpptGamesPlayed() - headToHeadMap.get(opptTeamKey).getOpptGamesPlayed();
+
+			logger.debug('\n' + "SubTeamStanding " + opptTeamKey);
+			logger.debug('\n' + "  Opponent Games Won/Played: " + opptGamesWon + " - " + opptGamesPlayed + " = " + 
+									standingsMap.get(opptTeamKey).getGamesWon() + " - " + standingsMap.get(opptTeamKey).getGamesPlayed() + " minus " + 
+									headToHeadMap.get(opptTeamKey).getGamesWon() + " - " + headToHeadMap.get(opptTeamKey).getGamesPlayed());
+			logger.debug('\n' + "  OpptOppt Games Won/Played: " + opptOpptGamesWon + " - " + opptOpptGamesPlayed + " = " + 
+									standingsMap.get(opptTeamKey).getOpptGamesWon() + " - " + standingsMap.get(opptTeamKey).getOpptGamesPlayed() + " minus " + 
+									headToHeadMap.get(opptTeamKey).getOpptGamesWon() + " - " + headToHeadMap.get(opptTeamKey).getOpptGamesPlayed());
+
+			if (opptGamesWon > opptGamesPlayed)	 { 
+				//head to head wins exceed opponent wins, should only occur until wins start to occur
+				//observed occurrence when loading standings before entire day's games were loaded
+				logger.info('\n' + "Paul - crazy opptGamesWon more than opptGamesPlayed!");
+				opptGamesWon = opptGamesPlayed;
+			}
+		}
+
+		standing.setOpptGamesWon(opptGamesWon);
+		standing.setOpptGamesPlayed(opptGamesPlayed);
+		standing.setOpptOpptGamesWon(opptOpptGamesWon);
+		standing.setOpptOpptGamesPlayed(opptOpptGamesPlayed);
+
+		BigDecimal opptRecord = opptGamesPlayed == 0 ? new BigDecimal(0) : new BigDecimal(opptGamesWon).divide(new BigDecimal(opptGamesPlayed), 4, RoundingMode.HALF_UP);
+		BigDecimal opptOpponentRecord = opptOpptGamesWon == 0 ? new BigDecimal(0) : new BigDecimal(opptOpptGamesWon).divide(new BigDecimal(opptOpptGamesPlayed), 4, RoundingMode.HALF_UP);
+		logger.debug('\n' + "  Opponent Games Won/Played = " + opptGamesWon + "-" + opptGamesPlayed);
+		logger.debug('\n' + "  OpptOppt Games Won/Played = " + opptOpptGamesWon + "-" + opptOpptGamesPlayed);
+		logger.debug('\n' + "  Opponent Record = " + opptRecord);
+		logger.debug('\n' + "    OpptOppt Record = " + opptOpponentRecord);
+		logger.info('\n' + "  Strenghth Of Schedule " + teamKey + " " + opptRecord.multiply(new BigDecimal(2)).add(opptOpponentRecord).divide(new BigDecimal(3), 4, RoundingMode.HALF_UP));
+		this.updateStanding(standing);
 	}
 }

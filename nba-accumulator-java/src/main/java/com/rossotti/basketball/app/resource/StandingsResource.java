@@ -1,7 +1,9 @@
 package com.rossotti.basketball.app.resource;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -19,12 +21,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.rossotti.basketball.app.service.GameServiceBean;
 import com.rossotti.basketball.app.service.StandingsServiceBean;
 import com.rossotti.basketball.client.FileClientBean;
 import com.rossotti.basketball.client.RestClientBean;
 import com.rossotti.basketball.client.dto.StandingsDTO;
+import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.model.Standing;
+import com.rossotti.basketball.dao.model.StandingRecord;
 import com.rossotti.basketball.dao.pub.PubStanding;
 import com.rossotti.basketball.dao.pub.PubStandings;
 import com.rossotti.basketball.util.DateTimeUtil;
@@ -40,6 +45,9 @@ public class StandingsResource {
 
 	@Autowired
 	private StandingsServiceBean standingsServiceBean;
+
+	@Autowired
+	private GameServiceBean gameServiceBean;
 
 	@Autowired
 	private PropertyBean propertyBean;
@@ -81,6 +89,52 @@ public class StandingsResource {
 				}
 
 				activeStandings = standingsServiceBean.getStandings(standingsDTO);
+
+				//build standings map
+				Map<String, StandingRecord> standingsMap = new HashMap<String, StandingRecord>();
+				StandingRecord standingRecord;
+				for (int i = 0; i < activeStandings.size(); i++) {
+					standingRecord = new StandingRecord((int)activeStandings.get(i).getGamesWon(), (int)activeStandings.get(i).getGamesPlayed(), 0, 0);
+					standingsMap.put(activeStandings.get(i).getTeam().getTeamKey(), standingRecord);
+				}
+
+				//create team standing
+				Standing createTeamStanding;
+				List<Game> completeGames;
+				Game completedGame;
+				String opptTeamKey;
+				Integer opptGamesWon;
+				Integer opptGamesPlayed;
+				for (int i = 0; i < activeStandings.size(); i++) {
+					createTeamStanding = activeStandings.get(i);
+					String teamKey = createTeamStanding.getTeam().getTeamKey();
+					opptGamesWon = 0;
+					opptGamesPlayed = 0;
+					completeGames = gameServiceBean.findByDateTeamSeason(asOfDate, teamKey);
+					for (int k = 0; k < completeGames.size(); k++) {
+						completedGame = completeGames.get(k);
+						int opptBoxScoreId = completedGame.getBoxScores().get(0).getTeam().equals(createTeamStanding.getTeam()) ? 1 : 0;
+						opptTeamKey = completedGame.getBoxScores().get(opptBoxScoreId).getTeam().getTeamKey();
+						opptGamesWon = opptGamesWon + standingsMap.get(opptTeamKey).getGamesWon();
+						opptGamesPlayed = opptGamesPlayed + standingsMap.get(opptTeamKey).getGamesPlayed();
+
+						String completedGameDate = DateTimeUtil.getStringDate(completedGame.getGameDateTime());
+						logger.debug('\n' + ("  StandingsMap " + teamKey + " " + completedGameDate + " " + opptTeamKey + 
+											" Games Won/Played: " + standingsMap.get(opptTeamKey).getGamesWon() + " - " + standingsMap.get(opptTeamKey).getGamesPlayed()));
+					}
+					standingsMap.get(teamKey).setOpptGamesWon(opptGamesWon);
+					standingsMap.get(teamKey).setOpptGamesPlayed(opptGamesPlayed);
+					standingsServiceBean.createStanding(createTeamStanding);
+				}
+
+				//update team standing
+				Standing updateTeamStanding;
+				for (int i = 0; i < activeStandings.size(); i++) {
+					updateTeamStanding = activeStandings.get(i);
+					String standingTeam = updateTeamStanding.getTeam().getTeamKey();
+					updateTeamStanding = standingsServiceBean.findStanding(standingTeam, asOfDate);
+					standingsServiceBean.calculateStrengthOfSchedule(updateTeamStanding, standingsMap);
+				}
 			}
 
 			List<PubStanding> listPubStandings = new ArrayList<PubStanding>();
