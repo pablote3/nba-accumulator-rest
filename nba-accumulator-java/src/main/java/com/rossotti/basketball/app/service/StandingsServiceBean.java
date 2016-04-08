@@ -141,7 +141,7 @@ public class StandingsServiceBean {
 									standingsMap.get(opptTeamKey).getOpptGamesWon() + " - " + standingsMap.get(opptTeamKey).getOpptGamesPlayed() + " minus " + 
 									headToHeadMap.get(opptTeamKey).getOpptGamesWon() + " - " + headToHeadMap.get(opptTeamKey).getOpptGamesPlayed());
 
-			if (opptGamesWon > opptGamesPlayed)	 { 
+			if (opptGamesWon > opptGamesPlayed) { 
 				//head to head wins exceed opponent wins, should only occur until wins start to occur
 				//observed occurrence when loading standings before entire day's games were loaded
 				logger.info('\n' + "Crazy opptGamesWon more than opptGamesPlayed!");
