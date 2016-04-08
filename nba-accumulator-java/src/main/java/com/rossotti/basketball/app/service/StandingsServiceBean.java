@@ -144,7 +144,7 @@ public class StandingsServiceBean {
 			if (opptGamesWon > opptGamesPlayed)	 { 
 				//head to head wins exceed opponent wins, should only occur until wins start to occur
 				//observed occurrence when loading standings before entire day's games were loaded
-				logger.info('\n' + "Paul - crazy opptGamesWon more than opptGamesPlayed!");
+				logger.info('\n' + "Crazy opptGamesWon more than opptGamesPlayed!");
 				opptGamesWon = opptGamesPlayed;
 			}
 		}
@@ -155,12 +155,12 @@ public class StandingsServiceBean {
 		standing.setOpptOpptGamesPlayed(opptOpptGamesPlayed);
 
 		BigDecimal opptRecord = opptGamesPlayed == 0 ? new BigDecimal(0) : new BigDecimal(opptGamesWon).divide(new BigDecimal(opptGamesPlayed), 4, RoundingMode.HALF_UP);
-		BigDecimal opptOpponentRecord = opptOpptGamesWon == 0 ? new BigDecimal(0) : new BigDecimal(opptOpptGamesWon).divide(new BigDecimal(opptOpptGamesPlayed), 4, RoundingMode.HALF_UP);
+		BigDecimal opptOpptRecord = opptOpptGamesWon == 0 ? new BigDecimal(0) : new BigDecimal(opptOpptGamesWon).divide(new BigDecimal(opptOpptGamesPlayed), 4, RoundingMode.HALF_UP);
 		logger.debug('\n' + "  Opponent Games Won/Played = " + opptGamesWon + "-" + opptGamesPlayed);
 		logger.debug('\n' + "  OpptOppt Games Won/Played = " + opptOpptGamesWon + "-" + opptOpptGamesPlayed);
 		logger.debug('\n' + "  Opponent Record = " + opptRecord);
-		logger.debug('\n' + "    OpptOppt Record = " + opptOpponentRecord);
-		logger.info('\n' + "  Strenghth Of Schedule " + teamKey + " " + opptRecord.multiply(new BigDecimal(2)).add(opptOpponentRecord).divide(new BigDecimal(3), 4, RoundingMode.HALF_UP));
+		logger.debug('\n' + "  OpptOppt Record = " + opptOpptRecord);
+		logger.info('\n' + "  Strenghth Of Schedule " + teamKey + " " + opptRecord.multiply(new BigDecimal(2)).add(opptOpptRecord).divide(new BigDecimal(3), 4, RoundingMode.HALF_UP));
 		this.updateStanding(standing);
 	}
 }
