@@ -1,4 +1,4 @@
-package com.rossotti.basketball.app.resource;
+package com.rossotti.basketball.app.service;
 
 import java.io.File;
 
@@ -10,9 +10,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.app.exception.PropertyException;
+import com.rossotti.basketball.app.resource.ClientSource;
 
 @Service
-
 @Configuration
 @PropertySource("service.properties")
 public class PropertyBean {
