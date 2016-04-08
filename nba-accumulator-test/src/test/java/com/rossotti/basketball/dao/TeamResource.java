@@ -1,4 +1,4 @@
-package com.rossotti.basketball;
+package com.rossotti.basketball.dao;
 
 import static com.jayway.restassured.RestAssured.expect;
 import static org.hamcrest.Matchers.equalTo;
@@ -9,7 +9,7 @@ import org.junit.Test;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.parsing.Parser;
 
-public class ResourceTeam {
+public class TeamResource {
 	
 	@Before
 	 public void setUp(){
