@@ -45,7 +45,7 @@ public class GameServiceBeanTest {
 
 	@Test
 	public void findByDateTeamSeason_Found() {
-		List<Game> previousGames = gameServiceBean.findByDateTeamSeason(new LocalDate(2015, 10, 29), "baltimore-bullets");
-		Assert.assertEquals(3, previousGames.size());
+		List<Game> previousGames = gameServiceBean.findByDateTeamSeason(new LocalDate(2015, 11, 26), "sacramento-hornets");
+		Assert.assertEquals(2, previousGames.size());
 	}
 }
