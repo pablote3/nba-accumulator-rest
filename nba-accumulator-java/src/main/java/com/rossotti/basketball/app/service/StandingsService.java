@@ -25,7 +25,7 @@ import com.rossotti.basketball.dao.model.StandingRecord;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
-public class StandingsServiceBean {
+public class StandingsService {
 	@Autowired
 	private StandingDAO standingDAO;
 
@@ -33,9 +33,9 @@ public class StandingsServiceBean {
 	private TeamDAO teamDAO;
 
 	@Autowired
-	private GameServiceBean gameServiceBean;
+	private GameService gameServiceBean;
 
-	private final Logger logger = LoggerFactory.getLogger(StandingsServiceBean.class);
+	private final Logger logger = LoggerFactory.getLogger(StandingsService.class);
 
 	public List<Standing> getStandings(StandingsDTO standingsDTO) {
 		LocalDate asOfDate = DateTimeUtil.getLocalDate(standingsDTO.standings_date);

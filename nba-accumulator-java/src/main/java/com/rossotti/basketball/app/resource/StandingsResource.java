@@ -21,12 +21,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rossotti.basketball.app.service.GameServiceBean;
-import com.rossotti.basketball.app.service.PropertyServiceBean;
-import com.rossotti.basketball.app.service.StandingsServiceBean;
-import com.rossotti.basketball.client.FileClientBean;
-import com.rossotti.basketball.client.RestClientBean;
+import com.rossotti.basketball.app.service.GameService;
+import com.rossotti.basketball.app.service.PropertyService;
+import com.rossotti.basketball.app.service.StandingsService;
 import com.rossotti.basketball.client.dto.StandingsDTO;
+import com.rossotti.basketball.client.service.FileClientService;
+import com.rossotti.basketball.client.service.RestClientService;
 import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.model.Standing;
@@ -39,19 +39,19 @@ import com.rossotti.basketball.util.DateTimeUtil;
 @Path("/score/roster")
 public class StandingsResource {
 	@Autowired
-	private RestClientBean restClientBean;
+	private RestClientService restClientService;
 
 	@Autowired
-	private FileClientBean fileClientBean;
+	private FileClientService fileClientService;
 
 	@Autowired
-	private StandingsServiceBean standingsServiceBean;
+	private StandingsService standingsService;
 
 	@Autowired
-	private GameServiceBean gameServiceBean;
+	private GameService gameService;
 
 	@Autowired
-	private PropertyServiceBean propertyBean;
+	private PropertyService propertyService;
 
 	private final Logger logger = LoggerFactory.getLogger(StandingsResource.class);
 
@@ -71,25 +71,25 @@ public class StandingsResource {
 			logger.info('\n' + "Standings ready to be loaded: " + event);
 
 			StandingsDTO standingsDTO = null;
-			ClientSource clientSource = propertyBean.getProperty_ClientSource("accumulator.source.standings");
+			ClientSource clientSource = propertyService.getProperty_ClientSource("accumulator.source.standings");
 			if (clientSource == ClientSource.File) {
-				standingsDTO = fileClientBean.retrieveRoster(event);
+				standingsDTO = fileClientService.retrieveRoster(event);
 			}
 			else if (clientSource == ClientSource.Api) {
-				standingsDTO = restClientBean.retrieveRoster(event);
+				standingsDTO = restClientService.retrieveRoster(event);
 			}
 
 			if (standingsDTO.httpStatus == 200) {
 				//delete standings for asOfDate if they exist
-				List<Standing> oldStandings = standingsServiceBean.findStandings(asOfDate);
+				List<Standing> oldStandings = standingsService.findStandings(asOfDate);
 				if (!oldStandings.isEmpty() && oldStandings.size() > 0) {
 					logger.info("Deleting standings for " + asOfDateString);
 					for (int i = 0; i < oldStandings.size(); i++) {
-						standingsServiceBean.deleteStanding(oldStandings.get(i).getTeam().getTeamKey(), asOfDate);
+						standingsService.deleteStanding(oldStandings.get(i).getTeam().getTeamKey(), asOfDate);
 					}
 				}
 
-				activeStandings = standingsServiceBean.getStandings(standingsDTO);
+				activeStandings = standingsService.getStandings(standingsDTO);
 
 				//build standings map
 				Map<String, StandingRecord> standingsMap = new HashMap<String, StandingRecord>();
@@ -111,7 +111,7 @@ public class StandingsResource {
 					String teamKey = createTeamStanding.getTeam().getTeamKey();
 					opptGamesWon = 0;
 					opptGamesPlayed = 0;
-					completeGames = gameServiceBean.findByDateTeamSeason(asOfDate, teamKey);
+					completeGames = gameService.findByDateTeamSeason(asOfDate, teamKey);
 					for (int k = 0; k < completeGames.size(); k++) {
 						completedGame = completeGames.get(k);
 						int opptBoxScoreId = completedGame.getBoxScores().get(0).getTeam().equals(createTeamStanding.getTeam()) ? 1 : 0;
@@ -125,7 +125,7 @@ public class StandingsResource {
 					}
 					standingsMap.get(teamKey).setOpptGamesWon(opptGamesWon);
 					standingsMap.get(teamKey).setOpptGamesPlayed(opptGamesPlayed);
-					standingsServiceBean.createStanding(createTeamStanding);
+					standingsService.createStanding(createTeamStanding);
 				}
 
 				//update team standing
@@ -133,8 +133,8 @@ public class StandingsResource {
 				for (int i = 0; i < activeStandings.size(); i++) {
 					updateTeamStanding = activeStandings.get(i);
 					String standingTeam = updateTeamStanding.getTeam().getTeamKey();
-					updateTeamStanding = standingsServiceBean.findStanding(standingTeam, asOfDate);
-					standingsServiceBean.calculateStrengthOfSchedule(updateTeamStanding, standingsMap);
+					updateTeamStanding = standingsService.findStanding(standingTeam, asOfDate);
+					standingsService.calculateStrengthOfSchedule(updateTeamStanding, standingsMap);
 				}
 			}
 

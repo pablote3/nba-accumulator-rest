@@ -11,7 +11,7 @@ import com.rossotti.basketball.dao.GameDAO;
 import com.rossotti.basketball.dao.model.Game;
 
 @Service
-public class GameServiceBean {
+public class GameService {
 	@Autowired
 	private GameDAO gameDAO;
 

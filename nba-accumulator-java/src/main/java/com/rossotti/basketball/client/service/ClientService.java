@@ -1,4 +1,4 @@
-package com.rossotti.basketball.client;
+package com.rossotti.basketball.client.service;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -12,15 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.app.exception.PropertyException;
-import com.rossotti.basketball.app.service.PropertyServiceBean;
+import com.rossotti.basketball.app.service.PropertyService;
 
 @Service
 
-public class ClientBean {
+public class ClientService {
 	@Autowired
-	private PropertyServiceBean propertyBean;
+	private PropertyService propertyBean;
 	
-	private final Logger logger = LoggerFactory.getLogger(ClientBean.class);
+	private final Logger logger = LoggerFactory.getLogger(ClientService.class);
 	private Client client;
 
 	ClientRequestFilter clientFilter = new ClientRequestFilter() {

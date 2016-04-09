@@ -9,84 +9,84 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.rossotti.basketball.app.exception.PropertyException;
 import com.rossotti.basketball.app.resource.ClientSource;
-import com.rossotti.basketball.app.service.PropertyServiceBean;
+import com.rossotti.basketball.app.service.PropertyService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:applicationContext.xml"})
-public class PropertyBeanTest {
+public class PropertyServiceTest {
 	@Autowired
-	private PropertyServiceBean propertyBean;
+	private PropertyService propertyService;
 
 	@Test
 	public void getProperty_String_Valid() {
-		String prop = propertyBean.getProperty_String("accumulator.string.valid");
+		String prop = propertyService.getProperty_String("accumulator.string.valid");
 		Assert.assertEquals("validString", prop);
 	}
 	@Test(expected=PropertyException.class)
 	public void getProperty_String_Empty() {
-		propertyBean.getProperty_String("accumulator.string.empty");
+		propertyService.getProperty_String("accumulator.string.empty");
 	}
 	@Test(expected=PropertyException.class)
 	public void getProperty_String_Null() {
-		propertyBean.getProperty_String("accumulator.string.null");
+		propertyService.getProperty_String("accumulator.string.null");
 	}
 
 	@Test
 	public void getProperty_Http_Valid() {
-		String prop = propertyBean.getProperty_Http("accumulator.http.valid");
+		String prop = propertyService.getProperty_Http("accumulator.http.valid");
 		Assert.assertEquals("https://erikberg.com/nba/boxscore/", prop);
 	}
 	@Test(expected=PropertyException.class)
 	public void getProperty_Http_Invalid() {
-		propertyBean.getProperty_Http("accumulator.http.invalid");
+		propertyService.getProperty_Http("accumulator.http.invalid");
 	}
 	@Test(expected=PropertyException.class)
 	public void getProperty_Http_Empty() {
-		propertyBean.getProperty_Http("accumulator.http.empty");
+		propertyService.getProperty_Http("accumulator.http.empty");
 	}
 	@Test(expected=PropertyException.class)
 	public void getProperty_Http_Null() {
-		propertyBean.getProperty_Http("accumulator.html.null");
+		propertyService.getProperty_Http("accumulator.html.null");
 	}
 
 	@Test
 	public void getProperty_Path_Valid() {
-		String prop = propertyBean.getProperty_Path("accumulator.path.valid");
+		String prop = propertyService.getProperty_Path("accumulator.path.valid");
 		Assert.assertEquals("/usr/bin", prop);
 	}
 	@Test(expected=PropertyException.class)
 	public void getProperty_Path_Invalid() {
-		propertyBean.getProperty_Path("accumulator.path.invalid");
+		propertyService.getProperty_Path("accumulator.path.invalid");
 	}
 	@Test(expected=PropertyException.class)
 	public void getProperty_Path_Empty() {
-		propertyBean.getProperty_Path("accumulator.path.empty");
+		propertyService.getProperty_Path("accumulator.path.empty");
 	}
 	@Test(expected=PropertyException.class)
 	public void getProperty_Path_Null() {
-		propertyBean.getProperty_Path("accumulator.path.null");
+		propertyService.getProperty_Path("accumulator.path.null");
 	}
 
 	@Test
 	public void getProperty_ClientSource_Valid_Api() {
-		ClientSource prop = propertyBean.getProperty_ClientSource("accumulator.clientsource.valid.api");
+		ClientSource prop = propertyService.getProperty_ClientSource("accumulator.clientsource.valid.api");
 		Assert.assertEquals(ClientSource.Api, prop);
 	}
 	@Test
 	public void getProperty_ClientSource_Valid_File() {
-		ClientSource prop = propertyBean.getProperty_ClientSource("accumulator.clientsource.valid.file");
+		ClientSource prop = propertyService.getProperty_ClientSource("accumulator.clientsource.valid.file");
 		Assert.assertEquals(ClientSource.File, prop);
 	}
 	@Test(expected=PropertyException.class)
 	public void getProperty_ClientSource_Invalid() {
-		propertyBean.getProperty_ClientSource("accumulator.clientsource.invalid.enum");
+		propertyService.getProperty_ClientSource("accumulator.clientsource.invalid.enum");
 	}
 	@Test(expected=PropertyException.class)
 	public void getProperty_ClientSource_Empty() {
-		propertyBean.getProperty_ClientSource("accumulator.clientsource.invalid.empty");
+		propertyService.getProperty_ClientSource("accumulator.clientsource.invalid.empty");
 	}
 	@Test(expected=PropertyException.class)
 	public void getProperty_ClientSource_Null() {
-		propertyBean.getProperty_ClientSource("accumulator.clientsource.invalid.null");
+		propertyService.getProperty_ClientSource("accumulator.clientsource.invalid.null");
 	}
 }

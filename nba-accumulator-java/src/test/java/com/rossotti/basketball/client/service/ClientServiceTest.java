@@ -1,4 +1,4 @@
-package com.rossotti.basketball.client;
+package com.rossotti.basketball.client.service;
 
 import java.io.IOException;
 
@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import com.rossotti.basketball.util.ThreadSleep;
 
-public class ClientTest {
+public class ClientServiceTest {
 	private Client client;
 
 	@Before

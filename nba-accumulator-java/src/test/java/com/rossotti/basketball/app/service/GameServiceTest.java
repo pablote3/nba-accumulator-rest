@@ -15,16 +15,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rossotti.basketball.app.provider.JsonProvider;
-import com.rossotti.basketball.app.service.GameServiceBean;
+import com.rossotti.basketball.app.service.GameService;
 import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:applicationContext.xml"})
-public class GameServiceBeanTest {
+public class GameServiceTest {
 	@Autowired
-	private GameServiceBean gameServiceBean;
+	private GameService gameService;
 
 	private ObjectMapper mapper = JsonProvider.buildObjectMapper();
 
@@ -39,13 +39,13 @@ public class GameServiceBeanTest {
 		}
 		LocalDate gameDate = DateTimeUtil.getLocalDate(gameDTO.event_information.getStart_date_time());
 		String awayTeamKey = gameDTO.away_team.getTeam_id();
-		LocalDateTime previousGameDate = gameServiceBean.findPreviousGameDateTime(gameDate, awayTeamKey);
+		LocalDateTime previousGameDate = gameService.findPreviousGameDateTime(gameDate, awayTeamKey);
 		Assert.assertEquals(new LocalDateTime("2015-11-24T10:00"), previousGameDate);
 	}
 
 	@Test
 	public void findByDateTeamSeason_Found() {
-		List<Game> previousGames = gameServiceBean.findByDateTeamSeason(new LocalDate(2015, 11, 26), "sacramento-hornets");
+		List<Game> previousGames = gameService.findByDateTeamSeason(new LocalDate(2015, 11, 26), "sacramento-hornets");
 		Assert.assertEquals(2, previousGames.size());
 	}
 }

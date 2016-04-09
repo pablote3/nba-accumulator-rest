@@ -1,4 +1,4 @@
-package com.rossotti.basketball.client;
+package com.rossotti.basketball.client.service;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,16 +17,16 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rossotti.basketball.app.provider.JsonProvider;
-import com.rossotti.basketball.app.service.PropertyServiceBean;
+import com.rossotti.basketball.app.service.PropertyService;
 import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.client.dto.RosterDTO;
 import com.rossotti.basketball.client.dto.StandingsDTO;
 import com.rossotti.basketball.client.dto.StatsDTO;
 
 @Service
-public class FileClientBean {
+public class FileClientService {
 	@Autowired
-	private PropertyServiceBean propertyBean;
+	private PropertyService propertyBean;
 
 	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
 

@@ -17,13 +17,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rossotti.basketball.app.service.GameServiceBean;
-import com.rossotti.basketball.app.service.OfficialServiceBean;
-import com.rossotti.basketball.app.service.PropertyServiceBean;
-import com.rossotti.basketball.app.service.RosterPlayerServiceBean;
-import com.rossotti.basketball.client.FileClientBean;
-import com.rossotti.basketball.client.RestClientBean;
+import com.rossotti.basketball.app.service.GameService;
+import com.rossotti.basketball.app.service.OfficialService;
+import com.rossotti.basketball.app.service.PropertyService;
+import com.rossotti.basketball.app.service.RosterPlayerService;
 import com.rossotti.basketball.client.dto.GameDTO;
+import com.rossotti.basketball.client.service.FileClientService;
+import com.rossotti.basketball.client.service.RestClientService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.BoxScore.Result;
@@ -38,22 +38,22 @@ import com.rossotti.basketball.util.DateTimeUtil;
 @Path("/score/games")
 public class ScoreResource {
 	@Autowired
-	private RestClientBean restClientBean;
+	private RestClientService restClientService;
 
 	@Autowired
-	private FileClientBean fileClientBean;
+	private FileClientService fileClientService;
 
 	@Autowired
-	private GameServiceBean gameServiceBean;
+	private GameService gameService;
 
 	@Autowired
-	private OfficialServiceBean officialServiceBean;
+	private OfficialService officialService;
 
 	@Autowired
-	private RosterPlayerServiceBean rosterPlayerServiceBean;
+	private RosterPlayerService rosterPlayerService;
 
 	@Autowired
-	private PropertyServiceBean propertyBean;
+	private PropertyService propertyService;
 
 	private final Logger logger = LoggerFactory.getLogger(ScoreResource.class);
 
@@ -80,12 +80,12 @@ public class ScoreResource {
 				logger.info('\n' + "Scheduled game ready to be scored: " + event);
 
 				GameDTO gameDTO = null;
-				ClientSource clientSource = propertyBean.getProperty_ClientSource("accumulator.source.boxScore");
+				ClientSource clientSource = propertyService.getProperty_ClientSource("accumulator.source.boxScore");
 				if (clientSource == ClientSource.File) {
-					gameDTO = fileClientBean.retrieveBoxScore(event);
+					gameDTO = fileClientService.retrieveBoxScore(event);
 				}
 				else if (clientSource == ClientSource.Api) {
-					gameDTO = restClientBean.retrieveBoxScore(event);
+					gameDTO = restClientService.retrieveBoxScore(event);
 				}
 
 				if (gameDTO.httpStatus == 200) {
@@ -95,9 +95,9 @@ public class ScoreResource {
 						homeBoxScore.updateTotals(gameDTO.home_totals);
 						awayBoxScore.updatePeriodScores(gameDTO.away_period_scores);
 						homeBoxScore.updatePeriodScores(gameDTO.home_period_scores);
-						awayBoxScore.setBoxScorePlayers(rosterPlayerServiceBean.getBoxScorePlayers(gameDTO.away_stats, gameDate, awayTeamKey));
-						homeBoxScore.setBoxScorePlayers(rosterPlayerServiceBean.getBoxScorePlayers(gameDTO.home_stats, gameDate, homeTeamKey));
-						game.setGameOfficials(officialServiceBean.getGameOfficials(gameDTO.officials, gameDate));
+						awayBoxScore.setBoxScorePlayers(rosterPlayerService.getBoxScorePlayers(gameDTO.away_stats, gameDate, awayTeamKey));
+						homeBoxScore.setBoxScorePlayers(rosterPlayerService.getBoxScorePlayers(gameDTO.home_stats, gameDate, homeTeamKey));
+						game.setGameOfficials(officialService.getGameOfficials(gameDTO.officials, gameDate));
 
 						if (gameDTO.away_totals.getPoints() > gameDTO.home_totals.getPoints()) {
 							awayBoxScore.setResult(Result.Win);
@@ -108,10 +108,10 @@ public class ScoreResource {
 							homeBoxScore.setResult(Result.Win);
 						}
 
-						awayBoxScore.setDaysOff((short)DateTimeUtil.getDaysBetweenTwoDateTimes(gameServiceBean.findPreviousGameDateTime(gameDate, awayTeamKey), gameDateTime));
-						homeBoxScore.setDaysOff((short)DateTimeUtil.getDaysBetweenTwoDateTimes(gameServiceBean.findPreviousGameDateTime(gameDate, homeTeamKey), gameDateTime));
+						awayBoxScore.setDaysOff((short)DateTimeUtil.getDaysBetweenTwoDateTimes(gameService.findPreviousGameDateTime(gameDate, awayTeamKey), gameDateTime));
+						homeBoxScore.setDaysOff((short)DateTimeUtil.getDaysBetweenTwoDateTimes(gameService.findPreviousGameDateTime(gameDate, homeTeamKey), gameDateTime));
 
-						Game updatedGame = gameServiceBean.updateGame(game);
+						Game updatedGame = gameService.updateGame(game);
 						if (updatedGame.isUpdated()) {
 							logger.info("Game Scored " + awayTeamKey +  " " + awayBoxScore.getPoints() + " " + homeTeamKey +  " " + homeBoxScore.getPoints());
 						}

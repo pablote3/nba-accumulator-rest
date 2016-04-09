@@ -22,14 +22,14 @@ import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
-public class RosterPlayerServiceBean {
+public class RosterPlayerService {
 	@Autowired
 	private RosterPlayerDAO rosterPlayerDAO;
 
 	@Autowired
 	private TeamDAO teamDAO;
 
-	private final Logger logger = LoggerFactory.getLogger(RosterPlayerServiceBean.class);
+	private final Logger logger = LoggerFactory.getLogger(RosterPlayerService.class);
 
 	public List<BoxScorePlayer> getBoxScorePlayers(BoxScorePlayerDTO[] boxScorePlayerDTOs, LocalDate gameDate, String teamKey) {
 		List<BoxScorePlayer> boxScorePlayers = new ArrayList<BoxScorePlayer>();
