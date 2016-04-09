@@ -20,15 +20,15 @@ import com.rossotti.basketball.client.dto.StatsDTO;
 @Service
 public class RestClientService {
 	@Autowired
-	private ClientService clientBean;
+	private ClientService clientService;
 
 	@Autowired
-	private PropertyService propertyBean;
+	private PropertyService propertyService;
 
 	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
 
 	private StatsDTO retrieveStats(String url, StatsDTO statsDTO) {
-		Response response = clientBean.getClient().target(url).request().get();
+		Response response = clientService.getClient().target(url).request().get();
 		
 		if (response.getStatus() != 200) {
 			response.readEntity(String.class);
@@ -52,30 +52,30 @@ public class RestClientService {
 	}
 
 	public GameDTO retrieveBoxScore(String event) {
-		String url = propertyBean.getProperty_Http("xmlstats.urlBoxScore");
+		String url = propertyService.getProperty_Http("xmlstats.urlBoxScore");
 		String eventUrl = url + event + ".json";
 		GameDTO dto = new GameDTO();
 		return (GameDTO)retrieveStats(eventUrl, dto);
 	}
 
 	public RosterDTO retrieveRoster(String event) {
-		String url = propertyBean.getProperty_Http("xmlstats.urlRoster");
+		String url = propertyService.getProperty_Http("xmlstats.urlRoster");
 		String eventUrl = url + event + ".json";
 		RosterDTO dto = new RosterDTO();
 		return (RosterDTO)retrieveStats(eventUrl, dto);
 	}
 
 	public StandingsDTO retrieveStandings(String event) {
-		String url = propertyBean.getProperty_Http("xmlstats.urlStandings");
+		String url = propertyService.getProperty_Http("xmlstats.urlStandings");
 		String eventUrl = url + event + ".json";
 		StandingsDTO dto = new StandingsDTO();
 		return (StandingsDTO)retrieveStats(eventUrl, dto);
 	}
 
-	public ClientService getClientBean() {
-		return clientBean;
+	public ClientService getClientService() {
+		return clientService;
 	}
-	public void setClientBean(ClientService clientBean) {
-		this.clientBean = clientBean;
+	public void setClientService(ClientService clientService) {
+		this.clientService = clientService;
 	}
 }

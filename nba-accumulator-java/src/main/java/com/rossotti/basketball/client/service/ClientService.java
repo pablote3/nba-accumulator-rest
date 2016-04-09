@@ -18,7 +18,7 @@ import com.rossotti.basketball.app.service.PropertyService;
 
 public class ClientService {
 	@Autowired
-	private PropertyService propertyBean;
+	private PropertyService propertyService;
 	
 	private final Logger logger = LoggerFactory.getLogger(ClientService.class);
 	private Client client;
@@ -26,8 +26,8 @@ public class ClientService {
 	ClientRequestFilter clientFilter = new ClientRequestFilter() {
 		@Override
 		public void filter(ClientRequestContext requestContext) throws PropertyException {
-			String accessToken = propertyBean.getProperty_String("xmlstats.accessToken");
-			String userAgent = propertyBean.getProperty_String("xmlstats.userAgent");
+			String accessToken = propertyService.getProperty_String("xmlstats.accessToken");
+			String userAgent = propertyService.getProperty_String("xmlstats.userAgent");
 			String authHeader = "Bearer " + accessToken;
 			requestContext.getHeaders().add(HttpHeaders.AUTHORIZATION, authHeader);
 			requestContext.getHeaders().add(HttpHeaders.USER_AGENT, userAgent);
@@ -37,7 +37,7 @@ public class ClientService {
 	public Client getClient() {
 		client = ClientBuilder.newBuilder().build();
 		client.register(clientFilter);
-		logger.info('\n' + "Client bean initialized");
+		logger.info('\n' + "Client service initialized");
 		return client;
 	}
 	public void setClient(Client client) {

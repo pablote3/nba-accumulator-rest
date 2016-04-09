@@ -26,7 +26,7 @@ import com.rossotti.basketball.client.dto.StatsDTO;
 @Service
 public class FileClientService {
 	@Autowired
-	private PropertyService propertyBean;
+	private PropertyService propertyService;
 
 	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
 
@@ -66,19 +66,19 @@ public class FileClientService {
 	}
 
 	public GameDTO retrieveBoxScore(String event) {
-		String path = propertyBean.getProperty_Path("xmlstats.fileBoxScore");
+		String path = propertyService.getProperty_Path("xmlstats.fileBoxScore");
 		GameDTO dto = new GameDTO();
 		return (GameDTO)retrieveStats(path, event, dto);
 	}
 
 	public RosterDTO retrieveRoster(String event) {
-		String path = propertyBean.getProperty_Path("xmlstats.fileRoster");
+		String path = propertyService.getProperty_Path("xmlstats.fileRoster");
 		RosterDTO dto = new RosterDTO();
 		return (RosterDTO)retrieveStats(path, event, dto);
 	}
 
 	public StandingsDTO retrieveStandings(String event) {
-		String path = propertyBean.getProperty_Path("xmlstats.fileStandings");
+		String path = propertyService.getProperty_Path("xmlstats.fileStandings");
 		StandingsDTO dto = new StandingsDTO();
 		return (StandingsDTO)retrieveStats(path, event, dto);
 	}
