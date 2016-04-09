@@ -12,13 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.app.exception.PropertyException;
-import com.rossotti.basketball.app.resource.PropertyBean;
+import com.rossotti.basketball.app.service.PropertyServiceBean;
 
 @Service
 
 public class ClientBean {
 	@Autowired
-	private PropertyBean propertyBean;
+	private PropertyServiceBean propertyBean;
 	
 	private final Logger logger = LoggerFactory.getLogger(ClientBean.class);
 	private Client client;

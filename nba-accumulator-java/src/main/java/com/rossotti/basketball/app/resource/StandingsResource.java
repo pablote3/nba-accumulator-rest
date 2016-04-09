@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.app.service.GameServiceBean;
+import com.rossotti.basketball.app.service.PropertyServiceBean;
 import com.rossotti.basketball.app.service.StandingsServiceBean;
 import com.rossotti.basketball.client.FileClientBean;
 import com.rossotti.basketball.client.RestClientBean;
@@ -50,7 +51,7 @@ public class StandingsResource {
 	private GameServiceBean gameServiceBean;
 
 	@Autowired
-	private PropertyBean propertyBean;
+	private PropertyServiceBean propertyBean;
 
 	private final Logger logger = LoggerFactory.getLogger(StandingsResource.class);
 

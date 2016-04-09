@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.app.service.PlayerServiceBean;
+import com.rossotti.basketball.app.service.PropertyServiceBean;
 import com.rossotti.basketball.app.service.RosterPlayerServiceBean;
 import com.rossotti.basketball.client.FileClientBean;
 import com.rossotti.basketball.client.RestClientBean;
@@ -48,7 +49,7 @@ public class RosterResource {
 	private PlayerServiceBean playerServiceBean;
 
 	@Autowired
-	private PropertyBean propertyBean;
+	private PropertyServiceBean propertyBean;
 
 	private final Logger logger = LoggerFactory.getLogger(RosterResource.class);
 

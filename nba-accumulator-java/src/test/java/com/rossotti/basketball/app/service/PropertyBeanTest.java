@@ -9,13 +9,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.rossotti.basketball.app.exception.PropertyException;
 import com.rossotti.basketball.app.resource.ClientSource;
-import com.rossotti.basketball.app.service.PropertyBean;
+import com.rossotti.basketball.app.service.PropertyServiceBean;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:applicationContext.xml"})
 public class PropertyBeanTest {
 	@Autowired
-	private PropertyBean propertyBean;
+	private PropertyServiceBean propertyBean;
 
 	@Test
 	public void getProperty_String_Valid() {

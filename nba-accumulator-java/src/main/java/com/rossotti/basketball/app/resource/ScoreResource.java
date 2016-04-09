@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.app.service.GameServiceBean;
 import com.rossotti.basketball.app.service.OfficialServiceBean;
+import com.rossotti.basketball.app.service.PropertyServiceBean;
 import com.rossotti.basketball.app.service.RosterPlayerServiceBean;
 import com.rossotti.basketball.client.FileClientBean;
 import com.rossotti.basketball.client.RestClientBean;
@@ -52,7 +53,7 @@ public class ScoreResource {
 	private RosterPlayerServiceBean rosterPlayerServiceBean;
 
 	@Autowired
-	private PropertyBean propertyBean;
+	private PropertyServiceBean propertyBean;
 
 	private final Logger logger = LoggerFactory.getLogger(ScoreResource.class);
 
