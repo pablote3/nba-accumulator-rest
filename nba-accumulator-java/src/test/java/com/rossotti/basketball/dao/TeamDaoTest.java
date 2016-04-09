@@ -16,6 +16,7 @@ import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.dao.model.Team.Conference;
 import com.rossotti.basketball.dao.model.Team.Division;
+import com.rossotti.basketball.dao.repository.TeamDAO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:applicationContext.xml"})

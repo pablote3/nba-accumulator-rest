@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.client.dto.OfficialDTO;
-import com.rossotti.basketball.dao.OfficialDAO;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.GameOfficial;
 import com.rossotti.basketball.dao.model.Official;
+import com.rossotti.basketball.dao.repository.OfficialDAO;
 
 @Service
 public class OfficialService {

@@ -1,4 +1,4 @@
-package com.rossotti.basketball.dao;
+package com.rossotti.basketball.dao.repository;
 
 import java.util.ArrayList;
 import java.util.List;

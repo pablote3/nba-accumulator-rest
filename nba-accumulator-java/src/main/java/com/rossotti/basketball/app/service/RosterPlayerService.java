@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.client.dto.BoxScorePlayerDTO;
 import com.rossotti.basketball.client.dto.RosterPlayerDTO;
-import com.rossotti.basketball.dao.RosterPlayerDAO;
-import com.rossotti.basketball.dao.TeamDAO;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.BoxScorePlayer;
 import com.rossotti.basketball.dao.model.Player;
 import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.model.Position;
 import com.rossotti.basketball.dao.model.Team;
+import com.rossotti.basketball.dao.repository.RosterPlayerDAO;
+import com.rossotti.basketball.dao.repository.TeamDAO;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service

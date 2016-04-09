@@ -22,12 +22,11 @@ import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rossotti.basketball.dao.OfficialDAO;
 import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.model.Official;
 import com.rossotti.basketball.dao.pub.PubOfficial;
 import com.rossotti.basketball.dao.pub.PubOfficials;
-
+import com.rossotti.basketball.dao.repository.OfficialDAO;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service

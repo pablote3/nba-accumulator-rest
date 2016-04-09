@@ -21,7 +21,6 @@ import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rossotti.basketball.dao.RosterPlayerDAO;
 import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.pub.PubPlayer;
@@ -31,7 +30,7 @@ import com.rossotti.basketball.dao.pub.PubRosterPlayer_ByTeam;
 import com.rossotti.basketball.dao.pub.PubRosterPlayers_ByPlayer;
 import com.rossotti.basketball.dao.pub.PubRosterPlayers_ByTeam;
 import com.rossotti.basketball.dao.pub.PubTeam;
-
+import com.rossotti.basketball.dao.repository.RosterPlayerDAO;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service

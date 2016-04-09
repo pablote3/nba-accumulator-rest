@@ -15,10 +15,10 @@ import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.client.dto.StandingDTO;
 import com.rossotti.basketball.client.dto.StandingsDTO;
-import com.rossotti.basketball.dao.StandingDAO;
-import com.rossotti.basketball.dao.TeamDAO;
 import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.BoxScore.Result;
+import com.rossotti.basketball.dao.repository.StandingDAO;
+import com.rossotti.basketball.dao.repository.TeamDAO;
 import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.model.Standing;
 import com.rossotti.basketball.dao.model.StandingRecord;

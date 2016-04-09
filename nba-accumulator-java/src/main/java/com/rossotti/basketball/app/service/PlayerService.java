@@ -4,8 +4,8 @@ import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rossotti.basketball.dao.PlayerDAO;
 import com.rossotti.basketball.dao.model.Player;
+import com.rossotti.basketball.dao.repository.PlayerDAO;
 
 @Service
 public class PlayerService {

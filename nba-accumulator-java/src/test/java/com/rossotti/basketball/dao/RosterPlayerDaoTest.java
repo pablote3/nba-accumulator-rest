@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.rossotti.basketball.dao.model.Player;
 import com.rossotti.basketball.dao.model.RosterPlayer;
+import com.rossotti.basketball.dao.repository.RosterPlayerDAO;
 import com.rossotti.basketball.dao.model.Position;
 
 @RunWith(SpringJUnit4ClassRunner.class)

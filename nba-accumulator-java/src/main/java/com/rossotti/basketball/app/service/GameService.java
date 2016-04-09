@@ -7,8 +7,8 @@ import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rossotti.basketball.dao.GameDAO;
 import com.rossotti.basketball.dao.model.Game;
+import com.rossotti.basketball.dao.repository.GameDAO;
 
 @Service
 public class GameService {
