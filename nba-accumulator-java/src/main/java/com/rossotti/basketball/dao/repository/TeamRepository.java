@@ -16,7 +16,7 @@ import com.rossotti.basketball.dao.model.Team;
 
 @Repository
 @Transactional
-public class TeamDAO {
+public class TeamRepository {
 	@Autowired
 	private SessionFactory sessionFactory;
 

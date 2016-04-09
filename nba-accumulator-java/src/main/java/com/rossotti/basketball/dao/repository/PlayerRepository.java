@@ -16,7 +16,7 @@ import com.rossotti.basketball.dao.model.StatusCode;
 
 @Repository
 @Transactional
-public class PlayerDAO {
+public class PlayerRepository {
 	@Autowired
 	private SessionFactory sessionFactory;
 

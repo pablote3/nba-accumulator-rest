@@ -30,7 +30,7 @@ import com.rossotti.basketball.dao.pub.PubRosterPlayer_ByTeam;
 import com.rossotti.basketball.dao.pub.PubRosterPlayers_ByPlayer;
 import com.rossotti.basketball.dao.pub.PubRosterPlayers_ByTeam;
 import com.rossotti.basketball.dao.pub.PubTeam;
-import com.rossotti.basketball.dao.repository.RosterPlayerDAO;
+import com.rossotti.basketball.dao.repository.RosterPlayerRepository;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
@@ -38,7 +38,7 @@ import com.rossotti.basketball.util.DateTimeUtil;
 public class RosterPlayerResource {
 
 	@Autowired
-	private RosterPlayerDAO rosterPlayerDAO;
+	private RosterPlayerRepository rosterPlayerRepo;
 
 	@GET
 	@Path("/player/{lastName}/{firstName}/{birthdate}/{asOfDate}")
@@ -51,7 +51,7 @@ public class RosterPlayerResource {
 		try {
 			LocalDate birthdate = DateTimeUtil.getLocalDate(birthdateString);
 			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
-			RosterPlayer rosterPlayer = rosterPlayerDAO.findRosterPlayer(lastName, firstName, birthdate, asOfDate);
+			RosterPlayer rosterPlayer = rosterPlayerRepo.findRosterPlayer(lastName, firstName, birthdate, asOfDate);
 			if (rosterPlayer.isFound()) {
 				PubRosterPlayer pubRosterPlayer = rosterPlayer.toPubRosterPlayer(uriInfo);
 				return Response.ok(pubRosterPlayer)
@@ -79,7 +79,7 @@ public class RosterPlayerResource {
 											@PathParam("asOfDate") String asOfDateString) {
 		try {
 			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
-			RosterPlayer rosterPlayer = rosterPlayerDAO.findRosterPlayer(lastName, firstName, teamKey, asOfDate);
+			RosterPlayer rosterPlayer = rosterPlayerRepo.findRosterPlayer(lastName, firstName, teamKey, asOfDate);
 			if (rosterPlayer.isFound()) {
 				PubRosterPlayer pubRosterPlayer = rosterPlayer.toPubRosterPlayer(uriInfo);
 				return Response.ok(pubRosterPlayer)
@@ -105,7 +105,7 @@ public class RosterPlayerResource {
 											@PathParam("firstName") String firstName,
 											@PathParam("birthdate") String birthdateString) {
 		LocalDate birthdate = DateTimeUtil.getLocalDate(birthdateString);
-		List<RosterPlayer> listRosterPlayers = rosterPlayerDAO.findRosterPlayers(lastName, firstName, birthdate);
+		List<RosterPlayer> listRosterPlayers = rosterPlayerRepo.findRosterPlayers(lastName, firstName, birthdate);
 		PubPlayer pubPlayer = listRosterPlayers.get(0).getPlayer().toPubPlayer(uriInfo);
 		if (listRosterPlayers.size() > 0) {
 			List<PubRosterPlayer_ByPlayer> listPubRosterPlayers = new ArrayList<PubRosterPlayer_ByPlayer>();
@@ -130,7 +130,7 @@ public class RosterPlayerResource {
 											@PathParam("teamKey") String teamKey,
 											@PathParam("asOfDate") String asOfDateString) {
 		LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
-		List<RosterPlayer> listRosterPlayers = rosterPlayerDAO.findRosterPlayers(teamKey, asOfDate);
+		List<RosterPlayer> listRosterPlayers = rosterPlayerRepo.findRosterPlayers(teamKey, asOfDate);
 		PubTeam pubTeam = listRosterPlayers.get(0).getTeam().toPubTeam(uriInfo);
 		if (listRosterPlayers.size() > 0) {
 			List<PubRosterPlayer_ByTeam> listPubRosterPlayers = new ArrayList<PubRosterPlayer_ByTeam>();
@@ -152,7 +152,7 @@ public class RosterPlayerResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createRosterPlayer(@Context UriInfo uriInfo, RosterPlayer createRosterPlayer) {
 		try {
-			RosterPlayer rosterPlayer = rosterPlayerDAO.createRosterPlayer(createRosterPlayer);
+			RosterPlayer rosterPlayer = rosterPlayerRepo.createRosterPlayer(createRosterPlayer);
 			if (rosterPlayer.isCreated()) {
 				return Response.created(uriInfo.getAbsolutePath()).build();
 			}
@@ -170,7 +170,7 @@ public class RosterPlayerResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateRosterPlayer(RosterPlayer updateRosterPlayer) {
 		try {
-			RosterPlayer rosterPlayer = rosterPlayerDAO.updateRosterPlayer(updateRosterPlayer);
+			RosterPlayer rosterPlayer = rosterPlayerRepo.updateRosterPlayer(updateRosterPlayer);
 			if (rosterPlayer.isUpdated()) {
 				return Response.noContent().build();
 			}
@@ -196,7 +196,7 @@ public class RosterPlayerResource {
 //		try {
 //			LocalDate birthdate = DateTimeUtil.getLocalDate(birthdateString);
 //			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
-//			RosterPlayer rosterPlayer = rosterPlayerDAO.deleteRosterPlayer(lastName, firstName, birthdate, asOfDate);
+//			RosterPlayer rosterPlayer = rosterPlayerRepo.deleteRosterPlayer(lastName, firstName, birthdate, asOfDate);
 //			if (rosterPlayer.isDeleted()) {
 //				return Response.noContent().build();
 //			}

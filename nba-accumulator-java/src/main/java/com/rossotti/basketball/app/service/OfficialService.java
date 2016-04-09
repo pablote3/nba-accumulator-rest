@@ -13,12 +13,12 @@ import com.rossotti.basketball.client.dto.OfficialDTO;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.GameOfficial;
 import com.rossotti.basketball.dao.model.Official;
-import com.rossotti.basketball.dao.repository.OfficialDAO;
+import com.rossotti.basketball.dao.repository.OfficialRepository;
 
 @Service
 public class OfficialService {
 	@Autowired
-	private OfficialDAO officialDAO;
+	private OfficialRepository officialRepo;
 
 	private final Logger logger = LoggerFactory.getLogger(OfficialService.class);
 
@@ -29,7 +29,7 @@ public class OfficialService {
 		for (int i = 0; i < officials.length; i++) {
 			String lastName = officials[i].getLast_name();
 			String firstName = officials[i].getFirst_name();
-			official = officialDAO.findOfficial(lastName, firstName, gameDate);
+			official = officialRepo.findOfficial(lastName, firstName, gameDate);
 			if (official.isNotFound()) {
 				logger.info("Official not found " + firstName + " " + lastName);
 				throw new NoSuchEntityException(Official.class);

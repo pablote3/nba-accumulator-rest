@@ -17,17 +17,17 @@ import com.rossotti.basketball.dao.model.Player;
 import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.model.Position;
 import com.rossotti.basketball.dao.model.Team;
-import com.rossotti.basketball.dao.repository.RosterPlayerDAO;
-import com.rossotti.basketball.dao.repository.TeamDAO;
+import com.rossotti.basketball.dao.repository.RosterPlayerRepository;
+import com.rossotti.basketball.dao.repository.TeamRepository;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
 public class RosterPlayerService {
 	@Autowired
-	private RosterPlayerDAO rosterPlayerDAO;
+	private RosterPlayerRepository rosterPlayerRepo;
 
 	@Autowired
-	private TeamDAO teamDAO;
+	private TeamRepository teamRepo;
 
 	private final Logger logger = LoggerFactory.getLogger(RosterPlayerService.class);
 
@@ -39,7 +39,7 @@ public class RosterPlayerService {
 		for (int i = 0; i < boxScorePlayerDTOs.length; i++) {
 			String lastName = boxScorePlayerDTOs[i].getLast_name();
 			String firstName = boxScorePlayerDTOs[i].getFirst_name();
-			rosterPlayer = rosterPlayerDAO.findRosterPlayer(lastName, firstName, teamKey, gameDate);
+			rosterPlayer = rosterPlayerRepo.findRosterPlayer(lastName, firstName, teamKey, gameDate);
 			if (rosterPlayer.isNotFound()) {
 				logger.info("Roster Player not found " + firstName + " " + lastName + " Team: " + teamKey + " GameDate: " + gameDate);
 				throw new NoSuchEntityException(RosterPlayer.class);
@@ -77,7 +77,7 @@ public class RosterPlayerService {
 		List<RosterPlayer> rosterPlayers = new ArrayList<RosterPlayer>();
 		RosterPlayer rosterPlayer;
 		Player player;
-		Team team = teamDAO.findTeam(teamKey, gameDate);
+		Team team = teamRepo.findTeam(teamKey, gameDate);
 
 		for (int i = 0; i < rosterPlayerDTOs.length; i++) {
 			player = new Player();
@@ -99,22 +99,22 @@ public class RosterPlayerService {
 	}
 
 	public RosterPlayer findByDatePlayerNameTeam(LocalDate asOfDate, String lastName, String firstName, String teamKey) {
-		return rosterPlayerDAO.findRosterPlayer(lastName, firstName, teamKey, asOfDate);
+		return rosterPlayerRepo.findRosterPlayer(lastName, firstName, teamKey, asOfDate);
 	}
 
 	public RosterPlayer findLatestByPlayerNameBirthdateSeason(LocalDate asOfDate, String lastName, String firstName, LocalDate birthdate) {
-		return rosterPlayerDAO.findRosterPlayer(lastName, firstName, birthdate, asOfDate);
+		return rosterPlayerRepo.findRosterPlayer(lastName, firstName, birthdate, asOfDate);
 	}
 
 	public RosterPlayer createRosterPlayer(RosterPlayer rosterPlayer) {
-		return rosterPlayerDAO.createRosterPlayer(rosterPlayer);
+		return rosterPlayerRepo.createRosterPlayer(rosterPlayer);
 	}
 
 	public RosterPlayer updateRosterPlayer(RosterPlayer rosterPlayer) {
-		return rosterPlayerDAO.updateRosterPlayer(rosterPlayer);
+		return rosterPlayerRepo.updateRosterPlayer(rosterPlayer);
 	}
 
 	public List<RosterPlayer> findRosterPlayers(LocalDate asOfDate, String teamKey) {
-		return rosterPlayerDAO.findRosterPlayers(teamKey, asOfDate);
+		return rosterPlayerRepo.findRosterPlayers(teamKey, asOfDate);
 	}
 }

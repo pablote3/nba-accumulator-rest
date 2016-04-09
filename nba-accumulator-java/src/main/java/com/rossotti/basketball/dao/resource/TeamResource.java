@@ -26,7 +26,7 @@ import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.dao.pub.PubTeam;
 import com.rossotti.basketball.dao.pub.PubTeams;
-import com.rossotti.basketball.dao.repository.TeamDAO;
+import com.rossotti.basketball.dao.repository.TeamRepository;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
@@ -34,7 +34,7 @@ import com.rossotti.basketball.util.DateTimeUtil;
 public class TeamResource {
 
 	@Autowired
-	private TeamDAO teamDAO;
+	private TeamRepository teamRepo;
 
 	@GET
 	@Path("/{key}/{asOfDate}")
@@ -44,7 +44,7 @@ public class TeamResource {
 									@PathParam("asOfDate") String asOfDateString) {
 		try {
 			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
-			Team team = teamDAO.findTeam(key, asOfDate);
+			Team team = teamRepo.findTeam(key, asOfDate);
 			if (team.isFound()) {
 				PubTeam pubTeam = team.toPubTeam(uriInfo);
 				return Response.ok(pubTeam)
@@ -69,7 +69,7 @@ public class TeamResource {
 									@PathParam("asOfDate") String asOfDateString) {
 		try {
 			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
-			List<Team> listTeams = teamDAO.findTeams(asOfDate);
+			List<Team> listTeams = teamRepo.findTeams(asOfDate);
 			if (listTeams.size() > 0) {
 				List<PubTeam> listPubTeams = new ArrayList<PubTeam>();
 				for (Team team : listTeams) {
@@ -93,7 +93,7 @@ public class TeamResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createTeam(@Context UriInfo uriInfo, Team createTeam) {
 		try {
-			Team team = teamDAO.createTeam(createTeam);
+			Team team = teamRepo.createTeam(createTeam);
 			if (team.isCreated()) {
 				return Response.created(uriInfo.getAbsolutePath()).build();
 			}
@@ -111,7 +111,7 @@ public class TeamResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateTeam(Team updateTeam) {
 		try {
-			Team team = teamDAO.updateTeam(updateTeam);
+			Team team = teamRepo.updateTeam(updateTeam);
 			if (team.isUpdated()) {
 				return Response.noContent().build();
 			}
@@ -133,7 +133,7 @@ public class TeamResource {
 								@PathParam("asOfDate") String asOfDateString) {
 		try {
 			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
-			Team team = teamDAO.deleteTeam(key, asOfDate);
+			Team team = teamRepo.deleteTeam(key, asOfDate);
 			if (team.isDeleted()) {
 				return Response.noContent().build();
 			}

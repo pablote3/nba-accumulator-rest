@@ -23,7 +23,7 @@ import com.rossotti.basketball.util.DateTimeUtil;
 
 @Repository
 @Transactional
-public class GameDAO {
+public class GameRepository {
 	@Autowired
 	private SessionFactory sessionFactory;
 

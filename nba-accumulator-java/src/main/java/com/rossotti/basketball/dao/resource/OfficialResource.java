@@ -26,7 +26,7 @@ import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.model.Official;
 import com.rossotti.basketball.dao.pub.PubOfficial;
 import com.rossotti.basketball.dao.pub.PubOfficials;
-import com.rossotti.basketball.dao.repository.OfficialDAO;
+import com.rossotti.basketball.dao.repository.OfficialRepository;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
@@ -34,7 +34,7 @@ import com.rossotti.basketball.util.DateTimeUtil;
 public class OfficialResource {
 
 	@Autowired
-	private OfficialDAO officialDAO;
+	private OfficialRepository officialRepo;
 
 	@GET
 	@Path("/{lastName}/{firstName}/{asOfDate}")
@@ -45,7 +45,7 @@ public class OfficialResource {
 										@PathParam("asOfDate") String asOfDateString) {
 		try {
 			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
-			Official official = officialDAO.findOfficial(lastName, firstName, asOfDate);
+			Official official = officialRepo.findOfficial(lastName, firstName, asOfDate);
 			if (official.isFound()) {
 				PubOfficial pubOfficial = official.toPubOfficial(uriInfo);
 				return Response.ok(pubOfficial)
@@ -69,10 +69,10 @@ public class OfficialResource {
 	public Response findOfficialsByName(@Context UriInfo uriInfo, 
 										@PathParam("lastName") String lastName, 
 										@PathParam("firstName") String firstName) {
-		List<Official> listOfficials = officialDAO.findOfficials(lastName, firstName);
+		List<Official> listOfficials = officialRepo.findOfficials(lastName, firstName);
 		if (listOfficials.size() > 0) {
 			List<PubOfficial> listPubOfficials = new ArrayList<PubOfficial>();
-			for (Official official : officialDAO.findOfficials(lastName, firstName)) {
+			for (Official official : officialRepo.findOfficials(lastName, firstName)) {
 				PubOfficial pubOfficial = official.toPubOfficial(uriInfo);
 				listPubOfficials.add(pubOfficial);
 			}
@@ -93,7 +93,7 @@ public class OfficialResource {
 										@PathParam("asOfDate") String asOfDateString) {
 		try {
 			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
-			List<Official> listOfficials = officialDAO.findOfficials(asOfDate);
+			List<Official> listOfficials = officialRepo.findOfficials(asOfDate);
 			if (listOfficials.size() > 0) {
 				List<PubOfficial> listPubOfficials = new ArrayList<PubOfficial>();
 				for (Official official : listOfficials) {
@@ -117,7 +117,7 @@ public class OfficialResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createOfficial(@Context UriInfo uriInfo, Official createOfficial) {
 		try {
-			Official official = officialDAO.createOfficial(createOfficial);
+			Official official = officialRepo.createOfficial(createOfficial);
 			if (official.isCreated()) {
 				return Response.created(uriInfo.getAbsolutePath()).build();
 			}
@@ -135,7 +135,7 @@ public class OfficialResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateOfficial(Official updateOfficial) {
 		try {
-			Official official = officialDAO.updateOfficial(updateOfficial);
+			Official official = officialRepo.updateOfficial(updateOfficial);
 			if (official.isUpdated()) {
 				return Response.noContent().build();
 			}
@@ -158,7 +158,7 @@ public class OfficialResource {
 								@PathParam("asOfDate") String asOfDateString) {
 		try {
 			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
-			Official official = officialDAO.deleteOfficial(lastName, firstName, asOfDate);
+			Official official = officialRepo.deleteOfficial(lastName, firstName, asOfDate);
 			if (official.isDeleted()) {
 				return Response.noContent().build();
 			}

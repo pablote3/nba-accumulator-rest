@@ -8,22 +8,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.dao.model.Game;
-import com.rossotti.basketball.dao.repository.GameDAO;
+import com.rossotti.basketball.dao.repository.GameRepository;
 
 @Service
 public class GameService {
 	@Autowired
-	private GameDAO gameDAO;
+	private GameRepository gameRepo;
 
 	public LocalDateTime findPreviousGameDateTime(LocalDate gameDate, String teamKey) {
-		return gameDAO.findPreviousGameDateTimeByDateTeam(gameDate, teamKey);
+		return gameRepo.findPreviousGameDateTimeByDateTeam(gameDate, teamKey);
 	}
 
 	public List<Game> findByDateTeamSeason(LocalDate gameDate, String teamKey) {
-		return gameDAO.findByDateTeamSeason(gameDate, teamKey);
+		return gameRepo.findByDateTeamSeason(gameDate, teamKey);
 	}
 
 	public Game updateGame(Game game) {
-		return gameDAO.updateGame(game);
+		return gameRepo.updateGame(game);
 	}
 }

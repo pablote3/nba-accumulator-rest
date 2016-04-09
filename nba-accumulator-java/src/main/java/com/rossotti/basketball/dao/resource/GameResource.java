@@ -26,7 +26,7 @@ import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.pub.PubGame;
 import com.rossotti.basketball.dao.pub.PubGames;
-import com.rossotti.basketball.dao.repository.GameDAO;
+import com.rossotti.basketball.dao.repository.GameRepository;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
@@ -34,7 +34,7 @@ import com.rossotti.basketball.util.DateTimeUtil;
 public class GameResource {
 
 	@Autowired
-	private GameDAO gameDAO;
+	private GameRepository gameRepo;
 
 	@GET
 	@Path("/{gameDate}/{teamKey}")
@@ -44,7 +44,7 @@ public class GameResource {
 											@PathParam("teamKey") String teamKey) {
 		try {
 			LocalDate gameDate = DateTimeUtil.getLocalDate(gameDateString);
-			Game game = gameDAO.findByDateTeam(gameDate, teamKey);
+			Game game = gameRepo.findByDateTeam(gameDate, teamKey);
 			if (game.isFound()) {
 				PubGame pubGame = game.toPubGame(uriInfo, teamKey);
 				
@@ -69,7 +69,7 @@ public class GameResource {
 	public Response findGamesByGameDate(@Context UriInfo uriInfo, 
 										@PathParam("gameDate") String gameDateString) {
 		LocalDate gameDate = DateTimeUtil.getLocalDate(gameDateString);
-		List<Game> listGames = gameDAO.findByDate(gameDate);
+		List<Game> listGames = gameRepo.findByDate(gameDate);
 		if (listGames.size() > 0) {
 			List<PubGame> listPubGames = new ArrayList<PubGame>();
 			for (Game game : listGames) {
@@ -90,7 +90,7 @@ public class GameResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createGame(@Context UriInfo uriInfo, Game createGame) {
 		try {
-			Game game = gameDAO.createGame(createGame);
+			Game game = gameRepo.createGame(createGame);
 			if (game.isCreated()) {
 				return Response.created(uriInfo.getAbsolutePath()).build();
 			}
@@ -108,7 +108,7 @@ public class GameResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateGame(Game updateGame) {
 		try {
-			Game game = gameDAO.updateGame(updateGame);
+			Game game = gameRepo.updateGame(updateGame);
 			if (game.isUpdated()) {
 				return Response.noContent().build();
 			}
@@ -130,7 +130,7 @@ public class GameResource {
 								@PathParam("teamKey") String teamKey) {
 		try {
 			LocalDate gameDate = DateTimeUtil.getLocalDate(gameDateString);
-			Game game = gameDAO.deleteGame(gameDate, teamKey);
+			Game game = gameRepo.deleteGame(gameDate, teamKey);
 			if (game.isDeleted()) {
 				return Response.noContent().build();
 			}

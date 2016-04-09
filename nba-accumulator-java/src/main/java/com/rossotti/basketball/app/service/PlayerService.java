@@ -5,18 +5,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.dao.model.Player;
-import com.rossotti.basketball.dao.repository.PlayerDAO;
+import com.rossotti.basketball.dao.repository.PlayerRepository;
 
 @Service
 public class PlayerService {
 	@Autowired
-	private PlayerDAO playerDAO;
+	private PlayerRepository playerRepo;
 
 	public Player findByPlayerNameBirthdate(String lastName, String firstName, LocalDate birthdate) {
-		return playerDAO.findPlayer(lastName, firstName, birthdate);
+		return playerRepo.findPlayer(lastName, firstName, birthdate);
 	}
 
 	public Player createPlayer(Player player) {
-		return playerDAO.createPlayer(player);
+		return playerRepo.createPlayer(player);
 	}
 }

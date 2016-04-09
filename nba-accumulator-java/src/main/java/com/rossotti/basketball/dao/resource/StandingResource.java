@@ -26,7 +26,7 @@ import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.model.Standing;
 import com.rossotti.basketball.dao.pub.PubStanding;
 import com.rossotti.basketball.dao.pub.PubStandings;
-import com.rossotti.basketball.dao.repository.StandingDAO;
+import com.rossotti.basketball.dao.repository.StandingRepository;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
@@ -34,7 +34,7 @@ import com.rossotti.basketball.util.DateTimeUtil;
 public class StandingResource {
 
 	@Autowired
-	private StandingDAO standingDAO;
+	private StandingRepository standingRepo;
 
 	@GET
 	@Path("/{teamKey}/{asOfDate}")
@@ -44,7 +44,7 @@ public class StandingResource {
 								@PathParam("asOfDate") String asOfDateString) {
 		try {
 			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
-			Standing standing = standingDAO.findStanding(teamKey, asOfDate);
+			Standing standing = standingRepo.findStanding(teamKey, asOfDate);
 			if (standing.isFound()) {
 				PubStanding pubStanding = standing.toPubStanding(uriInfo);
 				return Response.ok(pubStanding)
@@ -68,7 +68,7 @@ public class StandingResource {
 	public Response findStandings(@Context UriInfo uriInfo, 
 								@PathParam("asOfDate") String asOfDateString) {
 		LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
-		List<Standing> listStandings = standingDAO.findStandings(asOfDate);
+		List<Standing> listStandings = standingRepo.findStandings(asOfDate);
 		if (listStandings.size() > 0) {
 			List<PubStanding> listPubStandings = new ArrayList<PubStanding>();
 			for (Standing standing : listStandings) {
@@ -89,7 +89,7 @@ public class StandingResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createStanding(@Context UriInfo uriInfo, Standing createStanding) {
 		try {
-			Standing standing = standingDAO.createStanding(createStanding);
+			Standing standing = standingRepo.createStanding(createStanding);
 			if (standing.isCreated()) {
 				return Response.created(uriInfo.getAbsolutePath()).build();
 			}
@@ -107,7 +107,7 @@ public class StandingResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateStanding(Standing updateStanding) {
 		try {
-			Standing standing = standingDAO.updateStanding(updateStanding);
+			Standing standing = standingRepo.updateStanding(updateStanding);
 			if (standing.isUpdated()) {
 				return Response.noContent().build();
 			}
@@ -129,7 +129,7 @@ public class StandingResource {
 								@PathParam("asOfDate") String asOfDateString) {
 		try {
 			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
-			Standing standing = standingDAO.deleteStanding(teamKey, asOfDate);
+			Standing standing = standingRepo.deleteStanding(teamKey, asOfDate);
 			if (standing.isDeleted()) {
 				return Response.noContent().build();
 			}

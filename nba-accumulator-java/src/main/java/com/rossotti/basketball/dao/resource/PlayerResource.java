@@ -26,7 +26,7 @@ import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.model.Player;
 import com.rossotti.basketball.dao.pub.PubPlayer;
 import com.rossotti.basketball.dao.pub.PubPlayers;
-import com.rossotti.basketball.dao.repository.PlayerDAO;
+import com.rossotti.basketball.dao.repository.PlayerRepository;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
@@ -34,7 +34,7 @@ import com.rossotti.basketball.util.DateTimeUtil;
 public class PlayerResource {
 
 	@Autowired
-	private PlayerDAO playerDAO;
+	private PlayerRepository playerRepo;
 
 	@GET
 	@Path("/{lastName}/{firstName}/{birthdate}")
@@ -45,7 +45,7 @@ public class PlayerResource {
 											@PathParam("birthdate") String birthdateString) {
 		try {
 			LocalDate birthdate = DateTimeUtil.getLocalDate(birthdateString);
-			Player player = playerDAO.findPlayer(lastName, firstName, birthdate);
+			Player player = playerRepo.findPlayer(lastName, firstName, birthdate);
 			if (player.isFound()) {
 				PubPlayer pubPlayer = player.toPubPlayer(uriInfo);
 				return Response.ok(pubPlayer)
@@ -69,7 +69,7 @@ public class PlayerResource {
 	public Response findPlayersByName(@Context UriInfo uriInfo, 
 									@PathParam("lastName") String lastName, 
 									@PathParam("firstName") String firstName) {
-		List<Player> listPlayers = playerDAO.findPlayers(lastName, firstName);
+		List<Player> listPlayers = playerRepo.findPlayers(lastName, firstName);
 		if (listPlayers.size() > 0) {
 			List<PubPlayer> listPubPlayers = new ArrayList<PubPlayer>();
 			for (Player player : listPlayers) {
@@ -90,7 +90,7 @@ public class PlayerResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createPlayer(@Context UriInfo uriInfo, Player createPlayer) {
 		try {
-			Player player = playerDAO.createPlayer(createPlayer);
+			Player player = playerRepo.createPlayer(createPlayer);
 			if (player.isCreated()) {
 				return Response.created(uriInfo.getAbsolutePath()).build();
 			}
@@ -108,7 +108,7 @@ public class PlayerResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updatePlayer(Player updatePlayer) {
 		try {
-			Player player = playerDAO.updatePlayer(updatePlayer);
+			Player player = playerRepo.updatePlayer(updatePlayer);
 			if (player.isUpdated()) {
 				return Response.noContent().build();
 			}
@@ -131,7 +131,7 @@ public class PlayerResource {
 								@PathParam("birthdate") String birthdateString) {
 		try {
 			LocalDate birthdate = DateTimeUtil.getLocalDate(birthdateString);
-			Player player = playerDAO.deletePlayer(lastName, firstName, birthdate);
+			Player player = playerRepo.deletePlayer(lastName, firstName, birthdate);
 			if (player.isDeleted()) {
 				return Response.noContent().build();
 			}

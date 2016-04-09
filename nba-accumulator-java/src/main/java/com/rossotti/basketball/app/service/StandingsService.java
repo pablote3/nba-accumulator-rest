@@ -17,8 +17,8 @@ import com.rossotti.basketball.client.dto.StandingDTO;
 import com.rossotti.basketball.client.dto.StandingsDTO;
 import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.BoxScore.Result;
-import com.rossotti.basketball.dao.repository.StandingDAO;
-import com.rossotti.basketball.dao.repository.TeamDAO;
+import com.rossotti.basketball.dao.repository.StandingRepository;
+import com.rossotti.basketball.dao.repository.TeamRepository;
 import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.model.Standing;
 import com.rossotti.basketball.dao.model.StandingRecord;
@@ -27,13 +27,13 @@ import com.rossotti.basketball.util.DateTimeUtil;
 @Service
 public class StandingsService {
 	@Autowired
-	private StandingDAO standingDAO;
+	private StandingRepository standingRepo;
 
 	@Autowired
-	private TeamDAO teamDAO;
+	private TeamRepository teamRepo;
 
 	@Autowired
-	private GameService gameServiceBean;
+	private GameService gameService;
 
 	private final Logger logger = LoggerFactory.getLogger(StandingsService.class);
 
@@ -45,7 +45,7 @@ public class StandingsService {
 		for (int i = 0; i < standingsDTO.standing.length; i++) {
 			standingDTO = standingsDTO.standing[i];
 			standing = new Standing();
-			standing.setTeam(teamDAO.findTeam(standingDTO.getTeam_id(), asOfDate));
+			standing.setTeam(teamRepo.findTeam(standingDTO.getTeam_id(), asOfDate));
 			standing.setStandingDate(asOfDate);
 			standing.setRank(standingDTO.getRank());
 			standing.setOrdinalRank(standingDTO.getOrdinal_rank());
@@ -77,23 +77,23 @@ public class StandingsService {
 	}
 
 	public Standing findStanding(String teamKey, LocalDate asOfDate) {
-		return standingDAO.findStanding(teamKey, asOfDate);
+		return standingRepo.findStanding(teamKey, asOfDate);
 	}
 
 	public List<Standing> findStandings(LocalDate asOfDate) {
-		return standingDAO.findStandings(asOfDate);
+		return standingRepo.findStandings(asOfDate);
 	}
 
 	public Standing createStanding(Standing standing) {
-		return standingDAO.createStanding(standing);
+		return standingRepo.createStanding(standing);
 	}
 
 	public Standing updateStanding(Standing standing) {
-		return standingDAO.updateStanding(standing);
+		return standingRepo.updateStanding(standing);
 	}
 
 	public Standing deleteStanding(String teamKey, LocalDate asOfDate) {
-		return standingDAO.deleteStanding(teamKey, asOfDate);
+		return standingRepo.deleteStanding(teamKey, asOfDate);
 	}
 
 	public void calculateStrengthOfSchedule(Standing standing, Map<String, StandingRecord> standingsMap) {
@@ -104,7 +104,7 @@ public class StandingsService {
 		Integer opptGamesPlayed = 0;
 		Integer opptOpptGamesWon = 0;
 		Integer opptOpptGamesPlayed = 0;
-		List<Game> completeGames = gameServiceBean.findByDateTeamSeason(standing.getStandingDate(), teamKey);
+		List<Game> completeGames = gameService.findByDateTeamSeason(standing.getStandingDate(), teamKey);
 
 		Map<String, StandingRecord> headToHeadMap = new HashMap<String, StandingRecord>();
 		for (int i = 0; i < completeGames.size(); i++) {
