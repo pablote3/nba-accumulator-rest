@@ -1,4 +1,4 @@
-package com.rossotti.basketball.dao;
+package com.rossotti.basketball.dao.repository;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import com.rossotti.basketball.dao.repository.StandingDAO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:applicationContext.xml"})
-public class StandingDaoTest {
+public class StandingRepositoryTest {
 
 	@Autowired
 	private StandingDAO standingDAO;

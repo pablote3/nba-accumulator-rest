@@ -1,4 +1,4 @@
-package com.rossotti.basketball.dao;
+package com.rossotti.basketball.dao.repository;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import com.rossotti.basketball.dao.repository.TeamDAO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:applicationContext.xml"})
-public class TeamDaoTest {
+public class TeamRepositoryTest {
 
 	@Autowired
 	private TeamDAO teamDAO;
