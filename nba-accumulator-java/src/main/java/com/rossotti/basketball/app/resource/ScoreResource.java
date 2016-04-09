@@ -17,10 +17,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rossotti.basketball.app.service.GameServiceBean;
-import com.rossotti.basketball.app.service.OfficialServiceBean;
-import com.rossotti.basketball.app.service.PropertyServiceBean;
-import com.rossotti.basketball.app.service.RosterPlayerServiceBean;
+import com.rossotti.basketball.app.service.GameService;
+import com.rossotti.basketball.app.service.OfficialService;
+import com.rossotti.basketball.app.service.PropertyService;
+import com.rossotti.basketball.app.service.RosterPlayerService;
 import com.rossotti.basketball.client.FileClientBean;
 import com.rossotti.basketball.client.RestClientBean;
 import com.rossotti.basketball.client.dto.GameDTO;
@@ -44,16 +44,16 @@ public class ScoreResource {
 	private FileClientBean fileClientBean;
 
 	@Autowired
-	private GameServiceBean gameServiceBean;
+	private GameService gameServiceBean;
 
 	@Autowired
-	private OfficialServiceBean officialServiceBean;
+	private OfficialService officialServiceBean;
 
 	@Autowired
-	private RosterPlayerServiceBean rosterPlayerServiceBean;
+	private RosterPlayerService rosterPlayerServiceBean;
 
 	@Autowired
-	private PropertyServiceBean propertyBean;
+	private PropertyService propertyBean;
 
 	private final Logger logger = LoggerFactory.getLogger(ScoreResource.class);
 

@@ -15,7 +15,7 @@ import com.rossotti.basketball.app.resource.ClientSource;
 @Service
 @Configuration
 @PropertySource("service.properties")
-public class PropertyServiceBean {
+public class PropertyService {
 	@Autowired
 	private Environment env;
 

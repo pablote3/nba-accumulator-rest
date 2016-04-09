@@ -16,11 +16,11 @@ import com.rossotti.basketball.dao.model.GameOfficial;
 import com.rossotti.basketball.dao.model.Official;
 
 @Service
-public class OfficialServiceBean {
+public class OfficialService {
 	@Autowired
 	private OfficialDAO officialDAO;
 
-	private final Logger logger = LoggerFactory.getLogger(OfficialServiceBean.class);
+	private final Logger logger = LoggerFactory.getLogger(OfficialService.class);
 
 	public List<GameOfficial> getGameOfficials(OfficialDTO[] officials, LocalDate gameDate) {
 		List<GameOfficial> gameOfficials = new ArrayList<GameOfficial>();

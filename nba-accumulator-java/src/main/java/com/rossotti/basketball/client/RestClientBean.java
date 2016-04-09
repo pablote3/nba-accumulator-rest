@@ -11,7 +11,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rossotti.basketball.app.provider.JsonProvider;
-import com.rossotti.basketball.app.service.PropertyServiceBean;
+import com.rossotti.basketball.app.service.PropertyService;
 import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.client.dto.RosterDTO;
 import com.rossotti.basketball.client.dto.StandingsDTO;
@@ -23,7 +23,7 @@ public class RestClientBean {
 	private ClientBean clientBean;
 
 	@Autowired
-	private PropertyServiceBean propertyBean;
+	private PropertyService propertyBean;
 
 	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
 

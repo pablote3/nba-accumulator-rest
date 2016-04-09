@@ -19,9 +19,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rossotti.basketball.app.service.PlayerServiceBean;
-import com.rossotti.basketball.app.service.PropertyServiceBean;
-import com.rossotti.basketball.app.service.RosterPlayerServiceBean;
+import com.rossotti.basketball.app.service.PlayerService;
+import com.rossotti.basketball.app.service.PropertyService;
+import com.rossotti.basketball.app.service.RosterPlayerService;
 import com.rossotti.basketball.client.FileClientBean;
 import com.rossotti.basketball.client.RestClientBean;
 import com.rossotti.basketball.client.dto.RosterDTO;
@@ -43,13 +43,13 @@ public class RosterResource {
 	private FileClientBean fileClientBean;
 
 	@Autowired
-	private RosterPlayerServiceBean rosterPlayerServiceBean;
+	private RosterPlayerService rosterPlayerServiceBean;
 
 	@Autowired
-	private PlayerServiceBean playerServiceBean;
+	private PlayerService playerServiceBean;
 
 	@Autowired
-	private PropertyServiceBean propertyBean;
+	private PropertyService propertyBean;
 
 	private final Logger logger = LoggerFactory.getLogger(RosterResource.class);
 

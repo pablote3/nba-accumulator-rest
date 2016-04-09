@@ -8,7 +8,7 @@ import com.rossotti.basketball.dao.PlayerDAO;
 import com.rossotti.basketball.dao.model.Player;
 
 @Service
-public class PlayerServiceBean {
+public class PlayerService {
 	@Autowired
 	private PlayerDAO playerDAO;
 

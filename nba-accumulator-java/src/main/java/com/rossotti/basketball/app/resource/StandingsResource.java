@@ -21,9 +21,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rossotti.basketball.app.service.GameServiceBean;
-import com.rossotti.basketball.app.service.PropertyServiceBean;
-import com.rossotti.basketball.app.service.StandingsServiceBean;
+import com.rossotti.basketball.app.service.GameService;
+import com.rossotti.basketball.app.service.PropertyService;
+import com.rossotti.basketball.app.service.StandingsService;
 import com.rossotti.basketball.client.FileClientBean;
 import com.rossotti.basketball.client.RestClientBean;
 import com.rossotti.basketball.client.dto.StandingsDTO;
@@ -45,13 +45,13 @@ public class StandingsResource {
 	private FileClientBean fileClientBean;
 
 	@Autowired
-	private StandingsServiceBean standingsServiceBean;
+	private StandingsService standingsServiceBean;
 
 	@Autowired
-	private GameServiceBean gameServiceBean;
+	private GameService gameServiceBean;
 
 	@Autowired
-	private PropertyServiceBean propertyBean;
+	private PropertyService propertyBean;
 
 	private final Logger logger = LoggerFactory.getLogger(StandingsResource.class);
 
