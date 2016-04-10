@@ -6,7 +6,6 @@ insert into team VALUES(5, 'STL', 'Baltimore', 'East', 'Southeast', 'Baltimore',
 insert into team VALUES(6, 'CLE', 'Relels', 'East', 'Central', 'Cleveland', '2010-07-01', 'Cleveland Rebels', 'Rebels', 'Cleveland Arena', 'OH', 'cleveland-rebels', '9999-12-31');
 insert into team VALUES(7, 'ROC', 'Rochester', 'East', 'Atlantic', 'Rochester', '2008-07-01', 'Rochester Royals', 'Royals', 'Edgerton Park Arena', 'NY', 'rochester-royals', '2009-06-30');
 insert into team VALUES(8, 'STL', 'St. Louis', 'East', 'Southwest', 'St. Louis', '2010-07-01', 'St. Louis Bombers', 'Bombers', 'St. Louis Multiplex', 'MO', 'st-louis-bombers', '2011-06-30');
-insert into team VALUES(9, 'SAC', 'Sacramento', 'West', 'Pacific', 'Sacramento', '2010-07-01', 'Sacramento Hornets', 'Hornets', 'Sacramento State University', 'CA', 'sacramento-hornets', '9999-12-31');
 insert into team VALUES(10, 'DET', 'Detroit', 'East', 'Central', 'Detroit', '2010-07-01', 'Detroit Pistons', 'Pistons', 'Palace of Auburn Hills', 'MI', 'detroit-pistons', '9999-12-31');
 
 insert into official VALUES(1, 'Joe', '2009-07-01', 'LateCall', '96', '2010-06-30');
@@ -74,22 +73,6 @@ insert into boxScore (id, gameId, teamId, location) VALUES(14, 7, 5, 'Away');
 insert into game VALUES(10, '2015-11-24 10:00:00.0', 'Regular', 'Completed');
 insert into boxScore (id, gameId, teamId, location) VALUES(20, 10, 10, 'Home');
 insert into boxScore (id, gameId, teamId, location) VALUES(21, 10, 8, 'Away');
-
-insert into game VALUES(11, '2015-11-24 10:00:00.0', 'Regular', 'Scheduled');
-insert into boxScore (id, gameId, teamId, location) VALUES(22, 11, 9, 'Home');
-insert into boxScore (id, gameId, teamId, location) VALUES(23, 11, 4, 'Away');
-
-insert into game VALUES(12, '2015-11-25 10:00:00.0', 'Regular', 'Postponed');
-insert into boxScore (id, gameId, teamId, location) VALUES(24, 12, 9, 'Home');
-insert into boxScore (id, gameId, teamId, location) VALUES(25, 12, 4, 'Away');
-
-insert into game VALUES(13, '2015-11-26 10:00:00.0', 'Regular', 'Completed');
-insert into boxScore (id, gameId, teamId, location) VALUES(26, 13, 9, 'Home');
-insert into boxScore (id, gameId, teamId, location) VALUES(27, 13, 4, 'Away');
-
-insert into game VALUES(14, '2015-11-27 10:00:00.0', 'Regular', 'Completed');
-insert into boxScore (id, gameId, teamId, location) VALUES(28, 14, 9, 'Home');
-insert into boxScore (id, gameId, teamId, location) VALUES(29, 14, 4, 'Away');
 
 insert into standing (id, teamId, standingDate, rank, ordinalRank, gamesWon, gamesLost, streak, streakType, streakTotal, gamesBack, pointsFor, pointsAgainst, homeWins, homeLosses, 
 awayWins, awayLosses, conferenceWins, conferenceLosses, lastFive, lastTen, gamesPlayed, pointsScoredPerGame, PointsAllowedPerGame, WinPercentage, PointDifferential, pointDifferentialPerGame) 
