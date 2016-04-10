@@ -4,6 +4,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.model.GameStatus;
+import com.rossotti.basketball.dao.model.StatusCode;
 import com.rossotti.basketball.dao.repository.GameRepository;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -31,34 +33,72 @@ public class GameServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		when(gameRepo.findPreviousGameDateTimeByDateTeam((LocalDate) anyObject(), anyString())).thenReturn(new LocalDateTime("2015-11-24T10:00"));
-		when(gameRepo.findByDateTeamSeason((LocalDate) anyObject(), anyString())).thenReturn(createMockGames());
+		when(gameRepo.findPreviousGameDateTimeByDateTeam((LocalDate) anyObject(), anyString()))
+			.thenReturn(new LocalDateTime("2015-11-24T10:00"))
+			.thenReturn(null);
+		when(gameRepo.findByDateTeamSeason((LocalDate) anyObject(), anyString()))
+			.thenReturn(createMockGames())
+			.thenReturn(new ArrayList<Game>());
+		when(gameRepo.updateGame((Game) anyObject()))
+			.thenReturn(createMockGame_StatusCode(new LocalDateTime("2015-11-24T10:00"), StatusCode.Updated))
+			.thenReturn(createMockGame_StatusCode(new LocalDateTime("2015-11-24T10:00"), StatusCode.NotFound));
 	}
 
 	@Test
 	public void findPreviousGameDateTime() {
-		LocalDateTime previousGameDate = gameService.findPreviousGameDateTime(new LocalDate(2015, 11, 26), "sacramento-hornets");
+		LocalDateTime previousGameDate;
+		//previous game found
+		previousGameDate = gameService.findPreviousGameDateTime(new LocalDate(2015, 11, 26), "sacramento-hornets");
 		Assert.assertEquals(new LocalDateTime("2015-11-24T10:00"), previousGameDate);
+
+		//previous game not found
+		previousGameDate = gameService.findPreviousGameDateTime(new LocalDate(2015, 8, 26), "sacramento-hornets");
+		Assert.assertNull(previousGameDate);
 	}
 
 	@Test
 	public void findByDateTeamSeason() {
-		List<Game> games = gameService.findByDateTeamSeason(new LocalDate(2015, 11, 26), "sacramento-hornets");
+		List<Game> games;
+		//two games found
+		games = gameService.findByDateTeamSeason(new LocalDate(2015, 11, 26), "sacramento-hornets");
 		Assert.assertEquals(2, games.size());
+
+		//no games found
+		games = gameService.findByDateTeamSeason(new LocalDate(2015, 8, 26), "sacramento-hornets");
+		Assert.assertEquals(0, games.size());
+	}
+
+	@Test
+	public void updateGame() {
+		Game game;
+		//game updated
+		game = gameService.updateGame(createMockGame_StatusCode(new LocalDateTime("2015-11-24T10:00"), null));
+		Assert.assertTrue(game.isUpdated());
+
+		//game not found
+		game = gameService.updateGame(createMockGame_StatusCode(new LocalDateTime("2015-08-26T10:00"), null));
+		Assert.assertTrue(game.isNotFound());
 	}
 
 	private List<Game> createMockGames() {
 		List<Game> games = Arrays.asList(
-				createMockGame(new LocalDateTime("2015-11-24T10:00"), GameStatus.Completed),
-				createMockGame(new LocalDateTime("2015-11-26T10:00"), GameStatus.Scheduled)
+				createMockGame_GameStatus(new LocalDateTime("2015-11-24T10:00"), GameStatus.Completed),
+				createMockGame_GameStatus(new LocalDateTime("2015-11-26T10:00"), GameStatus.Scheduled)
 		);
 		return games;
 	}
 
-	private Game createMockGame(LocalDateTime asOfDate, GameStatus status) {
+	private Game createMockGame_GameStatus(LocalDateTime asOfDate, GameStatus status) {
 		Game game = new Game();
 		game.setGameDateTime(asOfDate);
 		game.setStatus(status);
+		return game;
+	}
+
+	private Game createMockGame_StatusCode(LocalDateTime asOfDate, StatusCode status) {
+		Game game = new Game();
+		game.setGameDateTime(asOfDate);
+		game.setStatusCode(status);
 		return game;
 	}
 }
