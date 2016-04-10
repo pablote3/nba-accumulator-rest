@@ -32,7 +32,7 @@ public class GameServiceTest {
 	private GameService gameService = new GameService();
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		when(gameRepo.findPreviousGameDateTimeByDateTeam((LocalDate) anyObject(), anyString()))
 			.thenReturn(new LocalDateTime("2015-11-24T10:00"))
 			.thenReturn(null);
