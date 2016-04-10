@@ -1,51 +1,82 @@
 package com.rossotti.basketball.app.service;
 
-import java.io.IOException;
-import java.io.InputStream;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
 import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rossotti.basketball.app.provider.JsonProvider;
-import com.rossotti.basketball.app.service.GameService;
-import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.dao.model.Game;
-import com.rossotti.basketball.util.DateTimeUtil;
+import com.rossotti.basketball.dao.model.GameStatus;
+import com.rossotti.basketball.dao.repository.GameRepository;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath:applicationContext.xml"})
+@RunWith(MockitoJUnitRunner.class)
 public class GameServiceTest {
-	@Autowired
-	private GameService gameService;
+	@Mock
+	private GameRepository gameRepo;
 
-	private ObjectMapper mapper = JsonProvider.buildObjectMapper();
+	@InjectMocks
+	private GameService gameService = new GameService();
 
+	@Before
+	public void setUp() throws Exception {
+		when(gameRepo.findPreviousGameDateTimeByDateTeam((LocalDate) anyObject(), anyString())).thenReturn(new LocalDateTime("2015-11-24T10:00"));
+		when(gameRepo.findByDateTeamSeason((LocalDate) anyObject(), anyString())).thenReturn(createMockGames());
+	}
+
+//	@Test
+//	public void findPreviousGameDateTime_Found() {
+//		GameDTO gameDTO = null;
+//		try {
+//			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockClient/gameClient_Valid.json");
+//			gameDTO = mapper.readValue(baseJson, GameDTO.class);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		LocalDate gameDate = DateTimeUtil.getLocalDate(gameDTO.event_information.getStart_date_time());
+//		String awayTeamKey = gameDTO.away_team.getTeam_id();
+//
+//
+//		LocalDateTime previousGameDate = gameService.findPreviousGameDateTime(gameDate, awayTeamKey);
+//		Assert.assertEquals(new LocalDateTime("2015-11-24T10:00"), previousGameDate);
+//	}
+
+	
 	@Test
-	public void findPreviousGameDateTime_Found() {
-		GameDTO gameDTO = null;
-		try {
-			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockClient/gameClient_Valid.json");
-			gameDTO = mapper.readValue(baseJson, GameDTO.class);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		LocalDate gameDate = DateTimeUtil.getLocalDate(gameDTO.event_information.getStart_date_time());
-		String awayTeamKey = gameDTO.away_team.getTeam_id();
-		LocalDateTime previousGameDate = gameService.findPreviousGameDateTime(gameDate, awayTeamKey);
+	public void findPreviousGameDateTime() {
+		LocalDateTime previousGameDate = gameService.findPreviousGameDateTime(new LocalDate(2015, 11, 26), "sacramento-hornets");
 		Assert.assertEquals(new LocalDateTime("2015-11-24T10:00"), previousGameDate);
 	}
 
 	@Test
-	public void findByDateTeamSeason_Found() {
-		List<Game> previousGames = gameService.findByDateTeamSeason(new LocalDate(2015, 11, 26), "sacramento-hornets");
-		Assert.assertEquals(2, previousGames.size());
+	public void findByDateTeamSeason() {
+		List<Game> games = gameService.findByDateTeamSeason(new LocalDate(2015, 11, 26), "sacramento-hornets");
+		Assert.assertEquals(2, games.size());
+	}
+
+	private List<Game> createMockGames() {
+		List<Game> games = Arrays.asList(
+				createMockGame(new LocalDateTime("2015-11-24T10:00"), GameStatus.Completed),
+				createMockGame(new LocalDateTime("2015-11-26T10:00"), GameStatus.Scheduled)
+		);
+		return games;
+	}
+
+	private Game createMockGame(LocalDateTime asOfDate, GameStatus status) {
+		Game game = new Game();
+		game.setGameDateTime(asOfDate);
+		game.setStatus(status);
+		return game;
 	}
 }
