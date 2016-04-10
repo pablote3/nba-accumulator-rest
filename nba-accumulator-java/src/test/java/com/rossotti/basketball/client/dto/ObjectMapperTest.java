@@ -16,7 +16,7 @@ public class ObjectMapperTest {
 	private ObjectMapper mapper = JsonProvider.buildObjectMapper();
 
 	@Test
-	public void deserialize_JsonToPojo_Roster() throws IOException {
+	public void deserializeRoster() throws IOException {
 		InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockClient/rosterClient.json");
 		RosterDTO roster = mapper.readValue(baseJson, RosterDTO.class);
 		Assert.assertEquals("toronto-raptors", roster.team.getTeam_id());
@@ -26,7 +26,7 @@ public class ObjectMapperTest {
 	}
 
 	@Test
-	public void deserialize_JsonToPojo_Game() throws IOException {
+	public void deserializeGame() throws IOException {
 		InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockClient/gameClient.json");
 		GameDTO game = mapper.readValue(baseJson, GameDTO.class);
 		Assert.assertEquals("detroit-pistons", game.away_team.getTeam_id());
@@ -40,7 +40,7 @@ public class ObjectMapperTest {
 	}
 
 	@Test
-	public void deserialize_JsonToPojo_Standings() throws IOException {
+	public void deserializeStandings() throws IOException {
 		InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockClient/standingsClient.json");
 		StandingsDTO standings = mapper.readValue(baseJson, StandingsDTO.class);
 		Assert.assertEquals("toronto-raptors", standings.standing[1].getTeam_id());
