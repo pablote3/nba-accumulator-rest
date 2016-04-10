@@ -35,24 +35,6 @@ public class GameServiceTest {
 		when(gameRepo.findByDateTeamSeason((LocalDate) anyObject(), anyString())).thenReturn(createMockGames());
 	}
 
-//	@Test
-//	public void findPreviousGameDateTime_Found() {
-//		GameDTO gameDTO = null;
-//		try {
-//			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockClient/gameClient_Valid.json");
-//			gameDTO = mapper.readValue(baseJson, GameDTO.class);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		LocalDate gameDate = DateTimeUtil.getLocalDate(gameDTO.event_information.getStart_date_time());
-//		String awayTeamKey = gameDTO.away_team.getTeam_id();
-//
-//
-//		LocalDateTime previousGameDate = gameService.findPreviousGameDateTime(gameDate, awayTeamKey);
-//		Assert.assertEquals(new LocalDateTime("2015-11-24T10:00"), previousGameDate);
-//	}
-
-	
 	@Test
 	public void findPreviousGameDateTime() {
 		LocalDateTime previousGameDate = gameService.findPreviousGameDateTime(new LocalDate(2015, 11, 26), "sacramento-hornets");
