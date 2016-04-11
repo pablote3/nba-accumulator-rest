@@ -1,62 +1,75 @@
 package com.rossotti.basketball.app.service;
 
-import java.io.IOException;
-import java.io.InputStream;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
 import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rossotti.basketball.app.provider.JsonProvider;
-import com.rossotti.basketball.app.service.OfficialService;
-import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.client.dto.OfficialDTO;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.GameOfficial;
-import com.rossotti.basketball.util.DateTimeUtil;
+import com.rossotti.basketball.dao.model.Official;
+import com.rossotti.basketball.dao.model.StatusCode;
+import com.rossotti.basketball.dao.repository.OfficialRepository;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath:applicationContext.xml"})
+@RunWith(MockitoJUnitRunner.class)
 public class OfficialServiceTest {
-	@Autowired
+	@Mock
+	private OfficialRepository officialRepo;
+
+	@InjectMocks
 	private OfficialService officialService;
 
-	private ObjectMapper mapper = JsonProvider.buildObjectMapper();
-
-	@Test
-	public void mapGameOfficials_Found() {
-		GameDTO gameDTO = null;
-		try {
-			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockClient/gameClient_Valid.json");
-			gameDTO = mapper.readValue(baseJson, GameDTO.class);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		OfficialDTO[] officialsDTO = gameDTO.officials;
-		LocalDate gameDate = DateTimeUtil.getLocalDate(gameDTO.event_information.getStart_date_time());
-		List<GameOfficial> officials = officialService.getGameOfficials(officialsDTO, gameDate);
-		Assert.assertEquals(3, officials.size());
-		Assert.assertEquals("Roe", officials.get(2).getOfficial().getLastName());
-		Assert.assertEquals("45", officials.get(2).getOfficial().getNumber());
+	@Before
+	public void setUp() {
+		when(officialRepo.findOfficial(anyString(), anyString(), (LocalDate) anyObject()))
+			.thenReturn(createMockOfficial("Adams", "Samuel", StatusCode.Found))
+			.thenReturn(createMockOfficial("Coors", "Adolph", StatusCode.Found))
+			.thenReturn(createMockOfficial("", "", StatusCode.NotFound));
 	}
 
 	@Test(expected=NoSuchEntityException.class)
-	public void mapGameOfficials_NotFound() {
-		GameDTO gameDTO = null;
-		try {
-			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockClient/gameClient_Invalid.json");
-			gameDTO = mapper.readValue(baseJson, GameDTO.class);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		OfficialDTO[] officialsDTO = gameDTO.officials;
-		LocalDate gameDate = DateTimeUtil.getLocalDate(gameDTO.event_information.getStart_date_time());
-		officialService.getGameOfficials(officialsDTO, gameDate);
+	public void getGameOfficials() {
+		List<GameOfficial> officials;
+		//game officials found
+		officials = officialService.getGameOfficials(createMockOfficialDTOs(), new LocalDate(2015, 11, 26));
+		Assert.assertEquals(2, officials.size());
+		Assert.assertEquals("Coors", officials.get(1).getOfficial().getLastName());
+		Assert.assertEquals("Adolph", officials.get(1).getOfficial().getFirstName());
+
+		//game officials not found
+		officials = officialService.getGameOfficials(createMockOfficialDTOs(), new LocalDate(2015, 8, 26));
+	}
+
+	private OfficialDTO[] createMockOfficialDTOs() {
+		OfficialDTO[] officials = new OfficialDTO[2];
+		officials[0] = createMockOfficialDTO("Adams", "Samuel");
+		officials[1] = createMockOfficialDTO("Coors", "Adolph");
+		return officials;
+	}
+
+	private OfficialDTO createMockOfficialDTO(String lastName, String firstName) {
+		OfficialDTO official = new OfficialDTO();
+		official.setLast_name(lastName);
+		official.setFirst_name(firstName);
+		return official;
+	}
+	
+	private Official createMockOfficial(String lastName, String firstName, StatusCode statusCode) {
+		Official official = new Official();
+		official.setLastName(lastName);
+		official.setFirstName(firstName);
+		official.setStatusCode(statusCode);
+		return official;
 	}
 }
