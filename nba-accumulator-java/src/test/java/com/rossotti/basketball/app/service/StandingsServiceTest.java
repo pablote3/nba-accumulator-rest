@@ -141,22 +141,19 @@ public class StandingsServiceTest {
 	}
 
 	@Test
-	public void deleteStanding() {
-		Standing standing;
+	public void deleteStandings() {
+		List<Standing> standings;
 		//standing deleted
-		standing = standingsService.deleteStanding("toronto-raptors", new LocalDate(2015, 11, 26));
-		Assert.assertEquals("toronto-raptors", standing.getTeam().getTeamKey());
-		Assert.assertTrue(standing.isDeleted());
+		standings = standingsService.deleteStandings(new LocalDate(2015, 11, 26));
+		Assert.assertTrue(standings.get(0).isDeleted());
 
 		//no standing found
-		standing = standingsService.deleteStanding("seattle-supersonics", new LocalDate(2015, 11, 26));
-		Assert.assertEquals("seattle-supersonics", standing.getTeam().getTeamKey());
-		Assert.assertTrue(standing.isNotFound());
+		Assert.assertTrue(standings.get(1).isNotFound());
 	}
 
 //	@Test
 //	public void calculateStrengthOfSchedule() {
-//		standingsService.calculateStrengthOfSchedule(standing, standingsMap);
+//		standingsService.calculateStrengthOfSchedule(createMockStanding("toronto-raptors", StatusCode.Found), standingsMap);
 //	}
 
 	private StandingsDTO createMockStandingsDTO() {

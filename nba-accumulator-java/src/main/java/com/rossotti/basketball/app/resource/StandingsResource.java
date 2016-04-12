@@ -80,14 +80,7 @@ public class StandingsResource {
 			}
 
 			if (standingsDTO.httpStatus == 200) {
-				//delete standings for asOfDate if they exist
-				List<Standing> oldStandings = standingsService.findStandings(asOfDate);
-				if (!oldStandings.isEmpty() && oldStandings.size() > 0) {
-					logger.info("Deleting standings for " + asOfDateString);
-					for (int i = 0; i < oldStandings.size(); i++) {
-						standingsService.deleteStanding(oldStandings.get(i).getTeam().getTeamKey(), asOfDate);
-					}
-				}
+				standingsService.deleteStandings(asOfDate);
 
 				activeStandings = standingsService.getStandings(standingsDTO);
 

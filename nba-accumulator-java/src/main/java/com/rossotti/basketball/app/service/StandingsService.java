@@ -101,8 +101,16 @@ public class StandingsService {
 		return standingRepo.updateStanding(standing);
 	}
 
-	public Standing deleteStanding(String teamKey, LocalDate asOfDate) {
-		return standingRepo.deleteStanding(teamKey, asOfDate);
+	public List<Standing> deleteStandings(LocalDate asOfDate) {
+		List<Standing> standings = standingRepo.findStandings(asOfDate);
+		if (!standings.isEmpty() && standings.size() > 0) {
+			logger.info("Deleting standings for " + DateTimeUtil.getStringDate(asOfDate));
+			for (int i = 0; i < standings.size(); i++) {
+				String team = standings.get(i).getTeam().getTeamKey();
+				standings.set(i, standingRepo.deleteStanding(team, asOfDate));
+			}
+		}
+		return standings;
 	}
 
 	public void calculateStrengthOfSchedule(Standing standing, Map<String, StandingRecord> standingsMap) {
