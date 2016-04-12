@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -22,7 +23,9 @@ import com.rossotti.basketball.client.dto.StandingDTO;
 import com.rossotti.basketball.client.dto.StandingsDTO;
 import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
+import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.model.Standing;
+import com.rossotti.basketball.dao.model.StandingRecord;
 import com.rossotti.basketball.dao.model.StatusCode;
 import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.dao.repository.GameRepository;
@@ -64,6 +67,9 @@ public class StandingsServiceTest {
 			.thenReturn(createMockTeam("denver-nuggets", StatusCode.Found))
 			.thenReturn(createMockTeam("miami-heat", StatusCode.Found))
 			.thenReturn(createMockTeam("denver-mcnuggets", StatusCode.NotFound));
+		when(gameRepo.findByDateTeamSeason((LocalDate) anyObject(), anyString()))
+			.thenReturn(createMockGames())
+			.thenReturn(new ArrayList<Game>());
 	}
 
 	@Test(expected=NoSuchEntityException.class)
@@ -148,6 +154,11 @@ public class StandingsServiceTest {
 		Assert.assertTrue(standing.isNotFound());
 	}
 
+//	@Test
+//	public void calculateStrengthOfSchedule() {
+//		standingsService.calculateStrengthOfSchedule(standing, standingsMap);
+//	}
+
 	private StandingsDTO createMockStandingsDTO() {
 		StandingsDTO standings = new StandingsDTO();
 		standings.standings_date = new DateTime(2015, 3, 26, 12, 0, 0, 0);
@@ -210,5 +221,19 @@ public class StandingsServiceTest {
 		team.setTeamKey(teamKey);
 		team.setStatusCode(statusCode);
 		return team;
+	}
+
+	private List<Game> createMockGames() {
+		List<Game> games = Arrays.asList(
+				createMockGame(),
+				createMockGame()
+			);
+			return games;
+	}
+
+	private Game createMockGame() {
+		Game game = new Game();
+		
+		return game;
 	}
 }
