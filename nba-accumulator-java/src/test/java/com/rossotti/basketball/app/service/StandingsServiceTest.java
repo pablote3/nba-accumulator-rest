@@ -4,6 +4,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,16 +46,12 @@ public class StandingsServiceTest {
 
 	@Before
 	public void setUp() {
-//		when(rosterPlayerRepo.findRosterPlayer(anyString(), anyString(), anyString(), (LocalDate) anyObject()))
-//			.thenReturn(createMockRosterPlayer("Adams", "Samuel", StatusCode.Found))
-//			.thenReturn(createMockRosterPlayer("Coors", "Adolph", StatusCode.Found))
-//			.thenReturn(createMockRosterPlayer("", "", StatusCode.NotFound));
-//		when(rosterPlayerRepo.findRosterPlayer(anyString(), anyString(), (LocalDate) anyObject(), (LocalDate) anyObject()))
-//			.thenReturn(createMockRosterPlayer("Simmons", "Gene", StatusCode.Found))
-//			.thenReturn(createMockRosterPlayer("Simmons", "Richard", StatusCode.NotFound));
-//		when(rosterPlayerRepo.findRosterPlayers(anyString(), (LocalDate) anyObject()))
-//			.thenReturn(createMockRosterPlayers())
-//			.thenReturn(new ArrayList<RosterPlayer>());
+		when(standingRepo.findStanding(anyString(), (LocalDate) anyObject()))
+			.thenReturn(createMockStanding("denver-nuggets", StatusCode.Found))
+			.thenReturn(createMockStanding("denver-mcnuggets", StatusCode.NotFound));
+		when(standingRepo.findStandings((LocalDate) anyObject()))
+			.thenReturn(createMockStandings())
+			.thenReturn(new ArrayList<Standing>());
 //		when(rosterPlayerRepo.createRosterPlayer((RosterPlayer) anyObject()))
 //			.thenReturn(createMockRosterPlayer("Payton", "Walter", StatusCode.Created))
 //			.thenThrow(new DuplicateEntityException());
@@ -82,62 +79,33 @@ public class StandingsServiceTest {
 		standings = standingsService.getStandings(createMockStandingsDTO());
 	}
 
-//	@Test(expected=NoSuchEntityException.class)
-//	public void getRosterPlayers() {
-//		List<RosterPlayer> rosterPlayers;
-//		//roster players found
-//		rosterPlayers = rosterPlayerService.getRosterPlayers(createMockRosterPlayerDTOs(), new LocalDate(2015, 11, 26), "sacramento-hornets");
-//		Assert.assertEquals(2, rosterPlayers.size());
-//		Assert.assertEquals("Clayton", rosterPlayers.get(1).getPlayer().getLastName());
-//		Assert.assertEquals("Mark", rosterPlayers.get(1).getPlayer().getFirstName());
-//
-//		//roster player not found
-//		rosterPlayers = rosterPlayerService.getRosterPlayers(createMockRosterPlayerDTOs(), new LocalDate(2015, 8, 26), "sacramento-hornets");
-//	}
-//
-//	@Test
-//	public void findRosterPlayers() {
-//		List<RosterPlayer> rosterPlayers;
-//		//roster players found
-//		rosterPlayers = rosterPlayerService.findRosterPlayers(new LocalDate(2015, 11, 26), "sacramento-hornets");
-//		Assert.assertEquals(2, rosterPlayers.size());
-//		Assert.assertEquals("Simpson", rosterPlayers.get(1).getPlayer().getLastName());
-//		Assert.assertEquals("Lisa", rosterPlayers.get(1).getPlayer().getFirstName());
-//
-//		//roster player not found
-//		rosterPlayers = rosterPlayerService.findRosterPlayers(new LocalDate(2015, 8, 26), "sacramento-hornets");
-//		Assert.assertEquals(new ArrayList<RosterPlayer>(), rosterPlayers);
-//	}
-//
-//	@Test
-//	public void findByDatePlayerNameTeam() {
-//		RosterPlayer rosterPlayer;
-//		//roster players found
-//		rosterPlayer = rosterPlayerService.findByDatePlayerNameTeam(new LocalDate(2015, 11, 26), "Moore", "Michael", "sacramento-hornets");
-//		Assert.assertEquals("Adams", rosterPlayer.getPlayer().getLastName());
-//		Assert.assertTrue(rosterPlayer.isFound());
-//		rosterPlayer = rosterPlayerService.findByDatePlayerNameTeam(new LocalDate(2015, 11, 26), "Moore", "Nat", "sacramento-hornets");
-//		Assert.assertEquals("Coors", rosterPlayer.getPlayer().getLastName());
-//		Assert.assertTrue(rosterPlayer.isFound());
-//
-//		//no roster player found
-//		rosterPlayer = rosterPlayerService.findByDatePlayerNameTeam(new LocalDate(2015, 11, 26), "Moore", "Even", "sacramento-hornets");
-//		Assert.assertTrue(rosterPlayer.isNotFound());
-//	}
-//
-//	@Test
-//	public void findLatestByPlayerNameBirthdateSeason() {
-//		RosterPlayer rosterPlayer;
-//		//roster player found
-//		rosterPlayer = rosterPlayerService.findLatestByPlayerNameBirthdateSeason(new LocalDate(2015, 11, 26), "Simmons", "Gene", new LocalDate(1995, 11, 26));
-//		Assert.assertEquals("Gene", rosterPlayer.getPlayer().getFirstName());
-//		Assert.assertTrue(rosterPlayer.isFound());
-//
-//		//no roster player found
-//		rosterPlayer = rosterPlayerService.findLatestByPlayerNameBirthdateSeason(new LocalDate(2015, 11, 26), "Simmons", "Richard", new LocalDate(1995, 11, 26));
-//		Assert.assertTrue(rosterPlayer.isNotFound());
-//	}
-//
+	@Test
+	public void findStanding() {
+		Standing standing;
+		//standing found
+		standing = standingsService.findStanding("denver-nuggets", new LocalDate(2015, 11, 26));
+		Assert.assertEquals("denver-nuggets", standing.getTeam().getTeamKey());
+		Assert.assertTrue(standing.isFound());
+
+		//standing not found
+		standing = standingsService.findStanding("denver-mcnuggets", new LocalDate(2015, 11, 26));
+		Assert.assertTrue(standing.isNotFound());
+	}
+
+	@Test
+	public void findStandings() {
+		List<Standing> standings;
+		//standings found
+		standings = standingsService.findStandings(new LocalDate(2015, 11, 26));
+		Assert.assertEquals(2, standings.size());
+		Assert.assertEquals("utah-jazz", standings.get(1).getTeam().getTeamKey());
+		Assert.assertTrue(standings.get(1).isFound());
+
+		//standings not found
+		standings = standingsService.findStandings(new LocalDate(2015, 8, 26));
+		Assert.assertEquals(new ArrayList<Standing>(), standings);
+	}
+
 //	@Test(expected=DuplicateEntityException.class)
 //	public void createRosterPlayer() {
 //		RosterPlayer rosterPlayer;
@@ -204,24 +172,21 @@ public class StandingsServiceTest {
 		return standing;
 	}
 
-	private List<RosterPlayer> createMockRosterPlayers() {
-		List<RosterPlayer> rosterPlayers = Arrays.asList(
-			createMockRosterPlayer("Simpson", "Homer", StatusCode.Found),
-			createMockRosterPlayer("Simpson", "Lisa", StatusCode.Found)
+	private List<Standing> createMockStandings() {
+		List<Standing> standings = Arrays.asList(
+			createMockStanding("sacramento-kings", StatusCode.Found),
+			createMockStanding("utah-jazz", StatusCode.Found)
 		);
-		return rosterPlayers;
+		return standings;
 	}
 
-	private RosterPlayer createMockRosterPlayer(String lastName, String firstName, StatusCode statusCode) {
-		RosterPlayer rosterPlayer = new RosterPlayer();
-		Player player = new Player();
-		rosterPlayer.setPlayer(player);
-		rosterPlayer.setStatusCode(statusCode);
-		rosterPlayer.setFromDate(new LocalDate(2015, 11, 26));
-		player.setLastName(lastName);
-		player.setFirstName(firstName);
-		player.setBirthdate(new LocalDate(1995, 11, 26));
-		return rosterPlayer;
+	private Standing createMockStanding(String teamKey, StatusCode statusCode) {
+		Standing standing = new Standing();
+		Team team = new Team();
+		team.setTeamKey(teamKey);
+		standing.setTeam(team);
+		standing.setStatusCode(statusCode);
+		return standing;
 	}
 
 	private Team createMockTeam(String teamKey, StatusCode statusCode) {
