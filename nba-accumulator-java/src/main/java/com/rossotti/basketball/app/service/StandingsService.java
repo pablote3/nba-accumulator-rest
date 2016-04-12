@@ -18,6 +18,7 @@ import com.rossotti.basketball.client.dto.StandingsDTO;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.BoxScore.Result;
+import com.rossotti.basketball.dao.repository.GameRepository;
 import com.rossotti.basketball.dao.repository.StandingRepository;
 import com.rossotti.basketball.dao.repository.TeamRepository;
 import com.rossotti.basketball.dao.model.Game;
@@ -35,7 +36,7 @@ public class StandingsService {
 	private TeamRepository teamRepo;
 
 	@Autowired
-	private GameService gameService;
+	private GameRepository gameRepo;
 
 	private final Logger logger = LoggerFactory.getLogger(StandingsService.class);
 
@@ -112,7 +113,7 @@ public class StandingsService {
 		Integer opptGamesPlayed = 0;
 		Integer opptOpptGamesWon = 0;
 		Integer opptOpptGamesPlayed = 0;
-		List<Game> completeGames = gameService.findByDateTeamSeason(standing.getStandingDate(), teamKey);
+		List<Game> completeGames = gameRepo.findByDateTeamSeason(standing.getStandingDate(), teamKey);
 
 		Map<String, StandingRecord> headToHeadMap = new HashMap<String, StandingRecord>();
 		for (int i = 0; i < completeGames.size(); i++) {
