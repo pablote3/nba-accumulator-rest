@@ -104,6 +104,10 @@ public class RosterPlayerService {
 		return rosterPlayers;
 	}
 
+	public List<RosterPlayer> findRosterPlayers(LocalDate asOfDate, String teamKey) {
+		return rosterPlayerRepo.findRosterPlayers(teamKey, asOfDate);
+	}
+
 	public RosterPlayer findByDatePlayerNameTeam(LocalDate asOfDate, String lastName, String firstName, String teamKey) {
 		return rosterPlayerRepo.findRosterPlayer(lastName, firstName, teamKey, asOfDate);
 	}
@@ -118,9 +122,5 @@ public class RosterPlayerService {
 
 	public RosterPlayer updateRosterPlayer(RosterPlayer rosterPlayer) {
 		return rosterPlayerRepo.updateRosterPlayer(rosterPlayer);
-	}
-
-	public List<RosterPlayer> findRosterPlayers(LocalDate asOfDate, String teamKey) {
-		return rosterPlayerRepo.findRosterPlayers(teamKey, asOfDate);
 	}
 }
