@@ -86,7 +86,7 @@ public class RosterPlayerServiceTest {
 		Assert.assertEquals("Clayton", rosterPlayers.get(1).getPlayer().getLastName());
 		Assert.assertEquals("Mark", rosterPlayers.get(1).getPlayer().getFirstName());
 
-		//roster player not found
+		//roster player team not found
 		rosterPlayers = rosterPlayerService.getRosterPlayers(createMockRosterPlayerDTOs(), new LocalDate(2015, 8, 26), "sacramento-hornets");
 	}
 
