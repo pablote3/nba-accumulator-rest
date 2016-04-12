@@ -77,23 +77,29 @@ public class RosterPlayerService {
 		List<RosterPlayer> rosterPlayers = new ArrayList<RosterPlayer>();
 		RosterPlayer rosterPlayer;
 		Player player;
-		Team team = teamRepo.findTeam(teamKey, gameDate);
-
-		for (int i = 0; i < rosterPlayerDTOs.length; i++) {
-			player = new Player();
-			player.setLastName(rosterPlayerDTOs[i].getLast_name());
-			player.setFirstName(rosterPlayerDTOs[i].getFirst_name());
-			player.setDisplayName(rosterPlayerDTOs[i].getDisplay_name());
-			player.setHeight(rosterPlayerDTOs[i].getHeight_in());
-			player.setWeight(rosterPlayerDTOs[i].getWeight_lb());
-			player.setBirthdate(DateTimeUtil.getLocalDate(rosterPlayerDTOs[i].getBirthdate()));
-			player.setBirthplace(rosterPlayerDTOs[i].getBirthplace());
-			rosterPlayer = new RosterPlayer();
-			rosterPlayer.setPlayer(player);
-			rosterPlayer.setTeam(team);
-			rosterPlayer.setNumber(rosterPlayerDTOs[i].getUniform_number());
-			rosterPlayer.setPosition(Position.valueOf(rosterPlayerDTOs[i].getPosition()));
-			rosterPlayers.add(rosterPlayer);
+		Team team;
+		team = teamRepo.findTeam(teamKey, gameDate);
+		if (team.isNotFound()) {
+			logger.info("Team not found " + teamKey);
+			throw new NoSuchEntityException(Team.class);
+		}
+		else {
+			for (int i = 0; i < rosterPlayerDTOs.length; i++) {
+				player = new Player();
+				player.setLastName(rosterPlayerDTOs[i].getLast_name());
+				player.setFirstName(rosterPlayerDTOs[i].getFirst_name());
+				player.setDisplayName(rosterPlayerDTOs[i].getDisplay_name());
+				player.setHeight(rosterPlayerDTOs[i].getHeight_in());
+				player.setWeight(rosterPlayerDTOs[i].getWeight_lb());
+				player.setBirthdate(DateTimeUtil.getLocalDate(rosterPlayerDTOs[i].getBirthdate()));
+				player.setBirthplace(rosterPlayerDTOs[i].getBirthplace());
+				rosterPlayer = new RosterPlayer();
+				rosterPlayer.setPlayer(player);
+				rosterPlayer.setTeam(team);
+				rosterPlayer.setNumber(rosterPlayerDTOs[i].getUniform_number());
+				rosterPlayer.setPosition(Position.valueOf(rosterPlayerDTOs[i].getPosition()));
+				rosterPlayers.add(rosterPlayer);
+			}
 		}
 		return rosterPlayers;
 	}
