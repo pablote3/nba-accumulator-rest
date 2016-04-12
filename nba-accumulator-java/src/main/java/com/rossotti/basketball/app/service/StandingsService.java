@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.client.dto.StandingDTO;
 import com.rossotti.basketball.client.dto.StandingsDTO;
+import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.BoxScore.Result;
 import com.rossotti.basketball.dao.repository.StandingRepository;
@@ -22,6 +23,7 @@ import com.rossotti.basketball.dao.repository.TeamRepository;
 import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.model.Standing;
 import com.rossotti.basketball.dao.model.StandingRecord;
+import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
@@ -42,10 +44,16 @@ public class StandingsService {
 		List<Standing> standings = new ArrayList<Standing>();
 		StandingDTO standingDTO;
 		Standing standing;
+		Team team;
 		for (int i = 0; i < standingsDTO.standing.length; i++) {
 			standingDTO = standingsDTO.standing[i];
+			team = teamRepo.findTeam(standingDTO.getTeam_id(), asOfDate);
+			if (team.isNotFound()) {
+				logger.info("Team not found " + standingDTO.getTeam_id());
+				throw new NoSuchEntityException(Team.class);
+			}
 			standing = new Standing();
-			standing.setTeam(teamRepo.findTeam(standingDTO.getTeam_id(), asOfDate));
+			standing.setTeam(team);
 			standing.setStandingDate(asOfDate);
 			standing.setRank(standingDTO.getRank());
 			standing.setOrdinalRank(standingDTO.getOrdinal_rank());
