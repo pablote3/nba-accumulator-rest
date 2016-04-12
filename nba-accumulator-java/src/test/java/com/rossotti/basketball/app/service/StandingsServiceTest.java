@@ -20,9 +20,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.rossotti.basketball.client.dto.StandingDTO;
 import com.rossotti.basketball.client.dto.StandingsDTO;
+import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
-import com.rossotti.basketball.dao.model.Player;
-import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.model.Standing;
 import com.rossotti.basketball.dao.model.StatusCode;
 import com.rossotti.basketball.dao.model.Team;
@@ -52,12 +51,15 @@ public class StandingsServiceTest {
 		when(standingRepo.findStandings((LocalDate) anyObject()))
 			.thenReturn(createMockStandings())
 			.thenReturn(new ArrayList<Standing>());
-//		when(rosterPlayerRepo.createRosterPlayer((RosterPlayer) anyObject()))
-//			.thenReturn(createMockRosterPlayer("Payton", "Walter", StatusCode.Created))
-//			.thenThrow(new DuplicateEntityException());
-//		when(rosterPlayerRepo.updateRosterPlayer((RosterPlayer) anyObject()))
-//			.thenReturn(createMockRosterPlayer("Schaub", "Buddy", StatusCode.Updated))
-//			.thenReturn(createMockRosterPlayer("Lima", "Roger", StatusCode.NotFound));
+		when(standingRepo.createStanding((Standing) anyObject()))
+			.thenReturn(createMockStanding("seattle-supersonics", StatusCode.Created))
+			.thenThrow(new DuplicateEntityException());
+		when(standingRepo.updateStanding((Standing) anyObject()))
+			.thenReturn(createMockStanding("toronto-raptors", StatusCode.Updated))
+			.thenReturn(createMockStanding("seattle-supersonics", StatusCode.NotFound));
+		when(standingRepo.deleteStanding(anyString(), (LocalDate) anyObject()))
+			.thenReturn(createMockStanding("toronto-raptors", StatusCode.Deleted))
+			.thenReturn(createMockStanding("seattle-supersonics", StatusCode.NotFound));
 		when(teamRepo.findTeam(anyString(), (LocalDate) anyObject()))
 			.thenReturn(createMockTeam("denver-nuggets", StatusCode.Found))
 			.thenReturn(createMockTeam("miami-heat", StatusCode.Found))
@@ -106,31 +108,45 @@ public class StandingsServiceTest {
 		Assert.assertEquals(new ArrayList<Standing>(), standings);
 	}
 
-//	@Test(expected=DuplicateEntityException.class)
-//	public void createRosterPlayer() {
-//		RosterPlayer rosterPlayer;
-//		//roster player created
-//		rosterPlayer = rosterPlayerService.createRosterPlayer(createMockRosterPlayer("Payton", "Walter", StatusCode.Created));
-//		Assert.assertEquals("Walter", rosterPlayer.getPlayer().getFirstName());
-//		Assert.assertTrue(rosterPlayer.isCreated());
-//
-//		//roster player already exists
-//		rosterPlayer = rosterPlayerService.createRosterPlayer(createMockRosterPlayer("Smith", "Emmitt", StatusCode.Found));
-//	}
-//
-//	@Test
-//	public void updateRosterPlayer() {
-//		RosterPlayer rosterPlayer;
-//		//roster player updated
-//		rosterPlayer = rosterPlayerService.updateRosterPlayer(createMockRosterPlayer("Schaub", "Buddy", StatusCode.Found));
-//		Assert.assertEquals("Buddy", rosterPlayer.getPlayer().getFirstName());
-//		Assert.assertTrue(rosterPlayer.isUpdated());
-//
-//		//no roster player found
-//		rosterPlayer = rosterPlayerService.updateRosterPlayer(createMockRosterPlayer("Roger", "Lima", StatusCode.NotFound));
-//		Assert.assertEquals("Roger", rosterPlayer.getPlayer().getFirstName());
-//		Assert.assertTrue(rosterPlayer.isNotFound());
-//	}
+	@Test(expected=DuplicateEntityException.class)
+	public void createStanding() {
+		Standing standing;
+		//standing created
+		standing = standingsService.createStanding(createMockStanding("seattle-supersonics", StatusCode.NotFound));
+		Assert.assertEquals("seattle-supersonics", standing.getTeam().getTeamKey());
+		Assert.assertTrue(standing.isCreated());
+
+		//standing already exists
+		standing = standingsService.createStanding(createMockStanding("houston-rockets", StatusCode.NotFound));
+	}
+
+	@Test
+	public void updateStanding() {
+		Standing standing;
+		//standing updated
+		standing = standingsService.updateStanding(createMockStanding("toronto-raptors", StatusCode.Found));
+		Assert.assertEquals("toronto-raptors", standing.getTeam().getTeamKey());
+		Assert.assertTrue(standing.isUpdated());
+
+		//no standing found
+		standing = standingsService.updateStanding(createMockStanding("seattle-supersonics", StatusCode.NotFound));
+		Assert.assertEquals("seattle-supersonics", standing.getTeam().getTeamKey());
+		Assert.assertTrue(standing.isNotFound());
+	}
+
+	@Test
+	public void deleteStanding() {
+		Standing standing;
+		//standing deleted
+		standing = standingsService.deleteStanding("toronto-raptors", new LocalDate(2015, 11, 26));
+		Assert.assertEquals("toronto-raptors", standing.getTeam().getTeamKey());
+		Assert.assertTrue(standing.isDeleted());
+
+		//no standing found
+		standing = standingsService.deleteStanding("seattle-supersonics", new LocalDate(2015, 11, 26));
+		Assert.assertEquals("seattle-supersonics", standing.getTeam().getTeamKey());
+		Assert.assertTrue(standing.isNotFound());
+	}
 
 	private StandingsDTO createMockStandingsDTO() {
 		StandingsDTO standings = new StandingsDTO();
