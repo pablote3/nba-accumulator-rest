@@ -113,6 +113,16 @@ public class StandingsService {
 		return standings;
 	}
 
+	public Map<String, StandingRecord> buildStandingsMap(List<Standing> standings) {
+		Map<String, StandingRecord> standingsMap = new HashMap<String, StandingRecord>();
+		StandingRecord standingRecord;
+		for (int i = 0; i < standings.size(); i++) {
+			standingRecord = new StandingRecord((int)standings.get(i).getGamesWon(), (int)standings.get(i).getGamesPlayed(), 0, 0);
+			standingsMap.put(standings.get(i).getTeam().getTeamKey(), standingRecord);
+		}
+		return standingsMap;
+	}
+
 	public void calculateStrengthOfSchedule(Standing standing, Map<String, StandingRecord> standingsMap) {
 		String teamKey = standing.getTeam().getTeamKey();
 		BoxScore opptBoxScore;

@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -151,6 +152,19 @@ public class StandingsServiceTest {
 		Assert.assertTrue(standings.get(1).isNotFound());
 	}
 
+	@Test
+	public void buildStandingsMap() {
+		Map<String, StandingRecord> standingsMap;
+		//standing map with entries
+		standingsMap = standingsService.buildStandingsMap(createMockStandings());
+		Assert.assertEquals(2, standingsMap.size());
+		Assert.assertEquals(5, standingsMap.get("utah-jazz").getGamesWon().intValue());
+
+		//no standing map entries
+		standingsMap = standingsService.buildStandingsMap(new ArrayList<Standing>());
+		Assert.assertEquals(new HashMap<String, StandingRecord>(), standingsMap);
+	}
+
 //	@Test
 //	public void calculateStrengthOfSchedule() {
 //		standingsService.calculateStrengthOfSchedule(createMockStanding("toronto-raptors", StatusCode.Found), standingsMap);
@@ -209,6 +223,8 @@ public class StandingsServiceTest {
 		Team team = new Team();
 		team.setTeamKey(teamKey);
 		standing.setTeam(team);
+		standing.setGamesWon((short)5);
+		standing.setGamesPlayed((short)10);
 		standing.setStatusCode(statusCode);
 		return standing;
 	}

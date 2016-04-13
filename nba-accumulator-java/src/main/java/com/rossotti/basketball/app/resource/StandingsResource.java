@@ -1,7 +1,6 @@
 package com.rossotti.basketball.app.resource;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -83,14 +82,7 @@ public class StandingsResource {
 				standingsService.deleteStandings(asOfDate);
 
 				activeStandings = standingsService.getStandings(standingsDTO);
-
-				//build standings map
-				Map<String, StandingRecord> standingsMap = new HashMap<String, StandingRecord>();
-				StandingRecord standingRecord;
-				for (int i = 0; i < activeStandings.size(); i++) {
-					standingRecord = new StandingRecord((int)activeStandings.get(i).getGamesWon(), (int)activeStandings.get(i).getGamesPlayed(), 0, 0);
-					standingsMap.put(activeStandings.get(i).getTeam().getTeamKey(), standingRecord);
-				}
+				Map<String, StandingRecord> standingsMap = standingsService.buildStandingsMap(activeStandings);
 
 				//create team standing
 				Standing createTeamStanding;
