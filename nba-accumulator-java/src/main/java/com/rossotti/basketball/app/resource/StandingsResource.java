@@ -20,13 +20,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rossotti.basketball.app.service.GameService;
 import com.rossotti.basketball.app.service.PropertyService;
 import com.rossotti.basketball.app.service.StandingsService;
 import com.rossotti.basketball.client.dto.StandingsDTO;
 import com.rossotti.basketball.client.service.FileClientService;
 import com.rossotti.basketball.client.service.RestClientService;
-import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.model.Standing;
 import com.rossotti.basketball.dao.model.StandingRecord;
@@ -45,9 +43,6 @@ public class StandingsResource {
 
 	@Autowired
 	private StandingsService standingsService;
-
-	@Autowired
-	private GameService gameService;
 
 	@Autowired
 	private PropertyService propertyService;
@@ -79,44 +74,18 @@ public class StandingsResource {
 			}
 
 			if (standingsDTO.httpStatus == 200) {
+				//clear existing standings
 				standingsService.deleteStandings(asOfDate);
 
 				activeStandings = standingsService.getStandings(standingsDTO);
 				Map<String, StandingRecord> standingsMap = standingsService.buildStandingsMap(activeStandings);
 
-				//create team standing
-				Standing createTeamStanding;
-				List<Game> completeGames;
-				Game completedGame;
-				String opptTeamKey;
-				Integer opptGamesWon;
-				Integer opptGamesPlayed;
-				for (int i = 0; i < activeStandings.size(); i++) {
-					createTeamStanding = activeStandings.get(i);
-					String teamKey = createTeamStanding.getTeam().getTeamKey();
-					opptGamesWon = 0;
-					opptGamesPlayed = 0;
-					completeGames = gameService.findByDateTeamSeason(asOfDate, teamKey);
-					for (int k = 0; k < completeGames.size(); k++) {
-						completedGame = completeGames.get(k);
-						int opptBoxScoreId = completedGame.getBoxScores().get(0).getTeam().equals(createTeamStanding.getTeam()) ? 1 : 0;
-						opptTeamKey = completedGame.getBoxScores().get(opptBoxScoreId).getTeam().getTeamKey();
-						opptGamesWon = opptGamesWon + standingsMap.get(opptTeamKey).getGamesWon();
-						opptGamesPlayed = opptGamesPlayed + standingsMap.get(opptTeamKey).getGamesPlayed();
-
-						String completedGameDate = DateTimeUtil.getStringDate(completedGame.getGameDateTime());
-						logger.debug('\n' + ("  StandingsMap " + teamKey + " " + completedGameDate + " " + opptTeamKey + 
-											" Games Won/Played: " + standingsMap.get(opptTeamKey).getGamesWon() + " - " + standingsMap.get(opptTeamKey).getGamesPlayed()));
-					}
-					standingsMap.get(teamKey).setOpptGamesWon(opptGamesWon);
-					standingsMap.get(teamKey).setOpptGamesPlayed(opptGamesPlayed);
-					standingsService.createStanding(createTeamStanding);
-				}
+				List<Standing> createdStandings = standingsService.createTeamStandings(activeStandings, standingsMap, asOfDate);
 
 				//update team standing
 				Standing updateTeamStanding;
-				for (int i = 0; i < activeStandings.size(); i++) {
-					updateTeamStanding = activeStandings.get(i);
+				for (int i = 0; i < createdStandings.size(); i++) {
+					updateTeamStanding = createdStandings.get(i);
 					String standingTeam = updateTeamStanding.getTeam().getTeamKey();
 					updateTeamStanding = standingsService.findStanding(standingTeam, asOfDate);
 					standingsService.calculateStrengthOfSchedule(updateTeamStanding, standingsMap);
