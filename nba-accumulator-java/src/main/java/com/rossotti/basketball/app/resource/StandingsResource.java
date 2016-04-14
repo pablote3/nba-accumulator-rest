@@ -78,9 +78,9 @@ public class StandingsResource {
 				standingsService.deleteStandings(asOfDate);
 
 				activeStandings = standingsService.getStandings(standingsDTO);
-				Map<String, StandingRecord> standingsMap = standingsService.buildStandingsMap(activeStandings);
+				Map<String, StandingRecord> standingsMap = standingsService.buildStandingsMap(activeStandings, asOfDate);
 
-				List<Standing> createdStandings = standingsService.createTeamStandings(activeStandings, standingsMap, asOfDate);
+				List<Standing> createdStandings = standingsService.createTeamStandings(activeStandings);
 
 				//update team standing
 				Standing updateTeamStanding;

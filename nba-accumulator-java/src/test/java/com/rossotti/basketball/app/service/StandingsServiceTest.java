@@ -110,7 +110,7 @@ public class StandingsServiceTest {
 		List<Standing> standings;
 		//standings found
 		standings = standingsService.findStandings(new LocalDate(2015, 11, 26));
-		Assert.assertEquals(2, standings.size());
+		Assert.assertEquals(5, standings.size());
 		Assert.assertEquals("utah-jazz", standings.get(1).getTeam().getTeamKey());
 		Assert.assertTrue(standings.get(1).isFound());
 
@@ -164,12 +164,13 @@ public class StandingsServiceTest {
 	public void buildStandingsMap() {
 		Map<String, StandingRecord> standingsMap;
 		//standing map with entries
-		standingsMap = standingsService.buildStandingsMap(createMockStandings());
-		Assert.assertEquals(2, standingsMap.size());
+		standingsMap = standingsService.buildStandingsMap(createMockStandings(), new LocalDate(2015, 12, 05));
+		Assert.assertEquals(5, standingsMap.size());
 		Assert.assertEquals(3, standingsMap.get("utah-jazz").getGamesWon().intValue());
+		Assert.assertEquals(12, standingsMap.get("utah-jazz").getOpptGamesPlayed().intValue());
 
 		//no standing map entries
-		standingsMap = standingsService.buildStandingsMap(new ArrayList<Standing>());
+		standingsMap = standingsService.buildStandingsMap(new ArrayList<Standing>(), new LocalDate(2015, 12, 05));
 		Assert.assertEquals(new HashMap<String, StandingRecord>(), standingsMap);
 	}
 
@@ -177,12 +178,16 @@ public class StandingsServiceTest {
 	public void createTeamStandings() {
 		List<Standing> standings;
 		//create standings
-		standings = standingsService.createTeamStandings(createMockStandings(), createMockStandingsMap(), new LocalDate(2015, 12, 05));
+		standings = Arrays.asList(
+			createMockStanding("sacramento-kings", (short)1, (short)4, 6, 10, StatusCode.NotFound),
+			createMockStanding("utah-jazz", (short)3, (short)4, 4, 11, StatusCode.NotFound)
+		);
+		standings = standingsService.createTeamStandings(standings);
 		Assert.assertEquals(2, standings.size());
 		Assert.assertEquals(3, standings.get(1).getGamesWon().intValue());
 
 		//no standings
-		standings = standingsService.createTeamStandings(new ArrayList<Standing>(), new HashMap<String, StandingRecord>(), new LocalDate(2015, 12, 05));
+		standings = standingsService.createTeamStandings(new ArrayList<Standing>());
 		Assert.assertEquals(new ArrayList<Standing>(), standings);
 	}
 
@@ -234,7 +239,10 @@ public class StandingsServiceTest {
 	private List<Standing> createMockStandings() {
 		List<Standing> standings = Arrays.asList(
 			createMockStanding("sacramento-kings", (short)1, (short)4, 6, 10, StatusCode.Found),
-			createMockStanding("utah-jazz", (short)3, (short)4, 4, 11, StatusCode.Found)
+			createMockStanding("utah-jazz", (short)3, (short)4, 4, 11, StatusCode.Found),
+			createMockStanding("detroit-pistons", (short)1, (short)3, 2, 3, StatusCode.Found),
+			createMockStanding("phoenix-suns", (short)1, (short)2, 2, 4, StatusCode.Found),
+			createMockStanding("miami-heat", (short)2, (short)3, 4, 6, StatusCode.Found)
 		);
 		return standings;
 	}

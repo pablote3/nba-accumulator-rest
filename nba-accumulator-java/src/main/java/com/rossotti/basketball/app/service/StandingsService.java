@@ -97,6 +97,13 @@ public class StandingsService {
 		return standingRepo.createStanding(standing);
 	}
 
+	public List<Standing> createTeamStandings(List<Standing> standings) {
+		for (int i = 0; i < standings.size(); i++) {
+			standings.set(i, standingRepo.createStanding(standings.get(i)));
+		}
+		return standings;
+	}
+
 	public Standing updateStanding(Standing standing) {
 		return standingRepo.updateStanding(standing);
 	}
@@ -113,33 +120,26 @@ public class StandingsService {
 		return standings;
 	}
 
-	public Map<String, StandingRecord> buildStandingsMap(List<Standing> standings) {
+	public Map<String, StandingRecord> buildStandingsMap(List<Standing> standings, LocalDate asOfDate) {
 		Map<String, StandingRecord> standingsMap = new HashMap<String, StandingRecord>();
-		StandingRecord standingRecord;
+		//create map with team games won/played
 		for (int i = 0; i < standings.size(); i++) {
-			standingRecord = new StandingRecord((int)standings.get(i).getGamesWon(), (int)standings.get(i).getGamesPlayed(), 0, 0);
+			StandingRecord standingRecord = new StandingRecord((int)standings.get(i).getGamesWon(), (int)standings.get(i).getGamesPlayed(), 0, 0);
 			standingsMap.put(standings.get(i).getTeam().getTeamKey(), standingRecord);
 		}
-		return standingsMap;
-	}
 
-	public List<Standing> createTeamStandings(List<Standing> standings, Map<String, StandingRecord> standingsMap, LocalDate asOfDate) {
-		List<Game> completeGames;
-		Game completedGame;
-		String opptTeamKey;
+		//update map summing opponent games won/played
 		Integer opptGamesWon;
 		Integer opptGamesPlayed;
-		Standing standing;
 		for (int i = 0; i < standings.size(); i++) {
-			standing = standings.get(i);
-			String teamKey = standing.getTeam().getTeamKey();
+			String teamKey = standings.get(i).getTeam().getTeamKey();
 			opptGamesWon = 0;
 			opptGamesPlayed = 0;
-			completeGames = gameRepo.findByDateTeamSeason(asOfDate, teamKey);
+			List<Game> completeGames = gameRepo.findByDateTeamSeason(asOfDate, teamKey);
 			for (int j = 0; j < completeGames.size(); j++) {
-				completedGame = completeGames.get(j);
+				Game completedGame = completeGames.get(j);
 				int opptBoxScoreId = completedGame.getBoxScores().get(0).getTeam().getTeamKey().equals(teamKey) ? 1 : 0;
-				opptTeamKey = completedGame.getBoxScores().get(opptBoxScoreId).getTeam().getTeamKey();
+				String opptTeamKey = completedGame.getBoxScores().get(opptBoxScoreId).getTeam().getTeamKey();
 				opptGamesWon = opptGamesWon + standingsMap.get(opptTeamKey).getGamesWon();
 				opptGamesPlayed = opptGamesPlayed + standingsMap.get(opptTeamKey).getGamesPlayed();
 
@@ -149,9 +149,8 @@ public class StandingsService {
 			}
 			standingsMap.get(teamKey).setOpptGamesWon(opptGamesWon);
 			standingsMap.get(teamKey).setOpptGamesPlayed(opptGamesPlayed);
-			standings.set(i, standingRepo.createStanding(standing));
 		}
-		return standings;
+		return standingsMap;
 	}
 
 	public void calculateStrengthOfSchedule(Standing standing, Map<String, StandingRecord> standingsMap) {
