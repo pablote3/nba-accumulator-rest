@@ -59,48 +59,52 @@ public class StandingsResource {
 
 		try {
 			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
-			String event = asOfDateString;
-			List<Standing> activeStandings = null;
-
-			logger.info('\n' + "Standings ready to be loaded: " + event);
+			logger.info('\n' + "Standings ready to be loaded: " + asOfDateString);
 
 			StandingsDTO standingsDTO = null;
 			ClientSource clientSource = propertyService.getProperty_ClientSource("accumulator.source.standings");
 			if (clientSource == ClientSource.File) {
-				standingsDTO = fileClientService.retrieveRoster(event);
+				standingsDTO = fileClientService.retrieveStandings(asOfDateString);
 			}
 			else if (clientSource == ClientSource.Api) {
-				standingsDTO = restClientService.retrieveRoster(event);
+				standingsDTO = restClientService.retrieveStandings(asOfDateString);
 			}
 
 			if (standingsDTO.httpStatus == 200) {
 				//clear existing standings
 				standingsService.deleteStandings(asOfDate);
 
-				activeStandings = standingsService.getStandings(standingsDTO);
-				Map<String, StandingRecord> standingsMap = standingsService.buildStandingsMap(activeStandings, asOfDate);
+				List<Standing> standings = standingsService.getStandings(standingsDTO);
+				Map<String, StandingRecord> standingsMap = standingsService.buildStandingsMap(standings, asOfDate);
 
-				List<Standing> createdStandings = standingsService.createTeamStandings(activeStandings);
-
-				//update team standing
-				Standing updateTeamStanding;
-				for (int i = 0; i < createdStandings.size(); i++) {
-					updateTeamStanding = createdStandings.get(i);
-					String standingTeam = updateTeamStanding.getTeam().getTeamKey();
-					updateTeamStanding = standingsService.findStanding(standingTeam, asOfDate);
-					standingsService.calculateStrengthOfSchedule(updateTeamStanding, standingsMap);
+				for (int i = 0; i < standings.size(); i++) {
+					Standing standing = standings.get(i);
+					String teamKey = standing.getTeam().getTeamKey();
+					Map<String, StandingRecord> headToHeadMap = standingsService.buildHeadToHeadMap(teamKey, asOfDate, standingsMap);
+					StandingRecord standingRecord = standingsService.calculateStrengthOfSchedule(teamKey, asOfDate, standingsMap, headToHeadMap);
+					standing.setOpptGamesWon(standingRecord.getGamesWon());
+					standing.setOpptGamesPlayed(standingRecord.getGamesPlayed());
+					standing.setOpptOpptGamesWon(standingRecord.getOpptGamesWon());
+					standing.setOpptOpptGamesPlayed(standingRecord.getOpptGamesPlayed());
+					standingsService.updateStanding(standing);
 				}
-			}
 
-			List<PubStanding> listPubStandings = new ArrayList<PubStanding>();
-			for (Standing standing : activeStandings) {
-				PubStanding pubStanding = standing.toPubStanding(uriInfo);
-				listPubStandings.add(pubStanding);
+				List<PubStanding> listPubStandings = new ArrayList<PubStanding>();
+				for (Standing standing : standings) {
+					PubStanding pubStanding = standing.toPubStanding(uriInfo);
+					listPubStandings.add(pubStanding);
+				}
+				PubStandings pubStandings = new PubStandings(uriInfo.getAbsolutePath(), listPubStandings);
+				return Response.ok(pubStandings)
+						.link(uriInfo.getAbsolutePath(), "standings")
+						.build();
 			}
-			PubStandings pubStandings = new PubStandings(uriInfo.getAbsolutePath(), listPubStandings);
-			return Response.ok(pubStandings)
-					.link(uriInfo.getAbsolutePath(), "standings")
-					.build();
+			else {
+				logger.info('\n' + "" + standingsDTO.httpStatus + " unable to retrieve standings: " + asOfDateString);
+				return Response.status(standingsDTO.httpStatus)
+						.link(uriInfo.getAbsolutePath(), "standings")
+						.build();
+			}
 		}
 		catch (Exception e) {
 			System.out.println("exception = " + e);

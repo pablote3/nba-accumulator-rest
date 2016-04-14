@@ -153,32 +153,35 @@ public class StandingsService {
 		return standingsMap;
 	}
 
-	public void calculateStrengthOfSchedule(Standing standing, Map<String, StandingRecord> standingsMap) {
-		String teamKey = standing.getTeam().getTeamKey();
-		BoxScore opptBoxScore;
-		Integer opptHeadToHead;
-		Integer opptGamesWon = 0;
-		Integer opptGamesPlayed = 0;
-		Integer opptOpptGamesWon = 0;
-		Integer opptOpptGamesPlayed = 0;
-		List<Game> completeGames = gameRepo.findByDateTeamSeason(standing.getStandingDate(), teamKey);
-
+	public Map<String, StandingRecord> buildHeadToHeadMap(String teamKey, LocalDate asOfDate, Map<String, StandingRecord> standingsMap) {
 		Map<String, StandingRecord> headToHeadMap = new HashMap<String, StandingRecord>();
+		List<Game> completeGames = gameRepo.findByDateTeamSeason(asOfDate, teamKey);
+
 		for (int i = 0; i < completeGames.size(); i++) {
 			int opptBoxScoreId = completeGames.get(i).getBoxScores().get(0).getTeam().getTeamKey().equals(teamKey) ? 1 : 0;
-			opptBoxScore = completeGames.get(i).getBoxScores().get(opptBoxScoreId);
+			BoxScore opptBoxScore = completeGames.get(i).getBoxScores().get(opptBoxScoreId);
 			String opptTeamKey = opptBoxScore.getTeam().getTeamKey();
-			opptHeadToHead = opptBoxScore.getResult() != null && opptBoxScore.getResult().equals(Result.Win) ? 1 : 0;
+			Integer opptHeadToHeadResult = opptBoxScore.getResult() != null && opptBoxScore.getResult().equals(Result.Win) ? 1 : 0;
 			if (headToHeadMap.get(opptTeamKey) == null) {
-				headToHeadMap.put(opptTeamKey, new StandingRecord(opptHeadToHead, 1, standingsMap.get(teamKey).getGamesWon(), standingsMap.get(teamKey).getGamesPlayed()));
+				headToHeadMap.put(opptTeamKey, new StandingRecord(opptHeadToHeadResult, 1, standingsMap.get(teamKey).getGamesWon(), standingsMap.get(teamKey).getGamesPlayed()));
 			}
 			else {
-				headToHeadMap.get(opptTeamKey).setGamesWon(headToHeadMap.get(opptTeamKey).getGamesWon() + opptHeadToHead);
+				headToHeadMap.get(opptTeamKey).setGamesWon(headToHeadMap.get(opptTeamKey).getGamesWon() + opptHeadToHeadResult);
 				headToHeadMap.get(opptTeamKey).setGamesPlayed(headToHeadMap.get(opptTeamKey).getGamesPlayed() + 1);
 				headToHeadMap.get(opptTeamKey).setOpptGamesWon(headToHeadMap.get(opptTeamKey).getOpptGamesWon() + standingsMap.get(teamKey).getGamesWon());
 				headToHeadMap.get(opptTeamKey).setOpptGamesPlayed(headToHeadMap.get(opptTeamKey).getOpptGamesPlayed() + standingsMap.get(teamKey).getGamesPlayed());
 			}
 		}
+		return headToHeadMap;
+	}
+
+	public StandingRecord calculateStrengthOfSchedule(String teamKey, LocalDate asOfDate, Map<String, StandingRecord> standingsMap, Map<String, StandingRecord> headToHeadMap) {
+		BoxScore opptBoxScore;
+		Integer opptGamesWon = 0;
+		Integer opptGamesPlayed = 0;
+		Integer opptOpptGamesWon = 0;
+		Integer opptOpptGamesPlayed = 0;
+		List<Game> completeGames = gameRepo.findByDateTeamSeason(asOfDate, teamKey);
 
 		for (int i = 0; i < completeGames.size(); i++) {
 			int opptBoxScoreId = completeGames.get(i).getBoxScores().get(0).getTeam().getTeamKey().equals(teamKey) ? 1 : 0;
@@ -206,11 +209,6 @@ public class StandingsService {
 			}
 		}
 
-		standing.setOpptGamesWon(opptGamesWon);
-		standing.setOpptGamesPlayed(opptGamesPlayed);
-		standing.setOpptOpptGamesWon(opptOpptGamesWon);
-		standing.setOpptOpptGamesPlayed(opptOpptGamesPlayed);
-
 		BigDecimal opptRecord = opptGamesPlayed == 0 ? new BigDecimal(0) : new BigDecimal(opptGamesWon).divide(new BigDecimal(opptGamesPlayed), 4, RoundingMode.HALF_UP);
 		BigDecimal opptOpptRecord = opptOpptGamesWon == 0 ? new BigDecimal(0) : new BigDecimal(opptOpptGamesWon).divide(new BigDecimal(opptOpptGamesPlayed), 4, RoundingMode.HALF_UP);
 		logger.debug('\n' + "  Opponent Games Won/Played = " + opptGamesWon + "-" + opptGamesPlayed);
@@ -218,6 +216,7 @@ public class StandingsService {
 		logger.debug('\n' + "  Opponent Record = " + opptRecord);
 		logger.debug('\n' + "  OpptOppt Record = " + opptOpptRecord);
 		logger.info('\n' + "  Strenghth Of Schedule " + teamKey + " " + opptRecord.multiply(new BigDecimal(2)).add(opptOpptRecord).divide(new BigDecimal(3), 4, RoundingMode.HALF_UP));
-		this.updateStanding(standing);
+		
+		return new StandingRecord(opptGamesWon, opptGamesPlayed, opptOpptGamesWon, opptOpptGamesPlayed);
 	}
 }
