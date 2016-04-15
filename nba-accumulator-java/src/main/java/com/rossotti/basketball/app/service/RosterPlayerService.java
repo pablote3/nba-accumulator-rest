@@ -33,19 +33,16 @@ public class RosterPlayerService {
 
 	public List<BoxScorePlayer> getBoxScorePlayers(BoxScorePlayerDTO[] boxScorePlayerDTOs, LocalDate gameDate, String teamKey) {
 		List<BoxScorePlayer> boxScorePlayers = new ArrayList<BoxScorePlayer>();
-		BoxScorePlayer boxScorePlayer;
-		RosterPlayer rosterPlayer;
-
 		for (int i = 0; i < boxScorePlayerDTOs.length; i++) {
 			String lastName = boxScorePlayerDTOs[i].getLast_name();
 			String firstName = boxScorePlayerDTOs[i].getFirst_name();
-			rosterPlayer = rosterPlayerRepo.findRosterPlayer(lastName, firstName, teamKey, gameDate);
+			RosterPlayer rosterPlayer = rosterPlayerRepo.findRosterPlayer(lastName, firstName, teamKey, gameDate);
 			if (rosterPlayer.isNotFound()) {
 				logger.info("Roster Player not found " + firstName + " " + lastName + " Team: " + teamKey + " GameDate: " + gameDate);
 				throw new NoSuchEntityException(RosterPlayer.class);
 			}
 			else {
-				boxScorePlayer = new BoxScorePlayer();
+				BoxScorePlayer boxScorePlayer = new BoxScorePlayer();
 				boxScorePlayer.setRosterPlayer(rosterPlayer);
 				boxScorePlayer.setPosition(Position.valueOf(boxScorePlayerDTOs[i].getPosition()));
 				boxScorePlayer.setMinutes(boxScorePlayerDTOs[i].getMinutes());
@@ -75,17 +72,14 @@ public class RosterPlayerService {
 
 	public List<RosterPlayer> getRosterPlayers(RosterPlayerDTO[] rosterPlayerDTOs, LocalDate gameDate, String teamKey) {
 		List<RosterPlayer> rosterPlayers = new ArrayList<RosterPlayer>();
-		RosterPlayer rosterPlayer;
-		Player player;
-		Team team;
-		team = teamRepo.findTeam(teamKey, gameDate);
+		Team team = teamRepo.findTeam(teamKey, gameDate);
 		if (team.isNotFound()) {
 			logger.info("Team not found " + teamKey);
 			throw new NoSuchEntityException(Team.class);
 		}
 		else {
 			for (int i = 0; i < rosterPlayerDTOs.length; i++) {
-				player = new Player();
+				Player player = new Player();
 				player.setLastName(rosterPlayerDTOs[i].getLast_name());
 				player.setFirstName(rosterPlayerDTOs[i].getFirst_name());
 				player.setDisplayName(rosterPlayerDTOs[i].getDisplay_name());
@@ -93,7 +87,7 @@ public class RosterPlayerService {
 				player.setWeight(rosterPlayerDTOs[i].getWeight_lb());
 				player.setBirthdate(DateTimeUtil.getLocalDate(rosterPlayerDTOs[i].getBirthdate()));
 				player.setBirthplace(rosterPlayerDTOs[i].getBirthplace());
-				rosterPlayer = new RosterPlayer();
+				RosterPlayer rosterPlayer = new RosterPlayer();
 				rosterPlayer.setPlayer(player);
 				rosterPlayer.setTeam(team);
 				rosterPlayer.setNumber(rosterPlayerDTOs[i].getUniform_number());

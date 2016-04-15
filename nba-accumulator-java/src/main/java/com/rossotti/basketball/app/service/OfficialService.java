@@ -24,18 +24,16 @@ public class OfficialService {
 
 	public List<GameOfficial> getGameOfficials(OfficialDTO[] officials, LocalDate gameDate) {
 		List<GameOfficial> gameOfficials = new ArrayList<GameOfficial>();
-		GameOfficial gameOfficial;
-		Official official;
 		for (int i = 0; i < officials.length; i++) {
 			String lastName = officials[i].getLast_name();
 			String firstName = officials[i].getFirst_name();
-			official = officialRepo.findOfficial(lastName, firstName, gameDate);
+			Official official = officialRepo.findOfficial(lastName, firstName, gameDate);
 			if (official.isNotFound()) {
 				logger.info("Official not found " + firstName + " " + lastName);
 				throw new NoSuchEntityException(Official.class);
 			}
 			else {
-				gameOfficial = new GameOfficial();
+				GameOfficial gameOfficial = new GameOfficial();
 				gameOfficial.setOfficial(official);
 				gameOfficials.add(gameOfficial);
 			}

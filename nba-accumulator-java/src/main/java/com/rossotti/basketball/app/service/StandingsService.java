@@ -43,17 +43,14 @@ public class StandingsService {
 	public List<Standing> getStandings(StandingsDTO standingsDTO) {
 		LocalDate asOfDate = DateTimeUtil.getLocalDate(standingsDTO.standings_date);
 		List<Standing> standings = new ArrayList<Standing>();
-		StandingDTO standingDTO;
-		Standing standing;
-		Team team;
 		for (int i = 0; i < standingsDTO.standing.length; i++) {
-			standingDTO = standingsDTO.standing[i];
-			team = teamRepo.findTeam(standingDTO.getTeam_id(), asOfDate);
+			StandingDTO standingDTO = standingsDTO.standing[i];
+			Team team = teamRepo.findTeam(standingDTO.getTeam_id(), asOfDate);
 			if (team.isNotFound()) {
 				logger.info("Team not found " + standingDTO.getTeam_id());
 				throw new NoSuchEntityException(Team.class);
 			}
-			standing = new Standing();
+			Standing standing = new Standing();
 			standing.setTeam(team);
 			standing.setStandingDate(asOfDate);
 			standing.setRank(standingDTO.getRank());
@@ -129,12 +126,10 @@ public class StandingsService {
 		}
 
 		//update map summing opponent games won/played
-		Integer opptGamesWon;
-		Integer opptGamesPlayed;
 		for (int i = 0; i < standings.size(); i++) {
 			String teamKey = standings.get(i).getTeam().getTeamKey();
-			opptGamesWon = 0;
-			opptGamesPlayed = 0;
+			Integer opptGamesWon = 0;
+			Integer opptGamesPlayed = 0;
 			List<Game> completeGames = gameRepo.findByDateTeamSeason(asOfDate, teamKey);
 			for (int j = 0; j < completeGames.size(); j++) {
 				Game completedGame = completeGames.get(j);
