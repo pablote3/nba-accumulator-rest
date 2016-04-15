@@ -184,11 +184,31 @@ public class StandingsServiceTest {
 		standingsMap = standingsService.buildStandingsMap(createMockStandings(), new LocalDate(2015, 12, 05));
 		Assert.assertEquals(5, standingsMap.size());
 		Assert.assertEquals(3, standingsMap.get("utah-jazz").getGamesWon().intValue());
-		Assert.assertEquals(12, standingsMap.get("utah-jazz").getOpptGamesPlayed().intValue());
+		Assert.assertEquals(4, standingsMap.get("utah-jazz").getGamesPlayed().intValue());
+		Assert.assertEquals(4, standingsMap.get("utah-jazz").getOpptGamesWon().intValue());
+		Assert.assertEquals(11, standingsMap.get("utah-jazz").getOpptGamesPlayed().intValue());
 
 		//no standing map entries
 		standingsMap = standingsService.buildStandingsMap(new ArrayList<Standing>(), new LocalDate(2015, 12, 05));
 		Assert.assertEquals(new HashMap<String, StandingRecord>(), standingsMap);
+	}
+
+	@Test
+	public void buildHeadToHeadMap() {
+		Map<String, StandingRecord> headToHeadMap;
+		//headToHead map with entries
+		headToHeadMap = standingsService.buildHeadToHeadMap("sacramento-kings", new LocalDate(2015, 12, 05), createMockStandingsMap());
+		Assert.assertEquals(3, headToHeadMap.size());
+		Assert.assertEquals(0, headToHeadMap.get("detroit-pistons").getGamesWon().intValue());
+		Assert.assertEquals(1, headToHeadMap.get("detroit-pistons").getGamesPlayed().intValue());
+		Assert.assertEquals(1, headToHeadMap.get("detroit-pistons").getOpptGamesWon().intValue());
+		Assert.assertEquals(4, headToHeadMap.get("detroit-pistons").getOpptGamesPlayed().intValue());
+		headToHeadMap = standingsService.buildHeadToHeadMap("utah-jazz", new LocalDate(2015, 12, 05), createMockStandingsMap());
+		Assert.assertEquals(3, headToHeadMap.size());
+		Assert.assertEquals(0, headToHeadMap.get("phoenix-suns").getGamesWon().intValue());
+		Assert.assertEquals(2, headToHeadMap.get("phoenix-suns").getGamesPlayed().intValue());
+		Assert.assertEquals(6, headToHeadMap.get("phoenix-suns").getOpptGamesWon().intValue());
+		Assert.assertEquals(8, headToHeadMap.get("phoenix-suns").getOpptGamesPlayed().intValue());
 	}
 
 //	@Test
@@ -238,11 +258,11 @@ public class StandingsServiceTest {
 
 	private List<Standing> createMockStandings() {
 		List<Standing> standings = Arrays.asList(
-			createMockStanding("sacramento-kings", (short)1, (short)4, 6, 10, StatusCode.Found),
-			createMockStanding("utah-jazz", (short)3, (short)4, 4, 11, StatusCode.Found),
-			createMockStanding("detroit-pistons", (short)1, (short)3, 2, 3, StatusCode.Found),
-			createMockStanding("phoenix-suns", (short)1, (short)2, 2, 4, StatusCode.Found),
-			createMockStanding("miami-heat", (short)2, (short)3, 4, 6, StatusCode.Found)
+			createMockStanding("sacramento-kings", (short)1, (short)4, 7, 11, StatusCode.Found),
+			createMockStanding("utah-jazz", (short)3, (short)4, 3, 10, StatusCode.Found),
+			createMockStanding("detroit-pistons", (short)1, (short)3, 3, 4, StatusCode.Found),
+			createMockStanding("phoenix-suns", (short)1, (short)2, 3, 4, StatusCode.Found),
+			createMockStanding("miami-heat", (short)2, (short)3, 3, 6, StatusCode.Found)
 		);
 		return standings;
 	}
@@ -270,6 +290,22 @@ public class StandingsServiceTest {
 		return standingsMap;
 	}
 
+	private Map<String, StandingRecord> createMockHeadToHeadMap_Kings() {
+		Map<String, StandingRecord> headToHeadMap = new HashMap<String, StandingRecord>();
+		headToHeadMap.put("detroit-pistons", new StandingRecord(0, 1, 1, 3));
+		headToHeadMap.put("miami-heat", new StandingRecord(2, 2, 4, 6));
+		headToHeadMap.put("utah-jazz", new StandingRecord(1, 1, 3, 4));
+		return headToHeadMap;
+	}
+
+	private Map<String, StandingRecord> createMockHeadToHeadMap_Jazz() {
+		Map<String, StandingRecord> headToHeadMap = new HashMap<String, StandingRecord>();
+		headToHeadMap.put("detroit-pistons", new StandingRecord(0, 1, 1, 3));
+		headToHeadMap.put("phoenix-suns", new StandingRecord(1, 2, 2, 4));
+		headToHeadMap.put("sacramento-kings", new StandingRecord(0, 1, 1, 4));
+		return headToHeadMap;
+	}
+
 	private Team createMockTeam(String teamKey, StatusCode statusCode) {
 		Team team = new Team();
 		team.setTeamKey(teamKey);
@@ -281,7 +317,7 @@ public class StandingsServiceTest {
 		List<Game> games = Arrays.asList(
 				createMockGame(new LocalDateTime("2015-12-02T10:00"), "detroit-pistons", "sacramento-kings"),
 				createMockGame(new LocalDateTime("2015-12-03T10:00"), "sacramento-kings", "miami-heat"),
-				createMockGame(new LocalDateTime("2015-12-04T10:00"), "phoenix-suns", "sacramento-kings"),
+				createMockGame(new LocalDateTime("2015-12-04T10:00"), "miami-heat", "sacramento-kings"),
 				createMockGame(new LocalDateTime("2015-12-05T10:00"), "utah-jazz", "sacramento-kings")
 			);
 			return games;
@@ -291,7 +327,7 @@ public class StandingsServiceTest {
 		List<Game> games = Arrays.asList(
 				createMockGame(new LocalDateTime("2015-12-02T10:00"), "phoenix-suns", "utah-jazz"),
 				createMockGame(new LocalDateTime("2015-12-03T10:00"), "detroit-pistons", "utah-jazz"),
-				createMockGame(new LocalDateTime("2015-12-04T10:00"), "utah-jazz", "miami-heat"),
+				createMockGame(new LocalDateTime("2015-12-04T10:00"), "utah-jazz", "phoenix-suns"),
 				createMockGame(new LocalDateTime("2015-12-05T10:00"), "utah-jazz", "sacramento-kings")
 			);
 			return games;
