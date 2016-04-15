@@ -203,6 +203,7 @@ public class StandingsServiceTest {
 		Assert.assertEquals(1, headToHeadMap.get("detroit-pistons").getGamesPlayed().intValue());
 		Assert.assertEquals(1, headToHeadMap.get("detroit-pistons").getOpptGamesWon().intValue());
 		Assert.assertEquals(4, headToHeadMap.get("detroit-pistons").getOpptGamesPlayed().intValue());
+
 		headToHeadMap = standingsService.buildHeadToHeadMap("utah-jazz", new LocalDate(2015, 12, 05), createMockStandingsMap());
 		Assert.assertEquals(3, headToHeadMap.size());
 		Assert.assertEquals(0, headToHeadMap.get("phoenix-suns").getGamesWon().intValue());
@@ -211,10 +212,21 @@ public class StandingsServiceTest {
 		Assert.assertEquals(8, headToHeadMap.get("phoenix-suns").getOpptGamesPlayed().intValue());
 	}
 
-//	@Test
-//	public void calculateStrengthOfSchedule() {
-//		standingsService.calculateStrengthOfSchedule(createMockStanding("toronto-raptors", StatusCode.Found), standingsMap);
-//	}
+	@Test
+	public void calculateStrengthOfSchedule() {
+		StandingRecord standingRecord;
+		standingRecord = standingsService.calculateStrengthOfSchedule("sacramento-kings", new LocalDate(2015, 12, 05), createMockStandingsMap(), createMockHeadToHeadMap_Kings());
+		Assert.assertEquals(3, standingRecord.getGamesWon().intValue());
+		Assert.assertEquals(7, standingRecord.getGamesPlayed().intValue());
+		Assert.assertEquals(-12, standingRecord.getOpptGamesWon().intValue());
+		Assert.assertEquals(-19, standingRecord.getOpptGamesPlayed().intValue());
+
+		standingRecord = standingsService.calculateStrengthOfSchedule("utah-jazz", new LocalDate(2015, 12, 05), createMockStandingsMap(), createMockHeadToHeadMap_Jazz());
+		Assert.assertEquals(2, standingRecord.getGamesWon().intValue());
+		Assert.assertEquals(5, standingRecord.getGamesPlayed().intValue());
+		Assert.assertEquals(-6, standingRecord.getOpptGamesWon().intValue());
+		Assert.assertEquals(-15, standingRecord.getOpptGamesPlayed().intValue());
+	}
 
 	private StandingsDTO createMockStandingsDTO() {
 		StandingsDTO standings = new StandingsDTO();
