@@ -63,38 +63,33 @@ public class RosterResource {
 								List<RosterPlayer> rosterPlayers) {
 
 		try {
-			LocalDate fromDate = DateTimeUtil.getLocalDate(asOfDateString);
-			LocalDate toDate = DateTimeUtil.getLocalDateSeasonMax(fromDate);
-			List<RosterPlayer> activeRosterPlayers = null;
-			String event = teamKey;
-
-			logger.info('\n' + "Team roster ready to be loaded: " + event);
+			logger.info('\n' + "Team roster ready to be loaded: " + teamKey);
 
 			RosterDTO rosterDTO = null;
 			ClientSource clientSource = propertyService.getProperty_ClientSource("accumulator.source.roster");
 			if (clientSource == ClientSource.File) {
-				rosterDTO = fileClientService.retrieveRoster(event);
+				rosterDTO = fileClientService.retrieveRoster(teamKey);
 			}
 			else if (clientSource == ClientSource.Api) {
-				rosterDTO = restClientService.retrieveRoster(event);
+				rosterDTO = restClientService.retrieveRoster(teamKey);
 			}
 
 			if (rosterDTO.httpStatus == 200) {
+				LocalDate fromDate = DateTimeUtil.getLocalDate(asOfDateString);
+				LocalDate toDate = DateTimeUtil.getLocalDateSeasonMax(fromDate);
 				//activate new roster players
 				logger.info("Activate new roster players");
-				activeRosterPlayers = rosterPlayerService.getRosterPlayers(rosterDTO.players, fromDate, teamKey);
-				RosterPlayer finderRosterPlayer;
-				Player finderPlayer;
+				List<RosterPlayer> activeRosterPlayers = rosterPlayerService.getRosterPlayers(rosterDTO.players, fromDate, teamKey);
 				for (int i = 0; i < activeRosterPlayers.size(); i++) {
 					RosterPlayer activeRosterPlayer = activeRosterPlayers.get(i);
 					Player activePlayer = activeRosterPlayer.getPlayer();
-					finderRosterPlayer = rosterPlayerService.findByDatePlayerNameTeam(fromDate, activePlayer.getLastName(), activePlayer.getFirstName(), teamKey);
+					RosterPlayer finderRosterPlayer = rosterPlayerService.findByDatePlayerNameTeam(fromDate, activePlayer.getLastName(), activePlayer.getFirstName(), teamKey);
 					if (finderRosterPlayer.isNotFound()) {
 						//player is not on current team roster
 						finderRosterPlayer = rosterPlayerService.findLatestByPlayerNameBirthdateSeason(fromDate, activePlayer.getLastName(), activePlayer.getFirstName(), activePlayer.getBirthdate());
 						if (finderRosterPlayer.isNotFound()) {
 							//player is not on any roster for current season
-							finderPlayer = playerService.findByPlayerNameBirthdate(activePlayer.getLastName(), activePlayer.getFirstName(), activePlayer.getBirthdate());
+							Player finderPlayer = playerService.findByPlayerNameBirthdate(activePlayer.getLastName(), activePlayer.getFirstName(), activePlayer.getBirthdate());
 							if (finderPlayer.isNotFound()) {
 								//player does not exist
 								Player createPlayer = playerService.createPlayer(activePlayer);
@@ -156,21 +151,26 @@ public class RosterResource {
 						logger.info(generateLogMessage("Player is not on current team roster", priorRosterPlayer));
 					}
 				}
+				PubTeam pubTeam = activeRosterPlayers.get(0).getTeam().toPubTeam(uriInfo);
+				List<PubRosterPlayer_ByTeam> listPubRosterPlayers = new ArrayList<PubRosterPlayer_ByTeam>();
+				for (RosterPlayer rosterPlayer : activeRosterPlayers) {
+					PubRosterPlayer_ByTeam pubRosterPlayer = rosterPlayer.toPubRosterPlayer_ByTeam(uriInfo);
+					listPubRosterPlayers.add(pubRosterPlayer);
+				}
+				PubRosterPlayers_ByTeam pubRosterPlayers = new PubRosterPlayers_ByTeam(uriInfo.getAbsolutePath(), pubTeam, listPubRosterPlayers);
+				return Response.ok(pubRosterPlayers)
+						.link(uriInfo.getAbsolutePath(), "rosterPlayer")
+						.build();
 			}
-
-			PubTeam pubTeam = activeRosterPlayers.get(0).getTeam().toPubTeam(uriInfo);
-			List<PubRosterPlayer_ByTeam> listPubRosterPlayers = new ArrayList<PubRosterPlayer_ByTeam>();
-			for (RosterPlayer rosterPlayer : activeRosterPlayers) {
-				PubRosterPlayer_ByTeam pubRosterPlayer = rosterPlayer.toPubRosterPlayer_ByTeam(uriInfo);
-				listPubRosterPlayers.add(pubRosterPlayer);
-			}
-			PubRosterPlayers_ByTeam pubRosterPlayers = new PubRosterPlayers_ByTeam(uriInfo.getAbsolutePath(), pubTeam, listPubRosterPlayers);
-			return Response.ok(pubRosterPlayers)
-					.link(uriInfo.getAbsolutePath(), "rosterPlayer")
+			else {
+				logger.info('\n' + "" + " unable to retrieve roster: HTTP status = " + rosterDTO.httpStatus);
+				return Response.serverError()
+					.link(uriInfo.getAbsolutePath(), "roster")
 					.build();
+			}
 		}
 		catch (Exception e) {
-			System.out.println("exception = " + e);
+			logger.info("unexpected exception = " + e);
 			return null;
 		}
 	}

@@ -128,13 +128,17 @@ public class ScoreResource {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+					PubGame pubGame = game.toPubGame(uriInfo, teamKey);
+					return Response.ok(pubGame)
+						.link(uriInfo.getAbsolutePath(), "game")
+						.build();
 				}
-				
-				PubGame pubGame = game.toPubGame(uriInfo, teamKey);
-				
-				return Response.ok(pubGame)
-					.link(uriInfo.getAbsolutePath(), "game")
-					.build();
+				else {
+					logger.info('\n' + "" + " unable to retrieve box score: HTTP status = " + gameDTO.httpStatus);
+					return Response.serverError()
+						.link(uriInfo.getAbsolutePath(), "game")
+						.build();
+				}
 			}
 			else {
 				logger.info('\n' + "" + game.getStatus() + " game not eligible to be scored: " + event.toString());
@@ -144,7 +148,7 @@ public class ScoreResource {
 			}
 		}
 		catch (Exception e) {
-			System.out.println("exception = " + e);
+			logger.info("unexpected exception = " + e);
 			return null;
 		}
 	}

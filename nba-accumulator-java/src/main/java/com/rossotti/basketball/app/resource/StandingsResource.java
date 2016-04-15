@@ -58,7 +58,6 @@ public class StandingsResource {
 								List<RosterPlayer> rosterPlayers) {
 
 		try {
-			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
 			logger.info('\n' + "Standings ready to be loaded: " + asOfDateString);
 
 			StandingsDTO standingsDTO = null;
@@ -71,6 +70,8 @@ public class StandingsResource {
 			}
 
 			if (standingsDTO.httpStatus == 200) {
+				LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
+
 				//clear existing standings
 				standingsService.deleteStandings(asOfDate);
 
@@ -100,14 +101,14 @@ public class StandingsResource {
 						.build();
 			}
 			else {
-				logger.info('\n' + "" + standingsDTO.httpStatus + " unable to retrieve standings: " + asOfDateString);
-				return Response.status(standingsDTO.httpStatus)
+				logger.info('\n' + "" + " unable to retrieve standings: HTTP status = " + standingsDTO.httpStatus);
+				return Response.serverError()
 						.link(uriInfo.getAbsolutePath(), "standings")
 						.build();
 			}
 		}
 		catch (Exception e) {
-			System.out.println("exception = " + e);
+			logger.info("unexpected exception = " + e);
 			return null;
 		}
 	}
