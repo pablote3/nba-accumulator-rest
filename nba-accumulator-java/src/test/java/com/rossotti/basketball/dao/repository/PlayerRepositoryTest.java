@@ -50,6 +50,14 @@ public class PlayerRepositoryTest {
 		Player findPlayer = playerRepo.findPlayer("Puzdrakiewicz", "Luke", new LocalDate("2002-02-21"));
 		Assert.assertTrue(findPlayer.isNotFound());
 	}
+	
+	@Test
+	public void findPlayerByName_Found_UTF_8() {
+		Player findPlayer = playerRepo.findPlayer("Valančiūnas", "Jonas", new LocalDate("1992-05-06"));
+		Assert.assertEquals("Jonas Valančiūnas", findPlayer.getDisplayName());
+		Assert.assertEquals("Utėnai, Lithuania", findPlayer.getBirthplace());
+		Assert.assertTrue(findPlayer.isFound());
+	}
 
 	//'Thad', 'Puzdrakiewicz', '1966-06-02', 'Thad Puzdrakiewicz'
 	//'Thad', 'Puzdrakiewicz', '2000-03-13', 'Thad Puzdrakiewicz'
