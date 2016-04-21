@@ -128,7 +128,7 @@ public class TeamResourceTest {
 			statusCode(204).
 		given().
 			contentType(ContentType.JSON).
-			body(updateJsonTeam("miami-heat").toString()).
+			body(updateJsonTeam("seattle-supersonics").toString()).
 		when().
 			put("/teams");
 	}
@@ -139,7 +139,7 @@ public class TeamResourceTest {
 			statusCode(404).
 		given().
 			contentType(ContentType.JSON).
-			body(updateJsonTeam("seattle-supersonics").toString()).
+			body(updateJsonTeam("seattle-superstars").toString()).
 		when().
 			put("/teams");
 	}
