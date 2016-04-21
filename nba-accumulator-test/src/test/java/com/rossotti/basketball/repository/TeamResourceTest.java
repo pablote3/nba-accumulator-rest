@@ -58,7 +58,7 @@ public class TeamResourceTest {
 		Object document = Configuration.defaultConfiguration().jsonProvider().parse(response);
 		List<Team> teams = JsonPath.read(document, "$.teams");
 		String abbr = JsonPath.read(document, "$.teams[0].abbr");
-		Assert.assertEquals(30, teams.size());
+		Assert.assertTrue("Teams size " + teams.size() + " should be at least 30", teams.size() >= 30);
 		Assert.assertEquals("BOS", abbr);
 	}
 
@@ -84,23 +84,67 @@ public class TeamResourceTest {
 			statusCode(201).
 		given().
 			contentType(ContentType.JSON).
-			body(buildJsonTeam("providence-steamrollers").toString()).
+			body(createJsonTeam("providence-steamrollers").toString()).
 		when().
 			post("/teams");
 	}
 
 	@Test
-	public void createTeam_Exists() {
+	public void createTeam_Found() {
 		expect().
 			statusCode(400).
 		given().
 			contentType(ContentType.JSON).
-			body(buildJsonTeam("boston-celtics").toString()).
+			body(createJsonTeam("boston-celtics").toString()).
 		when().
 			post("/teams");
 	}
 
-	private static JsonObject buildJsonTeam(String teamKey) {
+	@Test
+	public void updateTeam_Updated() {
+		expect().
+			statusCode(204).
+		given().
+			contentType(ContentType.JSON).
+			body(updateJsonTeam("chicago-bulls").toString()).
+		when().
+			put("/teams");
+	}
+
+	@Test
+	public void updateTeam_NotFound() {
+		expect().
+			statusCode(404).
+		given().
+			contentType(ContentType.JSON).
+			body(updateJsonTeam("chicago-cows").toString()).
+		when().
+			put("/teams");
+	}
+
+	@Test
+	public void deleteTeam_Deleted() {
+		expect().
+			statusCode(204).
+		given().
+			contentType(ContentType.JSON).
+			body(updateJsonTeam("miami-heat").toString()).
+		when().
+			put("/teams");
+	}
+
+	@Test
+	public void deleteTeam_NotFound() {
+		expect().
+			statusCode(404).
+		given().
+			contentType(ContentType.JSON).
+			body(updateJsonTeam("seattle-supersonics").toString()).
+		when().
+			put("/teams");
+	}
+
+	private static JsonObject createJsonTeam(String teamKey) {
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);
 		JsonObject value = factory.createObjectBuilder()
 			.add("teamKey", teamKey)
@@ -115,6 +159,25 @@ public class TeamResourceTest {
 			.add("city", "Providence")
 			.add("state", "RI")
 			.add("fullName", "Providence Steamrollers")
+		.build();
+		return value;
+	}
+	
+	private static JsonObject updateJsonTeam(String teamKey) {
+		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+		JsonObject value = factory.createObjectBuilder()
+			.add("teamKey", teamKey)
+			.add("abbr", "CHI")
+			.add("fromDate", "2012-07-01")
+			.add("toDate", "2018-06-30")
+			.add("firstName", "Chicago")
+			.add("lastName", "Bulls")
+			.add("conference", "East")
+			.add("division", "Central")
+			.add("siteName", "United Center")
+			.add("city", "Chicago")
+			.add("state", "IL")
+			.add("fullName", "Chicago Bulls")
 		.build();
 		return value;
 	}
