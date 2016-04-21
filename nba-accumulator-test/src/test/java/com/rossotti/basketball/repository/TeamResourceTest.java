@@ -49,7 +49,7 @@ public class TeamResourceTest {
 		expect().
 			statusCode(400).
 		when().
-			get("/teams/seattle-supersonics/2012-07");
+			get("/teams/seattle-superstuds/2012-07");
 	}
 
 	@Test
@@ -126,22 +126,16 @@ public class TeamResourceTest {
 	public void deleteTeam_Deleted() {
 		expect().
 			statusCode(204).
-		given().
-			contentType(ContentType.JSON).
-			body(updateJsonTeam("seattle-supersonics").toString()).
 		when().
-			put("/teams");
+			delete("/teams/seattle-supersonics/2012-07-01");
 	}
 
 	@Test
 	public void deleteTeam_NotFound() {
 		expect().
 			statusCode(404).
-		given().
-			contentType(ContentType.JSON).
-			body(updateJsonTeam("seattle-superstars").toString()).
 		when().
-			put("/teams");
+			delete("/teams/seattle-superstars/2012-07-01");
 	}
 
 	private static JsonObject createJsonTeam(String teamKey) {
@@ -171,7 +165,7 @@ public class TeamResourceTest {
 			.add("fromDate", "2012-07-01")
 			.add("toDate", "2018-06-30")
 			.add("firstName", "Chicago")
-			.add("lastName", "Bulls")
+			.add("lastName", "Booleans")
 			.add("conference", "East")
 			.add("division", "Central")
 			.add("siteName", "United Center")
