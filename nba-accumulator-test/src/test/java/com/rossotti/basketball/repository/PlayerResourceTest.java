@@ -19,7 +19,7 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.config.EncoderConfig;
 import com.jayway.restassured.http.ContentType;
-import com.rossotti.basketball.dao.model.Team;
+import com.rossotti.basketball.dao.model.Player;
 
 public class PlayerResourceTest {
 	@Before
@@ -57,7 +57,7 @@ public class PlayerResourceTest {
 	public void findByPlayerName_Found() {
 		String response = get("/players/Wright/Chris").asString();
 		Object document = Configuration.defaultConfiguration().jsonProvider().parse(response);
-		List<Team> players = JsonPath.read(document, "$.players");
+		List<Player> players = JsonPath.read(document, "$.players");
 		String lastName = JsonPath.read(document, "$.players[0].lastName");
 		Assert.assertTrue("Players size " + players.size() + " should be at least 2", players.size() >= 2);
 		Assert.assertEquals("Wright", lastName);
