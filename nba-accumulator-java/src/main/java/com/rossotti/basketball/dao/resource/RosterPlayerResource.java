@@ -104,22 +104,26 @@ public class RosterPlayerResource {
 											@PathParam("lastName") String lastName, 
 											@PathParam("firstName") String firstName,
 											@PathParam("birthdate") String birthdateString) {
-		LocalDate birthdate = DateTimeUtil.getLocalDate(birthdateString);
-		List<RosterPlayer> listRosterPlayers = rosterPlayerRepo.findRosterPlayers(lastName, firstName, birthdate);
-		PubPlayer pubPlayer = listRosterPlayers.get(0).getPlayer().toPubPlayer(uriInfo);
-		if (listRosterPlayers.size() > 0) {
-			List<PubRosterPlayer_ByPlayer> listPubRosterPlayers = new ArrayList<PubRosterPlayer_ByPlayer>();
-			for (RosterPlayer rosterPlayer : listRosterPlayers) {
-				PubRosterPlayer_ByPlayer pubRosterPlayer = rosterPlayer.toPubRosterPlayer_ByPlayer(uriInfo);
-				listPubRosterPlayers.add(pubRosterPlayer);
+		try {
+			LocalDate birthdate = DateTimeUtil.getLocalDate(birthdateString);
+			List<RosterPlayer> listRosterPlayers = rosterPlayerRepo.findRosterPlayers(lastName, firstName, birthdate);
+			if (listRosterPlayers.size() > 0) {
+				PubPlayer pubPlayer = listRosterPlayers.get(0).getPlayer().toPubPlayer(uriInfo);
+				List<PubRosterPlayer_ByPlayer> listPubRosterPlayers = new ArrayList<PubRosterPlayer_ByPlayer>();
+				for (RosterPlayer rosterPlayer : listRosterPlayers) {
+					PubRosterPlayer_ByPlayer pubRosterPlayer = rosterPlayer.toPubRosterPlayer_ByPlayer(uriInfo);
+					listPubRosterPlayers.add(pubRosterPlayer);
+				}
+				PubRosterPlayers_ByPlayer pubRosterPlayers = new PubRosterPlayers_ByPlayer(uriInfo.getAbsolutePath(), pubPlayer, listPubRosterPlayers);
+				return Response.ok(pubRosterPlayers)
+						.link(uriInfo.getAbsolutePath(), "rosterPlayer")
+						.build();
 			}
-			PubRosterPlayers_ByPlayer pubRosterPlayers = new PubRosterPlayers_ByPlayer(uriInfo.getAbsolutePath(), pubPlayer, listPubRosterPlayers);
-			return Response.ok(pubRosterPlayers)
-					.link(uriInfo.getAbsolutePath(), "rosterPlayer")
-					.build();
-		}
-		else {
-			return Response.status(404).build();
+			else {
+				return Response.status(404).build();
+			}
+		} catch (IllegalArgumentException e) {
+			throw new BadRequestException("dates must be yyyy-MM-dd format", e);
 		}
 	}
 
@@ -129,22 +133,26 @@ public class RosterPlayerResource {
 	public Response findRosterPlayersByTeamKey(@Context UriInfo uriInfo, 
 											@PathParam("teamKey") String teamKey,
 											@PathParam("asOfDate") String asOfDateString) {
-		LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
-		List<RosterPlayer> listRosterPlayers = rosterPlayerRepo.findRosterPlayers(teamKey, asOfDate);
-		PubTeam pubTeam = listRosterPlayers.get(0).getTeam().toPubTeam(uriInfo);
-		if (listRosterPlayers.size() > 0) {
-			List<PubRosterPlayer_ByTeam> listPubRosterPlayers = new ArrayList<PubRosterPlayer_ByTeam>();
-			for (RosterPlayer rosterPlayer : listRosterPlayers) {
-				PubRosterPlayer_ByTeam pubRosterPlayer = rosterPlayer.toPubRosterPlayer_ByTeam(uriInfo);
-				listPubRosterPlayers.add(pubRosterPlayer);
+		try {
+			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
+			List<RosterPlayer> listRosterPlayers = rosterPlayerRepo.findRosterPlayers(teamKey, asOfDate);
+			if (listRosterPlayers.size() > 0) {
+				PubTeam pubTeam = listRosterPlayers.get(0).getTeam().toPubTeam(uriInfo);
+				List<PubRosterPlayer_ByTeam> listPubRosterPlayers = new ArrayList<PubRosterPlayer_ByTeam>();
+				for (RosterPlayer rosterPlayer : listRosterPlayers) {
+					PubRosterPlayer_ByTeam pubRosterPlayer = rosterPlayer.toPubRosterPlayer_ByTeam(uriInfo);
+					listPubRosterPlayers.add(pubRosterPlayer);
+				}
+				PubRosterPlayers_ByTeam pubRosterTeams = new PubRosterPlayers_ByTeam(uriInfo.getAbsolutePath(), pubTeam, listPubRosterPlayers);
+				return Response.ok(pubRosterTeams)
+						.link(uriInfo.getAbsolutePath(), "rosterPlayer")
+						.build();
 			}
-			PubRosterPlayers_ByTeam pubRosterTeams = new PubRosterPlayers_ByTeam(uriInfo.getAbsolutePath(), pubTeam, listPubRosterPlayers);
-			return Response.ok(pubRosterTeams)
-					.link(uriInfo.getAbsolutePath(), "rosterPlayer")
-					.build();
-		}
-		else {
-			return Response.status(404).build();
+			else {
+				return Response.status(404).build();
+			}
+		} catch (IllegalArgumentException e) {
+			throw new BadRequestException("dates must be yyyy-MM-dd format", e);
 		}
 	}
 
