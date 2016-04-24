@@ -33,7 +33,7 @@ public class PlayerServiceTest {
 			.thenReturn(createMockPlayer("Simmons", "Richard", StatusCode.NotFound));
 		when(playerRepo.createPlayer((Player) anyObject()))
 			.thenReturn(createMockPlayer("Payton", "Walter", StatusCode.Created))
-			.thenThrow(new DuplicateEntityException());
+			.thenThrow(new DuplicateEntityException(Player.class));
 	}
 
 	@Test

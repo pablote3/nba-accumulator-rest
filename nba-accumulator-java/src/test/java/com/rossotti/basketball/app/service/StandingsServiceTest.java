@@ -60,7 +60,7 @@ public class StandingsServiceTest {
 		when(standingRepo.createStanding((Standing) anyObject()))
 			.thenReturn(createMockStanding("sacramento-kings",(short)1, (short)4, null, null, StatusCode.Created))
 			.thenReturn(createMockStanding("utah-jazz",(short)3, (short)4, null, null, StatusCode.Created))
-			.thenThrow(new DuplicateEntityException());
+			.thenThrow(new DuplicateEntityException(Standing.class));
 		when(standingRepo.updateStanding((Standing) anyObject()))
 			.thenReturn(createMockStanding("toronto-raptors", (short)10, (short)15, 25, 35, StatusCode.Updated))
 			.thenReturn(createMockStanding("seattle-supersonics", null, null, null, null, StatusCode.NotFound));

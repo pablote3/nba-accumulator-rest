@@ -5,15 +5,13 @@ package com.rossotti.basketball.dao.exception;
  */
 public class DuplicateEntityException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
+	private final Class<?> entityClass;
 
-//	private final String entityId;
-//	
-//	public DuplicateEntityException(String entityId) {
-//		super("The record \"" + entityId + "\" already exists.");
-//		this.entityId = entityId;
-//	}
-//	
-//	public String getEntityId() {
-//		return entityId;
-//	}
+	public DuplicateEntityException(Class<?> entityClass) {
+		super("The entity \"" + entityClass + "\" already exists.");
+		this.entityClass = entityClass;
+	}
+	public Class<?> getEntityClass() {
+		return entityClass;
+	}
 }

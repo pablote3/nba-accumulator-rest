@@ -55,7 +55,7 @@ public class RosterPlayerServiceTest {
 			.thenReturn(new ArrayList<RosterPlayer>());
 		when(rosterPlayerRepo.createRosterPlayer((RosterPlayer) anyObject()))
 			.thenReturn(createMockRosterPlayer("Payton", "Walter", StatusCode.Created))
-			.thenThrow(new DuplicateEntityException());
+			.thenThrow(new DuplicateEntityException(RosterPlayer.class));
 		when(rosterPlayerRepo.updateRosterPlayer((RosterPlayer) anyObject()))
 			.thenReturn(createMockRosterPlayer("Schaub", "Buddy", StatusCode.Updated))
 			.thenReturn(createMockRosterPlayer("Lima", "Roger", StatusCode.NotFound));
