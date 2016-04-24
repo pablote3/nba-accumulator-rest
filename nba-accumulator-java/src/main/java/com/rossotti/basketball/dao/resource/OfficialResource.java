@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.dao.exception.DuplicateEntityException;
+import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.Official;
 import com.rossotti.basketball.dao.pub.PubOfficial;
 import com.rossotti.basketball.dao.pub.PubOfficials;
@@ -53,7 +54,7 @@ public class OfficialResource {
 					.build();
 			}
 			else if (official.isNotFound()) {
-				return Response.status(404).build();
+				throw new NoSuchEntityException(Official.class);
 			}
 			else {
 				return Response.status(500).build();
@@ -121,11 +122,12 @@ public class OfficialResource {
 			if (official.isCreated()) {
 				return Response.created(uriInfo.getAbsolutePath()).build();
 			}
+			else if (official.isFound()) {
+				throw new DuplicateEntityException(Official.class);
+			}
 			else {
 				return Response.status(500).build();
 			}
-		} catch (DuplicateEntityException e) {
-			throw new BadRequestException("official " + createOfficial.getFirstName() + " " + createOfficial.getLastName() + " already exists", e);
 		} catch (PropertyValueException e) {
 			throw new BadRequestException("missing required field(s)", e);
 		}
@@ -140,7 +142,7 @@ public class OfficialResource {
 				return Response.noContent().build();
 			}
 			else if (official.isNotFound()) {
-				return Response.status(404).build();
+				throw new NoSuchEntityException(Official.class);
 			}
 			else {
 				return Response.status(500).build();
@@ -163,7 +165,7 @@ public class OfficialResource {
 				return Response.noContent().build();
 			}
 			else if (official.isNotFound()){
-				return Response.status(404).build();
+				throw new NoSuchEntityException(Official.class);
 			}
 			else {
 				return Response.status(500).build();

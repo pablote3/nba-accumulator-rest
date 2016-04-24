@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.dao.exception.DuplicateEntityException;
+import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.Standing;
 import com.rossotti.basketball.dao.pub.PubStanding;
 import com.rossotti.basketball.dao.pub.PubStandings;
@@ -52,7 +53,7 @@ public class StandingResource {
 					.build();
 			}
 			else if (standing.isNotFound()) {
-				return Response.status(404).build();
+				throw new NoSuchEntityException(Standing.class);
 			}
 			else {
 				return Response.status(500).build();
@@ -67,21 +68,25 @@ public class StandingResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findStandings(@Context UriInfo uriInfo, 
 								@PathParam("asOfDate") String asOfDateString) {
-		LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
-		List<Standing> listStandings = standingRepo.findStandings(asOfDate);
-		if (listStandings.size() > 0) {
-			List<PubStanding> listPubStandings = new ArrayList<PubStanding>();
-			for (Standing standing : listStandings) {
-				PubStanding pubStanding = standing.toPubStanding(uriInfo);
-				listPubStandings.add(pubStanding);
+		try {
+			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
+			List<Standing> listStandings = standingRepo.findStandings(asOfDate);
+			if (listStandings.size() > 0) {
+				List<PubStanding> listPubStandings = new ArrayList<PubStanding>();
+				for (Standing standing : listStandings) {
+					PubStanding pubStanding = standing.toPubStanding(uriInfo);
+					listPubStandings.add(pubStanding);
+				}
+				PubStandings pubStandings = new PubStandings(uriInfo.getAbsolutePath(), listPubStandings);
+				return Response.ok(pubStandings)
+						.link(uriInfo.getAbsolutePath(), "standing")
+						.build();
 			}
-			PubStandings pubStandings = new PubStandings(uriInfo.getAbsolutePath(), listPubStandings);
-			return Response.ok(pubStandings)
-					.link(uriInfo.getAbsolutePath(), "standing")
-					.build();
-		}
-		else {
-			return Response.status(404).build();
+			else {
+				return Response.status(404).build();
+			}
+		} catch (IllegalArgumentException e) {
+			throw new BadRequestException("asOfDate must be yyyy-MM-dd format", e);
 		}
 	}
 
@@ -93,11 +98,12 @@ public class StandingResource {
 			if (standing.isCreated()) {
 				return Response.created(uriInfo.getAbsolutePath()).build();
 			}
+			else if (standing.isFound()) {
+				throw new DuplicateEntityException(Standing.class);
+			}
 			else {
 				return Response.status(500).build();
 			}
-		} catch (DuplicateEntityException e) {
-			throw new BadRequestException("standing " + createStanding.getTeam().getTeamKey() + " " + createStanding.getStandingDate() + " already exists", e);
 		} catch (PropertyValueException e) {
 			throw new BadRequestException("missing required field(s)", e);
 		}
@@ -112,7 +118,7 @@ public class StandingResource {
 				return Response.noContent().build();
 			}
 			else if (standing.isNotFound()) {
-				return Response.status(404).build();
+				throw new NoSuchEntityException(Standing.class);
 			}
 			else {
 				return Response.status(500).build();
@@ -134,7 +140,7 @@ public class StandingResource {
 				return Response.noContent().build();
 			}
 			else if (standing.isNotFound()){
-				return Response.status(404).build();
+				throw new NoSuchEntityException(Standing.class);
 			}
 			else {
 				return Response.status(500).build();

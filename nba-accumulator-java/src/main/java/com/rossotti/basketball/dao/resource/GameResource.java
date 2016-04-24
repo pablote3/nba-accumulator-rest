@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.dao.exception.DuplicateEntityException;
+import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.pub.PubGame;
 import com.rossotti.basketball.dao.pub.PubGames;
@@ -47,13 +48,12 @@ public class GameResource {
 			Game game = gameRepo.findByDateTeam(gameDate, teamKey);
 			if (game.isFound()) {
 				PubGame pubGame = game.toPubGame(uriInfo, teamKey);
-				
 				return Response.ok(pubGame)
 					.link(uriInfo.getAbsolutePath(), "game")
 					.build();
 			}
 			else if (game.isNotFound()) {
-				return Response.status(404).build();
+				throw new NoSuchEntityException(Game.class);
 			}
 			else {
 				return Response.status(500).build();
@@ -68,21 +68,25 @@ public class GameResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findGamesByGameDate(@Context UriInfo uriInfo, 
 										@PathParam("gameDate") String gameDateString) {
-		LocalDate gameDate = DateTimeUtil.getLocalDate(gameDateString);
-		List<Game> listGames = gameRepo.findByDate(gameDate);
-		if (listGames.size() > 0) {
-			List<PubGame> listPubGames = new ArrayList<PubGame>();
-			for (Game game : listGames) {
-				PubGame pubGame = game.toPubGame(uriInfo, game.getBoxScores().get(0).getTeam().getTeamKey());
-				listPubGames.add(pubGame);
+		try {
+			LocalDate gameDate = DateTimeUtil.getLocalDate(gameDateString);
+			List<Game> listGames = gameRepo.findByDate(gameDate);
+			if (listGames.size() > 0) {
+				List<PubGame> listPubGames = new ArrayList<PubGame>();
+				for (Game game : listGames) {
+					PubGame pubGame = game.toPubGame(uriInfo, game.getBoxScores().get(0).getTeam().getTeamKey());
+					listPubGames.add(pubGame);
+				}
+				PubGames pubGames = new PubGames(uriInfo.getAbsolutePath(), listPubGames);
+				return Response.ok(pubGames)
+						.link(uriInfo.getAbsolutePath(), "game")
+						.build();
 			}
-			PubGames pubGames = new PubGames(uriInfo.getAbsolutePath(), listPubGames);
-			return Response.ok(pubGames)
-					.link(uriInfo.getAbsolutePath(), "game")
-					.build();
-		}
-		else {
-			return Response.status(404).build();
+			else {
+				return Response.status(404).build();
+			}
+		} catch (IllegalArgumentException e) {
+			throw new BadRequestException("asOfDate must be yyyy-MM-dd format", e);
 		}
 	}
 
@@ -94,11 +98,12 @@ public class GameResource {
 			if (game.isCreated()) {
 				return Response.created(uriInfo.getAbsolutePath()).build();
 			}
+			else if (game.isFound()) {
+				throw new DuplicateEntityException(Game.class);
+			}
 			else {
 				return Response.status(500).build();
 			}
-		} catch (DuplicateEntityException e) {
-			throw new BadRequestException("game " + createGame.getGameDateTime() + " " + createGame.getBoxScores().get(0).getTeam().getTeamKey() + " already exists", e);
 		} catch (PropertyValueException e) {
 			throw new BadRequestException("missing required field(s)", e);
 		}
@@ -113,7 +118,7 @@ public class GameResource {
 				return Response.noContent().build();
 			}
 			else if (game.isNotFound()) {
-				return Response.status(404).build();
+				throw new NoSuchEntityException(Game.class);
 			}
 			else {
 				return Response.status(500).build();
@@ -135,7 +140,7 @@ public class GameResource {
 				return Response.noContent().build();
 			}
 			else if (game.isNotFound()){
-				return Response.status(404).build();
+				throw new NoSuchEntityException(Game.class);
 			}
 			else {
 				return Response.status(500).build();

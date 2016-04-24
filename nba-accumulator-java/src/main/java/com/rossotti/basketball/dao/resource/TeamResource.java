@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.dao.exception.DuplicateEntityException;
+import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.dao.pub.PubTeam;
 import com.rossotti.basketball.dao.pub.PubTeams;
@@ -52,7 +53,7 @@ public class TeamResource {
 					.build();
 			}
 			else if (team.isNotFound()) {
-				return Response.status(404).build();
+				throw new NoSuchEntityException(Team.class);
 			}
 			else {
 				return Response.status(500).build();
@@ -97,11 +98,12 @@ public class TeamResource {
 			if (team.isCreated()) {
 				return Response.created(uriInfo.getAbsolutePath()).build();
 			}
+			else if (team.isFound()) {
+				throw new DuplicateEntityException(Team.class);
+			}
 			else {
 				return Response.status(500).build();
 			}
-		} catch (DuplicateEntityException e) {
-			throw new BadRequestException("team " + createTeam.getTeamKey() + " already exists", e);
 		} catch (PropertyValueException e) {
 			throw new BadRequestException("missing required field(s)", e);
 		}
@@ -116,7 +118,7 @@ public class TeamResource {
 				return Response.noContent().build();
 			}
 			else if (team.isNotFound()) {
-				return Response.status(404).build();
+				throw new NoSuchEntityException(Team.class);
 			}
 			else {
 				return Response.status(500).build();
@@ -138,7 +140,7 @@ public class TeamResource {
 				return Response.noContent().build();
 			}
 			else if (team.isNotFound()){
-				return Response.status(404).build();
+				throw new NoSuchEntityException(Team.class);
 			}
 			else {
 				return Response.status(500).build();

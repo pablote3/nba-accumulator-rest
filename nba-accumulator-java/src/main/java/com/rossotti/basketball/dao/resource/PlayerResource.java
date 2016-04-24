@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.dao.exception.DuplicateEntityException;
+import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.Player;
 import com.rossotti.basketball.dao.pub.PubPlayer;
 import com.rossotti.basketball.dao.pub.PubPlayers;
@@ -53,7 +54,7 @@ public class PlayerResource {
 					.build();
 			}
 			else if (player.isNotFound()) {
-				return Response.status(404).build();
+				throw new NoSuchEntityException(Player.class);
 			}
 			else {
 				return Response.status(500).build();
@@ -94,11 +95,12 @@ public class PlayerResource {
 			if (player.isCreated()) {
 				return Response.created(uriInfo.getAbsolutePath()).build();
 			}
+			else if (player.isFound()) {
+				throw new DuplicateEntityException(Player.class);
+			}
 			else {
 				return Response.status(500).build();
 			}
-		} catch (DuplicateEntityException e) {
-			throw new BadRequestException("player " + createPlayer.getFirstName() + " " + createPlayer.getLastName() + " already exists", e);
 		} catch (PropertyValueException e) {
 			throw new BadRequestException("missing required field(s)", e);
 		}
@@ -113,7 +115,7 @@ public class PlayerResource {
 				return Response.noContent().build();
 			}
 			else if (player.isNotFound()) {
-				return Response.status(404).build();
+				throw new NoSuchEntityException(Player.class);
 			}
 			else {
 				return Response.status(500).build();
@@ -136,7 +138,7 @@ public class PlayerResource {
 				return Response.noContent().build();
 			}
 			else if (player.isNotFound()){
-				return Response.status(404).build();
+				throw new NoSuchEntityException(Player.class);
 			}
 			else {
 				return Response.status(500).build();
