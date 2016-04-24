@@ -86,9 +86,10 @@ public class PlayerResourceTest {
 	@Test
 	public void createPlayer_Found() {
 		expect().
-			statusCode(400).
+			statusCode(403).
 		given().
 			contentType(ContentType.JSON).
+			config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8"))).
 			body(createJsonPlayer("Ginóbili", "Emanuel").toString()).
 		when().
 			post("/players");

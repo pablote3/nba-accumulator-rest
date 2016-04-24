@@ -94,9 +94,10 @@ public class OfficialResourceTest {
 	@Test
 	public void createOfficial_Found() {
 		expect().
-			statusCode(400).
+			statusCode(403).
 		given().
 			contentType(ContentType.JSON).
+			config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8"))).
 			body(createJsonOfficial("Ginóbili", "Johnny").toString()).
 		when().
 			post("/officials");

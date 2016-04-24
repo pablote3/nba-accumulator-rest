@@ -92,7 +92,7 @@ public class TeamResourceTest {
 	@Test
 	public void createTeam_Found() {
 		expect().
-			statusCode(400).
+			statusCode(403).
 		given().
 			contentType(ContentType.JSON).
 			body(createJsonTeam("boston-celtics").toString()).
