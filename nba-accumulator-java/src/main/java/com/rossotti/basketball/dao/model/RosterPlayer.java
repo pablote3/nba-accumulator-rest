@@ -70,7 +70,7 @@ public class RosterPlayer {
 		this.id = id;
 	}
 
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name="teamId", referencedColumnName="id", nullable=false)
 	private Team team;
 	public Team getTeam() {
@@ -80,7 +80,7 @@ public class RosterPlayer {
 		this.team = team;
 	}
 
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name="playerId", referencedColumnName="id", nullable=false)
 	private Player player;
 	public Player getPlayer() {
