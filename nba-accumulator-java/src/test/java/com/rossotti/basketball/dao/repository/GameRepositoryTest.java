@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.BoxScorePlayer;
 import com.rossotti.basketball.dao.model.Game;
@@ -143,8 +142,7 @@ public class GameRepositoryTest {
 
 	@Test
 	public void createGame_Created() {
-		Game game = createMockGame(new LocalDateTime("2015-10-10T21:00"), 1L, "chicago-zephyrs", 2L, "harlem-globetrotters");
-		Game createGame = gameRepo.createGame(game);
+		Game createGame = gameRepo.createGame(createMockGame(new LocalDateTime("2015-10-10T21:00"), 1L, "chicago-zephyrs", 2L, "harlem-globetrotters"));
 		Game findGame = gameRepo.findByDateTeam(new LocalDate("2015-10-10"), "chicago-zephyrs");
 		Assert.assertTrue(createGame.isCreated());
 		Assert.assertEquals(2, findGame.getBoxScores().size());
@@ -152,10 +150,9 @@ public class GameRepositoryTest {
 		Assert.assertEquals("Harlem Globetrotters", findGame.getBoxScores().get(1).getTeam().getFullName());
 	}
 
-	@Test(expected=DuplicateEntityException.class)
 	public void createGame_Duplicate() {
-		Game game = createMockGame(new LocalDateTime("2015-10-27T20:00"), 1L, "chicago-zephyrs", 2L, "harlem-globetrotters");
-		gameRepo.createGame(game);
+		Game game = gameRepo.createGame(createMockGame(new LocalDateTime("2015-10-27T20:00"), 1L, "chicago-zephyrs", 2L, "harlem-globetrotters"));
+		Assert.assertTrue(game.isFound());
 	}
 
 	@Test(expected=PropertyValueException.class)
@@ -372,7 +369,7 @@ public class GameRepositoryTest {
 
 	private BoxScorePlayer createMockBoxScorePlayerAway() {
 		BoxScorePlayer awayBoxScorePlayer = new BoxScorePlayer();
-		awayBoxScorePlayer.setRosterPlayer(getMockRosterPlayer(4L, "Puzdrakiewicz", "Junior", new LocalDate("1966-06-10"), new LocalDate("2009-10-30"), new LocalDate("9999-12-31")));
+		awayBoxScorePlayer.setRosterPlayer(getMockRosterPlayer(5L, "Puzdrakiewicz", "Junior", new LocalDate("1966-06-10"), new LocalDate("2009-10-30"), new LocalDate("9999-12-31")));
 		awayBoxScorePlayer.setPosition(Position.SG);
 		awayBoxScorePlayer.setStarter(false);
 		awayBoxScorePlayer.setMinutes((short)2);

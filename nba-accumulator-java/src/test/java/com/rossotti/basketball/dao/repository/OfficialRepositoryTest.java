@@ -12,7 +12,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.model.Official;
 import com.rossotti.basketball.dao.repository.OfficialRepository;
 
@@ -22,8 +21,6 @@ public class OfficialRepositoryTest {
 
 	@Autowired
 	private OfficialRepository officialRepo;
-
-	//'Joe', 'LateCall', '2009-07-01', '2010-06-30'
 
 	@Test
 	public void findOfficialByName_Found_FromDate() {
@@ -63,9 +60,6 @@ public class OfficialRepositoryTest {
 		Assert.assertTrue(findOfficial.isNotFound());
 	}
 
-	//'Mike', 'MissedCall', '2009-07-01', '2010-06-30'
-	//'Mike', 'MissedCall', '2010-07-01', '2011-06-30'
-
 	@Test
 	public void findOfficialsByName() {
 		List<Official> findOfficials = officialRepo.findOfficials("MissedCall","Mike");
@@ -83,7 +77,7 @@ public class OfficialRepositoryTest {
 		List<Official> findOfficials = officialRepo.findOfficials("MissedCall", "Mikey");
 		Assert.assertEquals(0, findOfficials.size());
 	}
-	
+
 	@Test
 	public void findOfficialsByDateRange_Found() {
 		List<Official> officials = officialRepo.findOfficials(new LocalDate("2009-10-31"));
@@ -96,8 +90,6 @@ public class OfficialRepositoryTest {
 		Assert.assertEquals(0, findOfficials.size());
 	}
 
-	//'Hefe', 'QuestionableCall', '2005-07-01', '2006-06-30'
-
 	@Test
 	public void createOfficial_Created() {
 		Official createOfficial = officialRepo.createOfficial(createMockOfficial("BadCall", "Melvin", new LocalDate("2012-07-01"), new LocalDate("2012-07-01")));
@@ -106,9 +98,9 @@ public class OfficialRepositoryTest {
 		Assert.assertEquals("999", findOfficial.getNumber());
 	}
 
-	@Test(expected=DuplicateEntityException.class)
-	public void createOfficial_OverlappingDates() {
-		officialRepo.createOfficial(createMockOfficial("QuestionableCall", "Hefe", new LocalDate("2005-07-01"), new LocalDate("2006-06-30")));
+	public void createOfficial_Duplicate() {
+		Official createOfficial = officialRepo.createOfficial(createMockOfficial("QuestionableCall", "Hefe", new LocalDate("2005-07-01"), new LocalDate("2006-06-30")));
+		Assert.assertTrue(createOfficial.isFound());
 	}
 
 	@Test(expected=PropertyValueException.class)
@@ -118,8 +110,6 @@ public class OfficialRepositoryTest {
 		createOfficial.setFirstName("missing-required-data");
 		officialRepo.createOfficial(createOfficial);
 	}
-
-	//'Mike', 'MissedCall', '2009-07-01', '2010-06-30'
 
 	@Test
 	public void updateOfficial_Updated() {
@@ -141,8 +131,6 @@ public class OfficialRepositoryTest {
 		updateOfficial.setNumber(null);
 		officialRepo.updateOfficial(updateOfficial);
 	}
-
-	//'Limo', 'TerribleCall', '2005-07-01', '2006-06-30');
 
 	@Test
 	public void deleteOfficial_Deleted() {
@@ -167,7 +155,7 @@ public class OfficialRepositoryTest {
 		official.setNumber("999");
 		return official;
 	}
-	
+
 	private Official updateMockOfficial(String lastName, String firstName, LocalDate fromDate, LocalDate toDate) {
 		Official official = new Official();
 		official.setLastName(lastName);

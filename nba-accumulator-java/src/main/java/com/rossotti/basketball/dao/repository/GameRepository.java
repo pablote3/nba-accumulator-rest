@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.model.GameStatus;
@@ -40,7 +39,8 @@ public class GameRepository {
 		Game findGame = (Game)query.uniqueResult();
 		if (findGame == null) {
 			return new Game(StatusCode.NotFound);
-		} else {
+		} 
+		else {
 			Game game = (Game)getSessionFactory().getCurrentSession().createCriteria(Game.class)
 				.add(Restrictions.eq("id", findGame.getId()))
 				.uniqueResult();
@@ -149,18 +149,18 @@ public class GameRepository {
 	}
 
 	public Game createGame(Game createGame) {
-		Game game = findByDateTeam(DateTimeUtil.getLocalDate(createGame.getGameDateTime()), createGame.getBoxScores().get(0).getTeam().getTeamKey());
-		if (game.isNotFound()) {
+		Game findGame = findByDateTeam(DateTimeUtil.getLocalDate(createGame.getGameDateTime()), createGame.getBoxScores().get(0).getTeam().getTeamKey());
+		if (findGame.isNotFound()) {
 			for (int i = 0; i < createGame.getBoxScores().size(); i++) {
 				createGame.getBoxScores().get(i).setGame(createGame);
 			}
 			getSessionFactory().getCurrentSession().persist(createGame);
 			createGame.setStatusCode(StatusCode.Created);
+			return createGame;
 		}
 		else {
-			throw new DuplicateEntityException();
+			return findGame;
 		}
-		return createGame;
 	}
 
 	public Game updateGame(Game updateGame) {

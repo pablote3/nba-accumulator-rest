@@ -12,7 +12,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.model.Player;
 import com.rossotti.basketball.dao.repository.PlayerRepository;
 
@@ -22,8 +21,6 @@ public class PlayerRepositoryTest {
 
 	@Autowired
 	private PlayerRepository playerRepo;
-
-	//'Luke', 'Puzdrakiewicz', '2002-02-20', 'Luke Puzdrakiewicz'
 
 	@Test
 	public void findPlayerByName_Found_MatchBirthdate() {
@@ -50,7 +47,7 @@ public class PlayerRepositoryTest {
 		Player findPlayer = playerRepo.findPlayer("Puzdrakiewicz", "Luke", new LocalDate("2002-02-21"));
 		Assert.assertTrue(findPlayer.isNotFound());
 	}
-	
+
 	@Test
 	public void findPlayerByName_Found_UTF_8() {
 		Player findPlayer = playerRepo.findPlayer("Valančiūnas", "Jonas", new LocalDate("1992-05-06"));
@@ -58,9 +55,6 @@ public class PlayerRepositoryTest {
 		Assert.assertEquals("Utėnai, Lithuania", findPlayer.getBirthplace());
 		Assert.assertTrue(findPlayer.isFound());
 	}
-
-	//'Thad', 'Puzdrakiewicz', '1966-06-02', 'Thad Puzdrakiewicz'
-	//'Thad', 'Puzdrakiewicz', '2000-03-13', 'Thad Puzdrakiewicz'
 
 	@Test
 	public void findPlayersByName_Found() {
@@ -73,8 +67,6 @@ public class PlayerRepositoryTest {
 		List<Player> findPlayers = playerRepo.findPlayers("Puzdrakiewicz", "Thady");
 		Assert.assertEquals(0, findPlayers.size());
 	}
-
-	//'Michelle', 'Puzdrakiewicz', '1969-09-08', 'Michelle Puzdrakiewicz'
 
 	@Test
 	public void createPlayer_Created_UniqueName() {
@@ -92,9 +84,9 @@ public class PlayerRepositoryTest {
 		Assert.assertEquals("Michelle Puzdrakiewicz2", findPlayer.getDisplayName());
 	}
 
-	@Test(expected=DuplicateEntityException.class)
 	public void createPlayer_Duplicate_IdenticalBirthdate() {
-		playerRepo.createPlayer(createMockPlayer("Puzdrakiewicz", "Michelle", new LocalDate("1969-09-08"), "Michelle Puzdrakiewicz"));
+		Player createPlayer = playerRepo.createPlayer(createMockPlayer("Puzdrakiewicz", "Michelle", new LocalDate("1969-09-08"), "Michelle Puzdrakiewicz"));
+		Assert.assertTrue(createPlayer.isFound());
 	}
 
 	@Test(expected=PropertyValueException.class)
@@ -104,8 +96,6 @@ public class PlayerRepositoryTest {
 		createPlayer.setFirstName("missing-required-data");
 		playerRepo.createPlayer(createPlayer);
 	}
-
-	//'Thad', 'Puzdrakiewicz', '1966-06-10', 'Thad Puzdrakiewicz'
 
 	@Test
 	public void updatePlayer_Updated() {
@@ -127,19 +117,17 @@ public class PlayerRepositoryTest {
 		playerRepo.updatePlayer(updatePlayer);
 	}
 
-	//'Junior', 'Puzdrakiewicz', '1966-06-10', 'Junior Puzdrakiewicz'
-
 	@Test
 	public void deletePlayer_Deleted() {
-		Player deletePlayer = playerRepo.deletePlayer("Puzdrakiewicz", "Junior", new LocalDate("1966-06-10"));
-		Player findPlayer = playerRepo.findPlayer("Puzdrakiewicz", "Junior", new LocalDate("1966-06-10"));
+		Player deletePlayer = playerRepo.deletePlayer("Puzdrakiewicz", "Tuey", new LocalDate("1966-06-07"));
+		Player findPlayer = playerRepo.findPlayer("Puzdrakiewicz", "Tuey", new LocalDate("1966-06-07"));
 		Assert.assertTrue(deletePlayer.isDeleted());
 		Assert.assertTrue(findPlayer.isNotFound());
 	}
 
 	@Test
 	public void deletePlayer_NotFound() {
-		Player deletePlayer = playerRepo.deletePlayer("Puzdrakiewicz", "Juni", new LocalDate("1966-06-10"));
+		Player deletePlayer = playerRepo.deletePlayer("Puzdrakiewicz", "Tooey", new LocalDate("1966-06-10"));
 		Assert.assertTrue(deletePlayer.isNotFound());
 	}
 
@@ -154,7 +142,7 @@ public class PlayerRepositoryTest {
 		player.setBirthplace("Monroe, Louisiana, USA");
 		return player;
 	}
-	
+
 	private Player updateMockPlayer(String lastName, String firstName, LocalDate birthdate, String displayName) {
 		Player player = new Player();
 		player.setLastName(lastName);

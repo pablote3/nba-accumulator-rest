@@ -12,7 +12,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.dao.model.Team.Conference;
 import com.rossotti.basketball.dao.model.Team.Division;
@@ -25,8 +24,6 @@ public class TeamRepositoryTest {
 	@Autowired
 	private TeamRepository teamRepo;
 
-	//'harlem-globetrotters', '2009-07-01', '2010-06-30', 'Harlem Globetrotters'
-	
 	@Test
 	public void findTeamByKey_Found_FromDate() {
 		Team findTeam = teamRepo.findTeam("harlem-globetrotters", new LocalDate("2009-07-01"));
@@ -59,9 +56,6 @@ public class TeamRepositoryTest {
 		Assert.assertTrue(findTeam.isNotFound());
 	}
 
-	//'st-louis-bombers', '2009-07-01', '2010-06-30', 'St. Louis Bombers'
-	//'st-louis-bombers', '2010-07-01', '2011-06-30', 'St. Louis Bombers'
-
 	@Test
 	public void findTeamsByKey_Found() {
 		List<Team> teams = teamRepo.findTeams("st-louis-bombers");
@@ -86,8 +80,6 @@ public class TeamRepositoryTest {
 		Assert.assertEquals(0, teams.size());
 	}
 
-	//'baltimore-bullets', '2005-07-01', '2006-06-30', 'Baltimore Bullets'
-
 	@Test
 	public void createTeam_Created_AsOfDate() {
 		Team createTeam = teamRepo.createTeam(createMockTeam("seattle-supersonics", new LocalDate("2012-07-01"), new LocalDate("9999-12-31"), "Seattle Supersonics"));
@@ -104,9 +96,9 @@ public class TeamRepositoryTest {
 		Assert.assertEquals("Baltimore Bullets2", findTeam.getFullName());
 	}
 
-	@Test(expected=DuplicateEntityException.class)
 	public void createTeam_OverlappingDates() {
-		teamRepo.createTeam(createMockTeam("baltimore-bullets", new LocalDate("2005-07-01"), new LocalDate("2005-07-01"), "Baltimore Bullets"));
+		Team createTeam = teamRepo.createTeam(createMockTeam("baltimore-bullets", new LocalDate("2005-07-01"), new LocalDate("2005-07-01"), "Baltimore Bullets"));
+		Assert.assertTrue(createTeam.isFound());
 	}
 
 	@Test(expected=PropertyValueException.class)
@@ -115,8 +107,6 @@ public class TeamRepositoryTest {
 		team.setTeamKey("missing-required-data-key");
 		teamRepo.createTeam(team);
 	}
-
-	//'st-louis-bombers', '2009-07-01', '2010-06-30', 'St. Louis Bombers'
 
 	@Test
 	public void updateTeam() {
@@ -135,8 +125,6 @@ public class TeamRepositoryTest {
 		Team team = updateMockTeam("st-louis-bombers", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"), null);
 		teamRepo.updateTeam(team);
 	}
-
-	//'rochester-royals', '2008-07-01', '2009-06-30', 'Rochester Royals'
 
 	@Test
 	public void deleteTeam_Deleted() {
@@ -168,7 +156,7 @@ public class TeamRepositoryTest {
 		team.setFullName(fullName);
 		return team;
 	}
-	
+
 	private Team updateMockTeam(String key, LocalDate fromDate, LocalDate toDate, String fullName) {
 		Team team = new Team();
 		team.setTeamKey(key);

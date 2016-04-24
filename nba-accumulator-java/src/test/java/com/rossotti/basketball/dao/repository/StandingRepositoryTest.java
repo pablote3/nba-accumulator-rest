@@ -12,7 +12,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.model.Standing;
 import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.dao.repository.StandingRepository;
@@ -23,7 +22,7 @@ public class StandingRepositoryTest {
 
 	@Autowired
 	private StandingRepository standingRepo;
-	
+
 	@Test
 	public void findStandingByTeamAsOfDate_Found() {
 		Standing findStanding = standingRepo.findStanding("chicago-zephyrs", new LocalDate("2015-10-30"));
@@ -70,9 +69,9 @@ public class StandingRepositoryTest {
 		Assert.assertTrue(findStanding.getConferenceWins().equals((short)7));
 	}
 
-	@Test(expected=DuplicateEntityException.class)
 	public void createStanding_OverlappingDates() {
-		standingRepo.createStanding(createMockStanding("chicago-zephyrs", new LocalDate("2015-10-30")));
+		Standing createStanding = standingRepo.createStanding(createMockStanding("chicago-zephyrs", new LocalDate("2015-10-30")));
+		Assert.assertTrue(createStanding.isFound());
 	}
 
 	@Test(expected=PropertyValueException.class)

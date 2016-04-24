@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.model.StatusCode;
 
@@ -34,6 +33,9 @@ public class RosterPlayerRepository {
 		if (rosterPlayer == null) {
 			rosterPlayer = new RosterPlayer(StatusCode.NotFound);
 		}
+		else {
+			rosterPlayer.setStatusCode(StatusCode.Found);
+		}
 		return rosterPlayer;
 	}
 
@@ -51,6 +53,9 @@ public class RosterPlayerRepository {
 		RosterPlayer rosterPlayer = (RosterPlayer)query.uniqueResult();
 		if (rosterPlayer == null) {
 			rosterPlayer = new RosterPlayer(StatusCode.NotFound);
+		}
+		else {
+			rosterPlayer.setStatusCode(StatusCode.Found);
 		}
 		return rosterPlayer;
 	}
@@ -87,16 +92,16 @@ public class RosterPlayerRepository {
 		return rosterPlayers;
 	}
 
-	public RosterPlayer createRosterPlayer(RosterPlayer rp) {
-		RosterPlayer rosterPlayer = findRosterPlayer(rp.getPlayer().getLastName(), rp.getPlayer().getFirstName(), rp.getPlayer().getBirthdate(), rp.getFromDate());
-		if (rosterPlayer.isNotFound()) {
-			getSessionFactory().getCurrentSession().persist(rp);
-			rp.setStatusCode(StatusCode.Created);
+	public RosterPlayer createRosterPlayer(RosterPlayer createRosterPlayer) {
+		RosterPlayer findRosterPlayer = findRosterPlayer(createRosterPlayer.getPlayer().getLastName(), createRosterPlayer.getPlayer().getFirstName(), createRosterPlayer.getPlayer().getBirthdate(), createRosterPlayer.getFromDate());
+		if (findRosterPlayer.isNotFound()) {
+			getSessionFactory().getCurrentSession().save(createRosterPlayer);
+			createRosterPlayer.setStatusCode(StatusCode.Created);
+			return createRosterPlayer;
 		}
 		else {
-			throw new DuplicateEntityException();
+			return findRosterPlayer;
 		}
-		return rp;
 	}
 
 	public RosterPlayer updateRosterPlayer(RosterPlayer rp) {

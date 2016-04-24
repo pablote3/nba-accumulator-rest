@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.model.Standing;
 import com.rossotti.basketball.dao.model.StatusCode;
 
@@ -31,6 +30,9 @@ public class StandingRepository {
 		if (standing == null) {
 			standing = new Standing(StatusCode.NotFound);
 		}
+		else {
+			standing.setStatusCode(StatusCode.Found);
+		}
 		return standing;
 	}
 
@@ -48,16 +50,16 @@ public class StandingRepository {
 		return standings;
 	}
 
-	public Standing createStanding(Standing s) {
-		Standing standing = findStanding(s.getTeam().getTeamKey(), s.getStandingDate());
+	public Standing createStanding(Standing createStanding) {
+		Standing standing = findStanding(createStanding.getTeam().getTeamKey(), createStanding.getStandingDate());
 		if (standing.isNotFound()) {
-			getSessionFactory().getCurrentSession().persist(s);
-			s.setStatusCode(StatusCode.Created);
+			getSessionFactory().getCurrentSession().persist(createStanding);
+			createStanding.setStatusCode(StatusCode.Created);
+			return createStanding;
 		}
 		else {
-			throw new DuplicateEntityException();
+			return standing;
 		}
-		return s;
 	}
 
 	public Standing updateStanding(Standing s) {

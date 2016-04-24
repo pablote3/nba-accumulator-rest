@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.model.Official;
 import com.rossotti.basketball.dao.model.StatusCode;
 
@@ -29,6 +28,9 @@ public class OfficialRepository {
 			.uniqueResult();
 		if (official == null) {
 			official = new Official(StatusCode.NotFound);
+		}
+		else {
+			official.setStatusCode(StatusCode.Found);
 		}
 		return official;
 	}
@@ -64,7 +66,7 @@ public class OfficialRepository {
 			createOfficial.setStatusCode(StatusCode.Created);
 		}
 		else {
-			throw new DuplicateEntityException();
+			return official;
 		}
 		return createOfficial;
 	}

@@ -22,6 +22,7 @@ insert into player VALUES(2, '1966-06-02', 'Sacramento, CA, USA', 'Thad Puzdraki
 insert into player VALUES(3, '2000-03-13', 'Sacramento, CA, USA', 'Thad Puzdrakiewicz', 'Thad', 79, 'Puzdrakiewicz', 180);
 insert into player VALUES(4, '1969-09-08', 'Sacramento, CA, USA', 'Michelle Puzdrakiewicz', 'Michelle', 75, 'Puzdrakiewicz', 170);
 insert into player VALUES(5, '1966-06-10', 'Sacramento, CA, USA', 'Junior Puzdrakiewicz', 'Junior', 80, 'Puzdrakiewicz', 240);
+insert into player VALUES(6, '1966-06-07', 'Sacramento, CA, USA', 'Tuey Puzdrakiewicz', 'Tuey', 80, 'Puzdrakiewicz', 240);
 insert into player VALUES(10, '1990-03-04', 'Saginaw, Michigan, USA', 'Andre Drummond', 'Andre', 79, 'Drummond', 230);
 insert into player VALUES(11, '1989-09-02', 'Philadelphia, Pennsylvania, USA', 'Marcus Morris', 'Marcus', 81, 'Morris', 235);
 insert into player VALUES(12, '1993-02-18', 'Thomaston, Georgia, USA', 'Kentavious Caldwell-Pope', 'Kentavious', 78, 'Caldwell-Pope', 204);
@@ -31,7 +32,8 @@ insert into player VALUES(14, '1992-05-06', 'Utėnai, Lithuania', 'Jonas Valanč
 insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(1, 1, 1, '2009-11-30', '9999-12-31', '21', 'SG');
 insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(2, 1, 4, '2009-10-30', '2009-11-03', '21', 'PG');
 insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(3, 2, 4, '2009-10-30', '2009-11-04', '12', 'C');
-insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(4, 3, 5, '2009-10-30', '9999-12-31', '9', 'PG');
+insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(4, 2, 2, '2010-01-01', '2010-01-10', '12', 'C');
+insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(5, 3, 5, '2009-10-30', '9999-12-31', '9', 'PG');
 insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(10, 10, 10, '2015-11-15', '9999-12-31', '21', 'SG');
 insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(11, 11, 10, '2015-10-30', '9999-12-31', '28', 'PG');
 insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(12, 12, 10, '2015-10-30', '2015-12-01', '12', 'C');
