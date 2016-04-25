@@ -26,6 +26,7 @@ import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.Player;
 import com.rossotti.basketball.dao.model.RosterPlayer;
+import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.dao.pub.PubPlayer;
 import com.rossotti.basketball.dao.pub.PubRosterPlayer;
 import com.rossotti.basketball.dao.pub.PubRosterPlayer_ByPlayer;
@@ -35,6 +36,7 @@ import com.rossotti.basketball.dao.pub.PubRosterPlayers_ByTeam;
 import com.rossotti.basketball.dao.pub.PubTeam;
 import com.rossotti.basketball.dao.repository.PlayerRepository;
 import com.rossotti.basketball.dao.repository.RosterPlayerRepository;
+import com.rossotti.basketball.dao.repository.TeamRepository;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
@@ -46,6 +48,9 @@ public class RosterPlayerResource {
 	
 	@Autowired
 	private PlayerRepository playerRepo;
+
+	@Autowired
+	private TeamRepository teamRepo;
 
 	@GET
 	@Path("/player/{lastName}/{firstName}/{birthdate}/{asOfDate}")
@@ -169,12 +174,23 @@ public class RosterPlayerResource {
 		try {
 			Player player = playerRepo.findPlayer(createRosterPlayer.getPlayer().getLastName(), createRosterPlayer.getPlayer().getFirstName(), createRosterPlayer.getPlayer().getBirthdate());
 			if (player.isFound()) {
-				RosterPlayer rosterPlayer = rosterPlayerRepo.createRosterPlayer(createRosterPlayer);
-				if (rosterPlayer.isCreated()) {
-					return Response.created(uriInfo.getAbsolutePath()).build();
+				createRosterPlayer.getPlayer().setId(player.getId());
+				Team team = teamRepo.findTeam(createRosterPlayer.getTeam().getTeamKey(), createRosterPlayer.getFromDate());
+				if (team.isFound()) {
+					createRosterPlayer.getTeam().setId(team.getId());
+					RosterPlayer rosterPlayer = rosterPlayerRepo.createRosterPlayer(createRosterPlayer);
+					if (rosterPlayer.isCreated()) {
+						return Response.created(uriInfo.getAbsolutePath()).build();
+					}
+					else if (rosterPlayer.isFound()){
+						throw new DuplicateEntityException(RosterPlayer.class);
+					}
+					else {
+						return Response.status(500).build();
+					}
 				}
-				else if (rosterPlayer.isFound()){
-					throw new DuplicateEntityException(RosterPlayer.class);
+				else if (team.isNotFound()) {
+					throw new NoSuchEntityException(Team.class);
 				}
 				else {
 					return Response.status(500).build();
