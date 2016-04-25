@@ -17,10 +17,8 @@ import org.junit.Test;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.config.EncoderConfig;
 import com.jayway.restassured.http.ContentType;
 import com.rossotti.basketball.dao.model.RosterPlayer;
-import com.rossotti.basketball.dao.model.Team;
 
 public class RosterPlayerResourceTest {
 	@Before
@@ -29,7 +27,7 @@ public class RosterPlayerResourceTest {
 	}
 
 	@Test
-	public void findByPlayer_NameBirthdateAsOfDate_Found() {
+	public void findByPlayerNameBirthdateAsOfDate_Found() {
 		expect().
 			statusCode(200).
 			body("toDate", equalTo("2013-06-30")).
@@ -39,7 +37,7 @@ public class RosterPlayerResourceTest {
 	}
 
 	@Test
-	public void findByPlayer_NameBirthdateAsOfDate_NotFound() {
+	public void findByPlayerNameBirthdateAsOfDate_NotFound() {
 		expect().
 			statusCode(404).
 		when().
@@ -47,14 +45,14 @@ public class RosterPlayerResourceTest {
 	}
 
 	@Test
-	public void findByPlayer_NameBirthdateAsOfDate_BadRequest() {
+	public void findByPlayerNameBirthdateAsOfDate_BadRequest() {
 		expect().
 			statusCode(400).
 		when().
 			get("/rosterPlayers/player/Price/A.J./1986-10-07/2012-10");
 	}
 
-	public void findByTeam_NameTeamAsOfDate_Found() {
+	public void findByPlayerNameTeamAsOfDate_Found() {
 		expect().
 			statusCode(200).
 			body("toDate", equalTo("2013-06-30")).
@@ -64,7 +62,7 @@ public class RosterPlayerResourceTest {
 	}
 
 	@Test
-	public void findByTeam_NameTeamAsOfDate_NotFound() {
+	public void findByPlayerNameTeamAsOfDate_NotFound() {
 		expect().
 			statusCode(404).
 		when().
@@ -72,7 +70,7 @@ public class RosterPlayerResourceTest {
 	}
 
 	@Test
-	public void findByTeam_NameTeamAsOfDate_BadRequest() {
+	public void findByPlayerNameTeamAsOfDate_BadRequest() {
 		expect().
 			statusCode(400).
 		when().
@@ -80,7 +78,7 @@ public class RosterPlayerResourceTest {
 	}
 
 	@Test
-	public void findByPlayer_NameBirthdate_Found() {
+	public void findByPlayer_Found() {
 		String response = get("/rosterPlayers/player/Price/A.J./1986-10-07").asString();
 		Object document = Configuration.defaultConfiguration().jsonProvider().parse(response);
 		List<RosterPlayer> rosterPlayers = JsonPath.read(document, "$.rosterPlayers");
@@ -90,7 +88,7 @@ public class RosterPlayerResourceTest {
 	}
 
 	@Test
-	public void findByPlayer_NameBirthdate_NotFound() {
+	public void findByPlayer_NotFound() {
 		expect().
 			statusCode(404).
 		when().
@@ -98,7 +96,7 @@ public class RosterPlayerResourceTest {
 	}
 
 	@Test
-	public void findByPlayer_NameBirthdate_BadRequest() {
+	public void findByPlayer_BadRequest() {
 		expect().
 			statusCode(400).
 		when().
@@ -106,7 +104,7 @@ public class RosterPlayerResourceTest {
 	}
 
 	@Test
-	public void findByTeam_KeyAsOfDate_Found() {
+	public void findByTeam_Found() {
 		String response = get("/rosterPlayers/team/atlanta-hawks/2014-10-29").asString();
 		Object document = Configuration.defaultConfiguration().jsonProvider().parse(response);
 		List<RosterPlayer> rosterPlayers = JsonPath.read(document, "$.rosterPlayers");
@@ -116,7 +114,7 @@ public class RosterPlayerResourceTest {
 	}
 
 	@Test
-	public void findByTeam_KeyAsOfDate_NotFound() {
+	public void findByTeam_NotFound() {
 		expect().
 			statusCode(404).
 		when().
@@ -124,24 +122,57 @@ public class RosterPlayerResourceTest {
 	}
 
 	@Test
-	public void findByTeam_KeyAsOfDate_BadRequest() {
+	public void findByTeam_BadRequest() {
 		expect().
 			statusCode(400).
 		when().
 			get("/rosterPlayers/team/atlanta-hawks/1986-10");
 	}
 
-//	@Test
-//	public void createPlayer_Found() {
-//		expect().
-//			statusCode(400).
-//		given().
-//			contentType(ContentType.JSON).
-//			body(createJsonPlayer("Ginóbili", "Emanuel").toString()).
-//		when().
-//			post("/players");
-//	}
-//
+	@Test
+	public void createRosterPlayer_Created() {
+		expect().
+			statusCode(201).
+		given().
+			contentType(ContentType.JSON).
+			body(createJsonRosterPlayer("Brewer", "Corey", "houston-rockets", "2014-12-25", "2015-02-20").toString()).
+		when().
+			post("/rosterPlayers");
+	}
+
+	@Test
+	public void createRosterPlayer_RosterPlayerExists() {
+		expect().
+			statusCode(403).
+		given().
+			contentType(ContentType.JSON).
+			body(createJsonRosterPlayer("Brewer", "Corey", "houston-rockets", "2014-12-21", "2015-02-20").toString()).
+		when().
+			post("/rosterPlayers");
+	}
+
+	@Test
+	public void createRosterPlayer_PlayerNotExists() {
+		expect().
+			statusCode(404).
+		given().
+			contentType(ContentType.JSON).
+			body(createJsonRosterPlayer("Brewery", "Corey", "houston-rockets", "2014-12-21", "2015-02-20").toString()).
+		when().
+			post("/rosterPlayers");
+	}
+
+	@Test
+	public void createRosterPlayer_TeamNotExists() {
+		expect().
+			statusCode(404).
+		given().
+			contentType(ContentType.JSON).
+			body(createJsonRosterPlayer("Brewer", "Corey", "houston-rocketers", "2014-12-21", "2015-02-20").toString()).
+		when().
+			post("/rosterPlayers");
+	}
+
 //	@Test
 //	public void updatePlayer_Updated() {
 //		expect().
@@ -179,21 +210,24 @@ public class RosterPlayerResourceTest {
 //		when().
 //			delete("/players/Phillips/Juan/2013-11-01");
 //	}
-//
-//	private static JsonObject createJsonPlayer(String lastName, String firstName) {
-//		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-//		JsonObject value = factory.createObjectBuilder()
-//			.add("lastName", lastName)
-//			.add("firstName", firstName)
-//			.add("birthdate", "1997-07-01")
-//			.add("displayName", firstName + " " + lastName)
-//			.add("height", "79")
-//			.add("weight", 220)
-//			.add("birthplace", "Los Angeles, California, USA")
-//		.build();
-//		return value;
-//	}
-//
+
+	private static JsonObject createJsonRosterPlayer(String lastName, String firstName, String teamKey, String fromDate, String toDate) {
+		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+		JsonObject value = factory.createObjectBuilder()
+			.add("fromDate", fromDate)
+			.add("toDate", toDate)
+			.add("position", "C")
+			.add("number", "21")
+			.add("team", factory.createObjectBuilder()
+				.add("teamKey", teamKey))
+			.add("player", factory.createObjectBuilder()
+				.add("lastName", lastName)
+				.add("firstName", firstName)
+				.add("birthdate", "1986-03-05"))
+		.build();
+		return value;
+	}
+
 //	private static JsonObject updateJsonPlayer(String lastName, String firstName) {
 //		JsonBuilderFactory factory = Json.createBuilderFactory(null);
 //		JsonObject value = factory.createObjectBuilder()
