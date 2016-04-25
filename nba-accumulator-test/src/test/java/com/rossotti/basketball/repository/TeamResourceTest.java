@@ -84,7 +84,7 @@ public class TeamResourceTest {
 			statusCode(201).
 		given().
 			contentType(ContentType.JSON).
-			body(createJsonTeam("providence-steamrollers").toString()).
+			body(createJsonTeam("seattle-supersonics").toString()).
 		when().
 			post("/teams");
 	}
@@ -127,7 +127,7 @@ public class TeamResourceTest {
 		expect().
 			statusCode(204).
 		when().
-			delete("/teams/seattle-supersonics/2012-07-01");
+			delete("/teams/providence-steamrollers/2013-07-01");
 	}
 
 	@Test
@@ -135,7 +135,15 @@ public class TeamResourceTest {
 		expect().
 			statusCode(404).
 		when().
-			delete("/teams/seattle-superstars/2012-07-01");
+			delete("/teams/providence-steamers/2013-07-01");
+	}
+
+	@Test
+	public void deleteTeam_BadRequest() {
+		expect().
+			statusCode(400).
+		when().
+			delete("/teams/providence-steamrollers/2012-07");
 	}
 
 	private static JsonObject createJsonTeam(String teamKey) {
@@ -145,14 +153,14 @@ public class TeamResourceTest {
 			.add("abbr", "PS")
 			.add("fromDate", "2013-07-01")
 			.add("toDate", "9999-12-30")
-			.add("firstName", "Providence")
-			.add("lastName", "Steamrollers")
-			.add("conference", "East")
-			.add("division", "Atlantic")
-			.add("siteName", "Rhode Island Auditorium")
-			.add("city", "Providence")
-			.add("state", "RI")
-			.add("fullName", "Providence Steamrollers")
+			.add("firstName", "Seattle")
+			.add("lastName", "Supersonics")
+			.add("conference", "West")
+			.add("division", "Pacific")
+			.add("siteName", "Key West Arena")
+			.add("city", "Seattle")
+			.add("state", "WA")
+			.add("fullName", "Seattle Supersonics")
 		.build();
 		return value;
 	}
