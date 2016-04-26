@@ -28,7 +28,7 @@ public class OfficialResourceTest {
 	}
 
 	@Test
-	public void findByOfficialNameDate_Found() {
+	public void findByNameDate_Found() {
 		expect().
 			statusCode(200).
 			body("number", equalTo("714")).
@@ -38,7 +38,7 @@ public class OfficialResourceTest {
 	}
 
 	@Test
-	public void findByOfficialNameDate_NotFound() {
+	public void findByNameDate_NotFound() {
 		expect().
 			statusCode(404).
 		when().
@@ -46,7 +46,7 @@ public class OfficialResourceTest {
 	}
 
 	@Test
-	public void findByOfficialNameDate_BadRequest() {
+	public void findByNameDate_BadRequest() {
 		expect().
 			statusCode(400).
 		when().
@@ -54,7 +54,7 @@ public class OfficialResourceTest {
 	}
 
 	@Test
-	public void findOfficialsByDate_Found() {
+	public void findByDate_Found() {
 		String response = get("/officials/2009-07-01").asString();
 		Object document = Configuration.defaultConfiguration().jsonProvider().parse(response);
 		List<Team> officials = JsonPath.read(document, "$.officials");
@@ -64,7 +64,7 @@ public class OfficialResourceTest {
 	}
 
 	@Test
-	public void findOfficialsByDate_NotFound() {
+	public void findByDate_NotFound() {
 		expect().
 			statusCode(404).
 		when().
@@ -72,7 +72,7 @@ public class OfficialResourceTest {
 	}
 
 	@Test
-	public void findOfficialsByDate_BadRequest() {
+	public void findByDate_BadRequest() {
 		expect().
 			statusCode(400).
 		when().

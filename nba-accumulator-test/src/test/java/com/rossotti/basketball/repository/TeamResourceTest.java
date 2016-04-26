@@ -27,7 +27,7 @@ public class TeamResourceTest {
 	}
 
 	@Test
-	public void findByTeamKeyDate_Found() {
+	public void findByTeamDate_Found() {
 		expect().
 			statusCode(200).
 			body("fullName", equalTo("Charlotte Bobcats")).
@@ -37,7 +37,7 @@ public class TeamResourceTest {
 	}
 
 	@Test
-	public void findByTeamKeyDate_NotFound() {
+	public void findByTeamDate_NotFound() {
 		expect().
 			statusCode(404).
 		when().
@@ -45,7 +45,7 @@ public class TeamResourceTest {
 	}
 
 	@Test
-	public void findByTeamKeyDate_BadRequest() {
+	public void findByTeamDate_BadRequest() {
 		expect().
 			statusCode(400).
 		when().
@@ -53,7 +53,7 @@ public class TeamResourceTest {
 	}
 
 	@Test
-	public void findTeamsByDate_Found() {
+	public void findByDate_Found() {
 		String response = get("/teams/2012-07-01").asString();
 		Object document = Configuration.defaultConfiguration().jsonProvider().parse(response);
 		List<Team> teams = JsonPath.read(document, "$.teams");
@@ -63,7 +63,7 @@ public class TeamResourceTest {
 	}
 
 	@Test
-	public void findTeamsByDate_NotFound() {
+	public void findByDate_NotFound() {
 		expect().
 			statusCode(404).
 		when().

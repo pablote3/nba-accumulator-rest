@@ -28,7 +28,7 @@ public class PlayerResourceTest {
 	}
 
 	@Test
-	public void findByPlayerNameBirthdate_Found() {
+	public void findByNameBirthdate_Found() {
 		expect().
 			statusCode(200).
 			body("weight", equalTo("231")).
@@ -38,7 +38,7 @@ public class PlayerResourceTest {
 	}
 
 	@Test
-	public void findByPlayerNameBirthdate_NotFound() {
+	public void findByNameBirthdate_NotFound() {
 		expect().
 			statusCode(404).
 		when().
@@ -46,7 +46,7 @@ public class PlayerResourceTest {
 	}
 
 	@Test
-	public void findByPlayerNameBirthdate_BadRequest() {
+	public void findByNameBirthdate_BadRequest() {
 		expect().
 			statusCode(400).
 		when().
@@ -54,7 +54,7 @@ public class PlayerResourceTest {
 	}
 
 	@Test
-	public void findByPlayerName_Found() {
+	public void findByName_Found() {
 		String response = get("/players/Wright/Chris").asString();
 		Object document = Configuration.defaultConfiguration().jsonProvider().parse(response);
 		List<Player> players = JsonPath.read(document, "$.players");
@@ -64,7 +64,7 @@ public class PlayerResourceTest {
 	}
 
 	@Test
-	public void findByPlayerName_NotFound() {
+	public void findNyName_NotFound() {
 		expect().
 			statusCode(404).
 		when().
