@@ -232,7 +232,7 @@ public class RosterPlayerResource {
 									@PathParam("lastName") String lastName, 
 									@PathParam("firstName") String firstName, 
 									@PathParam("birthdate") String birthdateString, 
-									@PathParam("asOfdate") String asOfDateString) {
+									@PathParam("asOfDate") String asOfDateString) {
 		try {
 			LocalDate birthdate = DateTimeUtil.getLocalDate(birthdateString);
 			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
