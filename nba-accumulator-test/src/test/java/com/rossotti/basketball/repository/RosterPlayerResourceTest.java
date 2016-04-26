@@ -173,43 +173,51 @@ public class RosterPlayerResourceTest {
 			post("/rosterPlayers");
 	}
 
-//	@Test
-//	public void updatePlayer_Updated() {
-//		expect().
-//			statusCode(204).
-//		given().
-//			contentType(ContentType.JSON).
-//			body(updateJsonPlayer("Collins", "Jason").toString()).
-//		when().
-//			put("/players");
-//	}
-//
-//	@Test
-//	public void updatePlayer_NotFound() {
-//		expect().
-//			statusCode(404).
-//		given().
-//			contentType(ContentType.JSON).
-//			body(updateJsonPlayer("Collins", "Tom").toString()).
-//		when().
-//			put("/players");
-//	}
-//
-//	@Test
-//	public void deletePlayer_Deleted() {
-//		expect().
-//			statusCode(204).
-//		when().
-//			delete("/players/Carter/Jimmy/1972-01-26");
-//	}
-//
-//	@Test
-//	public void deletePlayer_NotFound() {
-//		expect().
-//			statusCode(404).
-//		when().
-//			delete("/players/Phillips/Juan/2013-11-01");
-//	}
+	@Test
+	public void updatePlayer_Updated() {
+		expect().
+			statusCode(204).
+		given().
+			contentType(ContentType.JSON).
+			body(updateJsonRosterPlayer("Ennis", "Tyler", "2014-10-29", "2015-02-28").toString()).
+		when().
+			put("/rosterPlayers");
+	}
+
+	@Test
+	public void updatePlayer_NotFound() {
+		expect().
+			statusCode(404).
+		given().
+			contentType(ContentType.JSON).
+			body(updateJsonRosterPlayer("Onis", "Tyler", "2014-10-29", "2015-02-28").toString()).
+		when().
+			put("/rosterPlayers");
+	}
+
+	@Test
+	public void deletePlayer_Deleted() {
+		expect().
+			statusCode(204).
+		when().
+			delete("/rosterPlayers/Thomas/Isaiah/1989-02-07/2015-03-17");
+	}
+
+	@Test
+	public void deletePlayer_NotFound() {
+		expect().
+			statusCode(404).
+		when().
+			delete("/rosterPlayers/Thomas/Isaiahan/1989-02-07/2015-03-17");
+	}
+
+	@Test
+	public void deletePlayer_BadRequest() {
+		expect().
+			statusCode(400).
+		when().
+			delete("/rosterPlayers/Thomas/Isaiah/1989-02-07/2015-03");
+	}
 
 	private static JsonObject createJsonRosterPlayer(String lastName, String firstName, String teamKey, String fromDate, String toDate) {
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);
@@ -228,17 +236,18 @@ public class RosterPlayerResourceTest {
 		return value;
 	}
 
-//	private static JsonObject updateJsonPlayer(String lastName, String firstName) {
-//		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-//		JsonObject value = factory.createObjectBuilder()
-//				.add("lastName", lastName)
-//				.add("firstName", firstName)
-//				.add("birthdate", "1978-12-02")
-//				.add("displayName", firstName + " " + lastName)
-//				.add("height", "79")
-//				.add("weight", 220)
-//				.add("birthplace", "Bakersfield, California, USA")
-//		.build();
-//		return value;
-//	}
+	private static JsonObject updateJsonRosterPlayer(String lastName, String firstName, String fromDate, String toDate) {
+		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+		JsonObject value = factory.createObjectBuilder()
+				.add("fromDate", fromDate)
+				.add("toDate", toDate)
+				.add("position", "PG")
+				.add("number", "99")
+				.add("player", factory.createObjectBuilder()
+						.add("lastName", lastName)
+						.add("firstName", firstName)
+						.add("birthdate", "1994-08-24"))
+		.build();
+		return value;
+	}
 }
