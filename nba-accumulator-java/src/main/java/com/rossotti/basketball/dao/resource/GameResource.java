@@ -25,9 +25,11 @@ import org.springframework.stereotype.Service;
 import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.Game;
+import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.dao.pub.PubGame;
 import com.rossotti.basketball.dao.pub.PubGames;
 import com.rossotti.basketball.dao.repository.GameRepository;
+import com.rossotti.basketball.dao.repository.TeamRepository;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
@@ -36,6 +38,9 @@ public class GameResource {
 
 	@Autowired
 	private GameRepository gameRepo;
+
+	@Autowired
+	private TeamRepository teamRepo;
 
 	@GET
 	@Path("/{gameDate}/{teamKey}")
@@ -94,12 +99,24 @@ public class GameResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createGame(@Context UriInfo uriInfo, Game createGame) {
 		try {
-			Game game = gameRepo.createGame(createGame);
-			if (game.isCreated()) {
-				return Response.created(uriInfo.getAbsolutePath()).build();
+			Team homeTeam = teamRepo.findTeam(createGame.getBoxScoreHome().getTeam().getTeamKey(), DateTimeUtil.getLocalDate(createGame.getGameDateTime()));
+			Team awayTeam = teamRepo.findTeam(createGame.getBoxScoreAway().getTeam().getTeamKey(), DateTimeUtil.getLocalDate(createGame.getGameDateTime()));
+			if (homeTeam.isFound() && awayTeam.isFound()) {
+				createGame.getBoxScoreHome().getTeam().setId(homeTeam.getId());
+				createGame.getBoxScoreAway().getTeam().setId(awayTeam.getId());
+				Game game = gameRepo.createGame(createGame);
+				if (game.isCreated()) {
+					return Response.created(uriInfo.getAbsolutePath()).build();
+				}
+				else if (game.isFound()) {
+					throw new DuplicateEntityException(Game.class);
+				}
+				else {
+					return Response.status(500).build();
+				}
 			}
-			else if (game.isFound()) {
-				throw new DuplicateEntityException(Game.class);
+			else if (homeTeam.isNotFound() || awayTeam.isNotFound()) {
+				throw new NoSuchEntityException(Team.class);
 			}
 			else {
 				return Response.status(500).build();
