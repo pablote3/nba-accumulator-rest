@@ -25,9 +25,11 @@ import org.springframework.stereotype.Service;
 import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.Standing;
+import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.dao.pub.PubStanding;
 import com.rossotti.basketball.dao.pub.PubStandings;
 import com.rossotti.basketball.dao.repository.StandingRepository;
+import com.rossotti.basketball.dao.repository.TeamRepository;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
@@ -36,6 +38,9 @@ public class StandingResource {
 
 	@Autowired
 	private StandingRepository standingRepo;
+
+	@Autowired
+	private TeamRepository teamRepo;
 
 	@GET
 	@Path("/{teamKey}/{asOfDate}")
@@ -94,12 +99,22 @@ public class StandingResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createStanding(@Context UriInfo uriInfo, Standing createStanding) {
 		try {
-			Standing standing = standingRepo.createStanding(createStanding);
-			if (standing.isCreated()) {
-				return Response.created(uriInfo.getAbsolutePath()).build();
+			Team team = teamRepo.findTeam(createStanding.getTeam().getTeamKey(), createStanding.getStandingDate());
+			if (team.isFound()) {
+				createStanding.getTeam().setId(team.getId());
+				Standing standing = standingRepo.createStanding(createStanding);
+				if (standing.isCreated()) {
+					return Response.created(uriInfo.getAbsolutePath()).build();
+				}
+				else if (standing.isFound()) {
+					throw new DuplicateEntityException(Standing.class);
+				}
+				else {
+					return Response.status(500).build();
+				}
 			}
-			else if (standing.isFound()) {
-				throw new DuplicateEntityException(Standing.class);
+			else if (team.isNotFound()) {
+				throw new NoSuchEntityException(Team.class);
 			}
 			else {
 				return Response.status(500).build();
