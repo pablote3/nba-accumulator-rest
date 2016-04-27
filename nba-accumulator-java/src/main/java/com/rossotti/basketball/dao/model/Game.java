@@ -21,6 +21,7 @@ import javax.ws.rs.core.UriInfo;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDateTime;
 
+import com.rossotti.basketball.dao.model.BoxScore.Location;
 import com.rossotti.basketball.dao.pub.PubBoxScore;
 import com.rossotti.basketball.dao.pub.PubGame;
 import com.rossotti.basketball.dao.pub.PubGameOfficial;
@@ -84,10 +85,20 @@ public class Game {
 		this.getBoxScores().remove(boxScore);
 	}
 	public BoxScore getBoxScoreAway() {
-		return this.getBoxScores().get(0);
+		if (this.getBoxScores().get(0).getLocation() == Location.Away) {
+			return this.getBoxScores().get(0);
+		}
+		else {
+			return this.getBoxScores().get(1);
+		}
 	}
 	public BoxScore getBoxScoreHome() {
-		return this.getBoxScores().get(1);
+		if (this.getBoxScores().get(0).getLocation() == Location.Home) {
+			return this.getBoxScores().get(0);
+		}
+		else {
+			return this.getBoxScores().get(1);
+		}
 	}
 
 	@OneToMany(mappedBy="game", fetch = FetchType.LAZY)
