@@ -2,7 +2,6 @@ package com.rossotti.basketball.repository;
 
 import static com.jayway.restassured.RestAssured.expect;
 import static com.jayway.restassured.RestAssured.get;
-import static org.hamcrest.Matchers.equalTo;
 
 import java.util.List;
 
@@ -18,9 +17,7 @@ import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
-import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.model.Standing;
-import com.rossotti.basketball.dao.model.Team;
 
 public class StandingResourceTest {
 	@Before
@@ -77,109 +74,120 @@ public class StandingResourceTest {
 			get("/standings/2014-11");
 	}
 
-//	@Test
-//	public void createTeam_Created() {
-//		expect().
-//			statusCode(201).
-//		given().
-//			contentType(ContentType.JSON).
-//			body(createJsonTeam("seattle-supersonics").toString()).
-//		when().
-//			post("/teams");
-//	}
-//
-//	@Test
-//	public void createTeam_Found() {
-//		expect().
-//			statusCode(403).
-//		given().
-//			contentType(ContentType.JSON).
-//			body(createJsonTeam("boston-celtics").toString()).
-//		when().
-//			post("/teams");
-//	}
-//
-//	@Test
-//	public void updateTeam_Updated() {
-//		expect().
-//			statusCode(204).
-//		given().
-//			contentType(ContentType.JSON).
-//			body(updateJsonTeam("chicago-bulls").toString()).
-//		when().
-//			put("/teams");
-//	}
-//
-//	@Test
-//	public void updateTeam_NotFound() {
-//		expect().
-//			statusCode(404).
-//		given().
-//			contentType(ContentType.JSON).
-//			body(updateJsonTeam("chicago-cows").toString()).
-//		when().
-//			put("/teams");
-//	}
-//
-//	@Test
-//	public void deleteTeam_Deleted() {
-//		expect().
-//			statusCode(204).
-//		when().
-//			delete("/teams/providence-steamrollers/2013-07-01");
-//	}
-//
-//	@Test
-//	public void deleteTeam_NotFound() {
-//		expect().
-//			statusCode(404).
-//		when().
-//			delete("/teams/providence-steamers/2013-07-01");
-//	}
-//
-//	@Test
-//	public void deleteTeam_BadRequest() {
-//		expect().
-//			statusCode(400).
-//		when().
-//			delete("/teams/providence-steamrollers/2012-07");
-//	}
-//
-//	private static JsonObject createJsonTeam(String teamKey) {
-//		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-//		JsonObject value = factory.createObjectBuilder()
-//			.add("teamKey", teamKey)
-//			.add("abbr", "PS")
-//			.add("fromDate", "2013-07-01")
-//			.add("toDate", "9999-12-30")
-//			.add("firstName", "Seattle")
-//			.add("lastName", "Supersonics")
-//			.add("conference", "West")
-//			.add("division", "Pacific")
-//			.add("siteName", "Key West Arena")
-//			.add("city", "Seattle")
-//			.add("state", "WA")
-//			.add("fullName", "Seattle Supersonics")
-//		.build();
-//		return value;
-//	}
-//	
-//	private static JsonObject updateJsonTeam(String teamKey) {
-//		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-//		JsonObject value = factory.createObjectBuilder()
-//			.add("teamKey", teamKey)
-//			.add("abbr", "CHI")
-//			.add("fromDate", "2012-07-01")
-//			.add("toDate", "2018-06-30")
-//			.add("firstName", "Chicago")
-//			.add("lastName", "Booleans")
-//			.add("conference", "East")
-//			.add("division", "Central")
-//			.add("siteName", "United Center")
-//			.add("city", "Chicago")
-//			.add("state", "IL")
-//			.add("fullName", "Chicago Bulls")
-//		.build();
-//		return value;
-//	}
+	@Test
+	public void createStanding_Created() {
+		expect().
+			statusCode(201).
+		given().
+			contentType(ContentType.JSON).
+			body(buildJsonStanding("boston-celtics", "2015-04-16").toString()).
+		when().
+			post("/standings");
+	}
+
+	@Test
+	public void createStanding_StandingExists() {
+		expect().
+			statusCode(403).
+		given().
+			contentType(ContentType.JSON).
+			body(buildJsonStanding("boston-celtics", "2015-04-15").toString()).
+		when().
+			post("/standings");
+	}
+
+	@Test
+	public void createStanding_TeamNotExists() {
+		expect().
+			statusCode(404).
+		given().
+			contentType(ContentType.JSON).
+			body(buildJsonStanding("boston-celticks", "2015-04-16").toString()).
+		when().
+			post("/standings");
+	}
+
+	@Test
+	public void updateStanding_Updated() {
+		expect().
+			statusCode(204).
+		given().
+			contentType(ContentType.JSON).
+			body(buildJsonStanding("boston-celtics", "2015-04-15").toString()).
+		when().
+			put("/standings");
+	}
+
+	@Test
+	public void updateStanding_NotFound() {
+		expect().
+			statusCode(404).
+		given().
+			contentType(ContentType.JSON).
+			body(buildJsonStanding("boston-celticks", "2015-04-16").toString()).
+		when().
+			put("/standings");
+	}
+
+	@Test
+	public void deleteStanding_Deleted() {
+		expect().
+			statusCode(204).
+		when().
+			delete("/standings/chicago-bulls/2015-04-15");
+	}
+
+	@Test
+	public void deleteStanding_NotFound() {
+		expect().
+			statusCode(404).
+		when().
+			delete("/standings/chicago-bulls/2015-04-16");
+	}
+
+	@Test
+	public void deleteStanding_BadRequest() {
+		expect().
+			statusCode(400).
+		when().
+			delete("/standings/chicago-bulls/2015-04");
+	}
+
+	private static JsonObject buildJsonStanding(String teamKey, String standingDate) {
+		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+		JsonObject value = factory.createObjectBuilder()
+			.add("standingDate", standingDate)
+			.add("rank", "5")
+			.add("ordinalRank", "5th")
+			.add("gamesWon", "10")
+			.add("gamesLost", "20")
+			.add("streak", "W2")
+			.add("streakType", "win")
+			.add("streakTotal", "2")
+			.add("gamesBack", "4.5")
+			.add("pointsFor", "1792")
+			.add("pointsAgainst", "1474")
+			.add("homeWins", "5")
+			.add("homeLosses", "10")
+			.add("awayWins", "5")
+			.add("awayLosses", "10")
+			.add("conferenceWins", "4")
+			.add("conferenceLosses", "6")
+			.add("lastFive", "2")
+			.add("lastTen", "4")
+			.add("gamesPlayed", "30")
+			.add("pointsScoredPerGame", "102")
+			.add("pointsAllowedPerGame", "108")
+			.add("winPercentage", "0.333")
+			.add("pointDifferential", "60")
+			.add("pointDifferentialPerGame", "6")
+			.add("opptGamesWon", "42")
+			.add("opptGamesPlayed", "65")
+			.add("opptOpptGamesWon", "275")
+			.add("opptOpptGamesPlayed", "369")
+			.add("team", factory.createObjectBuilder()
+				.add("teamKey", teamKey))
+		.build();
+		return value;
+	}
 }
