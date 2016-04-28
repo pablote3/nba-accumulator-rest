@@ -17,7 +17,6 @@ import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.model.GameStatus;
 import com.rossotti.basketball.dao.model.StatusCode;
-import com.rossotti.basketball.dao.model.BoxScore.Location;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Repository
@@ -173,10 +172,8 @@ public class GameRepository {
 				findGame.getGameOfficials().get(i).setGame(findGame);
 			}
 
-			int findHomeBoxScoreId = findGame.getBoxScores().get(0).getLocation().equals(Location.Home) ? 1 : 0;
-			BoxScore findHomeBoxScore = findGame.getBoxScores().get(findHomeBoxScoreId);
-			int updateHomeBoxScoreId = updateGame.getBoxScores().get(0).getLocation().equals(Location.Home) ? 1 : 0;
-			BoxScore updateHomeBoxScore = updateGame.getBoxScores().get(updateHomeBoxScoreId);
+			BoxScore findHomeBoxScore = findGame.getBoxScoreHome();
+			BoxScore updateHomeBoxScore = updateGame.getBoxScoreHome();
 			findHomeBoxScore.setMinutes(updateHomeBoxScore.getMinutes());
 			findHomeBoxScore.setPoints(updateHomeBoxScore.getPoints());
 			findHomeBoxScore.setAssists(updateHomeBoxScore.getAssists());
@@ -200,10 +197,8 @@ public class GameRepository {
 				findHomeBoxScore.getBoxScorePlayers().get(i).setBoxScore(findHomeBoxScore);
 			}
 
-			int findAwayBoxScoreId = findGame.getBoxScores().get(0).getLocation().equals(Location.Away) ? 1 : 0;
-			BoxScore findAwayBoxScore = findGame.getBoxScores().get(findAwayBoxScoreId);
-			int updateAwayBoxScoreId = updateGame.getBoxScores().get(0).getLocation().equals(Location.Away) ? 1 : 0;
-			BoxScore updateAwayBoxScore = updateGame.getBoxScores().get(updateAwayBoxScoreId);
+			BoxScore findAwayBoxScore = findGame.getBoxScoreAway();
+			BoxScore updateAwayBoxScore = updateGame.getBoxScoreAway();
 			findAwayBoxScore.setMinutes(updateAwayBoxScore.getMinutes());
 			findAwayBoxScore.setPoints(updateAwayBoxScore.getPoints());
 			findAwayBoxScore.setAssists(updateAwayBoxScore.getAssists());
