@@ -174,8 +174,17 @@ public class GameRepository {
 
 			BoxScore findHomeBoxScore = findGame.getBoxScoreHome();
 			BoxScore updateHomeBoxScore = updateGame.getBoxScoreHome();
+			findHomeBoxScore.setResult(updateHomeBoxScore.getResult());
 			findHomeBoxScore.setMinutes(updateHomeBoxScore.getMinutes());
 			findHomeBoxScore.setPoints(updateHomeBoxScore.getPoints());
+			findHomeBoxScore.setPointsPeriod1(updateHomeBoxScore.getPointsPeriod1());
+			findHomeBoxScore.setPointsPeriod2(updateHomeBoxScore.getPointsPeriod2());
+			findHomeBoxScore.setPointsPeriod3(updateHomeBoxScore.getPointsPeriod3());
+			findHomeBoxScore.setPointsPeriod4(updateHomeBoxScore.getPointsPeriod4());
+			findHomeBoxScore.setPointsPeriod5(updateHomeBoxScore.getPointsPeriod5());
+			findHomeBoxScore.setPointsPeriod6(updateHomeBoxScore.getPointsPeriod6());
+			findHomeBoxScore.setPointsPeriod7(updateHomeBoxScore.getPointsPeriod7());
+			findHomeBoxScore.setPointsPeriod8(updateHomeBoxScore.getPointsPeriod8());
 			findHomeBoxScore.setAssists(updateHomeBoxScore.getAssists());
 			findHomeBoxScore.setTurnovers(updateHomeBoxScore.getTurnovers());
 			findHomeBoxScore.setSteals(updateHomeBoxScore.getSteals());
@@ -192,6 +201,7 @@ public class GameRepository {
 			findHomeBoxScore.setReboundsOffense(updateHomeBoxScore.getReboundsOffense());
 			findHomeBoxScore.setReboundsDefense(updateHomeBoxScore.getReboundsDefense());
 			findHomeBoxScore.setPersonalFouls(updateHomeBoxScore.getPersonalFouls());
+			findHomeBoxScore.setDaysOff(updateHomeBoxScore.getDaysOff());
 			findHomeBoxScore.setBoxScorePlayers(updateHomeBoxScore.getBoxScorePlayers());
 			for (int i = 0; i < findHomeBoxScore.getBoxScorePlayers().size(); i++) {
 				findHomeBoxScore.getBoxScorePlayers().get(i).setBoxScore(findHomeBoxScore);
@@ -199,8 +209,17 @@ public class GameRepository {
 
 			BoxScore findAwayBoxScore = findGame.getBoxScoreAway();
 			BoxScore updateAwayBoxScore = updateGame.getBoxScoreAway();
+			findAwayBoxScore.setResult(updateAwayBoxScore.getResult());
 			findAwayBoxScore.setMinutes(updateAwayBoxScore.getMinutes());
 			findAwayBoxScore.setPoints(updateAwayBoxScore.getPoints());
+			findAwayBoxScore.setPointsPeriod1(updateAwayBoxScore.getPointsPeriod1());
+			findAwayBoxScore.setPointsPeriod2(updateAwayBoxScore.getPointsPeriod2());
+			findAwayBoxScore.setPointsPeriod3(updateAwayBoxScore.getPointsPeriod3());
+			findAwayBoxScore.setPointsPeriod4(updateAwayBoxScore.getPointsPeriod4());
+			findAwayBoxScore.setPointsPeriod5(updateAwayBoxScore.getPointsPeriod5());
+			findAwayBoxScore.setPointsPeriod6(updateAwayBoxScore.getPointsPeriod6());
+			findAwayBoxScore.setPointsPeriod7(updateAwayBoxScore.getPointsPeriod7());
+			findAwayBoxScore.setPointsPeriod8(updateAwayBoxScore.getPointsPeriod8());
 			findAwayBoxScore.setAssists(updateAwayBoxScore.getAssists());
 			findAwayBoxScore.setTurnovers(updateAwayBoxScore.getTurnovers());
 			findAwayBoxScore.setSteals(updateAwayBoxScore.getSteals());
@@ -217,6 +236,7 @@ public class GameRepository {
 			findAwayBoxScore.setReboundsOffense(updateAwayBoxScore.getReboundsOffense());
 			findAwayBoxScore.setReboundsDefense(updateAwayBoxScore.getReboundsDefense());
 			findAwayBoxScore.setPersonalFouls(updateAwayBoxScore.getPersonalFouls());
+			findAwayBoxScore.setDaysOff(updateAwayBoxScore.getDaysOff());
 			findAwayBoxScore.setBoxScorePlayers(updateAwayBoxScore.getBoxScorePlayers());
 			for (int i = 0; i < findAwayBoxScore.getBoxScorePlayers().size(); i++) {
 				findAwayBoxScore.getBoxScorePlayers().get(i).setBoxScore(findAwayBoxScore);
