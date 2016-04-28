@@ -86,7 +86,7 @@ public class StandingResourceTest {
 	}
 
 	@Test
-	public void createStanding_StandingExists() {
+	public void createStanding_Found() {
 		expect().
 			statusCode(403).
 		given().
