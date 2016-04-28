@@ -24,11 +24,17 @@ import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
+import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.Game;
+import com.rossotti.basketball.dao.model.Official;
+import com.rossotti.basketball.dao.model.Player;
+import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.dao.pub.PubGame;
 import com.rossotti.basketball.dao.pub.PubGames;
 import com.rossotti.basketball.dao.repository.GameRepository;
+import com.rossotti.basketball.dao.repository.OfficialRepository;
+import com.rossotti.basketball.dao.repository.RosterPlayerRepository;
 import com.rossotti.basketball.dao.repository.TeamRepository;
 import com.rossotti.basketball.util.DateTimeUtil;
 
@@ -41,6 +47,12 @@ public class GameResource {
 
 	@Autowired
 	private TeamRepository teamRepo;
+
+	@Autowired
+	private OfficialRepository officialRepo;
+
+	@Autowired
+	private RosterPlayerRepository rosterPlayerRepo;
 
 	@GET
 	@Path("/{gameDate}/{teamKey}")
@@ -130,12 +142,70 @@ public class GameResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateGame(Game updateGame) {
 		try {
-			Game game = gameRepo.updateGame(updateGame);
-			if (game.isUpdated()) {
-				return Response.noContent().build();
+			LocalDate gameDate = DateTimeUtil.getLocalDate(updateGame.getGameDateTime());
+			Team homeTeam = teamRepo.findTeam(updateGame.getBoxScoreHome().getTeam().getTeamKey(), gameDate);
+			Team awayTeam = teamRepo.findTeam(updateGame.getBoxScoreAway().getTeam().getTeamKey(), gameDate);
+			if (homeTeam.isFound() && awayTeam.isFound()) {
+				updateGame.getBoxScoreHome().getTeam().setId(homeTeam.getId());
+				updateGame.getBoxScoreAway().getTeam().setId(awayTeam.getId());
+				for (int i = 0; i < updateGame.getGameOfficials().size(); i++) {
+					Official updateOfficial = updateGame.getGameOfficials().get(i).getOfficial();
+					Official findOfficial = officialRepo.findOfficial(updateOfficial.getLastName(), updateOfficial.getFirstName(), gameDate);
+					if (findOfficial.isFound()) {
+						updateOfficial.setId(findOfficial.getId());
+					}
+					else if (findOfficial.isNotFound()) {
+						throw new NoSuchEntityException(Official.class);
+					}
+					else {
+						return Response.status(500).build();
+					}
+				}
+				BoxScore homeBoxScore = updateGame.getBoxScoreHome();
+				for (int i = 0; i < homeBoxScore.getBoxScorePlayers().size(); i++) {
+					RosterPlayer updateRosterPlayer = homeBoxScore.getBoxScorePlayers().get(i).getRosterPlayer();
+					Player updatePlayer = updateRosterPlayer.getPlayer();
+					RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer(updatePlayer.getLastName(), updatePlayer.getFirstName(), updatePlayer.getBirthdate(), gameDate);
+					if (findRosterPlayer.isFound()) {
+						updatePlayer.setId(findRosterPlayer.getPlayer().getId());
+						updateRosterPlayer.setId(findRosterPlayer.getId());
+					}
+					else if (findRosterPlayer.isNotFound()) {
+						throw new NoSuchEntityException(RosterPlayer.class);
+					}
+					else {
+						return Response.status(500).build();
+					}
+				}
+				BoxScore awayBoxScore = updateGame.getBoxScoreAway();
+				for (int i = 0; i < awayBoxScore.getBoxScorePlayers().size(); i++) {
+					RosterPlayer updateRosterPlayer = awayBoxScore.getBoxScorePlayers().get(i).getRosterPlayer();
+					Player updatePlayer = updateRosterPlayer.getPlayer();
+					RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer(updatePlayer.getLastName(), updatePlayer.getFirstName(), updatePlayer.getBirthdate(), gameDate);
+					if (findRosterPlayer.isFound()) {
+						updatePlayer.setId(findRosterPlayer.getPlayer().getId());
+						updateRosterPlayer.setId(findRosterPlayer.getId());
+					}
+					else if (findRosterPlayer.isNotFound()) {
+						throw new NoSuchEntityException(RosterPlayer.class);
+					}
+					else {
+						return Response.status(500).build();
+					}
+				}
+				Game game = gameRepo.updateGame(updateGame);
+				if (game.isUpdated()) {
+					return Response.noContent().build();
+				}
+				else if (game.isNotFound()) {
+					throw new NoSuchEntityException(Game.class);
+				}
+				else {
+					return Response.status(500).build();
+				}
 			}
-			else if (game.isNotFound()) {
-				throw new NoSuchEntityException(Game.class);
+			else if (homeTeam.isNotFound() || awayTeam.isNotFound()) {
+				throw new NoSuchEntityException(Team.class);
 			}
 			else {
 				return Response.status(500).build();
