@@ -173,12 +173,12 @@ public class GameRepositoryTest {
 		Game updateGame = gameRepo.updateGame(findGame);
 		Assert.assertTrue(updateGame.isUpdated());
 		Game game = gameRepo.findByDateTeam(new LocalDate("2015-10-27"), "salinas-cowboys");
-		BoxScore homeBoxScore = game.getBoxScores().get(game.getBoxScores().get(0).getLocation().equals(Location.Home) ? 1 : 0);
+		BoxScore homeBoxScore = game.getBoxScoreHome();
 		BoxScorePlayer homeBoxScorePlayer0 = homeBoxScore.getBoxScorePlayers().get(0);
 		Assert.assertTrue(homeBoxScorePlayer0.getMinutes().equals((short)20));
 		BoxScorePlayer homeBoxScorePlayer1 = homeBoxScore.getBoxScorePlayers().get(1);
 		Assert.assertTrue(homeBoxScorePlayer1.getThreePointPercent().equals((float)0.0));
-		BoxScore awayBoxScore = game.getBoxScores().get(game.getBoxScores().get(0).getLocation().equals(Location.Away) ? 1 : 0);
+		BoxScore awayBoxScore = game.getBoxScoreAway();
 		BoxScorePlayer awayBoxScorePlayer = awayBoxScore.getBoxScorePlayers().get(0);
 		Assert.assertTrue(awayBoxScorePlayer.getBlocks().equals((short)2));
 		Assert.assertTrue(homeBoxScore.getFreeThrowMade().equals((short)10));
@@ -223,8 +223,7 @@ public class GameRepositoryTest {
 	}
 
 	private void updateMockBoxScoreHome(Game game) {
-		int homeBoxScoreId = game.getBoxScores().get(0).getLocation().equals(Location.Home) ? 1 : 0;
-		BoxScore homeBoxScore = game.getBoxScores().get(homeBoxScoreId);
+		BoxScore homeBoxScore = game.getBoxScoreHome();
 		homeBoxScore.addBoxScorePlayer(createMockBoxScorePlayerHome_0());
 		homeBoxScore.addBoxScorePlayer(createMockBoxScorePlayerHome_1());
 		homeBoxScore.setMinutes((short)240);
@@ -248,8 +247,7 @@ public class GameRepositoryTest {
 	}
 
 	private void updateMockBoxScoreAway(Game game) {
-		int awayBoxScoreId = game.getBoxScores().get(0).getLocation().equals(Location.Away) ? 1 : 0;
-		BoxScore awayBoxScore = game.getBoxScores().get(awayBoxScoreId);
+		BoxScore awayBoxScore = game.getBoxScoreAway();
 		awayBoxScore.addBoxScorePlayer(createMockBoxScorePlayerAway());
 		awayBoxScore.setMinutes((short)240);
 		awayBoxScore.setPoints((short)98);
