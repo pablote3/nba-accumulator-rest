@@ -56,7 +56,7 @@ public class GameResourceTest {
 		expect().
 			statusCode(404).
 		when().
-			get("/games/2015-04-16/atlanta-hawks");
+			get("/games/2015-04-16/chicago-bulls");
 	}
 
 	@Test
@@ -107,50 +107,28 @@ public class GameResourceTest {
 			get("/games/2015-04");
 	}
 
-//	@Test
-//	public void createRosterPlayer_Created() {
-//		expect().
-//			statusCode(201).
-//		given().
-//			contentType(ContentType.JSON).
-//			body(createJsonRosterPlayer("Brewer", "Corey", "houston-rockets", "2014-12-25", "2015-02-20").toString()).
-//		when().
-//			post("/rosterPlayers");
-//	}
-//
-//	@Test
-//	public void createRosterPlayer_RosterPlayerExists() {
-//		expect().
-//			statusCode(403).
-//		given().
-//			contentType(ContentType.JSON).
-//			body(createJsonRosterPlayer("Brewer", "Corey", "houston-rockets", "2014-12-21", "2015-02-20").toString()).
-//		when().
-//			post("/rosterPlayers");
-//	}
-//
-//	@Test
-//	public void createRosterPlayer_PlayerNotExists() {
-//		expect().
-//			statusCode(404).
-//		given().
-//			contentType(ContentType.JSON).
-//			body(createJsonRosterPlayer("Brewery", "Corey", "houston-rockets", "2014-12-21", "2015-02-20").toString()).
-//		when().
-//			post("/rosterPlayers");
-//	}
-//
-//	@Test
-//	public void createRosterPlayer_TeamNotExists() {
-//		expect().
-//			statusCode(404).
-//		given().
-//			contentType(ContentType.JSON).
-//			body(createJsonRosterPlayer("Brewer", "Corey", "houston-rocketers", "2014-12-21", "2015-02-20").toString()).
-//		when().
-//			post("/rosterPlayers");
-//	}
-//
+	@Test
+	public void createGame_Created() {
+		expect().
+			statusCode(201).
+		given().
+			contentType(ContentType.JSON).
+			body(createJsonGame("2015-04-16T20:00", "atlanta-hawks", "detroit-pistons").toString()).
+		when().
+			post("/games");
+	}
+
+	@Test
+	public void createGame_Found() {
+		expect().
+			statusCode(403).
+		given().
+			contentType(ContentType.JSON).
+			body(createJsonGame("2015-04-15T20:00", "dallas-mavericks", "portland-trail-blazers").toString()).
+		when().
+			post("/games");
+	}
+
 //	@Test
 //	public void updatePlayer_Updated() {
 //		expect().
@@ -196,24 +174,26 @@ public class GameResourceTest {
 //		when().
 //			delete("/rosterPlayers/Thomas/Isaiah/1989-02-07/2015-03");
 //	}
-//
-//	private static JsonObject createJsonRosterPlayer(String lastName, String firstName, String teamKey, String fromDate, String toDate) {
-//		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-//		JsonObject value = factory.createObjectBuilder()
-//			.add("fromDate", fromDate)
-//			.add("toDate", toDate)
-//			.add("position", "C")
-//			.add("number", "21")
-//			.add("team", factory.createObjectBuilder()
-//				.add("teamKey", teamKey))
-//			.add("player", factory.createObjectBuilder()
-//				.add("lastName", lastName)
-//				.add("firstName", firstName)
-//				.add("birthdate", "1986-03-05"))
-//		.build();
-//		return value;
-//	}
-//
+
+	private static JsonObject createJsonGame(String gameDateTime, String homeTeamKey, String awayTeamKey) {
+		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+		JsonObject value = factory.createObjectBuilder()
+			.add("gameDateTime", gameDateTime)
+			.add("status", "Scheduled")
+			.add("seasonType", "Regular")
+			.add("boxScores", factory.createArrayBuilder()
+				.add(factory.createObjectBuilder()
+					.add("location", "Home")
+					.add("team", factory.createObjectBuilder()
+						.add("teamKey", homeTeamKey)))
+				.add(factory.createObjectBuilder()
+					.add("location", "Away")
+					.add("team", factory.createObjectBuilder()
+						.add("teamKey", awayTeamKey))))
+		.build();
+		return value;
+	}
+
 //	private static JsonObject updateJsonRosterPlayer(String lastName, String firstName, String fromDate, String toDate) {
 //		JsonBuilderFactory factory = Json.createBuilderFactory(null);
 //		JsonObject value = factory.createObjectBuilder()
