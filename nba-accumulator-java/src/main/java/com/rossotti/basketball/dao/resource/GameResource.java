@@ -19,6 +19,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.hibernate.PropertyValueException;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -176,6 +177,13 @@ public class GameResource {
 					else {
 						return Response.status(500).build();
 					}
+					LocalDateTime homeTeamPreviousGame = gameRepo.findPreviousGameDateTimeByDateTeam(gameDate, homeTeam.getTeamKey());
+					if (homeTeamPreviousGame != null) {
+						homeBoxScore.setDaysOff((short) DateTimeUtil.getDaysBetweenTwoDateTimes(homeTeamPreviousGame, updateGame.getGameDateTime()));
+					}
+					else {
+						homeBoxScore.setDaysOff((short)0);
+					}
 				}
 				BoxScore awayBoxScore = updateGame.getBoxScoreAway();
 				for (int i = 0; i < awayBoxScore.getBoxScorePlayers().size(); i++) {
@@ -191,6 +199,13 @@ public class GameResource {
 					}
 					else {
 						return Response.status(500).build();
+					}
+					LocalDateTime awayTeamPreviousGame = gameRepo.findPreviousGameDateTimeByDateTeam(gameDate, awayTeam.getTeamKey());
+					if (awayTeamPreviousGame != null) {
+						awayBoxScore.setDaysOff((short) DateTimeUtil.getDaysBetweenTwoDateTimes(awayTeamPreviousGame, updateGame.getGameDateTime()));
+					}
+					else {
+						awayBoxScore.setDaysOff((short)0);
 					}
 				}
 				Game game = gameRepo.updateGame(updateGame);
