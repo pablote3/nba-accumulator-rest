@@ -49,7 +49,7 @@ public class TeamResourceTest {
 		expect().
 			statusCode(400).
 		when().
-			get("/teams/seattle-superstuds/2012-07");
+			get("/teams/charlotte-bobcats/2012-07");
 	}
 
 	@Test
@@ -84,7 +84,7 @@ public class TeamResourceTest {
 			statusCode(201).
 		given().
 			contentType(ContentType.JSON).
-			body(createJsonTeam("seattle-supersonics").toString()).
+			body(createJsonTeam("providence-steamrollers").toString()).
 		when().
 			post("/teams");
 	}
@@ -127,7 +127,7 @@ public class TeamResourceTest {
 		expect().
 			statusCode(204).
 		when().
-			delete("/teams/providence-steamrollers/2013-07-01");
+			delete("/teams/seattle-supersonics/2013-07-01");
 	}
 
 	@Test
@@ -135,7 +135,7 @@ public class TeamResourceTest {
 		expect().
 			statusCode(404).
 		when().
-			delete("/teams/providence-steamers/2013-07-01");
+			delete("/teams/seattle-supers/2013-07-01");
 	}
 
 	@Test
@@ -143,7 +143,7 @@ public class TeamResourceTest {
 		expect().
 			statusCode(400).
 		when().
-			delete("/teams/providence-steamrollers/2012-07");
+			delete("/teams/seattle-supersonics/2013-07");
 	}
 
 	private static JsonObject createJsonTeam(String teamKey) {

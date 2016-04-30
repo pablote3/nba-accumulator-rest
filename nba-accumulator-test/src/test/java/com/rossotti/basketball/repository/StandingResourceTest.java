@@ -80,7 +80,7 @@ public class StandingResourceTest {
 			statusCode(201).
 		given().
 			contentType(ContentType.JSON).
-			body(buildJsonStanding("boston-celtics", "2015-04-16").toString()).
+			body(buildJsonStanding("utah-jazz", "2015-04-16").toString()).
 		when().
 			post("/standings");
 	}
@@ -134,7 +134,7 @@ public class StandingResourceTest {
 		expect().
 			statusCode(204).
 		when().
-			delete("/standings/chicago-bulls/2015-04-15");
+			delete("/standings/boston-celtics/2015-04-16");
 	}
 
 	@Test
