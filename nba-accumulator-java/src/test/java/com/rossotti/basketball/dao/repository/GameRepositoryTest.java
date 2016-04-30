@@ -188,13 +188,13 @@ public class GameRepositoryTest {
 
 	@Test
 	public void updateGame_NotFound_Both() {
-		Game updateGame = gameRepo.updateGame(createMockGame(new LocalDateTime("2015-10-10T21:00"), 1L, "chicago-zephyriers", 2L, "harlem-globetrottered"));
+		Game updateGame = gameRepo.updateGame(createMockGame(new LocalDateTime("2015-11-24T10:00"), 1L, "chicago-zephyrs", 2L, "harlem-globetrotters"));
 		Assert.assertTrue(updateGame.isNotFound());
 	}
 
 	@Test
 	public void updateGame_NotFound_Single() {
-		Game updateGame = gameRepo.updateGame(createMockGame(new LocalDateTime("2015-10-10T21:00"), 1L, "chicago-zephyriers", 3L, "st-louis-bombers"));
+		Game updateGame = gameRepo.updateGame(createMockGame(new LocalDateTime("2015-11-24T10:00"), 1L, "chicago-zephyrs", 8L, "st-louis-bombers"));
 		Assert.assertTrue(updateGame.isNotFound());
 	}
 
