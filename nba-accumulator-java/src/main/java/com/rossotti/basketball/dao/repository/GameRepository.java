@@ -164,10 +164,13 @@ public class GameRepository {
 	}
 
 	public Game updateGame(Game updateGame) {
-		Game findGame = findByDateTeam(DateTimeUtil.getLocalDate(updateGame.getGameDateTime()), updateGame.getBoxScores().get(0).getTeam().getTeamKey());
+		Game findGame = findByDateTeam(DateTimeUtil.getLocalDate(updateGame.getGameDateTime()), updateGame.getBoxScoreAway().getTeam().getTeamKey());
 		if (findGame.isFound()) {
+			if (!findGame.getBoxScoreHome().getTeam().getTeamKey().equals(updateGame.getBoxScoreHome().getTeam().getTeamKey())) {
+				findGame.setStatusCode(StatusCode.NotFound);
+				return findGame;
+			}
 			findGame.setStatus(updateGame.getStatus());
-
 			for (int i = 0; i < updateGame.getGameOfficials().size(); i++) {
 				GameOfficial gameOfficial = updateGame.getGameOfficials().get(i);
 				gameOfficial.setGame(findGame);
