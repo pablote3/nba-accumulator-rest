@@ -54,7 +54,7 @@ public class GameResourceTest {
 		expect().
 			statusCode(404).
 		when().
-			get("/games/2015-04-16/chicago-bulls");
+			get("/games/2015-04-16/miami-heat");
 	}
 
 	@Test
@@ -111,7 +111,7 @@ public class GameResourceTest {
 			statusCode(201).
 		given().
 			contentType(ContentType.JSON).
-			body(createJsonGame("2015-04-16T20:00", "atlanta-hawks", "detroit-pistons").toString()).
+			body(createJsonGame("2015-04-16T20:00", "atlanta-hawks", "houston-rockets").toString()).
 		when().
 			post("/games");
 	}
@@ -150,7 +150,7 @@ public class GameResourceTest {
 	}
 
 	@Test
-	public void updatePlayer_GameNotFound() {
+	public void updateGame_GameNotFound() {
 		expect().
 			statusCode(404).
 			given().
@@ -161,7 +161,7 @@ public class GameResourceTest {
 	}
 
 	@Test
-	public void updatePlayer_TeamNotFound() {
+	public void updateGame_TeamNotFound() {
 		expect().
 			statusCode(404).
 			given().
@@ -172,7 +172,7 @@ public class GameResourceTest {
 	}
 
 	@Test
-	public void updatePlayer_OfficialNotFound() {
+	public void updateGame_OfficialNotFound() {
 		expect().
 			statusCode(404).
 			given().
@@ -183,7 +183,7 @@ public class GameResourceTest {
 	}
 
 	@Test
-	public void updatePlayer_RosterPlayerNotFound() {
+	public void updateGame_RosterPlayerNotFound() {
 		expect().
 			statusCode(404).
 			given().
@@ -193,29 +193,29 @@ public class GameResourceTest {
 			put("/games");
 	}
 
-//	@Test
-//	public void deletePlayer_Deleted() {
-//		expect().
-//			statusCode(204).
-//		when().
-//			delete("/rosterPlayers/Thomas/Isaiah/1989-02-07/2015-03-17");
-//	}
-//
-//	@Test
-//	public void deletePlayer_NotFound() {
-//		expect().
-//			statusCode(404).
-//		when().
-//			delete("/rosterPlayers/Thomas/Isaiahan/1989-02-07/2015-03-17");
-//	}
-//
-//	@Test
-//	public void deletePlayer_BadRequest() {
-//		expect().
-//			statusCode(400).
-//		when().
-//			delete("/rosterPlayers/Thomas/Isaiah/1989-02-07/2015-03");
-//	}
+	@Test
+	public void deleteGame_Deleted() {
+		expect().
+			statusCode(204).
+		when().
+			delete("/games/2015-04-16/detroit-pistons");
+	}
+
+	@Test
+	public void deleteGame_NotFound() {
+		expect().
+			statusCode(404).
+		when().
+			delete("/games/2015-04-17/detroit-pistons");
+	}
+
+	@Test
+	public void deleteGame_BadRequest() {
+		expect().
+			statusCode(400).
+		when().
+			delete("/games/2015-04/detroit-pistons");
+	}
 
 	private static JsonObject createJsonGame(String gameDateTime, String homeTeamKey, String awayTeamKey) {
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);
