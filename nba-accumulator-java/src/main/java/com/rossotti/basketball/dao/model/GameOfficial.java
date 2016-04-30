@@ -40,7 +40,7 @@ public class GameOfficial {
 		this.game = game;
 	}
 
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name="officialId", referencedColumnName="id", nullable=false)
 	private Official official;
 	public Official getOfficial() {

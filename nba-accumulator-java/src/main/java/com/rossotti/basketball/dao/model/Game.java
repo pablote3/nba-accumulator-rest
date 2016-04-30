@@ -101,7 +101,7 @@ public class Game {
 		}
 	}
 
-	@OneToMany(mappedBy="game", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy="game", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	private List<GameOfficial> gameOfficials = new ArrayList<GameOfficial>();
 	public List<GameOfficial> getGameOfficials() {
 		return gameOfficials;

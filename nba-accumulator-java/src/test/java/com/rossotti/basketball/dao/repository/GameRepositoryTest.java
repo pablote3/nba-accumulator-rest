@@ -165,9 +165,9 @@ public class GameRepositoryTest {
 	@Test
 	public void updateGame_Updated() {
 		Game findGame = gameRepo.findByDateTeam(new LocalDate("2015-10-27"), "salinas-cowboys");
-		findGame.addGameOfficial(getMockGameOfficial(4L, 1L, "LateCall", "Joe"));
-		findGame.addGameOfficial(getMockGameOfficial(5L, 3L, "MissedCall", "Mike"));
-		findGame.addGameOfficial(getMockGameOfficial(6L, 5L, "TerribleCall", "Limo"));
+		findGame.addGameOfficial(getMockGameOfficial(findGame, 1L, "LateCall", "Joe"));
+		findGame.addGameOfficial(getMockGameOfficial(findGame, 3L, "MissedCall", "Mike"));
+		findGame.addGameOfficial(getMockGameOfficial(findGame, 4L, "QuestionableCall", "Hefe"));
 		updateMockBoxScoreHome(findGame);
 		updateMockBoxScoreAway(findGame);
 		Game updateGame = gameRepo.updateGame(findGame);
@@ -183,6 +183,7 @@ public class GameRepositoryTest {
 		Assert.assertTrue(awayBoxScorePlayer.getBlocks().equals((short)2));
 		Assert.assertTrue(homeBoxScore.getFreeThrowMade().equals((short)10));
 		Assert.assertTrue(awayBoxScore.getFreeThrowMade().equals((short)18));
+		Assert.assertEquals(3, updateGame.getGameOfficials().size());
 	}
 
 	@Test
@@ -269,9 +270,9 @@ public class GameRepositoryTest {
 		awayBoxScore.setPersonalFouls((short)18);
 	}
 
-	private GameOfficial getMockGameOfficial(Long gameOfficialId, Long officialId, String lastName, String firstName) {
+	private GameOfficial getMockGameOfficial(Game game, Long officialId, String lastName, String firstName) {
 		GameOfficial gameOfficial = new GameOfficial();
-		gameOfficial.setId(gameOfficialId);
+		gameOfficial.setGame(game);
 		gameOfficial.setOfficial(getMockOfficial(officialId, lastName, firstName));
 		return gameOfficial;
 	}
@@ -281,9 +282,6 @@ public class GameRepositoryTest {
 		official.setId(officialId);
 		official.setLastName(lastName);
 		official.setFirstName(firstName);
-		official.setFromDate(new LocalDate("2012-02-16"));
-		official.setToDate(new LocalDate("9999-12-31"));
-		official.setNumber("66");
 		return official;
 	}
 

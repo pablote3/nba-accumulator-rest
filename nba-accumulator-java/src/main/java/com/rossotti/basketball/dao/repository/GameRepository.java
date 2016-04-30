@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.Game;
+import com.rossotti.basketball.dao.model.GameOfficial;
 import com.rossotti.basketball.dao.model.GameStatus;
 import com.rossotti.basketball.dao.model.StatusCode;
 import com.rossotti.basketball.util.DateTimeUtil;
@@ -167,11 +168,11 @@ public class GameRepository {
 		if (findGame.isFound()) {
 			findGame.setStatus(updateGame.getStatus());
 
-			findGame.setGameOfficials(updateGame.getGameOfficials());
-			for (int i = 0; i < findGame.getGameOfficials().size(); i++) {
-				findGame.getGameOfficials().get(i).setGame(findGame);
+			for (int i = 0; i < updateGame.getGameOfficials().size(); i++) {
+				GameOfficial gameOfficial = updateGame.getGameOfficials().get(i);
+				gameOfficial.setGame(findGame);
+				findGame.addGameOfficial(gameOfficial);
 			}
-
 			BoxScore findHomeBoxScore = findGame.getBoxScoreHome();
 			BoxScore updateHomeBoxScore = updateGame.getBoxScoreHome();
 			findHomeBoxScore.setResult(updateHomeBoxScore.getResult());
