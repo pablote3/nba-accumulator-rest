@@ -30,10 +30,10 @@ public class RosterPlayerResourceTest {
 	public void findByPlayerNameBirthdateAsOfDate_Found() {
 		expect().
 			statusCode(200).
-			body("toDate", equalTo("2013-06-30")).
+			body("toDate", equalTo("2014-11-06")).
 			body("position", equalTo("PG")).
 		when().
-			get("/rosterPlayers/player/Price/A.J./1986-10-07/2012-10-30");
+			get("/rosterPlayers/player/Price/A.J./1986-10-07/2014-10-30");
 	}
 
 	@Test
@@ -84,7 +84,7 @@ public class RosterPlayerResourceTest {
 		List<RosterPlayer> rosterPlayers = JsonPath.read(document, "$.rosterPlayers");
 		String fromDate = JsonPath.read(document, "$.rosterPlayers[0].fromDate");
 		Assert.assertTrue("Roster players size " + rosterPlayers.size() + " should be at least 2", rosterPlayers.size() >= 2);
-		Assert.assertEquals("2012-10-30", fromDate);
+		Assert.assertEquals("2014-10-30", fromDate);
 	}
 
 	@Test
