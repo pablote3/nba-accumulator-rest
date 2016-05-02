@@ -41,7 +41,7 @@ public class RosterPlayerResourceTest {
 		expect().
 			statusCode(404).
 		when().
-			get("/rosterPlayers/player/Price/K.J./1986-10-07/2012-10-30");
+			get("/rosterPlayers/player/Price/K.J./1986-10-07/2014-10-30");
 	}
 
 	@Test
@@ -49,7 +49,7 @@ public class RosterPlayerResourceTest {
 		expect().
 			statusCode(400).
 		when().
-			get("/rosterPlayers/player/Price/A.J./1986-10-07/2012-10");
+			get("/rosterPlayers/player/Price/A.J./1986-10-07/2014-10");
 	}
 
 	public void findByPlayerNameTeamAsOfDate_Found() {
@@ -74,7 +74,7 @@ public class RosterPlayerResourceTest {
 		expect().
 			statusCode(400).
 		when().
-			get("/rosterPlayers/team/Price/A.J./cleveland-cavaliers/2012-10");
+			get("/rosterPlayers/team/Price/A.J./cleveland-cavaliers/2014-10");
 	}
 
 	@Test
