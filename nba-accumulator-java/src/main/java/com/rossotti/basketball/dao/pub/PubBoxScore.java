@@ -4,11 +4,14 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rossotti.basketball.dao.model.BoxScore.Location;
 import com.rossotti.basketball.dao.model.BoxScore.Result;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
+@JsonInclude(Include.NON_EMPTY)
 public class PubBoxScore {
 	private final String location;
 	private final String result;
@@ -43,6 +46,7 @@ public class PubBoxScore {
 	private final PubTeam team;
 
 	@JsonCreator
+	//completed game
 	public PubBoxScore(@JsonProperty("location") Location location,
 					@JsonProperty("result") Result result,
 					@JsonProperty("minutes") Short minutes,
@@ -104,6 +108,43 @@ public class PubBoxScore {
 		this.pointsPeriod8 = String.valueOf(pointsPeriod8);
 		this.daysOff = String.valueOf(daysOff);
 		this.boxScorePlayers = boxScorePlayers;
+		this.team = team;
+	}
+
+	//scheduled game
+	public PubBoxScore(@JsonProperty("location") Location location,
+			@JsonProperty("result") Result result,
+			@JsonProperty("team") PubTeam team) {
+		this.location = location.name();
+		this.result = result != null ? result.name() : String.valueOf(Result.Inc);
+		this.minutes = null;
+		this.points = null;
+		this.assists = null;
+		this.turnovers = null;
+		this.steals = null;
+		this.blocks = null;
+		this.fieldGoalAttempts = null;
+		this.fieldGoalMade = null;
+		this.fieldGoalPercent = null;
+		this.threePointAttempts = null;
+		this.threePointMade = null;
+		this.threePointPercent = null;
+		this.freeThrowAttempts = null;
+		this.freeThrowMade = null;
+		this.freeThrowPercent = null;
+		this.reboundsOffense = null;
+		this.reboundsDefense = null;
+		this.personalFouls = null;
+		this.pointsPeriod1 = null;
+		this.pointsPeriod2 = null;
+		this.pointsPeriod3 = null;
+		this.pointsPeriod4 = null;
+		this.pointsPeriod5 = null;
+		this.pointsPeriod6 = null;
+		this.pointsPeriod7 = null;
+		this.pointsPeriod8 = null;
+		this.daysOff = null;
+		this.boxScorePlayers = null;
 		this.team = team;
 	}
 

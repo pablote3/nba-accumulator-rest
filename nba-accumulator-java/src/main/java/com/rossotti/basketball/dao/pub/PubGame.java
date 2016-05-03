@@ -25,19 +25,35 @@ public class PubGame {
 	private final URI score;
 
 	@JsonCreator
+	//completed game
 	public PubGame(@JsonProperty("self") URI self,
-					@JsonProperty("score") URI score,
 					@JsonProperty("gameDateTime") LocalDateTime gameDateTime,
 					@JsonProperty("status") GameStatus status,
 					@JsonProperty("seasonType") SeasonType seasonType,
 					@JsonProperty("gameOfficials") List<PubGameOfficial> gameOfficials,
 					@JsonProperty("boxScores") List<PubBoxScore> boxScores) {
 		this.self = self;
-		this.score = score;
+		this.score = null;
 		this.gameDateTime = DateTimeUtil.getStringDateTime(gameDateTime);
 		this.status = status.name();
 		this.seasonType = seasonType.name();
 		this.gameOfficials = gameOfficials;
+		this.boxScores = boxScores;
+	}
+	
+	//scheduled game
+	public PubGame(@JsonProperty("self") URI self,
+			@JsonProperty("score") URI score,
+			@JsonProperty("gameDateTime") LocalDateTime gameDateTime,
+			@JsonProperty("status") GameStatus status,
+			@JsonProperty("seasonType") SeasonType seasonType,
+			@JsonProperty("boxScores") List<PubBoxScore> boxScores) {
+		this.self = self;
+		this.score = score;
+		this.gameDateTime = DateTimeUtil.getStringDateTime(gameDateTime);
+		this.status = status.name();
+		this.seasonType = seasonType.name();
+		this.gameOfficials = null;
 		this.boxScores = boxScores;
 	}
 

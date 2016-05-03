@@ -367,39 +367,46 @@ public class BoxScore {
 				listPubBoxScorePlayer.add(pubBoxScorePlayer);
 			}
 		}
-		
-		return new PubBoxScore(
-				this.getLocation(),
-				this.getResult(),
-				this.getMinutes(),
-				this.getPoints(),
-				this.getAssists(),
-				this.getTurnovers(),
-				this.getSteals(),
-				this.getBlocks(),
-				this.getFieldGoalAttempts(),
-				this.getFieldGoalMade(),
-				this.getFieldGoalPercent(),
-				this.getThreePointAttempts(),
-				this.getThreePointMade(),
-				this.getThreePointPercent(),
-				this.getFreeThrowAttempts(),
-				this.getFreeThrowMade(),
-				this.getFreeThrowPercent(),
-				this.getReboundsOffense(),
-				this.getReboundsDefense(),
-				this.getPersonalFouls(),
-				this.getPointsPeriod1(),
-				this.getPointsPeriod2(),
-				this.getPointsPeriod3(),
-				this.getPointsPeriod4(),
-				this.getPointsPeriod5(),
-				this.getPointsPeriod6(),
-				this.getPointsPeriod7(),
-				this.getPointsPeriod8(),
-				this.getDaysOff(),
-				listPubBoxScorePlayer,
-				this.getTeam().toPubTeam(uriInfo));
+		if (this.getResult() == null) {
+			return new PubBoxScore(
+					this.getLocation(),
+					this.getResult(),
+					this.getTeam().toPubTeam(uriInfo));
+		}
+		else {
+			return new PubBoxScore(
+					this.getLocation(),
+					this.getResult(),
+					this.getMinutes(),
+					this.getPoints(),
+					this.getAssists(),
+					this.getTurnovers(),
+					this.getSteals(),
+					this.getBlocks(),
+					this.getFieldGoalAttempts(),
+					this.getFieldGoalMade(),
+					this.getFieldGoalPercent(),
+					this.getThreePointAttempts(),
+					this.getThreePointMade(),
+					this.getThreePointPercent(),
+					this.getFreeThrowAttempts(),
+					this.getFreeThrowMade(),
+					this.getFreeThrowPercent(),
+					this.getReboundsOffense(),
+					this.getReboundsDefense(),
+					this.getPersonalFouls(),
+					this.getPointsPeriod1(),
+					this.getPointsPeriod2(),
+					this.getPointsPeriod3(),
+					this.getPointsPeriod4(),
+					this.getPointsPeriod5(),
+					this.getPointsPeriod6(),
+					this.getPointsPeriod7(),
+					this.getPointsPeriod8(),
+					this.getDaysOff(),
+					listPubBoxScorePlayer,
+					this.getTeam().toPubTeam(uriInfo));
+		}
 	}
 
 	public void updateTotals(BoxScoreDTO stats) {

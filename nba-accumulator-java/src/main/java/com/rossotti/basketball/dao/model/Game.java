@@ -168,15 +168,7 @@ public class Game {
 								.path("games")
 								.path(DateTimeUtil.getStringDate(this.getGameDateTime()))
 								.path(teamKey).build();
-
-		if (this.getStatus() == GameStatus.Scheduled) {
-			scoreLink = uriInfo.getBaseUriBuilder()
-								.path("score")
-								.path("games")
-								.path(DateTimeUtil.getStringDate(this.getGameDateTime()))
-								.path(teamKey).build();
-		}
-
+	
 		List<PubBoxScore> listPubBoxScore = new ArrayList<PubBoxScore>();
 		if (this.getBoxScores().size() > 0) {
 			for (BoxScore boxScore : this.getBoxScores()) {
@@ -184,19 +176,34 @@ public class Game {
 				listPubBoxScore.add(pubBoxScore);
 			}
 		}
-		List<PubGameOfficial> listPubGameOfficial = new ArrayList<PubGameOfficial>();
-		if (this.getGameOfficials().size() > 0) {
-			for (GameOfficial gameOfficial : this.getGameOfficials()) {
-				PubGameOfficial pubGameOfficial = gameOfficial.toPubGameOfficial(uriInfo);
-				listPubGameOfficial.add(pubGameOfficial);
+
+		if (this.getStatus() == GameStatus.Completed) {
+			List<PubGameOfficial> listPubGameOfficial = new ArrayList<PubGameOfficial>();
+			if (this.getGameOfficials().size() > 0) {
+				for (GameOfficial gameOfficial : this.getGameOfficials()) {
+					PubGameOfficial pubGameOfficial = gameOfficial.toPubGameOfficial(uriInfo);
+					listPubGameOfficial.add(pubGameOfficial);
+				}
 			}
+			return new PubGame(selfLink,
+					this.gameDateTime,
+					this.status,
+					this.seasonType,
+					listPubGameOfficial,
+					listPubBoxScore);
+		}
+		else {
+			scoreLink = uriInfo.getBaseUriBuilder()
+					.path("score")
+					.path("games")
+					.path(DateTimeUtil.getStringDate(this.getGameDateTime()))
+					.path(teamKey).build();
 		}
 		return new PubGame(selfLink,
-						scoreLink,
-						this.gameDateTime,
-						this.status,
-						this.seasonType,
-						listPubGameOfficial,
-						listPubBoxScore);
+				scoreLink,
+				this.gameDateTime,
+				this.status,
+				this.seasonType,
+				listPubBoxScore);
 	}
 }
