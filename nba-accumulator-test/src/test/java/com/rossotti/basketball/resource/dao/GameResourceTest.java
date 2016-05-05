@@ -54,7 +54,7 @@ public class GameResourceTest {
 		expect().
 			statusCode(404).
 		when().
-			get("/games/2015-04-16/miami-heat");
+			get("/games/2015-04-16/portland-trail-blazers");
 	}
 
 	@Test
@@ -111,7 +111,7 @@ public class GameResourceTest {
 			statusCode(201).
 		given().
 			contentType(ContentType.JSON).
-			body(createJsonGame("2015-04-16T20:00", "atlanta-hawks", "houston-rockets").toString()).
+			body(createJsonGame("2015-04-16T20:00", "phoenix-suns", "miami-heat").toString()).
 		when().
 			post("/games");
 	}
