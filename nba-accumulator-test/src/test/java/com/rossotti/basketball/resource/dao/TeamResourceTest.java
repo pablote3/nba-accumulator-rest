@@ -1,4 +1,4 @@
-package com.rossotti.basketball.repository;
+package com.rossotti.basketball.resource.dao;
 
 import static com.jayway.restassured.RestAssured.expect;
 import static com.jayway.restassured.RestAssured.get;
