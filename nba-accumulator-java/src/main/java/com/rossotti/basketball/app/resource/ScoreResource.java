@@ -3,7 +3,6 @@ package com.rossotti.basketball.app.resource;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -58,14 +57,9 @@ public class ScoreResource {
 	private final Logger logger = LoggerFactory.getLogger(ScoreResource.class);
 
 	@POST
-	@Path("/{gameDate}/{teamKey}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response scoreGame(@Context UriInfo uriInfo, 
-								@PathParam("gameDate") String gameDateString, 
-								@PathParam("teamKey") String teamKey, 
-								Game game) {
-
+	public Response scoreGame(@Context UriInfo uriInfo, Game game) {
 		try {
 			BoxScore awayBoxScore = game.getBoxScoreAway();
 			BoxScore homeBoxScore = game.getBoxScoreHome();
@@ -93,6 +87,7 @@ public class ScoreResource {
 						game.setStatus(GameStatus.Completed);
 						awayBoxScore.updateTotals(gameDTO.away_totals);
 						homeBoxScore.updateTotals(gameDTO.home_totals);
+
 						awayBoxScore.updatePeriodScores(gameDTO.away_period_scores);
 						homeBoxScore.updatePeriodScores(gameDTO.home_period_scores);
 						awayBoxScore.setBoxScorePlayers(rosterPlayerService.getBoxScorePlayers(gameDTO.away_stats, gameDate, awayTeamKey));
@@ -118,20 +113,22 @@ public class ScoreResource {
 						else {
 							logger.info("Unable to update game - " + updatedGame.getStatus());
 						}
+						PubGame pubGame = game.toPubGame(uriInfo, homeTeamKey);
+						return Response.ok(pubGame)
+							.link(uriInfo.getAbsolutePath(), "game")
+							.build();
 					} catch (NoSuchEntityException nse) {
 						if (nse.getEntityClass().equals(Official.class)) {
-							logger.info("Official not found");
+							logger.info("Official not found - need to add official");
 						}
 						else if (nse.getEntityClass().equals(RosterPlayer.class)) {
-							logger.info("Rebuild active roster");
+							logger.info("Roster Player not found - need to rebuild active roster");
 						}
+						return Response.status(500).build();
 					} catch (Exception e) {
 						e.printStackTrace();
+						return Response.status(500).build();
 					}
-					PubGame pubGame = game.toPubGame(uriInfo, teamKey);
-					return Response.ok(pubGame)
-						.link(uriInfo.getAbsolutePath(), "game")
-						.build();
 				}
 				else {
 					logger.info('\n' + "" + " unable to retrieve box score: HTTP status = " + gameDTO.httpStatus);
@@ -149,7 +146,7 @@ public class ScoreResource {
 		}
 		catch (Exception e) {
 			logger.info("unexpected exception = " + e);
-			return null;
+			return Response.status(500).build();
 		}
 	}
 }
