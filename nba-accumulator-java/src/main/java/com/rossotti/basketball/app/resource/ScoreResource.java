@@ -20,6 +20,7 @@ import com.rossotti.basketball.app.service.GameService;
 import com.rossotti.basketball.app.service.OfficialService;
 import com.rossotti.basketball.app.service.PropertyService;
 import com.rossotti.basketball.app.service.RosterPlayerService;
+import com.rossotti.basketball.app.service.TeamService;
 import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.client.service.FileClientService;
 import com.rossotti.basketball.client.service.RestClientService;
@@ -50,6 +51,9 @@ public class ScoreResource {
 
 	@Autowired
 	private RosterPlayerService rosterPlayerService;
+
+	@Autowired
+	private TeamService teamService;
 
 	@Autowired
 	private PropertyService propertyService;
@@ -93,6 +97,9 @@ public class ScoreResource {
 						awayBoxScore.setBoxScorePlayers(rosterPlayerService.getBoxScorePlayers(gameDTO.away_stats, gameDate, awayTeamKey));
 						homeBoxScore.setBoxScorePlayers(rosterPlayerService.getBoxScorePlayers(gameDTO.home_stats, gameDate, homeTeamKey));
 						game.setGameOfficials(officialService.getGameOfficials(gameDTO.officials, gameDate));
+
+						awayBoxScore.setTeam(teamService.findTeam(awayTeamKey, gameDate));
+						homeBoxScore.setTeam(teamService.findTeam(homeTeamKey, gameDate));
 
 						if (gameDTO.away_totals.getPoints() > gameDTO.home_totals.getPoints()) {
 							awayBoxScore.setResult(Result.Win);
