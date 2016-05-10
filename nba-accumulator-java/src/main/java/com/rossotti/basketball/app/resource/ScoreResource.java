@@ -35,7 +35,7 @@ import com.rossotti.basketball.dao.pub.PubGame;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
-@Path("/score/games")
+@Path("/score")
 public class ScoreResource {
 	@Autowired
 	private RestClientService restClientService;

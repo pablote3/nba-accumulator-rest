@@ -15,7 +15,7 @@ import com.jayway.restassured.http.ContentType;
 public class ScoreResourceTest {
 	@Before
 	public void setUp(){
-		RestAssured.baseURI = "http://localhost:8080/nba-accumulator-web/rest/score";
+		RestAssured.baseURI = "http://localhost:8080/nba-accumulator-web/rest";
 	}
 
 	@Test
@@ -26,7 +26,7 @@ public class ScoreResourceTest {
 			contentType(ContentType.JSON).
 			body(postJsonGame("2015-04-16T20:00", "atlanta-hawks", "houston-rockets").toString()).
 			when().
-			post("/games");
+			post("/score");
 	}
 
 	@Test
@@ -37,7 +37,7 @@ public class ScoreResourceTest {
 			contentType(ContentType.JSON).
 			body(postJsonGame("2015-04-16T20:00", "portland-trail-blazers", "denver-nuggets").toString()).
 			when().
-			post("/games");
+			post("/score");
 	}
 
 	@Test
@@ -48,7 +48,7 @@ public class ScoreResourceTest {
 			contentType(ContentType.JSON).
 			body(postJsonGame("2015-04-16T20:00", "phoenix-suns", "miami-heat").toString()).
 			when().
-			post("/games");
+			post("/score");
 	}
 
 	@Test
@@ -59,7 +59,7 @@ public class ScoreResourceTest {
 			contentType(ContentType.JSON).
 			body(postJsonGame("2015-04-16T20:00", "indiana-pacers", "orlando-magic").toString()).
 			when().
-			post("/games");
+			post("/score");
 	}
 
 	@Test
@@ -70,7 +70,7 @@ public class ScoreResourceTest {
 			contentType(ContentType.JSON).
 			body(postJsonGame("2015-04-16T20:00", "toronto-raptors", "new-york-knicks").toString()).
 			when().
-			post("/games");
+			post("/score");
 	}
 
 	@Test
@@ -81,7 +81,7 @@ public class ScoreResourceTest {
 			contentType(ContentType.JSON).
 			body(postJsonGame("2015-04-15T20:00", "chicago-bulls", "atlanta-hawks").toString()).
 			when().
-			post("/games");
+			post("/score");
 	}
 
 	private static JsonObject postJsonGame(String gameDateTime, String homeTeamKey, String awayTeamKey) {
