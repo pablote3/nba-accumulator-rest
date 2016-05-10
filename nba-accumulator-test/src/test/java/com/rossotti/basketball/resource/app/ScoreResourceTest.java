@@ -19,7 +19,7 @@ public class ScoreResourceTest {
 	}
 
 	@Test
-	public void scoreGame_Completed() {
+	public void scoreGame_GameScheduled() {
 		expect().
 			statusCode(200).
 		given().
@@ -29,21 +29,60 @@ public class ScoreResourceTest {
 			post("/games");
 	}
 
-//	@Test
-//	public void findByTeamAsOfDate_NotFound() {
-//		expect().
-//			statusCode(404).
-//		when().
-//			get("/games/2015-04-16/portland-trail-blazers");
-//	}
-//
-//	@Test
-//	public void findByTeamAsOfDate_BadRequest() {
-//		expect().
-//			statusCode(400).
-//		when().
-//			get("/games/2015-04/atlanta-hawks");
-//	}
+	@Test
+	public void scoreGame_GameNotFound() {
+		expect().
+			statusCode(404).
+		given().
+			contentType(ContentType.JSON).
+			body(postJsonGame("2015-04-16T20:00", "portland-trail-blazers", "denver-nuggets").toString()).
+			when().
+			post("/games");
+	}
+
+	@Test
+	public void scoreGame_OfficialNotFound() {
+		expect().
+			statusCode(500).
+		given().
+			contentType(ContentType.JSON).
+			body(postJsonGame("2015-04-16T20:00", "phoenix-suns", "miami-heat").toString()).
+			when().
+			post("/games");
+	}
+
+	@Test
+	public void scoreGame_RosterPlayerNotFound() {
+		expect().
+			statusCode(500).
+		given().
+			contentType(ContentType.JSON).
+			body(postJsonGame("2015-04-16T20:00", "indiana-pacers", "orlando-magic").toString()).
+			when().
+			post("/games");
+	}
+
+	@Test
+	public void scoreGame_FileNotFound() {
+		expect().
+			statusCode(404).
+		given().
+			contentType(ContentType.JSON).
+			body(postJsonGame("2015-04-16T20:00", "toronto-raptors", "new-york-knicks").toString()).
+			when().
+			post("/games");
+	}
+
+	@Test
+	public void scoreGame_GameCompleted() {
+		expect().
+			statusCode(500).
+		given().
+			contentType(ContentType.JSON).
+			body(postJsonGame("2015-04-15T20:00", "chicago-bulls", "atlanta-hawks").toString()).
+			when().
+			post("/games");
+	}
 
 	private static JsonObject postJsonGame(String gameDateTime, String homeTeamKey, String awayTeamKey) {
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);
