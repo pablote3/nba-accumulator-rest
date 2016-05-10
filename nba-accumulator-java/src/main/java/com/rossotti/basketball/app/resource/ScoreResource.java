@@ -116,14 +116,16 @@ public class ScoreResource {
 						Game updatedGame = gameService.updateGame(game);
 						if (updatedGame.isUpdated()) {
 							logger.info("Game Scored " + awayTeamKey +  " " + awayBoxScore.getPoints() + " " + homeTeamKey +  " " + homeBoxScore.getPoints());
+							PubGame pubGame = game.toPubGame(uriInfo, homeTeamKey);
+							return Response.ok(pubGame)
+								.link(uriInfo.getAbsolutePath(), "game")
+								.build();
 						}
 						else {
 							logger.info("Unable to update game - " + updatedGame.getStatus());
+							return Response.status(404).build();
 						}
-						PubGame pubGame = game.toPubGame(uriInfo, homeTeamKey);
-						return Response.ok(pubGame)
-							.link(uriInfo.getAbsolutePath(), "game")
-							.build();
+
 					} catch (NoSuchEntityException nse) {
 						if (nse.getEntityClass().equals(Official.class)) {
 							logger.info("Official not found - need to add official");
@@ -139,9 +141,7 @@ public class ScoreResource {
 				}
 				else {
 					logger.info('\n' + "" + " unable to retrieve box score: HTTP status = " + gameDTO.httpStatus);
-					return Response.serverError()
-						.link(uriInfo.getAbsolutePath(), "game")
-						.build();
+					return Response.status(gameDTO.httpStatus).build();
 				}
 			}
 			else {
