@@ -34,7 +34,7 @@ import com.rossotti.basketball.util.DateTimeUtil;
 import com.rossotti.basketball.util.FormatUtil;
 
 @Service
-@Path("/score/roster")
+@Path("/roster")
 public class RosterResource {
 	@Autowired
 	private RestClientService restClientService;
@@ -54,7 +54,7 @@ public class RosterResource {
 	private final Logger logger = LoggerFactory.getLogger(RosterResource.class);
 
 	@POST
-	@Path("/{gameDate}/{teamKey}")
+	@Path("/{asOfDate}/{teamKey}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response loadRoster(@Context UriInfo uriInfo, 
@@ -92,37 +92,39 @@ public class RosterResource {
 							Player finderPlayer = playerService.findByPlayerNameBirthdate(activePlayer.getLastName(), activePlayer.getFirstName(), activePlayer.getBirthdate());
 							if (finderPlayer.isNotFound()) {
 								//player does not exist
+								logger.info(generateLogMessage("Player does not exist", activeRosterPlayer, fromDate));
 								Player createPlayer = playerService.createPlayer(activePlayer);
 								activeRosterPlayer.setPlayer(createPlayer);
 								activeRosterPlayer.setFromDate(fromDate);
 								activeRosterPlayer.setToDate(toDate);
 								rosterPlayerService.createRosterPlayer(activeRosterPlayer);
-								logger.info(generateLogMessage("Player does not exist", activeRosterPlayer));
 							}
 							else {
 								//player does exist, not on any roster
+								logger.info(generateLogMessage("Player does exist, not on any roster", activeRosterPlayer, fromDate));
 								activeRosterPlayer.setPlayer(finderPlayer);
 								activeRosterPlayer.setFromDate(fromDate);
 								activeRosterPlayer.setToDate(toDate);
 								rosterPlayerService.createRosterPlayer(activeRosterPlayer);
-								logger.info(generateLogMessage("Player does exist, not on any roster", activeRosterPlayer));
 							}
 						}
 						else {
 							//player is on another roster for current season
+							logger.info(generateLogMessage("Player on another team - Terminate", finderRosterPlayer, fromDate));
 							finderRosterPlayer.setToDate(DateTimeUtil.getDateMinusOneDay(fromDate));
 							rosterPlayerService.updateRosterPlayer(finderRosterPlayer);
-							logger.info(generateLogMessage("Player on another team - Terminate", finderRosterPlayer));
 
+							logger.info(generateLogMessage("Player on another team - Add", activeRosterPlayer, fromDate));
 							activeRosterPlayer.setFromDate(fromDate);
 							activeRosterPlayer.setToDate(toDate);
 							rosterPlayerService.createRosterPlayer(activeRosterPlayer);
-							logger.info(generateLogMessage("Player on another team - Add", activeRosterPlayer));
 						}
 					}
 					else {
 						//player is on current team roster
-						logger.info(generateLogMessage("Player on current team roster", activeRosterPlayer));
+						activeRosterPlayer.setFromDate(finderRosterPlayer.getFromDate());
+						activeRosterPlayer.setToDate(finderRosterPlayer.getToDate());
+						logger.info(generateLogMessage("Player on current team roster", activeRosterPlayer, fromDate));
 					}
 				}
 				//deactivate terminated roster players
@@ -137,18 +139,20 @@ public class RosterResource {
 					for (int j = 0; j < activeRosterPlayers.size(); j++) {
 						RosterPlayer activeRosterPlayer = activeRosterPlayers.get(j);
 						Player activePlayer = activeRosterPlayer.getPlayer();
-						if (priorPlayer.equals(activePlayer)) {
+						if (priorPlayer.getLastName().equals(activePlayer.getLastName()) &&
+								priorPlayer.getFirstName().equals(activePlayer.getFirstName()) &&
+								priorPlayer.getBirthdate().equals(activePlayer.getBirthdate())) {
 							//player is on current team roster
-							logger.info(generateLogMessage("Player on current team roster", priorRosterPlayer));
+							logger.info(generateLogMessage("Player on current team roster", priorRosterPlayer, fromDate));
 							foundPlayerOnRoster = true;
 							break;
 						}
 					}
 					if (!foundPlayerOnRoster) {
 						//player is not on current team roster
+						logger.info(generateLogMessage("Player is not on current team roster", priorRosterPlayer, fromDate));
 						priorRosterPlayer.setToDate(DateTimeUtil.getDateMinusOneDay(fromDate));
 						rosterPlayerService.updateRosterPlayer(priorRosterPlayer);
-						logger.info(generateLogMessage("Player is not on current team roster", priorRosterPlayer));
 					}
 				}
 				PubTeam pubTeam = activeRosterPlayers.get(0).getTeam().toPubTeam(uriInfo);
@@ -175,7 +179,7 @@ public class RosterResource {
 		}
 	}
 
-	private String generateLogMessage(String messageType, RosterPlayer rosterPlayer) {
+	private String generateLogMessage(String messageType, RosterPlayer rosterPlayer, LocalDate asOfDate) {
 		StringBuilder sb;
 		sb = new StringBuilder();
 		sb.append(FormatUtil.padString(messageType, 40));
