@@ -22,6 +22,7 @@ public class DTOMapperTest {
 		Assert.assertEquals("toronto-raptors", roster.team.getTeam_id());
 		Assert.assertEquals("São Gonçalo, Brazil", roster.players[8].getBirthplace());
 		Assert.assertEquals("Valančiūnas", roster.players[13].getLast_name());
+		Assert.assertEquals("E'Twaun", roster.players[14].getFirst_name());
 		baseJson.close();
 	}
 
