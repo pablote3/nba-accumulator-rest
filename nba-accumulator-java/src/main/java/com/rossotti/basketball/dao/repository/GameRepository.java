@@ -29,13 +29,17 @@ public class GameRepository {
 	public Game findByDateTeam(LocalDate gameDate, String teamKey) {
 		LocalDateTime fromDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
 		LocalDateTime toDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
-		String sql = 	"select game " +
-						"from Game game " +
+		String sql = 	"select game from Game game " +
 						"inner join game.boxScores boxScores " +
 						"inner join boxScores.team team " +
-						"where game.gameDateTime between '" + fromDateTime + "' and '" + toDateTime +"' " +
-						"and team.teamKey = '" + teamKey + "'";
+						"where game.gameDateTime >= :fromDateTime " +
+						"and game.gameDateTime <= :toDateTime " +
+						"and team.teamKey = :teamKey";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		query.setParameter("fromDateTime", fromDateTime);
+		query.setParameter("toDateTime", toDateTime);
+		query.setParameter("teamKey", teamKey);
+
 		Game findGame = (Game)query.uniqueResult();
 		if (findGame == null) {
 			return new Game(StatusCode.NotFound);
@@ -52,15 +56,23 @@ public class GameRepository {
 	public List<Game> findByDateTeamSeason(LocalDate gameDate, String teamKey) {
 		LocalDateTime fromDateTime = DateTimeUtil.getLocalDateTimeSeasonMin(gameDate);
 		LocalDateTime toDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
-		String sql = 	"select game " +
-						"from Game game " +
+		String sql = 	"select game from Game game " +
 						"left join game.boxScores boxScores " +
 						"inner join boxScores.team team " +
-						"where game.gameDateTime between '" + fromDateTime + "' and '" + toDateTime +"' " +
-						"and game.status in ('" + GameStatus.Completed + "', '" + GameStatus.Scheduled + "') " + 
-						"and team.teamKey = '" + teamKey + "' " +
+						"where game.gameDateTime >= :fromDateTime " +
+						"and game.gameDateTime <= :toDateTime " +
+						"and (game.status = :gameStatus1 " +
+						"or game.status = :gameStatus2) " +
+						"and team.teamKey = :teamKey " +
 						"order by gameDateTime asc";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+
+		query.setParameter("fromDateTime", fromDateTime);
+		query.setParameter("toDateTime", toDateTime);
+		query.setParameter("gameStatus1", GameStatus.Completed);
+		query.setParameter("gameStatus2", GameStatus.Scheduled);
+		query.setParameter("teamKey", teamKey);
+
 		List<Game> findGames = query.list();
 		List<Game> games = new ArrayList<Game>();
 		if (findGames != null) {
@@ -119,17 +131,20 @@ public class GameRepository {
 	@SuppressWarnings("unchecked")
 	public LocalDateTime findPreviousGameDateTimeByDateTeam(LocalDate gameDate, String teamKey) {
 		LocalDateTime gameDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
-		String sql = 	"select game " +
-						"from Game game " +
+		String sql = 	"select game from Game game " +
 						"left join game.boxScores boxScores " +
 						"inner join boxScores.team team " +
-						"where game.gameDateTime <= '" + gameDateTime + "' " +
-						"and game.status = '" + GameStatus.Completed + "' " +
-						"and team.teamKey = '" + teamKey + "' " +
+						"where game.gameDateTime <= :gameDateTime " +
+						"and game.status = :gameStatus " +
+						"and team.teamKey = :teamKey " +
 						"order by gameDateTime desc";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+
+		query.setParameter("gameDateTime", gameDateTime);
+		query.setParameter("gameStatus", GameStatus.Completed);
+		query.setParameter("teamKey", teamKey);
+
 		List<Game> games = query.list();
-		
 		LocalDateTime lastGameDateTime = null;
 		if (games.size() > 0) {
 			lastGameDateTime = games.get(0).getGameDateTime();

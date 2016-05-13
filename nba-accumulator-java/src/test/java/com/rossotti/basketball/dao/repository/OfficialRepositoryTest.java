@@ -24,57 +24,57 @@ public class OfficialRepositoryTest {
 
 	@Test
 	public void findOfficialByName_Found_FromDate() {
-		Official findOfficial = officialRepo.findOfficial("LateCall", "Joe", new LocalDate("2009-07-01"));
+		Official findOfficial = officialRepo.findOfficial("LateCa'll", "Joe", new LocalDate("2009-07-01"));
 		Assert.assertEquals("96", findOfficial.getNumber());
 		Assert.assertTrue(findOfficial.isFound());
 	}
 
 	@Test
 	public void findOfficialByName_Found_ToDate() {
-		Official findOfficial = officialRepo.findOfficial("LateCall", "Joe", new LocalDate("2010-06-30"));
+		Official findOfficial = officialRepo.findOfficial("LateCa'll", "Joe", new LocalDate("2010-06-30"));
 		Assert.assertEquals("96", findOfficial.getNumber());
 		Assert.assertTrue(findOfficial.isFound());
 	}
 
 	@Test
 	public void findOfficialByName_NotFound_LastName() {
-		Official findOfficial = officialRepo.findOfficial("LateCalls", "Joe", new LocalDate("2009-07-01"));
+		Official findOfficial = officialRepo.findOfficial("LateCa'lls", "Joe", new LocalDate("2009-07-01"));
 		Assert.assertTrue(findOfficial.isNotFound());
 	}
 
 	@Test
 	public void findOfficialByName_NotFound_FirstName() {
-		Official findOfficial = officialRepo.findOfficial("LateCall", "Joey", new LocalDate("2009-07-01"));
+		Official findOfficial = officialRepo.findOfficial("LateCa'll", "Joey", new LocalDate("2009-07-01"));
 		Assert.assertTrue(findOfficial.isNotFound());
 	}
 
 	@Test
 	public void findOfficialByName_NotFound_BeforeAsOfDate() {
-		Official findOfficial = officialRepo.findOfficial("LateCall", "Joe", new LocalDate("2009-06-30"));
+		Official findOfficial = officialRepo.findOfficial("LateCa'll", "Joe", new LocalDate("2009-06-30"));
 		Assert.assertTrue(findOfficial.isNotFound());
 	}
 
 	@Test
 	public void findOfficialByName_NotFound_AfterAsOfDate() {
-		Official findOfficial = officialRepo.findOfficial("LateCall", "Joe", new LocalDate("2010-07-01"));
+		Official findOfficial = officialRepo.findOfficial("LateCa'll", "Joe", new LocalDate("2010-07-01"));
 		Assert.assertTrue(findOfficial.isNotFound());
 	}
 
 	@Test
 	public void findOfficialsByName() {
-		List<Official> findOfficials = officialRepo.findOfficials("MissedCall","Mike");
+		List<Official> findOfficials = officialRepo.findOfficials("MissedCa'll","Mike");
 		Assert.assertEquals(2, findOfficials.size());
 	}
 
 	@Test
 	public void findOfficialsByName_NotFound_LastName() {
-		List<Official> findOfficials = officialRepo.findOfficials("MissedCalls", "Mike");
+		List<Official> findOfficials = officialRepo.findOfficials("MissedCa'lls", "Mike");
 		Assert.assertEquals(0, findOfficials.size());
 	}
 
 	@Test
 	public void findOfficialsByName_NotFound_FirstName() {
-		List<Official> findOfficials = officialRepo.findOfficials("MissedCall", "Mikey");
+		List<Official> findOfficials = officialRepo.findOfficials("MissedCa'll", "Mikey");
 		Assert.assertEquals(0, findOfficials.size());
 	}
 
@@ -113,8 +113,8 @@ public class OfficialRepositoryTest {
 
 	@Test
 	public void updateOfficial_Updated() {
-		Official updateOfficial = officialRepo.updateOfficial(updateMockOfficial("MissedCall", "Mike", new LocalDate("2009-07-01"), new LocalDate("2010-06-30")));
-		Official findOfficial = officialRepo.findOfficial("MissedCall", "Mike", new LocalDate("2009-07-01"));
+		Official updateOfficial = officialRepo.updateOfficial(updateMockOfficial("MissedCa'll", "Mike", new LocalDate("2009-07-01"), new LocalDate("2010-06-30")));
+		Official findOfficial = officialRepo.findOfficial("MissedCa'll", "Mike", new LocalDate("2009-07-01"));
 		Assert.assertTrue(updateOfficial.isUpdated());
 		Assert.assertEquals("998", findOfficial.getNumber());
 	}
@@ -127,7 +127,7 @@ public class OfficialRepositoryTest {
 
 	@Test(expected=DataIntegrityViolationException.class)
 	public void updateOfficial_MissingRequiredData() {
-		Official updateOfficial = updateMockOfficial("MissedCall", "Mike", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"));
+		Official updateOfficial = updateMockOfficial("MissedCa'll", "Mike", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"));
 		updateOfficial.setNumber(null);
 		officialRepo.updateOfficial(updateOfficial);
 	}

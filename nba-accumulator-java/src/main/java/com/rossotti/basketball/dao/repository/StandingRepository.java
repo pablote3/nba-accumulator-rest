@@ -20,12 +20,14 @@ public class StandingRepository {
 	private SessionFactory sessionFactory;
 
 	public Standing findStanding(String teamKey, LocalDate asOfDate) {
-		String sql = 	"select s " +
-						"from Standing s " +
+		String sql = 	"select s from Standing s " +
 						"inner join s.team t " +
-						"where t.teamKey = '" + teamKey + "' " +
-						"and s.standingDate = '" + asOfDate + "'";
+						"where t.teamKey = :teamKey " +
+						"and s.standingDate = :asOfDate";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		query.setParameter("teamKey", teamKey);
+		query.setParameter("asOfDate", asOfDate);
+
 		Standing standing = (Standing)query.uniqueResult();
 		if (standing == null) {
 			standing = new Standing(StatusCode.NotFound);

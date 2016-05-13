@@ -26,45 +26,45 @@ public class TeamRepositoryTest {
 
 	@Test
 	public void findTeamByKey_Found_FromDate() {
-		Team findTeam = teamRepo.findTeam("harlem-globetrotters", new LocalDate("2009-07-01"));
-		Assert.assertEquals("Harlem Globetrotters", findTeam.getFullName());
+		Team findTeam = teamRepo.findTeam("harlem-globetrotter's", new LocalDate("2009-07-01"));
+		Assert.assertEquals("Harlem Globetrotter's", findTeam.getFullName());
 		Assert.assertTrue(findTeam.isFound());
 	}
 
 	@Test
 	public void findTeamByKey_Found_ToDate() {
-		Team findTeam = teamRepo.findTeam("harlem-globetrotters", new LocalDate("2010-06-30"));
-		Assert.assertEquals("Harlem Globetrotters", findTeam.getFullName());
+		Team findTeam = teamRepo.findTeam("harlem-globetrotter's", new LocalDate("2010-06-30"));
+		Assert.assertEquals("Harlem Globetrotter's", findTeam.getFullName());
 		Assert.assertTrue(findTeam.isFound());
 	}
 
 	@Test
 	public void findTeamByKey_NotFound_TeamKey() {
-		Team findTeam = teamRepo.findTeam("harlem-hoopers", new LocalDate("2009-07-01"));
+		Team findTeam = teamRepo.findTeam("harlem-hooper's", new LocalDate("2009-07-01"));
 		Assert.assertTrue(findTeam.isNotFound());
 	}
 
 	@Test
 	public void findTeamByKey_NotFound_BeforeAsOfDate() {
-		Team findTeam = teamRepo.findTeam("harlem-globetrotters", new LocalDate("2009-06-30"));
+		Team findTeam = teamRepo.findTeam("harlem-globetrotter's", new LocalDate("2009-06-30"));
 		Assert.assertTrue(findTeam.isNotFound());
 	}
 
 	@Test
 	public void findTeamByKey_NotFound_AfterAsOfDate() {
-		Team findTeam = teamRepo.findTeam("harlem-globetrotters", new LocalDate("2010-07-01"));
+		Team findTeam = teamRepo.findTeam("harlem-globetrotter's", new LocalDate("2010-07-01"));
 		Assert.assertTrue(findTeam.isNotFound());
 	}
 
 	@Test
 	public void findTeamsByKey_Found() {
-		List<Team> teams = teamRepo.findTeams("st-louis-bombers");
+		List<Team> teams = teamRepo.findTeams("st-louis-bomber's");
 		Assert.assertEquals(2, teams.size());
 	}
 
 	@Test
 	public void findTeamsByKey_NotFound() {
-		List<Team> teams = teamRepo.findTeams("st-louis-bombbers");
+		List<Team> teams = teamRepo.findTeams("st-louis-bombber's");
 		Assert.assertEquals(0, teams.size());
 	}
 	
@@ -110,19 +110,19 @@ public class TeamRepositoryTest {
 
 	@Test
 	public void updateTeam() {
-		teamRepo.updateTeam(updateMockTeam("st-louis-bombers", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"), "St. Louis Bombiers"));
-		Team team = teamRepo.findTeam("st-louis-bombers", new LocalDate("2010-05-30"));
-		Assert.assertEquals("St. Louis Bombiers", team.getFullName());
+		teamRepo.updateTeam(updateMockTeam("st-louis-bomber's", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"), "St. Louis Bombier's"));
+		Team team = teamRepo.findTeam("st-louis-bomber's", new LocalDate("2010-05-30"));
+		Assert.assertEquals("St. Louis Bombier's", team.getFullName());
 	}
 
 	@Test
 	public void updateTeam_NotFound() {
-		teamRepo.updateTeam(updateMockTeam("st-louis-bombs", new LocalDate("2009-07-01"), new LocalDate("2010-07-01"), "St. Louis Bombiers"));
+		teamRepo.updateTeam(updateMockTeam("st-louis-bomb's", new LocalDate("2009-07-01"), new LocalDate("2010-07-01"), "St. Louis Bombier's"));
 	}
 
 	@Test(expected=DataIntegrityViolationException.class)
 	public void updateTeam_MissingRequiredData() {
-		Team team = updateMockTeam("st-louis-bombers", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"), null);
+		Team team = updateMockTeam("st-louis-bomber's", new LocalDate("2009-07-01"), new LocalDate("2010-06-30"), null);
 		teamRepo.updateTeam(team);
 	}
 

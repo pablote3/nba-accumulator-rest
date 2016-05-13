@@ -3,8 +3,8 @@ package com.rossotti.basketball.dao.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -20,12 +20,17 @@ public class OfficialRepository {
 	private SessionFactory sessionFactory;
 
 	public Official findOfficial(String lastName, String firstName, LocalDate asOfDate) {
-		Official official = (Official)getSessionFactory().getCurrentSession().createCriteria(Official.class)
-			.add(Restrictions.eq("lastName", lastName))
-			.add(Restrictions.eq("firstName", firstName))
-			.add(Restrictions.le("fromDate", asOfDate))
-			.add(Restrictions.ge("toDate", asOfDate))
-			.uniqueResult();
+		String sql = 	"from Official " +
+						"where lastName = :lastName " +
+						"and firstName = :firstName " +
+						"and fromDate <= :asOfDate " +
+						"and toDate >= :asOfDate";
+		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		query.setParameter("lastName", lastName);
+		query.setParameter("firstName", firstName);
+		query.setParameter("asOfDate", asOfDate);
+
+		Official official = (Official)query.uniqueResult();
 		if (official == null) {
 			official = new Official(StatusCode.NotFound);
 		}
@@ -37,10 +42,14 @@ public class OfficialRepository {
 
 	@SuppressWarnings("unchecked")
 	public List<Official> findOfficials(String lastName, String firstName) {
-		List<Official> officials = getSessionFactory().getCurrentSession().createCriteria(Official.class)
-			.add(Restrictions.eq("lastName", lastName))
-			.add(Restrictions.eq("firstName", firstName))
-			.list();
+		String sql = 	"from Official " +
+						"where lastName = :lastName " +
+						"and firstName = :firstName";
+		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		query.setParameter("lastName", lastName);
+		query.setParameter("firstName", firstName);
+
+		List<Official> officials = query.list();
 		if (officials == null) {
 			officials = new ArrayList<Official>();
 		}
@@ -49,10 +58,13 @@ public class OfficialRepository {
 
 	@SuppressWarnings("unchecked")
 	public List<Official> findOfficials(LocalDate asOfDate) {
-		List<Official> officials = getSessionFactory().getCurrentSession().createCriteria(Official.class)
-			.add(Restrictions.le("fromDate", asOfDate))
-			.add(Restrictions.ge("toDate", asOfDate))
-			.list();
+		String sql = 	"from Official " +
+						"where fromDate <= :asOfDate " +
+						"and toDate >= :asOfDate";
+		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		query.setParameter("asOfDate", asOfDate);
+
+		List<Official> officials = query.list();
 		if (officials == null) {
 			officials = new ArrayList<Official>();
 		}

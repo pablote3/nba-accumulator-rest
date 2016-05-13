@@ -3,8 +3,8 @@ package com.rossotti.basketball.dao.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -20,11 +20,16 @@ public class PlayerRepository {
 	private SessionFactory sessionFactory;
 
 	public Player findPlayer(String lastName, String firstName, LocalDate birthdate) {
-		Player player = (Player)getSessionFactory().getCurrentSession().createCriteria(Player.class)
-			.add(Restrictions.eq("lastName", lastName))
-			.add(Restrictions.eq("firstName", firstName))
-			.add(Restrictions.eq("birthdate", birthdate))
-			.uniqueResult();
+		String sql = 	"from Player " +
+						"where lastName = :lastName " +
+						"and firstName = :firstName " +
+						"and birthdate = :birthdate";
+		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		query.setParameter("lastName", lastName);
+		query.setParameter("firstName", firstName);
+		query.setParameter("birthdate", birthdate);
+
+		Player player = (Player)query.uniqueResult();
 		if (player == null) {
 			player = new Player(StatusCode.NotFound);
 		}
@@ -36,10 +41,14 @@ public class PlayerRepository {
 
 	@SuppressWarnings("unchecked")
 	public List<Player> findPlayers(String lastName, String firstName) {
-		List<Player> players = getSessionFactory().getCurrentSession().createCriteria(Player.class)
-			.add(Restrictions.eq("lastName", lastName))
-			.add(Restrictions.eq("firstName", firstName))
-			.list();
+		String sql = 	"from Player " +
+						"where lastName = :lastName " +
+						"and firstName = :firstName";
+		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		query.setParameter("lastName", lastName);
+		query.setParameter("firstName", firstName);
+
+		List<Player> players = query.list();
 		if (players == null) {
 			players = new ArrayList<Player>();
 		}

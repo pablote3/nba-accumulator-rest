@@ -25,27 +25,27 @@ public class StandingRepositoryTest {
 
 	@Test
 	public void findStandingByTeamAsOfDate_Found() {
-		Standing findStanding = standingRepo.findStanding("chicago-zephyrs", new LocalDate("2015-10-30"));
+		Standing findStanding = standingRepo.findStanding("chicago-zephyr's", new LocalDate("2015-10-30"));
 		Assert.assertEquals("1-0", findStanding.getLastFive());
-		Assert.assertEquals("Chicago Zephyrs", findStanding.getTeam().getFullName());
+		Assert.assertEquals("Chicago Zephyr's", findStanding.getTeam().getFullName());
 		Assert.assertTrue(findStanding.isFound());
 	}
 
 	@Test
 	public void findStandingByTeamAsOfDate_NotFound_Team() {
-		Standing findStanding = standingRepo.findStanding("chicago-zephyrsss", new LocalDate("2015-10-30"));
+		Standing findStanding = standingRepo.findStanding("chicago-zephyr'sss", new LocalDate("2015-10-30"));
 		Assert.assertTrue(findStanding.isNotFound());
 	}
 
 	@Test
 	public void findStandingByTeamAsOfDate_NotFound_BeforeAsOfDate() {
-		Standing findStanding = standingRepo.findStanding("chicago-zephyrs", new LocalDate("2015-10-29"));
+		Standing findStanding = standingRepo.findStanding("chicago-zephyr's", new LocalDate("2015-10-29"));
 		Assert.assertTrue(findStanding.isNotFound());
 	}
 
 	@Test
 	public void findStandingByTeamAsOfDate_NotFound_AfterAsOfDate() {
-		Standing findStanding = standingRepo.findStanding("chicago-zephyrs", new LocalDate("2015-11-01"));
+		Standing findStanding = standingRepo.findStanding("chicago-zephyr's", new LocalDate("2015-11-01"));
 		Assert.assertTrue(findStanding.isNotFound());
 	}
 
@@ -63,14 +63,14 @@ public class StandingRepositoryTest {
 
 	@Test
 	public void createStanding_Created() {
-		Standing createStanding = standingRepo.createStanding(createMockStanding("chicago-zephyrs", new LocalDate("2012-07-01")));
-		Standing findStanding = standingRepo.findStanding("chicago-zephyrs", new LocalDate("2012-07-01"));
+		Standing createStanding = standingRepo.createStanding(createMockStanding("chicago-zephyr's", new LocalDate("2012-07-01")));
+		Standing findStanding = standingRepo.findStanding("chicago-zephyr's", new LocalDate("2012-07-01"));
 		Assert.assertTrue(createStanding.isCreated());
 		Assert.assertTrue(findStanding.getConferenceWins().equals((short)7));
 	}
 
 	public void createStanding_OverlappingDates() {
-		Standing createStanding = standingRepo.createStanding(createMockStanding("chicago-zephyrs", new LocalDate("2015-10-30")));
+		Standing createStanding = standingRepo.createStanding(createMockStanding("chicago-zephyr's", new LocalDate("2015-10-30")));
 		Assert.assertTrue(createStanding.isFound());
 	}
 
@@ -83,20 +83,20 @@ public class StandingRepositoryTest {
 
 	@Test
 	public void updateStanding() {
-		Standing updateStanding = updateMockStanding("st-louis-bombers", new LocalDate("2015-10-31"), "10th");
+		Standing updateStanding = updateMockStanding("st-louis-bomber's", new LocalDate("2015-10-31"), "10th");
 		standingRepo.updateStanding(updateStanding);
-		Standing findStanding = standingRepo.findStanding("st-louis-bombers", new LocalDate("2015-10-31"));
+		Standing findStanding = standingRepo.findStanding("st-louis-bomber's", new LocalDate("2015-10-31"));
 		Assert.assertTrue(findStanding.getRank().equals((short)10));
 	}
 
 	@Test
 	public void updateStanding_NotFound() {
-		standingRepo.updateStanding(updateMockStanding("st-louis-bombs", new LocalDate("2015-10-31"), "10th"));
+		standingRepo.updateStanding(updateMockStanding("st-louis-bomb's", new LocalDate("2015-10-31"), "10th"));
 	}
 
 	@Test(expected=DataIntegrityViolationException.class)
 	public void updateStanding_MissingRequiredData() {
-		Standing standing = updateMockStanding("st-louis-bombers", new LocalDate("2015-10-31"), null);
+		Standing standing = updateMockStanding("st-louis-bomber's", new LocalDate("2015-10-31"), null);
 		standingRepo.updateStanding(standing);
 	}
 

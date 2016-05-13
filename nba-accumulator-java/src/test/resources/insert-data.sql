@@ -1,23 +1,23 @@
-insert into team VALUES(1, 'CHI', 'Chicago', 'East', 'Central', 'Chicago', '2009-07-01', 'Chicago Zephyrs', 'Zephyrs', 'Chicago Coliseum', 'IL', 'chicago-zephyrs', '9999-12-31');
-insert into team VALUES(2, 'HAR', 'Harlem', 'East', 'Atlantic', 'Harlem', '2009-07-01', 'Harlem Globetrotters', 'Globetrotters', 'Rucker Park', 'NY', 'harlem-globetrotters', '2010-06-30');
-insert into team VALUES(3, 'STL', 'St. Louis', 'East', 'Southwest', 'St. Louis', '2009-07-01', 'St. Louis Bombers', 'Bombers', 'St. Louis Arena', 'MO', 'st-louis-bombers', '2010-06-30');
+insert into team VALUES(1, 'CHI', 'Chicago', 'East', 'Central', 'Chicago', '2009-07-01', 'Chicago Zephyr''s', 'Zephyrs', 'Chicago Coliseum', 'IL', 'chicago-zephyr''s', '9999-12-31');
+insert into team VALUES(2, 'HAR', 'Harlem', 'East', 'Atlantic', 'Harlem', '2009-07-01', 'Harlem Globetrotter''s', 'Globetrotter''s', 'Rucker Park', 'NY', 'harlem-globetrotter''s', '2010-06-30');
+insert into team VALUES(3, 'STL', 'St. Louis', 'East', 'Southwest', 'St. Louis', '2009-07-01', 'St. Louis Bomber''s', 'Bomber''s', 'St. Louis Arena', 'MO', 'st-louis-bomber''s', '2010-06-30');
 insert into team VALUES(4, 'SAL', 'Salinas', 'West', 'Pacific', 'Salinas', '2010-07-01', 'Salinas Cowboys', 'Cowboys', 'Salinas High School', 'CA', 'salinas-cowboys', '9999-12-31');
 insert into team VALUES(5, 'STL', 'Baltimore', 'East', 'Southeast', 'Baltimore', '2005-07-01', 'Baltimore Bullets', 'Bullets', 'Baltimore Coliseum', 'MD', 'baltimore-bullets', '2006-06-30');
 insert into team VALUES(6, 'CLE', 'Relels', 'East', 'Central', 'Cleveland', '2010-07-01', 'Cleveland Rebels', 'Rebels', 'Cleveland Arena', 'OH', 'cleveland-rebels', '9999-12-31');
 insert into team VALUES(7, 'ROC', 'Rochester', 'East', 'Atlantic', 'Rochester', '2008-07-01', 'Rochester Royals', 'Royals', 'Edgerton Park Arena', 'NY', 'rochester-royals', '2009-06-30');
-insert into team VALUES(8, 'STL', 'St. Louis', 'East', 'Southwest', 'St. Louis', '2010-07-01', 'St. Louis Bombers', 'Bombers', 'St. Louis Multiplex', 'MO', 'st-louis-bombers', '2011-06-30');
+insert into team VALUES(8, 'STL', 'St. Louis', 'East', 'Southwest', 'St. Louis', '2010-07-01', 'St. Louis Bomber''s', 'Bomber''s', 'St. Louis Multiplex', 'MO', 'st-louis-bomber''s', '2011-06-30');
 insert into team VALUES(10, 'DET', 'Detroit', 'East', 'Central', 'Detroit', '2010-07-01', 'Detroit Pistons', 'Pistons', 'Palace of Auburn Hills', 'MI', 'detroit-pistons', '9999-12-31');
 
-insert into official VALUES(1, 'Joe', '2009-07-01', 'LateCall', '96', '2010-06-30');
-insert into official VALUES(2, 'Mike', '2009-07-01', 'MissedCall', '97', '2010-06-30');
-insert into official VALUES(3, 'Mike', '2010-07-01', 'MissedCall', '98', '2011-06-30');
+insert into official VALUES(1, 'Joe', '2009-07-01', 'LateCa''ll', '96', '2010-06-30');
+insert into official VALUES(2, 'Mike', '2009-07-01', 'MissedCa''ll', '97', '2010-06-30');
+insert into official VALUES(3, 'Mike', '2010-07-01', 'MissedCa''ll', '98', '2011-06-30');
 insert into official VALUES(4, 'Hefe', '2005-07-01', 'QuestionableCall', '99', '2006-06-30');
 insert into official VALUES(5, 'Limo', '2005-07-01', 'TerribleCall', '100', '2006-06-30');
 insert into official VALUES(10, 'Zach', '2010-10-30', 'Zarba', '28', '9999-12-31');
 insert into official VALUES(11, 'Brian', '2010-04-25', 'Forte', '100', '9999-12-31');
 insert into official VALUES(12, 'Eli', '2010-11-05', 'Roe', '45', '9999-12-31');
 
-insert into player VALUES(1, '2002-02-20', 'Sacramento, CA, USA', 'Luke Puzdrakiewicz', 'Luke', 78, 'Puzdrakiewicz', 175);
+insert into player VALUES(1, '2002-02-20', 'Sacramento, CA, USA', 'Luke Puzdrakiew''icz', 'Luke', 78, 'Puzdrakiew''icz', 175);
 insert into player VALUES(2, '1966-06-02', 'Sacramento, CA, USA', 'Thad Puzdrakiewicz', 'Thad', 81, 'Puzdrakiewicz', 210);
 insert into player VALUES(3, '2000-03-13', 'Sacramento, CA, USA', 'Thad Puzdrakiewicz', 'Thad', 79, 'Puzdrakiewicz', 180);
 insert into player VALUES(4, '1969-09-08', 'Sacramento, CA, USA', 'Michelle Puzdrakiewicz', 'Michelle', 75, 'Puzdrakiewicz', 170);

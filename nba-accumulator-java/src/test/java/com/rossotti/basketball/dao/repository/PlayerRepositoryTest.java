@@ -24,27 +24,27 @@ public class PlayerRepositoryTest {
 
 	@Test
 	public void findPlayerByName_Found_MatchBirthdate() {
-		Player findPlayer = playerRepo.findPlayer("Puzdrakiewicz", "Luke", new LocalDate("2002-02-20"));
-		Assert.assertEquals("Luke Puzdrakiewicz", findPlayer.getDisplayName());
+		Player findPlayer = playerRepo.findPlayer("Puzdrakiew'icz", "Luke", new LocalDate("2002-02-20"));
+		Assert.assertEquals("Luke Puzdrakiew'icz", findPlayer.getDisplayName());
 		Assert.assertEquals(2, findPlayer.getRosterPlayers().size());
 		Assert.assertTrue(findPlayer.isFound());
 	}
 
 	@Test
 	public void findPlayerByName_NotFound_LastName() {
-		Player findPlayer = playerRepo.findPlayer("Puzdrakiewic", "Luke", new LocalDate("2002-02-20"));
+		Player findPlayer = playerRepo.findPlayer("Puzdrakiew''icz", "Luke", new LocalDate("2002-02-20"));
 		Assert.assertTrue(findPlayer.isNotFound());
 	}
 
 	@Test
 	public void findPlayerByName_NotFound_FirstName() {
-		Player findPlayer = playerRepo.findPlayer("Puzdrakiewicz", "Luk", new LocalDate("2002-02-20"));
+		Player findPlayer = playerRepo.findPlayer("Puzdrakiew'icz", "Luk", new LocalDate("2002-02-20"));
 		Assert.assertTrue(findPlayer.isNotFound());
 	}
 
 	@Test
 	public void findPlayerByName_NotFound_Birthdate() {
-		Player findPlayer = playerRepo.findPlayer("Puzdrakiewicz", "Luke", new LocalDate("2002-02-21"));
+		Player findPlayer = playerRepo.findPlayer("Puzdrakiew'icz", "Luke", new LocalDate("2002-02-21"));
 		Assert.assertTrue(findPlayer.isNotFound());
 	}
 
@@ -58,7 +58,7 @@ public class PlayerRepositoryTest {
 
 	@Test
 	public void findPlayersByName_Found() {
-		List<Player> findPlayers = playerRepo.findPlayers("Puzdrakiewicz","Luke");
+		List<Player> findPlayers = playerRepo.findPlayers("Puzdrakiew'icz","Luke");
 		Assert.assertEquals(1, findPlayers.size());
 	}
 

@@ -27,90 +27,90 @@ public class RosterPlayerRepositoryTest {
 
 	@Test
 	public void findRosterPlayerByNameBirthdateAsOfDate_Found() {
-		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiewicz", "Luke", new LocalDate("2002-02-20"), new LocalDate("2009-10-30"));
-		Assert.assertEquals("Luke Puzdrakiewicz", findRosterPlayer.getPlayer().getDisplayName());
+		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiew'icz", "Luke", new LocalDate("2002-02-20"), new LocalDate("2009-10-30"));
+		Assert.assertEquals("Luke Puzdrakiew'icz", findRosterPlayer.getPlayer().getDisplayName());
 		Assert.assertEquals(Position.PG, findRosterPlayer.getPosition());
 		Assert.assertTrue(findRosterPlayer.isFound());
 	}
 
 	@Test
 	public void findRosterPlayerByNameBirthdateAsOfDate_NotFound_LastName() {
-		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiewic", "Luke", new LocalDate("2002-02-20"), new LocalDate("2009-10-30"));
+		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiew'ic", "Luke", new LocalDate("2002-02-20"), new LocalDate("2009-10-30"));
 		Assert.assertTrue(findRosterPlayer.isNotFound());
 	}
 
 	@Test
 	public void findRosterPlayerByNameBirthdateAsOfDate_NotFound_FirstName() {
-		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiewicz", "Luk", new LocalDate("2002-02-20"), new LocalDate("2009-10-30"));
+		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiew'icz", "Luk", new LocalDate("2002-02-20"), new LocalDate("2009-10-30"));
 		Assert.assertTrue(findRosterPlayer.isNotFound());
 	}
 
 	@Test
 	public void findRosterPlayerByNameBirthdateAsOfDate_NotFound_Birthdate() {
-		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiewicz", "Luke", new LocalDate("2002-02-21"), new LocalDate("2009-10-30"));
+		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiew'icz", "Luke", new LocalDate("2002-02-21"), new LocalDate("2009-10-30"));
 		Assert.assertTrue(findRosterPlayer.isNotFound());
 	}
 
 	@Test
 	public void findRosterPlayerByNameBirthdateAsOfDate_NotFound_FromDate() {
-		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiewicz", "Luke", new LocalDate("2002-02-20"), new LocalDate("2009-10-29"));
+		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiew'icz", "Luke", new LocalDate("2002-02-20"), new LocalDate("2009-10-29"));
 		Assert.assertTrue(findRosterPlayer.isNotFound());
 	}
 
 	@Test
 	public void findRosterPlayerByNameBirthdateAsOfDate_NotFound_ToDate() {
-		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiewicz", "Luke", new LocalDate("2002-02-20"), new LocalDate("2009-11-04"));
+		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiew'icz", "Luke", new LocalDate("2002-02-20"), new LocalDate("2009-11-04"));
 		Assert.assertTrue(findRosterPlayer.isNotFound());
 	}
 
 	@Test
 	public void findRosterPlayerByNameTeamAsOfDate_Found() {
-		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiewicz", "Luke", "salinas-cowboys", new LocalDate("2009-10-30"));
-		Assert.assertEquals("Luke Puzdrakiewicz", findRosterPlayer.getPlayer().getDisplayName());
+		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiew'icz", "Luke", "salinas-cowboys", new LocalDate("2009-10-30"));
+		Assert.assertEquals("Luke Puzdrakiew'icz", findRosterPlayer.getPlayer().getDisplayName());
 		Assert.assertEquals(Position.PG, findRosterPlayer.getPosition());
-		Assert.assertEquals("SAL",  findRosterPlayer.getTeam().getAbbr());
+		Assert.assertEquals("SAL", findRosterPlayer.getTeam().getAbbr());
 		Assert.assertTrue(findRosterPlayer.isFound());
 	}
 
 	@Test
 	public void findRosterPlayerByNameTeamAsOfDate_NotFound_LastName() {
-		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiewic", "Luke", "chicago-zephyrs", new LocalDate("2009-10-30"));
+		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiew'ic", "Luke", "chicago-zephyrs", new LocalDate("2009-10-30"));
 		Assert.assertTrue(findRosterPlayer.isNotFound());
 	}
 
 	@Test
 	public void findRosterPlayerByNameTeamAsOfDate_NotFound_FirstName() {
-		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiewicz", "Luk", "chicago-zephyrs", new LocalDate("2009-10-30"));
+		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiew'icz", "Luk", "chicago-zephyrs", new LocalDate("2009-10-30"));
 		Assert.assertTrue(findRosterPlayer.isNotFound());
 	}
 
 	@Test
 	public void findRosterPlayerByNameTeamAsOfDate_NotFound_TeamKey() {
-		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiewicz", "Luke", "chicago-zephers", new LocalDate("2009-10-30"));
+		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiew'icz", "Luke", "chicago-zephers", new LocalDate("2009-10-30"));
 		Assert.assertTrue(findRosterPlayer.isNotFound());
 	}
 	
 	@Test
 	public void findRosterPlayerByNameTeamAsOfDate_NotFound_FromDate() {
-		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiewicz", "Luke", "chicago-zephyrs", new LocalDate("2009-10-29"));
+		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiew'icz", "Luke", "chicago-zephyrs", new LocalDate("2009-10-29"));
 		Assert.assertTrue(findRosterPlayer.isNotFound());
 	}
 
 	@Test
 	public void findRosterPlayerByNameTeamAsOfDate_NotFound_ToDate() {
-		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiewicz", "Luke", "chicago-zephyrs", new LocalDate("2009-11-04"));
+		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiew'icz", "Luke", "chicago-zephyrs", new LocalDate("2009-11-04"));
 		Assert.assertTrue(findRosterPlayer.isNotFound());
 	}
 
 	@Test
 	public void findRosterPlayersByPlayer_Found() {
-		List<RosterPlayer> findRosterPlayers = rosterPlayerRepo.findRosterPlayers("Puzdrakiewicz", "Luke", new LocalDate("2002-02-20"));
+		List<RosterPlayer> findRosterPlayers = rosterPlayerRepo.findRosterPlayers("Puzdrakiew'icz", "Luke", new LocalDate("2002-02-20"));
 		Assert.assertEquals(2, findRosterPlayers.size());
 	}
 
 	@Test
 	public void findRosterPlayersByPlayer_NotFound() {
-		List<RosterPlayer> findRosterPlayers = rosterPlayerRepo.findRosterPlayers("Puzdrakiewicz", "Luke", new LocalDate("2002-02-21"));
+		List<RosterPlayer> findRosterPlayers = rosterPlayerRepo.findRosterPlayers("Puzdrakiew'icz", "Luke", new LocalDate("2002-02-21"));
 		Assert.assertEquals(0, findRosterPlayers.size());
 	}
 
@@ -132,7 +132,7 @@ public class RosterPlayerRepositoryTest {
 		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiewicz", "Thad", new LocalDate("1966-06-02"), new LocalDate("2009-11-05"));
 		Assert.assertTrue(createRosterPlayer.isCreated());
 		Assert.assertEquals("Puzdrakiewicz", findRosterPlayer.getPlayer().getLastName());
-		Assert.assertEquals("Harlem Globetrotters", findRosterPlayer.getTeam().getFullName());
+		Assert.assertEquals("Harlem Globetrotter's", findRosterPlayer.getTeam().getFullName());
 		Assert.assertEquals(Position.C, findRosterPlayer.getPosition());
 	}
 

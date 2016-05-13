@@ -20,15 +20,19 @@ public class RosterPlayerRepository {
 	private SessionFactory sessionFactory;
 
 	public RosterPlayer findRosterPlayer(String lastName, String firstName, LocalDate birthdate, LocalDate asOfDate) {
-		String sql = 	"select rp " +
-						"from RosterPlayer rp " +
+		String sql = 	"select rp from RosterPlayer rp " +
 						"inner join rp.player p " +
-						"where p.lastName = '" + lastName + "' " +
-						"and p.firstName = '" + firstName + "' " +
-						"and p.birthdate = '" + birthdate + "' " +
-						"and rp.fromDate <= '" + asOfDate + "' " +
-						"and rp.toDate >= '" + asOfDate + "' ";
+						"where p.lastName = :lastName " +
+						"and p.firstName = :firstName " +
+						"and p.birthdate = :birthdate " +
+						"and rp.fromDate <= :asOfDate " +
+						"and rp.toDate >= :asOfDate";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		query.setParameter("lastName", lastName);
+		query.setParameter("firstName", firstName);
+		query.setParameter("birthdate", birthdate);
+		query.setParameter("asOfDate", asOfDate);
+
 		RosterPlayer rosterPlayer = (RosterPlayer)query.uniqueResult();
 		if (rosterPlayer == null) {
 			rosterPlayer = new RosterPlayer(StatusCode.NotFound);
@@ -40,16 +44,20 @@ public class RosterPlayerRepository {
 	}
 
 	public RosterPlayer findRosterPlayer(String lastName, String firstName, String teamKey, LocalDate asOfDate) {
-		String sql = 	"select rp " +
-						"from RosterPlayer rp " +
+		String sql = 	"select rp from RosterPlayer rp " +
 						"inner join rp.player p " +
 						"inner join rp.team t " +
-						"where p.lastName = '" + lastName + "' " +
-						"and p.firstName = '" + firstName + "' " +
-						"and t.teamKey = '" + teamKey + "' " +
-						"and rp.fromDate <= '" + asOfDate + "' " +
-						"and rp.toDate >= '" + asOfDate + "'";
+						"where p.lastName = :lastName " +
+						"and p.firstName = :firstName " +
+						"and t.teamKey = :teamKey " +
+						"and rp.fromDate <= :asOfDate " +
+						"and rp.toDate >= :asOfDate";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		query.setParameter("lastName", lastName);
+		query.setParameter("firstName", firstName);
+		query.setParameter("teamKey", teamKey);
+		query.setParameter("asOfDate", asOfDate);
+
 		RosterPlayer rosterPlayer = (RosterPlayer)query.uniqueResult();
 		if (rosterPlayer == null) {
 			rosterPlayer = new RosterPlayer(StatusCode.NotFound);
@@ -62,13 +70,16 @@ public class RosterPlayerRepository {
 
 	@SuppressWarnings("unchecked")
 	public List<RosterPlayer> findRosterPlayers(String lastName, String firstName, LocalDate birthdate) {
-		String sql = 	"select rp " +
-				"from RosterPlayer rp " +
-				"inner join rp.player p " +
-				"where p.lastName = '" + lastName + "' " +
-				"and p.firstName = '" + firstName + "' " +
-				"and p.birthdate = '" + birthdate + "'";
+		String sql = 	"select rp from RosterPlayer rp " +
+						"inner join rp.player p " +
+						"where p.lastName = :lastName " +
+						"and p.firstName = :firstName " +
+						"and p.birthdate = :birthdate ";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		query.setParameter("lastName", lastName);
+		query.setParameter("firstName", firstName);
+		query.setParameter("birthdate", birthdate);
+
 		List<RosterPlayer> rosterPlayers = (List<RosterPlayer>)query.list();
 		if (rosterPlayers == null) {
 			rosterPlayers = new ArrayList<RosterPlayer>();
@@ -78,13 +89,16 @@ public class RosterPlayerRepository {
 
 	@SuppressWarnings("unchecked")
 	public List<RosterPlayer> findRosterPlayers(String teamKey, LocalDate asOfDate) {
-		String sql = 	"select rp " +
-						"from RosterPlayer rp " +
+		String sql = 	"select rp from RosterPlayer rp " +
+						"inner join rp.player p " +
 						"inner join rp.team t " +
-						"where t.teamKey = '" + teamKey + "' " +
-						"and rp.fromDate <= '" + asOfDate + "' " +
-						"and rp.toDate >= '" + asOfDate + "' ";
+						"where t.teamKey = :teamKey " +
+						"and rp.fromDate <= :asOfDate " +
+						"and rp.toDate >= :asOfDate";
 		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		query.setParameter("teamKey", teamKey);
+		query.setParameter("asOfDate", asOfDate);
+
 		List<RosterPlayer> rosterPlayers = (List<RosterPlayer>)query.list();
 		if (rosterPlayers == null) {
 			rosterPlayers = new ArrayList<RosterPlayer>();
