@@ -33,8 +33,8 @@ import com.rossotti.basketball.dao.pub.PubStandings;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
-@Path("/score/roster")
-public class StandingsResource {
+@Path("/rank")
+public class RankResource {
 	@Autowired
 	private RestClientService restClientService;
 
@@ -47,7 +47,7 @@ public class StandingsResource {
 	@Autowired
 	private PropertyService propertyService;
 
-	private final Logger logger = LoggerFactory.getLogger(StandingsResource.class);
+	private final Logger logger = LoggerFactory.getLogger(RankResource.class);
 
 	@POST
 	@Path("/{asOfDate}/{teamKey}")
