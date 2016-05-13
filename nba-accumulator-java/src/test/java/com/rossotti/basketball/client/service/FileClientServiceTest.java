@@ -29,21 +29,21 @@ public class FileClientServiceTest {
 	}
 	@Test
 	public void retrieveBoxScore_404() throws IOException {
-		String event = "20160311-houston-rockets-at-boston-celticsss";
+		String event = "20150415-utah-jazz-at-houston-rocketeers";
 		GameDTO game = fileClientService.retrieveBoxScore(event);
 		Assert.assertEquals(404, game.httpStatus);
 	}
 
 	@Test
 	public void retrieveRoster_200() throws IOException {
-		String event = "toronto-raptors-20141029";
+		String event = "toronto-raptors";
 		RosterDTO roster = fileClientService.retrieveRoster(event);
 		Assert.assertEquals(200, roster.httpStatus);
 		Assert.assertEquals("Toronto Raptors", roster.team.getFull_name());
 	}
 	@Test
 	public void retrieveRoster_404() throws IOException {
-		String event = "toronto-raptiers-20141029";
+		String event = "toronto-raptiers";
 		RosterDTO roster = fileClientService.retrieveRoster(event);
 		Assert.assertEquals(404, roster.httpStatus);
 	}
