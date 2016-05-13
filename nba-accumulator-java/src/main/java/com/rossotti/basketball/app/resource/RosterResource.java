@@ -169,9 +169,7 @@ public class RosterResource {
 			}
 			else {
 				logger.info('\n' + "" + " unable to retrieve roster: HTTP status = " + rosterDTO.httpStatus);
-				return Response.serverError()
-					.link(uriInfo.getAbsolutePath(), "roster")
-					.build();
+				return Response.status(rosterDTO.httpStatus).build();
 			}
 		}
 		catch (Exception e) {
