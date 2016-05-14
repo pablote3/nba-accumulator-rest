@@ -59,8 +59,7 @@ public class RosterResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response loadRoster(@Context UriInfo uriInfo, 
 								@PathParam("asOfDate") String asOfDateString, 
-								@PathParam("teamKey") String teamKey, 
-								List<RosterPlayer> rosterPlayers) {
+								@PathParam("teamKey") String teamKey) {
 
 		try {
 			logger.info('\n' + "Team roster ready to be loaded: " + teamKey);
