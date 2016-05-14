@@ -27,10 +27,10 @@ public class StandingResourceTest {
 
 	@Test
 	public void findByTeamDate_Found() {
-		String response = get("/standings/chicago-bulls/2014-11-06").asString();
+		String response = get("/standings/chicago-bulls/2015-04-14").asString();
 		Object document = Configuration.defaultConfiguration().jsonProvider().parse(response);
 		Assert.assertEquals("Chicago Bulls", JsonPath.read(document, "$.team.fullName"));
-		Assert.assertEquals(511, JsonPath.read(document, "$.pointsFor"));
+		Assert.assertEquals(8174, JsonPath.read(document, "$.pointsFor"));
 	}
 
 	@Test
@@ -51,10 +51,10 @@ public class StandingResourceTest {
 
 	@Test
 	public void findByDate_Found() {
-		String response = get("/standings/2014-11-06").asString();
+		String response = get("/standings/2015-04-14").asString();
 		Object document = Configuration.defaultConfiguration().jsonProvider().parse(response);
 		List<Standing> standings = JsonPath.read(document, "$.standings");
-		Assert.assertTrue("Standings size " + standings.size() + " should be at least 30", standings.size() >= 30);
+		Assert.assertEquals(30, standings.size());
 		Assert.assertEquals("Atlanta Hawks", JsonPath.read(document, "$.standings[0].team.fullName"));
 	}
 
