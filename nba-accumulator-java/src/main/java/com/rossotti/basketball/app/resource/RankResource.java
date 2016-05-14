@@ -25,7 +25,6 @@ import com.rossotti.basketball.app.service.StandingsService;
 import com.rossotti.basketball.client.dto.StandingsDTO;
 import com.rossotti.basketball.client.service.FileClientService;
 import com.rossotti.basketball.client.service.RestClientService;
-import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.model.Standing;
 import com.rossotti.basketball.dao.model.StandingRecord;
 import com.rossotti.basketball.dao.pub.PubStanding;
@@ -50,15 +49,14 @@ public class RankResource {
 	private final Logger logger = LoggerFactory.getLogger(RankResource.class);
 
 	@POST
-	@Path("/{asOfDate}/{teamKey}")
+	@Path("/{asOfDate}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response loadStandings(@Context UriInfo uriInfo, 
-								@PathParam("asOfDate") String asOfDateString, 
-								List<RosterPlayer> rosterPlayers) {
+	public Response rankStandings(@Context UriInfo uriInfo, 
+									@PathParam("asOfDate") String asOfDateString) {
 
 		try {
-			logger.info('\n' + "Standings ready to be loaded: " + asOfDateString);
+			logger.info('\n' + "Standings ready to be ranked: " + asOfDateString);
 
 			StandingsDTO standingsDTO = null;
 			ClientSource clientSource = propertyService.getProperty_ClientSource("accumulator.source.standings");
@@ -71,6 +69,7 @@ public class RankResource {
 
 			if (standingsDTO.httpStatus == 200) {
 				LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
+				logger.info("Rank standings");
 
 				//clear existing standings
 				standingsService.deleteStandings(asOfDate);
