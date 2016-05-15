@@ -27,21 +27,21 @@ public class RosterResourceTest {
 	@Test
 	public void manageRoster_PlayerOnAnotherTeamRoster() {
 		expect().
-		statusCode(200).
-	given().
-		contentType(ContentType.JSON).
-	when().
-		post("/roster/2015-04-12/utah-jazz");
+			statusCode(200).
+		given().
+			contentType(ContentType.JSON).
+		when().
+			post("/roster/2015-04-12/utah-jazz");
 	}
 
 	@Test
 	public void manageRoster_PlayerNotOnAnyTeamRoster() {
 		expect().
-		statusCode(200).
-	given().
-		contentType(ContentType.JSON).
-	when().
-		post("/roster/2015-04-12/san-antonio-spurs");
+			statusCode(200).
+		given().
+			contentType(ContentType.JSON).
+		when().
+			post("/roster/2015-04-12/san-antonio-spurs");
 	}
 
 	@Test
