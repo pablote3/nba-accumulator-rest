@@ -1,5 +1,7 @@
 package com.rossotti.basketball.app.resource;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -60,15 +62,17 @@ public class RankResource {
 
 			StandingsDTO standingsDTO = null;
 			ClientSource clientSource = propertyService.getProperty_ClientSource("accumulator.source.standings");
+			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
+			String nakedAsOfDate = DateTimeUtil.getStringDateNaked(asOfDate);
+
 			if (clientSource == ClientSource.File) {
-				standingsDTO = fileClientService.retrieveStandings(asOfDateString);
+				standingsDTO = fileClientService.retrieveStandings(nakedAsOfDate);
 			}
 			else if (clientSource == ClientSource.Api) {
-				standingsDTO = restClientService.retrieveStandings(asOfDateString);
+				standingsDTO = restClientService.retrieveStandings(nakedAsOfDate);
 			}
 
 			if (standingsDTO.httpStatus == 200) {
-				LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
 				logger.info("Rank standings");
 
 				//clear existing standings
@@ -86,7 +90,20 @@ public class RankResource {
 					standing.setOpptGamesPlayed(standingRecord.getGamesPlayed());
 					standing.setOpptOpptGamesWon(standingRecord.getOpptGamesWon());
 					standing.setOpptOpptGamesPlayed(standingRecord.getOpptGamesPlayed());
-					standingsService.updateStanding(standing);
+					Standing createdStanding = standingsService.createStanding(standing);
+					if (createdStanding.isCreated()) {
+						BigDecimal opponentRecord = standingRecord.getGamesPlayed() == 0 ? new BigDecimal(0) : new BigDecimal(standingRecord.getGamesWon()).divide(new BigDecimal(standingRecord.getGamesPlayed()), 4, RoundingMode.HALF_UP);
+						BigDecimal opponentOpponentRecord = standingRecord.getOpptGamesPlayed() == 0 ? new BigDecimal(0) : new BigDecimal(standingRecord.getOpptGamesWon()).divide(new BigDecimal(standingRecord.getOpptGamesPlayed()), 4, RoundingMode.HALF_UP);
+						logger.error("    Opponent Games Won/Played = " + standingRecord.getGamesWon() + "-" + standingRecord.getGamesPlayed());
+						logger.error("    OpptOppt Games Won/Played = " + standingRecord.getOpptGamesWon() + "-" + standingRecord.getOpptGamesPlayed());
+						logger.error("    Opponent Record = " + opponentRecord);
+						logger.error("    OpptOppt Record = " + opponentOpponentRecord);
+						logger.info("  Strenghth Of Schedule  " + teamKey + " " + opponentRecord.multiply(new BigDecimal(2)).add(opponentOpponentRecord).divide(new BigDecimal(3), 4, RoundingMode.HALF_UP));
+					}
+					else {
+						logger.info("Unable to create standing");
+						return Response.status(404).build();
+					}
 				}
 
 				List<PubStanding> listPubStandings = new ArrayList<PubStanding>();
