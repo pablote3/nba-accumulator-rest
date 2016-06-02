@@ -50,14 +50,14 @@ public class FileClientServiceTest {
 
 	@Test
 	public void retrieveStandings_200() throws IOException {
-		String event = "20160216";
+		String event = "20141028";
 		StandingsDTO standings = fileClientService.retrieveStandings(event);
 		Assert.assertEquals(200, standings.httpStatus);
-		Assert.assertEquals("cleveland-cavaliers", standings.standing[0].getTeam_id());
+		Assert.assertEquals("philadelphia-76ers", standings.standing[0].getTeam_id());
 	}
 	@Test
 	public void retrieveStandings_404() throws IOException {
-		String event = "20160236";
+		String event = "20140236";
 		StandingsDTO standings = fileClientService.retrieveStandings(event);
 		Assert.assertEquals(404, standings.httpStatus);
 	}
