@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans"
 	xmlns:int="http://www.springframework.org/schema/integration"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:int-stream="http://www.springframework.org/schema/integration/stream"
+	xmlns:int-file="http://www.springframework.org/schema/integration/file"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
-	http://www.springframework.org/schema/integration/stream http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd
+	http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<int-stream:stdin-channel-adapter id="producer-stream-adapter" channel="inboundChannel" />
+	<int-file:inbound-channel-adapter id="producer-file-adapter" channel="inboundChannel" directory="file:////home/pablote/pdrive/pwork/rest/nba-accumulator/message/inbound" prevent-duplicates="true">
+		<int:poller fixed-rate="5000" />
+	</int-file:inbound-channel-adapter>
+
 	<int:channel id="inboundChannel" />
 
-	<int:transformer input-channel="inboundChannel" output-channel="outboundChannel" ref="gameRepository" method="findByDate" />
-	<bean id="gameRepository" class="com.rossotti.basketball.dao.repository.GameRepository" />
+	<!-- <int:transformer input-channel="inboundChannel" output-channel="outboundChannel" ref="gameRepository" method="findByDate" />
+	<bean id="gameRepository" class="com.rossotti.basketball.dao.repository.GameRepository" /> -->
+	
+	<int:filter input-channel="inboundChannel" output-channel="outboundChannel" ref="selector" />
+	<bean id="selector" class="com.rossotti.basketball.app.gateway.FileSelector" />
 
 	<int:channel id="outboundChannel" />
-	<int-stream:stdout-channel-adapter id="consumer-stream-adapter" channel="outboundChannel" append-newline="true" />
+	
+	<int-file:outbound-channel-adapter channel="outboundChannel" id="consumer-file-adapter" directory="file:////home/pablote/pdrive/pwork/rest/nba-accumulator/message/outbound" />
 
 	<int:poller id="defaultPoller" default="true" max-messages-per-poll="5" fixed-rate="200" />
 </beans>
