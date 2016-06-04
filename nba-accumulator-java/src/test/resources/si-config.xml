@@ -10,7 +10,7 @@
 	http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<int-file:inbound-channel-adapter id="producer-file-adapter" channel="inboundChannel" directory="file:////home/pablote/pdrive/pwork/rest/nba-accumulator/message/inbound" prevent-duplicates="true">
+	<int-file:inbound-channel-adapter id="producer-file-adapter" channel="inboundChannel" directory="file:////home/pablote/pdrive/pwork/rest/nba-accumulator/preferences" prevent-duplicates="true">
 		<int:poller fixed-rate="5000" />
 	</int-file:inbound-channel-adapter>
 
@@ -18,12 +18,12 @@
 
 	<!-- <int:transformer input-channel="inboundChannel" output-channel="outboundChannel" ref="gameRepository" method="findByDate" />
 	<bean id="gameRepository" class="com.rossotti.basketball.dao.repository.GameRepository" /> -->
-	
+
 	<int:filter input-channel="inboundChannel" output-channel="outboundChannel" ref="selector" />
-	<bean id="selector" class="com.rossotti.basketball.app.gateway.FileSelector" />
+	<bean id="selector" class="com.rossotti.basketball.app.gateway.FileFilter" />
 
 	<int:channel id="outboundChannel" />
-	
+
 	<int-file:outbound-channel-adapter channel="outboundChannel" id="consumer-file-adapter" directory="file:////home/pablote/pdrive/pwork/rest/nba-accumulator/message/outbound" />
 
 	<int:poller id="defaultPoller" default="true" max-messages-per-poll="5" fixed-rate="200" />
