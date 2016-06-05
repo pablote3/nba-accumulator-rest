@@ -8,8 +8,15 @@ import org.springframework.messaging.Message;
 public class FileFilter implements MessageSelector {
 
 	public boolean accept(Message<?> message) {
-		if (message.getPayload() instanceof File && ((File) message.getPayload()).getName().startsWith("msg")) {
-			return true;
+		if (message.getPayload() instanceof File) {
+			if (((File) message.getPayload()).getName().startsWith("service")) {
+//				File file = (File) message.getPayload();
+//				String payload = file.get;
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 		return false;
 	}
