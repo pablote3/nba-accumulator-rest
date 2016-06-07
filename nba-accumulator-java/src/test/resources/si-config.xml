@@ -12,7 +12,7 @@
 
 	<context:component-scan base-package="com.rossotti.basketball.app.gateway" />
 
-	<int-file:inbound-channel-adapter id="producer-file-adapter" channel="inboundChannel" directory="classpath:/" prevent-duplicates="true">
+	<int-file:inbound-channel-adapter id="producer-file-adapter" channel="inboundChannel" directory="classpath:/" filename-pattern="service.properties" prevent-duplicates="true">
 		<int:poller fixed-rate="5000" />
 	</int-file:inbound-channel-adapter>
 
