@@ -18,13 +18,11 @@
 
 	<int:channel id="inboundChannel" />
 
-	<int:filter input-channel="inboundChannel" output-channel="outboundChannel" ref="selector" />
-	<bean id="selector" class="com.rossotti.basketball.app.gateway.FileFilter" />
+	<!-- <int:filter input-channel="inboundChannel" output-channel="outboundChannel" ref="selector" />
+	<bean id="selector" class="com.rossotti.basketball.app.gateway.FileFilter" /> -->
 
-	<!-- <int:channel id="transformerChannel" />
-
-	<int:transformer input-channel="transformerChannel" output-channel="outboundChannel" ref="messageTransformer" />
-	<bean id="gameRepository" class="com.rossotti.basketball.app.gateway.MessageTransformer" /> -->
+	<int:transformer input-channel="inboundChannel" output-channel="outboundChannel" ref="propertyTransformer" method="transform" />
+	<bean id="propertyTransformer" class="com.rossotti.basketball.app.gateway.PropertyTransformer" />
 
 	<int:channel id="outboundChannel" />
 

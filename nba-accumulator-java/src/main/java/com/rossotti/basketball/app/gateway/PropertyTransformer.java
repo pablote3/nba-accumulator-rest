@@ -1,50 +1,30 @@
 package com.rossotti.basketball.app.gateway;
 
-import java.util.Scanner;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PropertyTransformer {
-	public Message<String> toPigLatin(Message<String> inString) {
-		String word;
-		String latin = "";
-		StringBuilder latinPhrase = new StringBuilder();
-		char first;
-		boolean cap = false;
-		
-		String line = inString.getPayload();
-		Scanner pig = new Scanner(line);
-
-		// loop through all the words in the line
-		while (pig.hasNext()) // is there another word?
-		{
-			word = pig.next();
-			first = word.charAt(0);
-			if ('A' <= first && first <= 'Z') // first is capital letter
-			{
-				first = Character.toLowerCase(first);
-				cap = true;
-			} else
-				cap = false;
-
-			// test if first letter is a vowel
-			if (first == 'a' || first == 'e' || first == 'i' || first == 'o'
-					|| first == 'u')
-				latin = word + "hay";
-			else // not a vowel
-			{
-				if (cap) {
-					latin = "" + Character.toUpperCase(word.charAt(1));
-					latin = latin + word.substring(2) + first + "ay";
-				} else
-					latin = word.substring(1) + first + "ay";
-			}
-			latinPhrase.append(latin + " ");
-
+	public Message<ServiceProperties> transform(Message<File> message) {
+		Properties properties = new Properties();
+		ServiceProperties serviceProperties = new ServiceProperties();
+		FileInputStream fis;
+		try {
+			fis = new FileInputStream((File) message.getPayload());
+			properties.load(fis);
+			serviceProperties.setGameDate(properties.getProperty("game.date"));
+			serviceProperties.setTeam(properties.getProperty("game.team"));
+			System.out.println("Game Date = " + serviceProperties.getGameDate());
+			fis.close();
 		}
-		pig.close();
-		return MessageBuilder.withPayload(latinPhrase.toString()).build();
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		return MessageBuilder.withPayload(serviceProperties).build();
 	}
 }
