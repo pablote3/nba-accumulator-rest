@@ -12,21 +12,27 @@
 
 	<context:component-scan base-package="com.rossotti.basketball.app.gateway" />
 
-	<int-file:inbound-channel-adapter id="producer-file-adapter" channel="inboundChannel" directory="classpath:/" filename-pattern="service.properties" prevent-duplicates="true">
+	<int-file:inbound-channel-adapter id="producer-file-adapter" channel="inboundChannel" directory="classpath:/" filename-pattern="si-properties.json" prevent-duplicates="true">
 		<int:poller fixed-rate="5000" />
 	</int-file:inbound-channel-adapter>
 
 	<int:channel id="inboundChannel" />
 
-	<!-- <int:filter input-channel="inboundChannel" output-channel="outboundChannel" ref="selector" />
-	<bean id="selector" class="com.rossotti.basketball.app.gateway.FileFilter" /> -->
+	<int:json-to-object-transformer id="incomingJsonConverter" input-channel="inboundChannel" output-channel="midinChannel" type="com.rossotti.basketball.app.gateway.ServiceProperties" />
 
-	<int:transformer input-channel="inboundChannel" output-channel="outboundChannel" ref="propertyTransformer" method="transform" />
-	<bean id="propertyTransformer" class="com.rossotti.basketball.app.gateway.PropertyTransformer" />
+	<int:channel id="midinChannel" />
+
+	<int:service-activator ref="gameServiceBean" input-channel="midinChannel" output-channel="midoutChannel" />
+	<bean id="gameServiceBean" class="com.rossotti.basketball.app.gateway.GameServiceActivator" />
+
+	<int:channel id="midoutChannel" />
+
+	<int:object-to-json-transformer id="outgoingJsonConverter" input-channel="midoutChannel" output-channel="outboundChannel" />
 
 	<int:channel id="outboundChannel" />
 
 	<int-file:outbound-channel-adapter channel="outboundChannel" id="consumer-file-adapter" directory="file:////home/pablote/pdrive/pwork/rest/nba-accumulator/message/outbound" />
 
 	<int:poller id="defaultPoller" default="true" max-messages-per-poll="5" fixed-rate="200" />
+
 </beans>
