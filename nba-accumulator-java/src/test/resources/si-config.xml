@@ -22,7 +22,7 @@
 
 	<int:channel id="midinChannel" />
 
-	<int:service-activator ref="gameServiceBean" input-channel="midinChannel" output-channel="midoutChannel" />
+	<int:service-activator ref="gameServiceBean" input-channel="midinChannel" output-channel="midoutChannel" method="findGames" />
 	<bean id="gameServiceBean" class="com.rossotti.basketball.app.gateway.GameServiceActivator" />
 
 	<int:channel id="midoutChannel" />
