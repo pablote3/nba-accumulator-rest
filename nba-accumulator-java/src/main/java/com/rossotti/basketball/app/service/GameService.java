@@ -15,6 +15,14 @@ public class GameService {
 	@Autowired
 	private GameRepository gameRepo;
 
+	public List<Game> findByDate(LocalDate gameDate) {
+		return gameRepo.findByDate(gameDate);
+	}
+
+	public Game findByDateTeam(LocalDate gameDate, String teamKey) {
+		return gameRepo.findByDateTeam(gameDate, teamKey);
+	}
+
 	public LocalDateTime findPreviousGameDateTime(LocalDate gameDate, String teamKey) {
 		return gameRepo.findPreviousGameDateTimeByDateTeam(gameDate, teamKey);
 	}

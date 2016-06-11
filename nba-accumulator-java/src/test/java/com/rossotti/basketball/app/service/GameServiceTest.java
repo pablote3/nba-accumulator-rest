@@ -33,6 +33,12 @@ public class GameServiceTest {
 
 	@Before
 	public void setUp() {
+		when(gameRepo.findByDate((LocalDate) anyObject()))
+			.thenReturn(createMockGames())
+			.thenReturn(new ArrayList<Game>());
+		when(gameRepo.findByDateTeam((LocalDate) anyObject(), anyString()))
+			.thenReturn(createMockGame_GameStatus(new LocalDateTime("2015-11-26T10:00"), GameStatus.Scheduled))
+			.thenReturn(null);
 		when(gameRepo.findPreviousGameDateTimeByDateTeam((LocalDate) anyObject(), anyString()))
 			.thenReturn(new LocalDateTime("2015-11-24T10:00"))
 			.thenReturn(null);
@@ -42,6 +48,30 @@ public class GameServiceTest {
 		when(gameRepo.updateGame((Game) anyObject()))
 			.thenReturn(createMockGame_StatusCode(new LocalDateTime("2015-11-24T10:00"), StatusCode.Updated))
 			.thenReturn(createMockGame_StatusCode(new LocalDateTime("2015-11-24T10:00"), StatusCode.NotFound));
+	}
+
+	@Test
+	public void findByDate() {
+		List<Game> games;
+		//games found
+		games = gameService.findByDate(new LocalDate(2015, 11, 26));
+		Assert.assertEquals(2, games.size());
+
+		//games not found
+		games = gameService.findByDate(new LocalDate(2015, 8, 26));
+		Assert.assertEquals(0, games.size());
+	}
+	
+	@Test
+	public void findByDateTeam() {
+		Game game;
+		//game found
+		game = gameService.findByDateTeam(new LocalDate(2015, 11, 26), "sacramento-hornets");
+		Assert.assertEquals(new LocalDateTime("2015-11-26T10:00"), game.getGameDateTime());
+
+		//game not found
+		game = gameService.findByDateTeam(new LocalDate(2015, 8, 26), "sacramento-hornets");
+		Assert.assertNull(game);
 	}
 
 	@Test
