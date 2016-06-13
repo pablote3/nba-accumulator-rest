@@ -6,7 +6,10 @@ public class Startup {
 
 	@SuppressWarnings({ "resource", "unused" })
 	public static void main(String[] args) {
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:si-config.xml");
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(new String[] {
+					"classpath:si-config.xml",
+					"classpath:applicationContext.xml"
+		});
 		while (true) {}
 	}
 }
