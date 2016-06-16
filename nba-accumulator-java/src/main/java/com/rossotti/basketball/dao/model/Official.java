@@ -21,6 +21,7 @@ import javax.ws.rs.core.UriInfo;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.rossotti.basketball.dao.pub.PubOfficial;
 import com.rossotti.basketball.util.DateTimeUtil;
 
@@ -71,6 +72,7 @@ public class Official {
 	public List<GameOfficial> getGameOfficials() {
 		return gameOfficials;
 	}
+	@JsonManagedReference(value="gameOfficial-to-official")
 	public void setGameOfficials(List<GameOfficial> gameOfficials) {
 		this.gameOfficials = gameOfficials;
 	}

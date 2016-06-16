@@ -44,6 +44,7 @@ public class GameOfficial {
 
 	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name="officialId", referencedColumnName="id", nullable=false)
+	@JsonBackReference(value="gameOfficial-to-official")
 	private Official official;
 	public Official getOfficial() {
 		return official;
