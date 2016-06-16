@@ -23,6 +23,8 @@ import javax.ws.rs.core.UriInfo;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.rossotti.basketball.dao.pub.PubRosterPlayer;
 import com.rossotti.basketball.dao.pub.PubRosterPlayer_ByPlayer;
 import com.rossotti.basketball.dao.pub.PubRosterPlayer_ByTeam;
@@ -72,6 +74,7 @@ public class RosterPlayer {
 
 	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name="teamId", referencedColumnName="id", nullable=false)
+	@JsonBackReference(value="rosterPlayer-to-team")
 	private Team team;
 	public Team getTeam() {
 		return team;
@@ -82,6 +85,7 @@ public class RosterPlayer {
 
 	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name="playerId", referencedColumnName="id", nullable=false)
+	@JsonBackReference(value="rosterPlayer-to-player")
 	private Player player;
 	public Player getPlayer() {
 		return player;
@@ -95,6 +99,7 @@ public class RosterPlayer {
 	public List<BoxScorePlayer> getBoxScorePlayers()  {
 		return boxScorePlayers;
 	}
+	@JsonManagedReference(value="boxScorePlayer-to-rosterPlayer")
 	public void setBoxScorePlayers(List<BoxScorePlayer> boxScorePlayers)  {
 		this.boxScorePlayers = boxScorePlayers;
 	}

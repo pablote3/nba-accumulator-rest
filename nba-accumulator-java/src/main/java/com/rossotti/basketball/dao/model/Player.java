@@ -21,6 +21,7 @@ import javax.ws.rs.core.UriInfo;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.rossotti.basketball.dao.pub.PubPlayer;
 import com.rossotti.basketball.util.DateTimeUtil;
 
@@ -72,6 +73,7 @@ public class Player {
 	public List<RosterPlayer> getRosterPlayers()  {
 		return rosterPlayers;
 	}
+	@JsonManagedReference(value="rosterPlayer-to-player")
 	public void setRosterPlayers(List<RosterPlayer> rosterPlayers)  {
 		this.rosterPlayers = rosterPlayers;
 	}

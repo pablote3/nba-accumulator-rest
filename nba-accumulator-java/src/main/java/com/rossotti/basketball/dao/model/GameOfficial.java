@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.ws.rs.core.UriInfo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.rossotti.basketball.dao.pub.PubGameOfficial;
 import com.rossotti.basketball.dao.pub.PubOfficial;
 
@@ -32,6 +33,7 @@ public class GameOfficial {
 
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="gameId", referencedColumnName="id", nullable=false)
+	@JsonBackReference(value="gameOfficial-to-game")
 	private Game game;
 	public Game getGame() {
 		return game;

@@ -21,6 +21,7 @@ import javax.ws.rs.core.UriInfo;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.rossotti.basketball.dao.model.BoxScore.Location;
 import com.rossotti.basketball.dao.pub.PubBoxScore;
 import com.rossotti.basketball.dao.pub.PubGame;
@@ -75,6 +76,7 @@ public class Game {
 	public List<BoxScore> getBoxScores() {
 		return boxScores;
 	}
+	@JsonManagedReference(value="boxScore-to-game")
 	public void setBoxScores(List<BoxScore> boxScores) {
 		this.boxScores = boxScores;
 	}
@@ -106,6 +108,7 @@ public class Game {
 	public List<GameOfficial> getGameOfficials() {
 		return gameOfficials;
 	}
+	@JsonManagedReference(value="gameOfficial-to-game")
 	public void setGameOfficials(List<GameOfficial> gameOfficials) {
 		this.gameOfficials = gameOfficials;
 	}

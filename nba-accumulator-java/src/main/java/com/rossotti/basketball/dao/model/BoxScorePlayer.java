@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.ws.rs.core.UriInfo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.rossotti.basketball.dao.pub.PubBoxScorePlayer;
 
 @Entity
@@ -32,6 +33,7 @@ public class BoxScorePlayer {
 
 	@ManyToOne()
 	@JoinColumn(name="boxScoreId", referencedColumnName="id", nullable=false)
+	@JsonBackReference(value="boxScorePlayer-to-boxScore")
 	private BoxScore boxScore;
 	public BoxScore getBoxScore() {
 		return boxScore;
@@ -42,6 +44,7 @@ public class BoxScorePlayer {
 
 	@ManyToOne()
 	@JoinColumn(name="rosterPlayerId", referencedColumnName="id", nullable=false)
+	@JsonBackReference(value="boxScorePlayer-to-rosterPlayer")
 	private RosterPlayer rosterPlayer;
 	public RosterPlayer getRosterPlayer() {
 		return rosterPlayer;
