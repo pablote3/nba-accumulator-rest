@@ -25,7 +25,9 @@
 	<int:service-activator ref="findGameBean" input-channel="findGameInChannel" output-channel="findGameOutChannel" method="findGames" />
 	<bean id="findGameBean" class="com.rossotti.basketball.app.gateway.FindGameActivator" />
 
-	<int:channel id="findGameOutChannel" />
+	<int:channel id="findGameOutChannel">
+		<int:queue capacity="20" />
+	</int:channel>
 
 	<int:object-to-json-transformer id="outgoingJsonConverter" input-channel="findGameOutChannel" output-channel="outboundChannel" />
 
@@ -33,6 +35,6 @@
 
 	<int-file:outbound-channel-adapter channel="outboundChannel" id="consumer-file-adapter" directory="file:////home/pablote/pdrive/pwork/rest/nba-accumulator/message/outbound" />
 
-	<int:poller id="defaultPoller" default="true" max-messages-per-poll="5" fixed-rate="200" />
+	<int:poller id="defaultPoller" default="true" max-messages-per-poll="1" fixed-rate="200" />
 
 </beans>
