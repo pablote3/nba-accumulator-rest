@@ -28,12 +28,21 @@
 	<int:channel id="findGameOutChannel">
 		<int:queue capacity="20" />
 	</int:channel>
+	
+	<int:router ref="gameRouter" input-channel="findGameOutChannel" method="routeGame" />
+	<bean id="gameRouter" class="com.rossotti.basketball.app.gateway.GameRouter" />
+	
+	<int:channel id="scheduledChannelRoute" />
+	<int:channel id="completedChannelRoute" />
 
-	<int:object-to-json-transformer id="outgoingJsonConverter" input-channel="findGameOutChannel" output-channel="outboundChannel" />
+	<int:object-to-json-transformer id="outgoingJsonConverter1" input-channel="scheduledChannelRoute" output-channel="scheduledChannelOut" />
+	<int:object-to-json-transformer id="outgoingJsonConverter2" input-channel="completedChannelRoute" output-channel="completedChannelOut" />
 
-	<int:channel id="outboundChannel" />
+	<int:channel id="scheduledChannelOut" />
+	<int:channel id="completedChannelOut" />
 
-	<int-file:outbound-channel-adapter channel="outboundChannel" id="consumer-file-adapter" directory="file:////home/pablote/pdrive/pwork/rest/nba-accumulator/message/outbound" />
+	<int-file:outbound-channel-adapter channel="scheduledChannelOut" id="consumer-file-adapter1" directory="file:////home/pablote/pdrive/pwork/rest/nba-accumulator/message/scheduled" />
+	<int-file:outbound-channel-adapter channel="completedChannelOut" id="consumer-file-adapter2" directory="file:////home/pablote/pdrive/pwork/rest/nba-accumulator/message/completed" />
 
 	<int:poller id="defaultPoller" default="true" max-messages-per-poll="1" fixed-rate="200" />
 
