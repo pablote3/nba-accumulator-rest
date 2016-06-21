@@ -15,40 +15,34 @@
 	<int-file:inbound-channel-adapter id="producer-file-adapter" channel="inboundChannel" directory="classpath:/" filename-pattern="si-properties.json" prevent-duplicates="true">
 		<int:poller fixed-rate="5000" />
 	</int-file:inbound-channel-adapter>
-
 	<int:channel id="inboundChannel" />
 
-	<int:json-to-object-transformer id="incomingJsonConverter" input-channel="inboundChannel" output-channel="findGameInChannel" type="com.rossotti.basketball.app.gateway.ServiceProperties" />
+	<int:json-to-object-transformer id="incomingJsonConverter" input-channel="inboundChannel" output-channel="transformerChannel" type="com.rossotti.basketball.app.gateway.ServiceProperties" />
+	<int:channel id="transformerChannel" />
 
-	<int:channel id="findGameInChannel" />
-
-	<int:service-activator ref="findGameBean" input-channel="findGameInChannel" output-channel="findGameOutChannel" method="findGames" />
+	<int:service-activator ref="findGameBean" input-channel="transformerChannel" output-channel="findGameChannel" method="findGames" />
 	<bean id="findGameBean" class="com.rossotti.basketball.app.gateway.FindGameActivator" />
+	<int:channel id="findGameChannel" />
 
-	<int:channel id="findGameOutChannel">
-		<int:queue capacity="20" />
-	</int:channel>
-
-	<int:splitter ref="gameSplitter" input-channel="findGameOutChannel" output-channel="splitGameChannel" />
+	<int:splitter ref="gameSplitter" input-channel="findGameChannel" output-channel="splitGameChannel" />
 	<bean id="gameSplitter" class="com.rossotti.basketball.app.gateway.GameSplitter" />
-
 	<int:channel id="splitGameChannel" />
 
-	<int:router ref="gameRouter" input-channel="splitGameChannel"
-		method="routeGame" />
+	<int:router ref="gameRouter" input-channel="splitGameChannel" method="routeGame" />
 	<bean id="gameRouter" class="com.rossotti.basketball.app.gateway.GameRouter" />
+	<int:channel id="scheduledRouteChannel">
+		<int:queue capacity="20" />
+	</int:channel>
+	<int:channel id="completedRouteChannel" />
 
-	<int:channel id="scheduledChannelRoute" />
-	<int:channel id="completedChannelRoute" />
+	<int:object-to-json-transformer id="scheduledJsonConverter" input-channel="scheduledRouteChannel" output-channel="scheduledTransformerChannel" />
+	<int:object-to-json-transformer id="completedJsonConverter" input-channel="completedRouteChannel" output-channel="completedTransformerChannel" />
 
-	<int:object-to-json-transformer id="outgoingJsonConverter1" input-channel="scheduledChannelRoute" output-channel="scheduledChannelOut" />
-	<int:object-to-json-transformer id="outgoingJsonConverter2" input-channel="completedChannelRoute" output-channel="completedChannelOut" />
+	<int:channel id="scheduledTransformerChannel" />
+	<int:channel id="completedTransformerChannel" />
 
-	<int:channel id="scheduledChannelOut" />
-	<int:channel id="completedChannelOut" />
-
-	<int-file:outbound-channel-adapter channel="scheduledChannelOut" id="consumer-file-adapter1" directory="file:////home/pablote/pdrive/pwork/rest/nba-accumulator/message/scheduled" />
-	<int-file:outbound-channel-adapter channel="completedChannelOut" id="consumer-file-adapter2" directory="file:////home/pablote/pdrive/pwork/rest/nba-accumulator/message/completed" />
+	<int-file:outbound-channel-adapter id="consumer-file-adapter1" channel="scheduledTransformerChannel" directory="file:////home/pablote/pdrive/pwork/rest/nba-accumulator/message/scheduled" />
+	<int-file:outbound-channel-adapter id="consumer-file-adapter2" channel="completedTransformerChannel" directory="file:////home/pablote/pdrive/pwork/rest/nba-accumulator/message/completed" />
 
 	<int:poller id="defaultPoller" default="true" max-messages-per-poll="1" fixed-rate="200" />
 
