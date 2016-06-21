@@ -28,10 +28,16 @@
 	<int:channel id="findGameOutChannel">
 		<int:queue capacity="20" />
 	</int:channel>
-	
-	<int:router ref="gameRouter" input-channel="findGameOutChannel" method="routeGame" />
+
+	<int:splitter ref="gameSplitter" input-channel="findGameOutChannel" output-channel="splitGameChannel" />
+	<bean id="gameSplitter" class="com.rossotti.basketball.app.gateway.GameSplitter" />
+
+	<int:channel id="splitGameChannel" />
+
+	<int:router ref="gameRouter" input-channel="splitGameChannel"
+		method="routeGame" />
 	<bean id="gameRouter" class="com.rossotti.basketball.app.gateway.GameRouter" />
-	
+
 	<int:channel id="scheduledChannelRoute" />
 	<int:channel id="completedChannelRoute" />
 
