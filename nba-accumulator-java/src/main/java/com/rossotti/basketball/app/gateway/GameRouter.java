@@ -6,6 +6,6 @@ import com.rossotti.basketball.dao.model.GameStatus;
 public class GameRouter {
 	public String routeGame(Game game) {
 		System.out.println("begin gameRouter");
-		return (game.getStatus() == GameStatus.Scheduled) ? "scheduledChannelRoute" : "completedChannelRoute";
+		return (game.getStatus() == GameStatus.Scheduled) ? "scheduledRouteChannel" : "completedRouteChannel";
 	}
 }
