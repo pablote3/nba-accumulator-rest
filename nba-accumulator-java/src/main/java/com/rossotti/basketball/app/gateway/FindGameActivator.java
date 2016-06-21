@@ -13,7 +13,7 @@ public class FindGameActivator {
 	private GameService gameService;
 
 	public List<Game> findGames(ServiceProperties properties) {
-		System.out.println("Processing order");
+		System.out.println("begin findGamesActivator");
 		String gameTeam = properties.getGameTeam();
 		LocalDate gameDate = DateTimeUtil.getLocalDate(properties.getGameDate());
 		List<Game> games;
@@ -24,6 +24,7 @@ public class FindGameActivator {
 			games = new ArrayList<Game>();
 			games.add(gameService.findByDateTeam(gameDate, gameTeam));
 		}
+		System.out.println("end findGamesActivator");
 		return games;
 	}
 }
