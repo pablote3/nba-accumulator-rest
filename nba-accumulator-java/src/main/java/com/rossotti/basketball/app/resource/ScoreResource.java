@@ -139,9 +139,13 @@ public class ScoreResource {
 						return Response.status(500).build();
 					}
 				}
-				else {
-					logger.info('\n' + "" + " unable to retrieve box score: HTTP status = " + gameDTO.getStatusCode());
+				else if (gameDTO.isNotFound()) {
+					logger.info('\n' + "" + " unable to find box score");
 					return Response.status(404).build();
+				}
+				else {
+					logger.info('\n' + "" + " client error retrieving box score");
+					return Response.status(500).build();
 				}
 			}
 			else {

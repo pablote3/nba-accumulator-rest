@@ -166,9 +166,13 @@ public class RosterResource {
 						.link(uriInfo.getAbsolutePath(), "rosterPlayer")
 						.build();
 			}
-			else {
-				logger.info('\n' + "" + " unable to retrieve roster: HTTP status = " + rosterDTO.getStatusCode());
+			else if (rosterDTO.isNotFound()) {
+				logger.info('\n' + "" + " unable to find roster");
 				return Response.status(404).build();
+			}
+			else {
+				logger.info('\n' + "" + " client error retrieving roster");
+				return Response.status(500).build();
 			}
 		}
 		catch (Exception e) {

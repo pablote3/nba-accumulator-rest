@@ -116,9 +116,13 @@ public class RankResource {
 						.link(uriInfo.getAbsolutePath(), "standings")
 						.build();
 			}
-			else {
-				logger.info('\n' + "" + " unable to retrieve standings: HTTP status = " + standingsDTO.getStatusCode());
+			else if (standingsDTO.isNotFound()) {
+				logger.info('\n' + "" + " unable to find standings");
 				return Response.status(404).build();
+			}
+			else {
+				logger.info('\n' + "" + " client error retrieving standings");
+				return Response.status(500).build();
 			}
 		}
 		catch (Exception e) {
