@@ -95,11 +95,11 @@ public class GameRepositoryTest {
 		List<Game> findGames = gameRepo.findByDate(new LocalDate("2015-10-27"));
 		Assert.assertEquals(3, findGames.size());
 		Assert.assertEquals(new LocalDateTime("2015-10-27T20:30"), findGames.get(0).getGameDateTime());
-		Assert.assertEquals(GameStatus.Scheduled, findGames.get(0).getStatus());
+		Assert.assertTrue(findGames.get(0).isScheduled());
 		Assert.assertEquals(new LocalDateTime("2015-10-27T21:00"), findGames.get(1).getGameDateTime());
-		Assert.assertEquals(GameStatus.Scheduled, findGames.get(1).getStatus());
+		Assert.assertTrue(findGames.get(1).isScheduled());
 		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGames.get(2).getGameDateTime());
-		Assert.assertEquals(GameStatus.Completed, findGames.get(2).getStatus());
+		Assert.assertTrue(findGames.get(2).isCompleted());
 	}
 
 	@Test

@@ -74,7 +74,7 @@ public class ScoreResource {
 
 			String event = DateTimeUtil.getStringDateNaked(gameDateTime) + "-" + awayTeamKey + "-at-" + homeTeamKey;
 
-			if (game.getStatus().equals(GameStatus.Scheduled)) {
+			if (game.isScheduled()) {
 				logger.info('\n' + "Scheduled game ready to be scored: " + event);
 
 				GameDTO gameDTO = null;

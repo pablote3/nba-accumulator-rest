@@ -138,6 +138,21 @@ public class Game {
 	public void setStatus(GameStatus status) {
 		this.status = status;
 	}
+	public Boolean isScheduled() {
+		return status == GameStatus.Scheduled;
+	}
+	public Boolean isCompleted() {
+		return status == GameStatus.Completed;
+	}
+	public Boolean isPostponed() {
+		return status == GameStatus.Postponed;
+	}
+	public Boolean isSuspended() {
+		return status == GameStatus.Suspended;
+	}
+	public Boolean isCancelled() {
+		return status == GameStatus.Cancelled;
+	}
 
 	@Enumerated(EnumType.STRING)
 	@Column(name="seasonType", length=7, nullable=false)
@@ -180,7 +195,7 @@ public class Game {
 			}
 		}
 
-		if (this.getStatus() == GameStatus.Completed) {
+		if (this.isCompleted()) {
 			List<PubGameOfficial> listPubGameOfficial = new ArrayList<PubGameOfficial>();
 			if (this.getGameOfficials().size() > 0) {
 				for (GameOfficial gameOfficial : this.getGameOfficials()) {
