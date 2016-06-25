@@ -2,8 +2,6 @@ package com.rossotti.basketball.app.service;
 
 import java.util.List;
 
-import javax.ws.rs.core.Response;
-
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -19,7 +17,6 @@ import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.model.GameStatus;
 import com.rossotti.basketball.dao.model.BoxScore.Result;
-import com.rossotti.basketball.dao.pub.PubGame;
 import com.rossotti.basketball.dao.repository.GameRepository;
 import com.rossotti.basketball.util.DateTimeUtil;
 
@@ -36,7 +33,16 @@ public class GameService {
 
 	@Autowired
 	private FileClientService fileClientService;
-	
+
+	@Autowired
+	private OfficialService officialService;
+
+	@Autowired
+	private RosterPlayerService rosterPlayerService;
+
+	@Autowired
+	private TeamService teamService;
+
 	private final Logger logger = LoggerFactory.getLogger(OfficialService.class);
 
 	public List<Game> findByDate(LocalDate gameDate) {
@@ -71,51 +77,46 @@ public class GameService {
 
 		logger.info('\n' + "Scheduled game ready to be scored: " + event);
 
-//		GameDTO gameDTO = null;
-//		ClientSource clientSource = propertyService.getProperty_ClientSource("accumulator.source.boxScore");
-//		if (clientSource == ClientSource.File) {
-//			gameDTO = fileClientService.retrieveBoxScore(event);
-//		}
-//		else if (clientSource == ClientSource.Api) {
-//			gameDTO = restClientService.retrieveBoxScore(event);
-//		}
-//		if (gameDTO.httpStatus == 200) {
-//			game.setStatus(GameStatus.Completed);
-//			awayBoxScore.updateTotals(gameDTO.away_totals);
-//			homeBoxScore.updateTotals(gameDTO.home_totals);
-//			awayBoxScore.updatePeriodScores(gameDTO.away_period_scores);
-//			homeBoxScore.updatePeriodScores(gameDTO.home_period_scores);
-//			awayBoxScore.setBoxScorePlayers(rosterPlayerService.getBoxScorePlayers(gameDTO.away_stats, gameDate, awayTeamKey));
-//			homeBoxScore.setBoxScorePlayers(rosterPlayerService.getBoxScorePlayers(gameDTO.home_stats, gameDate, homeTeamKey));
-//			game.setGameOfficials(officialService.getGameOfficials(gameDTO.officials, gameDate));
-//			awayBoxScore.setTeam(teamService.findTeam(awayTeamKey, gameDate));
-//			homeBoxScore.setTeam(teamService.findTeam(homeTeamKey, gameDate));
-//
-//			if (gameDTO.away_totals.getPoints() > gameDTO.home_totals.getPoints()) {
-//				awayBoxScore.setResult(Result.Win);
-//				homeBoxScore.setResult(Result.Loss);
-//			}
-//			else {
-//				awayBoxScore.setResult(Result.Loss);
-//				homeBoxScore.setResult(Result.Win);
-//			}
-//
-//			awayBoxScore.setDaysOff((short)DateTimeUtil.getDaysBetweenTwoDateTimes(gameService.findPreviousGameDateTime(gameDate, awayTeamKey), gameDateTime));
-//			homeBoxScore.setDaysOff((short)DateTimeUtil.getDaysBetweenTwoDateTimes(gameService.findPreviousGameDateTime(gameDate, homeTeamKey), gameDateTime));
-//
-//			Game updatedGame = gameService.updateGame(game);
-//			if (updatedGame.isUpdated()) {
-//				logger.info("Game Scored " + awayTeamKey +  " " + awayBoxScore.getPoints() + " " + homeTeamKey +  " " + homeBoxScore.getPoints());
-//				PubGame pubGame = game.toPubGame(uriInfo, homeTeamKey);
-//				return Response.ok(pubGame)
-//					.link(uriInfo.getAbsolutePath(), "game")
-//					.build();
-//			}
-//			else {
-//				logger.info("Unable to update game - " + updatedGame.getStatus());
-//				return Response.status(404).build();
-//			}
-//		}
+		GameDTO gameDTO = null;
+		ClientSource clientSource = propertyService.getProperty_ClientSource("accumulator.source.boxScore");
+		if (clientSource == ClientSource.File) {
+			gameDTO = fileClientService.retrieveBoxScore(event);
+		}
+		else if (clientSource == ClientSource.Api) {
+			gameDTO = restClientService.retrieveBoxScore(event);
+		}
+		if (gameDTO.isFound()) {
+			awayBoxScore.updateTotals(gameDTO.away_totals);
+			homeBoxScore.updateTotals(gameDTO.home_totals);
+			awayBoxScore.updatePeriodScores(gameDTO.away_period_scores);
+			homeBoxScore.updatePeriodScores(gameDTO.home_period_scores);
+			awayBoxScore.setBoxScorePlayers(rosterPlayerService.getBoxScorePlayers(gameDTO.away_stats, gameDate, awayTeamKey));
+			homeBoxScore.setBoxScorePlayers(rosterPlayerService.getBoxScorePlayers(gameDTO.home_stats, gameDate, homeTeamKey));
+			game.setGameOfficials(officialService.getGameOfficials(gameDTO.officials, gameDate));
+			awayBoxScore.setTeam(teamService.findTeam(awayTeamKey, gameDate));
+			homeBoxScore.setTeam(teamService.findTeam(homeTeamKey, gameDate));
+
+			if (gameDTO.away_totals.getPoints() > gameDTO.home_totals.getPoints()) {
+				awayBoxScore.setResult(Result.Win);
+				homeBoxScore.setResult(Result.Loss);
+			}
+			else {
+				awayBoxScore.setResult(Result.Loss);
+				homeBoxScore.setResult(Result.Win);
+			}
+
+			awayBoxScore.setDaysOff((short)DateTimeUtil.getDaysBetweenTwoDateTimes(findPreviousGameDateTime(gameDate, awayTeamKey), gameDateTime));
+			homeBoxScore.setDaysOff((short)DateTimeUtil.getDaysBetweenTwoDateTimes(findPreviousGameDateTime(gameDate, homeTeamKey), gameDateTime));
+			game.setStatus(GameStatus.Completed);
+			Game updatedGame = updateGame(game);
+			if (updatedGame.isUpdated()) {
+				logger.info("Game Scored " + awayTeamKey +  " " + awayBoxScore.getPoints() + " " + homeTeamKey +  " " + homeBoxScore.getPoints());
+			}
+			else {
+				logger.info("Unable to update game - " + updatedGame.getStatus());
+				game.setStatus(GameStatus.Exception);
+			}
+		}
 		return game;
 	}
 }
