@@ -28,44 +28,44 @@ public class RestClientServiceTest {
 	}
 
 	@Test
-	public void retrieveBoxScore_200() throws IOException {
+	public void retrieveBoxScore_Found() throws IOException {
 		String event = "20160311-houston-rockets-at-boston-celtics";
 		GameDTO game = restClientService.retrieveBoxScore(event);
-		Assert.assertEquals(200, game.httpStatus);
+		Assert.assertTrue(game.isFound());
 		Assert.assertEquals("Houston Rockets", game.away_team.getFull_name());
 	}
 	@Test
-	public void retrieveBoxScore_404() throws IOException {
+	public void retrieveBoxScore_NotFound() throws IOException {
 		String event = "20160311-houston-rockets-at-boston-celticsss";
 		GameDTO game = restClientService.retrieveBoxScore(event);
-		Assert.assertEquals(404, game.httpStatus);
+		Assert.assertTrue(game.isNotFound());
 	}
 
 	@Test
-	public void retrieveRoster_200() throws IOException {
+	public void retrieveRoster_Found() throws IOException {
 		String event = "toronto-raptors";
 		RosterDTO roster = restClientService.retrieveRoster(event);
-		Assert.assertEquals(200, roster.httpStatus);
+		Assert.assertTrue(roster.isFound());
 		Assert.assertEquals("Toronto Raptors", roster.team.getFull_name());
 	}
 	@Test
-	public void retrieveRoster_404() throws IOException {
+	public void retrieveRoster_NotFound() throws IOException {
 		String event = "toronto-raptiers";
 		RosterDTO roster = restClientService.retrieveRoster(event);
-		Assert.assertEquals(404, roster.httpStatus);
+		Assert.assertTrue(roster.isNotFound());
 	}
 
 	@Test
-	public void retrieveStandings_200() throws IOException {
+	public void retrieveStandings_Found() throws IOException {
 		String event = "20160216";
 		StandingsDTO standings = restClientService.retrieveStandings(event);
-		Assert.assertEquals(200, standings.httpStatus);
+		Assert.assertTrue(standings.isFound());
 		Assert.assertEquals("cleveland-cavaliers", standings.standing[0].getTeam_id());
 	}
 	@Test
-	public void retrieveStandings_404() throws IOException {
+	public void retrieveStandings_NotFound() throws IOException {
 		String event = "20160236";
 		StandingsDTO standings = restClientService.retrieveStandings(event);
-		Assert.assertEquals(404, standings.httpStatus);
+		Assert.assertTrue(standings.isNotFound());
 	}
 }

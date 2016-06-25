@@ -72,7 +72,7 @@ public class RankResource {
 				standingsDTO = restClientService.retrieveStandings(nakedAsOfDate);
 			}
 
-			if (standingsDTO.httpStatus == 200) {
+			if (standingsDTO.isFound()) {
 				logger.info("Rank standings");
 
 				//clear existing standings
@@ -117,8 +117,8 @@ public class RankResource {
 						.build();
 			}
 			else {
-				logger.info('\n' + "" + " unable to retrieve standings: HTTP status = " + standingsDTO.httpStatus);
-				return Response.status(standingsDTO.httpStatus).build();
+				logger.info('\n' + "" + " unable to retrieve standings: HTTP status = " + standingsDTO.getStatusCode());
+				return Response.status(404).build();
 			}
 		}
 		catch (Exception e) {

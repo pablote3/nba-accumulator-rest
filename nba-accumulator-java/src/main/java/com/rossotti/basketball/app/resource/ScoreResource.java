@@ -86,7 +86,7 @@ public class ScoreResource {
 					gameDTO = restClientService.retrieveBoxScore(event);
 				}
 
-				if (gameDTO.httpStatus == 200) {
+				if (gameDTO.isFound()) {
 					try {
 						game.setStatus(GameStatus.Completed);
 						awayBoxScore.updateTotals(gameDTO.away_totals);
@@ -140,8 +140,8 @@ public class ScoreResource {
 					}
 				}
 				else {
-					logger.info('\n' + "" + " unable to retrieve box score: HTTP status = " + gameDTO.httpStatus);
-					return Response.status(gameDTO.httpStatus).build();
+					logger.info('\n' + "" + " unable to retrieve box score: HTTP status = " + gameDTO.getStatusCode());
+					return Response.status(404).build();
 				}
 			}
 			else {

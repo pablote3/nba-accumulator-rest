@@ -16,6 +16,7 @@ import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.client.dto.RosterDTO;
 import com.rossotti.basketball.client.dto.StandingsDTO;
 import com.rossotti.basketball.client.dto.StatsDTO;
+import com.rossotti.basketball.client.dto.StatusCode;
 
 @Service
 public class RestClientService {
@@ -31,22 +32,23 @@ public class RestClientService {
 		Response response = clientService.getClient().target(url).request().get();
 		
 		if (response.getStatus() != 200) {
+			statsDTO.setStatusCode(StatusCode.NotFound);
 			response.readEntity(String.class);
 		} else {
 			try {
 				statsDTO = mapper.readValue(response.readEntity(String.class), statsDTO.getClass());
+				statsDTO.setStatusCode(StatusCode.Found);
 			} catch (JsonParseException jpe) {
-				statsDTO.httpStatus = 500;
+				statsDTO.setStatusCode(StatusCode.ClientException);
 				jpe.printStackTrace();
 			} catch (JsonMappingException jme) {
-				statsDTO.httpStatus = 500;
+				statsDTO.setStatusCode(StatusCode.ClientException);
 				jme.printStackTrace();
 			} catch (IOException ioe) {
-				statsDTO.httpStatus = 500;
+				statsDTO.setStatusCode(StatusCode.ClientException);
 				ioe.printStackTrace();
 			}
 		}
-		statsDTO.httpStatus = response.getStatus();
 		response.close();
 		return statsDTO;
 	}

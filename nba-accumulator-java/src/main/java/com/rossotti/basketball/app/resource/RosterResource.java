@@ -73,7 +73,7 @@ public class RosterResource {
 				rosterDTO = restClientService.retrieveRoster(teamKey);
 			}
 
-			if (rosterDTO.httpStatus == 200) {
+			if (rosterDTO.isFound()) {
 				LocalDate fromDate = DateTimeUtil.getLocalDate(asOfDateString);
 				LocalDate toDate = DateTimeUtil.getLocalDateSeasonMax(fromDate);
 				//activate new roster players
@@ -167,8 +167,8 @@ public class RosterResource {
 						.build();
 			}
 			else {
-				logger.info('\n' + "" + " unable to retrieve roster: HTTP status = " + rosterDTO.httpStatus);
-				return Response.status(rosterDTO.httpStatus).build();
+				logger.info('\n' + "" + " unable to retrieve roster: HTTP status = " + rosterDTO.getStatusCode());
+				return Response.status(404).build();
 			}
 		}
 		catch (Exception e) {

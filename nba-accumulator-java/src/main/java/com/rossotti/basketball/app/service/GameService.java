@@ -6,6 +6,8 @@ import javax.ws.rs.core.Response;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,8 @@ public class GameService {
 
 	@Autowired
 	private FileClientService fileClientService;
+	
+	private final Logger logger = LoggerFactory.getLogger(OfficialService.class);
 
 	public List<Game> findByDate(LocalDate gameDate) {
 		return gameRepo.findByDate(gameDate);
@@ -65,8 +69,8 @@ public class GameService {
 		
 		String event = DateTimeUtil.getStringDateNaked(gameDateTime) + "-" + awayTeamKey + "-at-" + homeTeamKey;
 
-//		logger.info('\n' + "Scheduled game ready to be scored: " + event);
-//
+		logger.info('\n' + "Scheduled game ready to be scored: " + event);
+
 //		GameDTO gameDTO = null;
 //		ClientSource clientSource = propertyService.getProperty_ClientSource("accumulator.source.boxScore");
 //		if (clientSource == ClientSource.File) {
