@@ -5,5 +5,6 @@ public enum GameStatus {
 	Completed,
 	Postponed,
 	Suspended,
-	Cancelled;
+	Cancelled,
+	Exception;
 }
