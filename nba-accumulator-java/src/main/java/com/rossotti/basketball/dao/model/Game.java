@@ -153,6 +153,12 @@ public class Game {
 	public Boolean isCancelled() {
 		return status == GameStatus.Cancelled;
 	}
+	public Boolean isClientError() {
+		return status == GameStatus.ClientError;
+	}
+	public Boolean isServerError() {
+		return status == GameStatus.ServerError;
+	}
 
 	@Enumerated(EnumType.STRING)
 	@Column(name="seasonType", length=7, nullable=false)
