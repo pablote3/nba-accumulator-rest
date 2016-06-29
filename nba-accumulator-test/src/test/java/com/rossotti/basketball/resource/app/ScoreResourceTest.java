@@ -24,7 +24,7 @@ public class ScoreResourceTest {
 			statusCode(200).
 		given().
 			contentType(ContentType.JSON).
-			body(postJsonGame("2015-04-16T20:00", "atlanta-hawks", "houston-rockets").toString()).
+			body(postJsonGame("2015-04-16T20:00", "Scheduled", "atlanta-hawks", "houston-rockets").toString()).
 			when().
 			post("/score");
 	}
@@ -32,10 +32,10 @@ public class ScoreResourceTest {
 	@Test
 	public void scoreGame_GameNotFound() {
 		expect().
-			statusCode(404).
+			statusCode(500).
 		given().
 			contentType(ContentType.JSON).
-			body(postJsonGame("2015-04-16T20:00", "portland-trail-blazers", "denver-nuggets").toString()).
+			body(postJsonGame("2015-04-16T20:00", "Scheduled", "portland-trail-blazers", "denver-nuggets").toString()).
 			when().
 			post("/score");
 	}
@@ -43,10 +43,10 @@ public class ScoreResourceTest {
 	@Test
 	public void scoreGame_OfficialNotFound() {
 		expect().
-			statusCode(500).
+			statusCode(400).
 		given().
 			contentType(ContentType.JSON).
-			body(postJsonGame("2015-04-16T20:00", "phoenix-suns", "miami-heat").toString()).
+			body(postJsonGame("2015-04-16T20:00", "Scheduled", "phoenix-suns", "miami-heat").toString()).
 			when().
 			post("/score");
 	}
@@ -54,10 +54,10 @@ public class ScoreResourceTest {
 	@Test
 	public void scoreGame_RosterPlayerNotFound() {
 		expect().
-			statusCode(500).
+			statusCode(400).
 		given().
 			contentType(ContentType.JSON).
-			body(postJsonGame("2015-04-16T20:00", "indiana-pacers", "orlando-magic").toString()).
+			body(postJsonGame("2015-04-16T20:00", "Scheduled", "indiana-pacers", "orlando-magic").toString()).
 			when().
 			post("/score");
 	}
@@ -65,10 +65,10 @@ public class ScoreResourceTest {
 	@Test
 	public void scoreGame_FileNotFound() {
 		expect().
-			statusCode(404).
+			statusCode(400).
 		given().
 			contentType(ContentType.JSON).
-			body(postJsonGame("2015-04-16T20:00", "toronto-raptors", "new-york-knicks").toString()).
+			body(postJsonGame("2015-04-16T20:00", "Scheduled", "toronto-raptors", "new-york-knicks").toString()).
 			when().
 			post("/score");
 	}
@@ -79,16 +79,16 @@ public class ScoreResourceTest {
 			statusCode(500).
 		given().
 			contentType(ContentType.JSON).
-			body(postJsonGame("2015-04-15T20:00", "chicago-bulls", "atlanta-hawks").toString()).
+			body(postJsonGame("2015-04-15T20:00", "Completed", "chicago-bulls", "atlanta-hawks").toString()).
 			when().
 			post("/score");
 	}
 
-	private static JsonObject postJsonGame(String gameDateTime, String homeTeamKey, String awayTeamKey) {
+	private static JsonObject postJsonGame(String gameDateTime, String status, String homeTeamKey, String awayTeamKey) {
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);
 		JsonObject value = factory.createObjectBuilder()
 			.add("gameDateTime", gameDateTime)
-			.add("status", "Scheduled")
+			.add("status", status)
 			.add("seasonType", "Regular")
 			.add("boxScores", factory.createArrayBuilder()
 				.add(factory.createObjectBuilder()

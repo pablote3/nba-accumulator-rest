@@ -27,7 +27,7 @@ public class ScoreResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response scoreGame(@Context UriInfo uriInfo, Game game) {
 		Game resultGame = gameService.scoreGame(game);
-		if (resultGame.isUpdated()) {
+		if (resultGame.isCompleted()) {
 			PubGame pubGame = game.toPubGame(uriInfo, game.getBoxScoreHome().getTeam().getTeamKey());
 			return Response.ok(pubGame)
 				.link(uriInfo.getAbsolutePath(), "game")
