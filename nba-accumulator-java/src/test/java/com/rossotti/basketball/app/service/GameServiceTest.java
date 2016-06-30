@@ -18,15 +18,30 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.rossotti.basketball.app.exception.PropertyException;
+import com.rossotti.basketball.app.resource.ClientSource;
+import com.rossotti.basketball.client.dto.GameDTO;
+import com.rossotti.basketball.client.dto.StatusCodeDTO;
+import com.rossotti.basketball.client.service.FileClientService;
+import com.rossotti.basketball.client.service.RestClientService;
 import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.model.GameStatus;
-import com.rossotti.basketball.dao.model.StatusCode;
+import com.rossotti.basketball.dao.model.StatusCodeDAO;
 import com.rossotti.basketball.dao.repository.GameRepository;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GameServiceTest {
 	@Mock
 	private GameRepository gameRepo;
+
+	@Mock
+	private PropertyService propertyService;
+
+//	@Mock
+//	private FileClientService fileClientService;
+//
+//	@Mock
+//	private RestClientService restClientService;
 
 	@InjectMocks
 	private GameService gameService = new GameService();
@@ -37,7 +52,7 @@ public class GameServiceTest {
 			.thenReturn(createMockGames())
 			.thenReturn(new ArrayList<Game>());
 		when(gameRepo.findByDateTeam((LocalDate) anyObject(), anyString()))
-			.thenReturn(createMockGame_GameStatus(new LocalDateTime("2015-11-26T10:00"), GameStatus.Scheduled))
+			.thenReturn(createMockGame_Scheduled(new LocalDateTime("2015-11-26T10:00")))
 			.thenReturn(null);
 		when(gameRepo.findPreviousGameDateTimeByDateTeam((LocalDate) anyObject(), anyString()))
 			.thenReturn(new LocalDateTime("2015-11-24T10:00"))
@@ -46,9 +61,32 @@ public class GameServiceTest {
 			.thenReturn(createMockGames())
 			.thenReturn(new ArrayList<Game>());
 		when(gameRepo.updateGame((Game) anyObject()))
-			.thenReturn(createMockGame_StatusCode(new LocalDateTime("2015-11-24T10:00"), StatusCode.Updated))
-			.thenReturn(createMockGame_StatusCode(new LocalDateTime("2015-11-24T10:00"), StatusCode.NotFound));
+			.thenReturn(createMockGame_StatusCode(new LocalDateTime("2015-11-24T10:00"), StatusCodeDAO.Updated))
+			.thenReturn(createMockGame_StatusCode(new LocalDateTime("2015-11-24T10:00"), StatusCodeDAO.NotFound));
+//		when(propertyService.getProperty_ClientSource(anyString()))
+//			.thenReturn(ClientSource.File)
+//			.thenThrow(new PropertyException("propertyName"));
+//		when(fileClientService.retrieveBoxScore(anyString()))
+//			.thenReturn(createMockBoxScore(StatusCodeDTO.Found))
+//			.thenReturn(createMockBoxScore(StatusCodeDTO.NotFound))
+//			.thenReturn(createMockBoxScore(StatusCodeDTO.ClientException));
+//		when(restClientService.retrieveBoxScore(anyString()))
+//			.thenReturn(createMockBoxScore(StatusCodeDTO.Found))
+//			.thenReturn(createMockBoxScore(StatusCodeDTO.NotFound))
+//			.thenReturn(createMockBoxScore(StatusCodeDTO.ClientException));
 	}
+
+//	@Test
+//	public void scoreGame() {
+//		Game game;
+//		//game updated
+//		game = gameService.scoreGame(createMockGame_StatusCode(new LocalDateTime("2015-11-24T10:00"), null));
+//		Assert.assertTrue(game.isUpdated());
+//
+//		//game not found
+//		game = gameService.scoreGame(createMockGame_StatusCode(new LocalDateTime("2015-08-26T10:00"), null));
+//		Assert.assertTrue(game.isNotFound());
+//	}
 
 	@Test
 	public void findByDate() {
@@ -112,23 +150,36 @@ public class GameServiceTest {
 
 	private List<Game> createMockGames() {
 		List<Game> games = Arrays.asList(
-				createMockGame_GameStatus(new LocalDateTime("2015-11-24T10:00"), GameStatus.Completed),
-				createMockGame_GameStatus(new LocalDateTime("2015-11-26T10:00"), GameStatus.Scheduled)
+				createMockGame_Completed(new LocalDateTime("2015-11-24T10:00")),
+				createMockGame_Scheduled(new LocalDateTime("2015-11-26T10:00"))
 		);
 		return games;
 	}
 
-	private Game createMockGame_GameStatus(LocalDateTime asOfDate, GameStatus status) {
+	private Game createMockGame_Scheduled(LocalDateTime asOfDate) {
 		Game game = new Game();
 		game.setGameDateTime(asOfDate);
-		game.setStatus(status);
+		game.setStatus(GameStatus.Scheduled);
 		return game;
 	}
 
-	private Game createMockGame_StatusCode(LocalDateTime asOfDate, StatusCode status) {
+	private Game createMockGame_Completed(LocalDateTime asOfDate) {
+		Game game = new Game();
+		game.setGameDateTime(asOfDate);
+		game.setStatus(GameStatus.Completed);
+		return game;
+	}
+
+	private Game createMockGame_StatusCode(LocalDateTime asOfDate, StatusCodeDAO status) {
 		Game game = new Game();
 		game.setGameDateTime(asOfDate);
 		game.setStatusCode(status);
+		return game;
+	}
+
+	private GameDTO createMockGameDTO(StatusCodeDTO status) {
+		GameDTO game = new GameDTO();
+		
 		return game;
 	}
 }
