@@ -16,7 +16,7 @@ import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.client.dto.RosterDTO;
 import com.rossotti.basketball.client.dto.StandingsDTO;
 import com.rossotti.basketball.client.dto.StatsDTO;
-import com.rossotti.basketball.client.dto.StatusCode;
+import com.rossotti.basketball.client.dto.StatusCodeDTO;
 
 @Service
 public class RestClientService {
@@ -32,20 +32,20 @@ public class RestClientService {
 		Response response = clientService.getClient().target(url).request().get();
 		
 		if (response.getStatus() != 200) {
-			statsDTO.setStatusCode(StatusCode.NotFound);
+			statsDTO.setStatusCode(StatusCodeDTO.NotFound);
 			response.readEntity(String.class);
 		} else {
 			try {
 				statsDTO = mapper.readValue(response.readEntity(String.class), statsDTO.getClass());
-				statsDTO.setStatusCode(StatusCode.Found);
+				statsDTO.setStatusCode(StatusCodeDTO.Found);
 			} catch (JsonParseException jpe) {
-				statsDTO.setStatusCode(StatusCode.ClientException);
+				statsDTO.setStatusCode(StatusCodeDTO.ClientException);
 				jpe.printStackTrace();
 			} catch (JsonMappingException jme) {
-				statsDTO.setStatusCode(StatusCode.ClientException);
+				statsDTO.setStatusCode(StatusCodeDTO.ClientException);
 				jme.printStackTrace();
 			} catch (IOException ioe) {
-				statsDTO.setStatusCode(StatusCode.ClientException);
+				statsDTO.setStatusCode(StatusCodeDTO.ClientException);
 				ioe.printStackTrace();
 			}
 		}

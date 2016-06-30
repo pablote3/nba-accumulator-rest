@@ -1,20 +1,20 @@
 package com.rossotti.basketball.client.dto;
 
 public class StatsDTO {
-	private StatusCode statusCode;
-	public StatusCode getStatusCode() {
+	private StatusCodeDTO statusCode;
+	public StatusCodeDTO getStatusCode() {
 		return statusCode;
 	}
-	public void setStatusCode(StatusCode statusCode) {
+	public void setStatusCode(StatusCodeDTO statusCode) {
 		this.statusCode = statusCode;
 	}
 	public Boolean isFound() {
-		return statusCode == StatusCode.Found;
+		return statusCode == StatusCodeDTO.Found;
 	}
 	public Boolean isNotFound() {
-		return statusCode == StatusCode.NotFound;
+		return statusCode == StatusCodeDTO.NotFound;
 	}
 	public Boolean isJsonException() {
-		return statusCode == StatusCode.ClientException;
+		return statusCode == StatusCodeDTO.ClientException;
 	}
 }

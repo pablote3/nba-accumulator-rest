@@ -22,7 +22,7 @@ import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.client.dto.RosterDTO;
 import com.rossotti.basketball.client.dto.StandingsDTO;
 import com.rossotti.basketball.client.dto.StatsDTO;
-import com.rossotti.basketball.client.dto.StatusCode;
+import com.rossotti.basketball.client.dto.StatusCodeDTO;
 
 @Service
 public class FileClientService {
@@ -40,18 +40,18 @@ public class FileClientService {
 			InputStream inputStreamJson = new FileInputStream(file);
 			baseJson = new InputStreamReader(inputStreamJson, StandardCharsets.UTF_8);
 			statsDTO = mapper.readValue(baseJson, statsDTO.getClass());
-			statsDTO.setStatusCode(StatusCode.Found);
+			statsDTO.setStatusCode(StatusCodeDTO.Found);
 		} catch (FileNotFoundException fnf) {
-			statsDTO.setStatusCode(StatusCode.NotFound);
+			statsDTO.setStatusCode(StatusCodeDTO.NotFound);
 			fnf.printStackTrace();
 		} catch (JsonParseException jpe) {
-			statsDTO.setStatusCode(StatusCode.ClientException);
+			statsDTO.setStatusCode(StatusCodeDTO.ClientException);
 			jpe.printStackTrace();
 		} catch (JsonMappingException jme) {
-			statsDTO.setStatusCode(StatusCode.ClientException);
+			statsDTO.setStatusCode(StatusCodeDTO.ClientException);
 			jme.printStackTrace();
 		} catch (IOException ioe) {
-			statsDTO.setStatusCode(StatusCode.ClientException);
+			statsDTO.setStatusCode(StatusCodeDTO.ClientException);
 			ioe.printStackTrace();
 		}
 		finally {
@@ -59,7 +59,7 @@ public class FileClientService {
 				if (baseJson != null)
 					baseJson.close();
 			} catch (IOException ioe) {
-				statsDTO.setStatusCode(StatusCode.ClientException);
+				statsDTO.setStatusCode(StatusCodeDTO.ClientException);
 				ioe.printStackTrace();
 			}
 		}
