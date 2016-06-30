@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rossotti.basketball.dao.model.RosterPlayer;
-import com.rossotti.basketball.dao.model.StatusCode;
+import com.rossotti.basketball.dao.model.StatusCodeDAO;
 
 @Repository
 @Transactional
@@ -35,10 +35,10 @@ public class RosterPlayerRepository {
 
 		RosterPlayer rosterPlayer = (RosterPlayer)query.uniqueResult();
 		if (rosterPlayer == null) {
-			rosterPlayer = new RosterPlayer(StatusCode.NotFound);
+			rosterPlayer = new RosterPlayer(StatusCodeDAO.NotFound);
 		}
 		else {
-			rosterPlayer.setStatusCode(StatusCode.Found);
+			rosterPlayer.setStatusCode(StatusCodeDAO.Found);
 		}
 		return rosterPlayer;
 	}
@@ -60,10 +60,10 @@ public class RosterPlayerRepository {
 
 		RosterPlayer rosterPlayer = (RosterPlayer)query.uniqueResult();
 		if (rosterPlayer == null) {
-			rosterPlayer = new RosterPlayer(StatusCode.NotFound);
+			rosterPlayer = new RosterPlayer(StatusCodeDAO.NotFound);
 		}
 		else {
-			rosterPlayer.setStatusCode(StatusCode.Found);
+			rosterPlayer.setStatusCode(StatusCodeDAO.Found);
 		}
 		return rosterPlayer;
 	}
@@ -110,7 +110,7 @@ public class RosterPlayerRepository {
 		RosterPlayer findRosterPlayer = findRosterPlayer(createRosterPlayer.getPlayer().getLastName(), createRosterPlayer.getPlayer().getFirstName(), createRosterPlayer.getPlayer().getBirthdate(), createRosterPlayer.getFromDate());
 		if (findRosterPlayer.isNotFound()) {
 			getSessionFactory().getCurrentSession().save(createRosterPlayer);
-			createRosterPlayer.setStatusCode(StatusCode.Created);
+			createRosterPlayer.setStatusCode(StatusCodeDAO.Created);
 			return createRosterPlayer;
 		}
 		else {
@@ -125,7 +125,7 @@ public class RosterPlayerRepository {
 			rosterPlayer.setToDate(rp.getToDate());
 			rosterPlayer.setNumber(rp.getNumber());
 			rosterPlayer.setPosition(rp.getPosition());
-			rosterPlayer.setStatusCode(StatusCode.Updated);
+			rosterPlayer.setStatusCode(StatusCodeDAO.Updated);
 			getSessionFactory().getCurrentSession().saveOrUpdate(rosterPlayer);
 		}
 		return rosterPlayer;
@@ -135,7 +135,7 @@ public class RosterPlayerRepository {
 		RosterPlayer rosterPlayer = findRosterPlayer(lastName, firstName, birthdate, asOfDate);
 		if (rosterPlayer.isFound()) {
 			getSessionFactory().getCurrentSession().delete(rosterPlayer);
-			rosterPlayer = new RosterPlayer(StatusCode.Deleted);
+			rosterPlayer = new RosterPlayer(StatusCodeDAO.Deleted);
 		}
 		return rosterPlayer;
 	}

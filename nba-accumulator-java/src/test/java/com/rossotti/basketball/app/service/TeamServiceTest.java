@@ -13,7 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.rossotti.basketball.dao.model.StatusCode;
+import com.rossotti.basketball.dao.model.StatusCodeDAO;
 import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.dao.repository.TeamRepository;
 
@@ -28,9 +28,9 @@ public class TeamServiceTest {
 	@Before
 	public void setUp() {
 		when(teamRepo.findTeam(anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockTeam("denver-nuggets", StatusCode.Found))
-			.thenReturn(createMockTeam("new-orleans-hornets", StatusCode.NotFound))
-			.thenReturn(createMockTeam("denver-mcnuggets", StatusCode.NotFound));
+			.thenReturn(createMockTeam("denver-nuggets", StatusCodeDAO.Found))
+			.thenReturn(createMockTeam("new-orleans-hornets", StatusCodeDAO.NotFound))
+			.thenReturn(createMockTeam("denver-mcnuggets", StatusCodeDAO.NotFound));
 	}
 
 	@Test
@@ -50,7 +50,7 @@ public class TeamServiceTest {
 		Assert.assertTrue(team.isNotFound());
 	}
 	
-	private Team createMockTeam(String teamKey, StatusCode statusCode) {
+	private Team createMockTeam(String teamKey, StatusCodeDAO statusCode) {
 		Team team = new Team();
 		team.setTeamKey(teamKey);
 		team.setFromDate(new LocalDate(1995, 11, 26));

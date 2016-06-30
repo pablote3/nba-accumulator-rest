@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rossotti.basketball.dao.model.Standing;
-import com.rossotti.basketball.dao.model.StatusCode;
+import com.rossotti.basketball.dao.model.StatusCodeDAO;
 
 @Repository
 @Transactional
@@ -30,10 +30,10 @@ public class StandingRepository {
 
 		Standing standing = (Standing)query.uniqueResult();
 		if (standing == null) {
-			standing = new Standing(StatusCode.NotFound);
+			standing = new Standing(StatusCodeDAO.NotFound);
 		}
 		else {
-			standing.setStatusCode(StatusCode.Found);
+			standing.setStatusCode(StatusCodeDAO.Found);
 		}
 		return standing;
 	}
@@ -56,7 +56,7 @@ public class StandingRepository {
 		Standing standing = findStanding(createStanding.getTeam().getTeamKey(), createStanding.getStandingDate());
 		if (standing.isNotFound()) {
 			getSessionFactory().getCurrentSession().persist(createStanding);
-			createStanding.setStatusCode(StatusCode.Created);
+			createStanding.setStatusCode(StatusCodeDAO.Created);
 			return createStanding;
 		}
 		else {
@@ -95,7 +95,7 @@ public class StandingRepository {
 			standing.setOpptGamesPlayed(s.getOpptGamesPlayed());
 			standing.setOpptOpptGamesWon(s.getOpptOpptGamesWon());
 			standing.setOpptOpptGamesPlayed(s.getOpptOpptGamesPlayed());
-			standing.setStatusCode(StatusCode.Updated);
+			standing.setStatusCode(StatusCodeDAO.Updated);
 			getSessionFactory().getCurrentSession().saveOrUpdate(standing);
 		}
 		return standing;
@@ -105,7 +105,7 @@ public class StandingRepository {
 		Standing standing = findStanding(teamKey, asOfDate);
 		if (standing.isFound()) {
 			getSessionFactory().getCurrentSession().delete(standing);
-			standing = new Standing(StatusCode.Deleted);
+			standing = new Standing(StatusCodeDAO.Deleted);
 		}
 		return standing;
 	}

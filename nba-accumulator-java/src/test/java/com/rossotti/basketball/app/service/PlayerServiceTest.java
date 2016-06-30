@@ -15,7 +15,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.rossotti.basketball.dao.exception.DuplicateEntityException;
 import com.rossotti.basketball.dao.model.Player;
-import com.rossotti.basketball.dao.model.StatusCode;
+import com.rossotti.basketball.dao.model.StatusCodeDAO;
 import com.rossotti.basketball.dao.repository.PlayerRepository;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -29,10 +29,10 @@ public class PlayerServiceTest {
 	@Before
 	public void setUp() {
 		when(playerRepo.findPlayer(anyString(), anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockPlayer("Adams", "Samuel", StatusCode.Found))
-			.thenReturn(createMockPlayer("Simmons", "Richard", StatusCode.NotFound));
+			.thenReturn(createMockPlayer("Adams", "Samuel", StatusCodeDAO.Found))
+			.thenReturn(createMockPlayer("Simmons", "Richard", StatusCodeDAO.NotFound));
 		when(playerRepo.createPlayer((Player) anyObject()))
-			.thenReturn(createMockPlayer("Payton", "Walter", StatusCode.Created))
+			.thenReturn(createMockPlayer("Payton", "Walter", StatusCodeDAO.Created))
 			.thenThrow(new DuplicateEntityException(Player.class));
 	}
 
@@ -53,15 +53,15 @@ public class PlayerServiceTest {
 	public void createPlayer() {
 		Player player;
 		//player created
-		player = playerService.createPlayer(createMockPlayer("Payton", "Walter", StatusCode.Created));
+		player = playerService.createPlayer(createMockPlayer("Payton", "Walter", StatusCodeDAO.Created));
 		Assert.assertEquals("Walter", player.getFirstName());
 		Assert.assertTrue(player.isCreated());
 
 		//player already exists
-		player = playerService.createPlayer(createMockPlayer("Smith", "Emmitt", StatusCode.Found));
+		player = playerService.createPlayer(createMockPlayer("Smith", "Emmitt", StatusCodeDAO.Found));
 	}
 
-	private Player createMockPlayer(String lastName, String firstName, StatusCode statusCode) {
+	private Player createMockPlayer(String lastName, String firstName, StatusCodeDAO statusCode) {
 		Player player = new Player();
 		player.setLastName(lastName);
 		player.setFirstName(firstName);

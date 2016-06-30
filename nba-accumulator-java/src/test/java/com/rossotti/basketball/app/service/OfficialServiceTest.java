@@ -19,7 +19,7 @@ import com.rossotti.basketball.client.dto.OfficialDTO;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.GameOfficial;
 import com.rossotti.basketball.dao.model.Official;
-import com.rossotti.basketball.dao.model.StatusCode;
+import com.rossotti.basketball.dao.model.StatusCodeDAO;
 import com.rossotti.basketball.dao.repository.OfficialRepository;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,9 +33,9 @@ public class OfficialServiceTest {
 	@Before
 	public void setUp() {
 		when(officialRepo.findOfficial(anyString(), anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockOfficial("Adams", "Samuel", StatusCode.Found))
-			.thenReturn(createMockOfficial("Coors", "Adolph", StatusCode.Found))
-			.thenReturn(createMockOfficial("", "", StatusCode.NotFound));
+			.thenReturn(createMockOfficial("Adams", "Samuel", StatusCodeDAO.Found))
+			.thenReturn(createMockOfficial("Coors", "Adolph", StatusCodeDAO.Found))
+			.thenReturn(createMockOfficial("", "", StatusCodeDAO.NotFound));
 	}
 
 	@Test(expected=NoSuchEntityException.class)
@@ -65,7 +65,7 @@ public class OfficialServiceTest {
 		return official;
 	}
 	
-	private Official createMockOfficial(String lastName, String firstName, StatusCode statusCode) {
+	private Official createMockOfficial(String lastName, String firstName, StatusCodeDAO statusCode) {
 		Official official = new Official();
 		official.setLastName(lastName);
 		official.setFirstName(firstName);

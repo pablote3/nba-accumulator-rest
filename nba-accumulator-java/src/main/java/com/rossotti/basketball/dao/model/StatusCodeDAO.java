@@ -1,6 +1,6 @@
 package com.rossotti.basketball.dao.model;
 
-public enum StatusCode {
+public enum StatusCodeDAO {
 	Found,
 	NotFound,
 	Updated,

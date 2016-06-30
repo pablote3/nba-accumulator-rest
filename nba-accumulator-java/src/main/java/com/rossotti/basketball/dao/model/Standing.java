@@ -26,32 +26,32 @@ import com.rossotti.basketball.util.DateTimeUtil;
 @Table (name="standing", uniqueConstraints=@UniqueConstraint(columnNames={"teamId", "standingDate"}))
 public class Standing {
 	public Standing() {
-		setStatusCode(StatusCode.Found);
+		setStatusCode(StatusCodeDAO.Found);
 	}
-	public Standing(StatusCode statusCode) {
+	public Standing(StatusCodeDAO statusCode) {
 		setStatusCode(statusCode);
 	}
 
 	@Enumerated(EnumType.STRING)
 	@Transient
-	private StatusCode statusCode;
-	public void setStatusCode(StatusCode statusCode) {
+	private StatusCodeDAO statusCode;
+	public void setStatusCode(StatusCodeDAO statusCode) {
 		this.statusCode = statusCode;
 	}
 	public Boolean isFound() {
-		return statusCode == StatusCode.Found;
+		return statusCode == StatusCodeDAO.Found;
 	}
 	public Boolean isNotFound() {
-		return statusCode == StatusCode.NotFound;
+		return statusCode == StatusCodeDAO.NotFound;
 	}
 	public Boolean isUpdated() {
-		return statusCode == StatusCode.Updated;
+		return statusCode == StatusCodeDAO.Updated;
 	}
 	public Boolean isCreated() {
-		return statusCode == StatusCode.Created;
+		return statusCode == StatusCodeDAO.Created;
 	}
 	public Boolean isDeleted() {
-		return statusCode == StatusCode.Deleted;
+		return statusCode == StatusCodeDAO.Deleted;
 	}
 
 	@Id

@@ -25,7 +25,7 @@ import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.BoxScorePlayer;
 import com.rossotti.basketball.dao.model.Player;
 import com.rossotti.basketball.dao.model.RosterPlayer;
-import com.rossotti.basketball.dao.model.StatusCode;
+import com.rossotti.basketball.dao.model.StatusCodeDAO;
 import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.dao.repository.RosterPlayerRepository;
 import com.rossotti.basketball.dao.repository.TeamRepository;
@@ -44,24 +44,24 @@ public class RosterPlayerServiceTest {
 	@Before
 	public void setUp() {
 		when(rosterPlayerRepo.findRosterPlayer(anyString(), anyString(), anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockRosterPlayer("Adams", "Samuel", StatusCode.Found))
-			.thenReturn(createMockRosterPlayer("Coors", "Adolph", StatusCode.Found))
-			.thenReturn(createMockRosterPlayer("", "", StatusCode.NotFound));
+			.thenReturn(createMockRosterPlayer("Adams", "Samuel", StatusCodeDAO.Found))
+			.thenReturn(createMockRosterPlayer("Coors", "Adolph", StatusCodeDAO.Found))
+			.thenReturn(createMockRosterPlayer("", "", StatusCodeDAO.NotFound));
 		when(rosterPlayerRepo.findRosterPlayer(anyString(), anyString(), (LocalDate) anyObject(), (LocalDate) anyObject()))
-			.thenReturn(createMockRosterPlayer("Simmons", "Gene", StatusCode.Found))
-			.thenReturn(createMockRosterPlayer("Simmons", "Richard", StatusCode.NotFound));
+			.thenReturn(createMockRosterPlayer("Simmons", "Gene", StatusCodeDAO.Found))
+			.thenReturn(createMockRosterPlayer("Simmons", "Richard", StatusCodeDAO.NotFound));
 		when(rosterPlayerRepo.findRosterPlayers(anyString(), (LocalDate) anyObject()))
 			.thenReturn(createMockRosterPlayers())
 			.thenReturn(new ArrayList<RosterPlayer>());
 		when(rosterPlayerRepo.createRosterPlayer((RosterPlayer) anyObject()))
-			.thenReturn(createMockRosterPlayer("Payton", "Walter", StatusCode.Created))
+			.thenReturn(createMockRosterPlayer("Payton", "Walter", StatusCodeDAO.Created))
 			.thenThrow(new DuplicateEntityException(RosterPlayer.class));
 		when(rosterPlayerRepo.updateRosterPlayer((RosterPlayer) anyObject()))
-			.thenReturn(createMockRosterPlayer("Schaub", "Buddy", StatusCode.Updated))
-			.thenReturn(createMockRosterPlayer("Lima", "Roger", StatusCode.NotFound));
+			.thenReturn(createMockRosterPlayer("Schaub", "Buddy", StatusCodeDAO.Updated))
+			.thenReturn(createMockRosterPlayer("Lima", "Roger", StatusCodeDAO.NotFound));
 		when(teamRepo.findTeam(anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockTeam("denver-nuggets", StatusCode.Found))
-			.thenReturn(createMockTeam("denver-mcnuggets", StatusCode.NotFound));
+			.thenReturn(createMockTeam("denver-nuggets", StatusCodeDAO.Found))
+			.thenReturn(createMockTeam("denver-mcnuggets", StatusCodeDAO.NotFound));
 	}
 
 	@Test(expected=NoSuchEntityException.class)
@@ -137,24 +137,24 @@ public class RosterPlayerServiceTest {
 	public void createRosterPlayer() {
 		RosterPlayer rosterPlayer;
 		//roster player created
-		rosterPlayer = rosterPlayerService.createRosterPlayer(createMockRosterPlayer("Payton", "Walter", StatusCode.Created));
+		rosterPlayer = rosterPlayerService.createRosterPlayer(createMockRosterPlayer("Payton", "Walter", StatusCodeDAO.Created));
 		Assert.assertEquals("Walter", rosterPlayer.getPlayer().getFirstName());
 		Assert.assertTrue(rosterPlayer.isCreated());
 
 		//roster player already exists
-		rosterPlayer = rosterPlayerService.createRosterPlayer(createMockRosterPlayer("Smith", "Emmitt", StatusCode.Found));
+		rosterPlayer = rosterPlayerService.createRosterPlayer(createMockRosterPlayer("Smith", "Emmitt", StatusCodeDAO.Found));
 	}
 
 	@Test
 	public void updateRosterPlayer() {
 		RosterPlayer rosterPlayer;
 		//roster player updated
-		rosterPlayer = rosterPlayerService.updateRosterPlayer(createMockRosterPlayer("Schaub", "Buddy", StatusCode.Found));
+		rosterPlayer = rosterPlayerService.updateRosterPlayer(createMockRosterPlayer("Schaub", "Buddy", StatusCodeDAO.Found));
 		Assert.assertEquals("Buddy", rosterPlayer.getPlayer().getFirstName());
 		Assert.assertTrue(rosterPlayer.isUpdated());
 
 		//no roster player found
-		rosterPlayer = rosterPlayerService.updateRosterPlayer(createMockRosterPlayer("Roger", "Lima", StatusCode.NotFound));
+		rosterPlayer = rosterPlayerService.updateRosterPlayer(createMockRosterPlayer("Roger", "Lima", StatusCodeDAO.NotFound));
 		Assert.assertEquals("Roger", rosterPlayer.getPlayer().getFirstName());
 		Assert.assertTrue(rosterPlayer.isNotFound());
 	}
@@ -216,13 +216,13 @@ public class RosterPlayerServiceTest {
 
 	private List<RosterPlayer> createMockRosterPlayers() {
 		List<RosterPlayer> rosterPlayers = Arrays.asList(
-			createMockRosterPlayer("Simpson", "Homer", StatusCode.Found),
-			createMockRosterPlayer("Simpson", "Lisa", StatusCode.Found)
+			createMockRosterPlayer("Simpson", "Homer", StatusCodeDAO.Found),
+			createMockRosterPlayer("Simpson", "Lisa", StatusCodeDAO.Found)
 		);
 		return rosterPlayers;
 	}
 
-	private RosterPlayer createMockRosterPlayer(String lastName, String firstName, StatusCode statusCode) {
+	private RosterPlayer createMockRosterPlayer(String lastName, String firstName, StatusCodeDAO statusCode) {
 		RosterPlayer rosterPlayer = new RosterPlayer();
 		Player player = new Player();
 		rosterPlayer.setPlayer(player);
@@ -234,7 +234,7 @@ public class RosterPlayerServiceTest {
 		return rosterPlayer;
 	}
 
-	private Team createMockTeam(String teamKey, StatusCode statusCode) {
+	private Team createMockTeam(String teamKey, StatusCodeDAO statusCode) {
 		Team team = new Team();
 		team.setTeamKey(teamKey);
 		team.setStatusCode(statusCode);

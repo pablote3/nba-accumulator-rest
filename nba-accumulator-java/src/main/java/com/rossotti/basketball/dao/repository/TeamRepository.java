@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rossotti.basketball.dao.model.StatusCode;
+import com.rossotti.basketball.dao.model.StatusCodeDAO;
 import com.rossotti.basketball.dao.model.Team;
 
 @Repository
@@ -26,10 +26,10 @@ public class TeamRepository {
 			.add(Restrictions.ge("toDate", asOfDate))
 			.uniqueResult();
 		if (team == null) {
-			team = new Team(StatusCode.NotFound);
+			team = new Team(StatusCodeDAO.NotFound);
 		}
 		else {
-			team.setStatusCode(StatusCode.Found);
+			team.setStatusCode(StatusCodeDAO.Found);
 		}
 		return team;
 	}
@@ -61,7 +61,7 @@ public class TeamRepository {
 		Team team = findTeam(createTeam.getTeamKey(), createTeam.getFromDate());
 		if (team.isNotFound()) {
 			getSessionFactory().getCurrentSession().persist(createTeam);
-			createTeam.setStatusCode(StatusCode.Created);
+			createTeam.setStatusCode(StatusCodeDAO.Created);
 			return createTeam;
 		}
 		else {
@@ -83,7 +83,7 @@ public class TeamRepository {
 			team.setCity(updateTeam.getCity());
 			team.setState(updateTeam.getState());
 			team.setSiteName(updateTeam.getSiteName());
-			team.setStatusCode(StatusCode.Updated);
+			team.setStatusCode(StatusCodeDAO.Updated);
 			getSessionFactory().getCurrentSession().saveOrUpdate(team);
 		}
 		return team;
@@ -93,7 +93,7 @@ public class TeamRepository {
 		Team team = findTeam(teamKey, asOfDate);
 		if (team.isFound()) {
 			getSessionFactory().getCurrentSession().delete(team);
-			team = new Team(StatusCode.Deleted);
+			team = new Team(StatusCodeDAO.Deleted);
 		}
 		return team;
 	}

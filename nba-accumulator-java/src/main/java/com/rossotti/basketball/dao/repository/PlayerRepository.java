@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rossotti.basketball.dao.model.Player;
-import com.rossotti.basketball.dao.model.StatusCode;
+import com.rossotti.basketball.dao.model.StatusCodeDAO;
 
 @Repository
 @Transactional
@@ -31,10 +31,10 @@ public class PlayerRepository {
 
 		Player player = (Player)query.uniqueResult();
 		if (player == null) {
-			player = new Player(StatusCode.NotFound);
+			player = new Player(StatusCodeDAO.NotFound);
 		}
 		else {
-			player.setStatusCode(StatusCode.Found);
+			player.setStatusCode(StatusCodeDAO.Found);
 		}
 		return player;
 	}
@@ -59,7 +59,7 @@ public class PlayerRepository {
 		Player player = findPlayer(createPlayer.getLastName(), createPlayer.getFirstName(), createPlayer.getBirthdate());
 		if (player.isNotFound()) {
 			getSessionFactory().getCurrentSession().persist(createPlayer);
-			createPlayer.setStatusCode(StatusCode.Created);
+			createPlayer.setStatusCode(StatusCodeDAO.Created);
 		}
 		else {
 			return player;
@@ -77,7 +77,7 @@ public class PlayerRepository {
 			player.setHeight(updatePlayer.getHeight());
 			player.setWeight(updatePlayer.getWeight());
 			player.setBirthplace(updatePlayer.getBirthplace());
-			player.setStatusCode(StatusCode.Updated);
+			player.setStatusCode(StatusCodeDAO.Updated);
 			getSessionFactory().getCurrentSession().saveOrUpdate(player);
 		}
 		return player;
@@ -87,7 +87,7 @@ public class PlayerRepository {
 		Player player = findPlayer(lastName, firstName, birthdate);
 		if (player.isFound()) {
 			getSessionFactory().getCurrentSession().delete(player);
-			player = new Player(StatusCode.Deleted);
+			player = new Player(StatusCodeDAO.Deleted);
 		}
 		return player;
 	}

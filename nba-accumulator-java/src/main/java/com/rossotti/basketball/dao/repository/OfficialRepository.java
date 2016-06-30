@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rossotti.basketball.dao.model.Official;
-import com.rossotti.basketball.dao.model.StatusCode;
+import com.rossotti.basketball.dao.model.StatusCodeDAO;
 
 @Repository
 @Transactional
@@ -32,10 +32,10 @@ public class OfficialRepository {
 
 		Official official = (Official)query.uniqueResult();
 		if (official == null) {
-			official = new Official(StatusCode.NotFound);
+			official = new Official(StatusCodeDAO.NotFound);
 		}
 		else {
-			official.setStatusCode(StatusCode.Found);
+			official.setStatusCode(StatusCodeDAO.Found);
 		}
 		return official;
 	}
@@ -75,7 +75,7 @@ public class OfficialRepository {
 		Official official = findOfficial(createOfficial.getLastName(), createOfficial.getFirstName(), createOfficial.getFromDate());
 		if (official.isNotFound()) {
 			getSessionFactory().getCurrentSession().persist(createOfficial);
-			createOfficial.setStatusCode(StatusCode.Created);
+			createOfficial.setStatusCode(StatusCodeDAO.Created);
 		}
 		else {
 			return official;
@@ -91,7 +91,7 @@ public class OfficialRepository {
 			official.setFromDate(updateOfficial.getFromDate());
 			official.setToDate(updateOfficial.getToDate());
 			official.setNumber(updateOfficial.getNumber());
-			official.setStatusCode(StatusCode.Updated);
+			official.setStatusCode(StatusCodeDAO.Updated);
 			getSessionFactory().getCurrentSession().saveOrUpdate(official);
 		}
 		return official;
@@ -101,7 +101,7 @@ public class OfficialRepository {
 		Official official = findOfficial(lastName, firstName, asOfDate);
 		if (official.isFound()) {
 			getSessionFactory().getCurrentSession().delete(official);
-			official = new Official(StatusCode.Deleted);
+			official = new Official(StatusCodeDAO.Deleted);
 		}
 		return official;
 	}

@@ -17,7 +17,7 @@ import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.model.GameOfficial;
 import com.rossotti.basketball.dao.model.GameStatus;
-import com.rossotti.basketball.dao.model.StatusCode;
+import com.rossotti.basketball.dao.model.StatusCodeDAO;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Repository
@@ -42,7 +42,7 @@ public class GameRepository {
 
 		Game findGame = (Game)query.uniqueResult();
 		if (findGame == null) {
-			return new Game(StatusCode.NotFound);
+			return new Game(StatusCodeDAO.NotFound);
 		} 
 		else {
 			Game game = (Game)getSessionFactory().getCurrentSession().createCriteria(Game.class)
@@ -170,7 +170,7 @@ public class GameRepository {
 				createGame.getBoxScores().get(i).setGame(createGame);
 			}
 			getSessionFactory().getCurrentSession().persist(createGame);
-			createGame.setStatusCode(StatusCode.Created);
+			createGame.setStatusCode(StatusCodeDAO.Created);
 			return createGame;
 		}
 		else {
@@ -182,7 +182,7 @@ public class GameRepository {
 		Game findGame = findByDateTeam(DateTimeUtil.getLocalDate(updateGame.getGameDateTime()), updateGame.getBoxScoreAway().getTeam().getTeamKey());
 		if (findGame.isFound()) {
 			if (!findGame.getBoxScoreHome().getTeam().getTeamKey().equals(updateGame.getBoxScoreHome().getTeam().getTeamKey())) {
-				findGame.setStatusCode(StatusCode.NotFound);
+				findGame.setStatusCode(StatusCodeDAO.NotFound);
 				return findGame;
 			}
 			findGame.setStatus(updateGame.getStatus());
@@ -261,7 +261,7 @@ public class GameRepository {
 				findAwayBoxScore.getBoxScorePlayers().get(i).setBoxScore(findAwayBoxScore);
 			}
 
-			findGame.setStatusCode(StatusCode.Updated);
+			findGame.setStatusCode(StatusCodeDAO.Updated);
 			getSessionFactory().getCurrentSession().saveOrUpdate(findGame);
 		}
 		return findGame;
@@ -271,7 +271,7 @@ public class GameRepository {
 		Game game = findByDateTeam(gameDate, teamKey);
 		if (game.isFound()) {
 			getSessionFactory().getCurrentSession().delete(game);
-			game = new Game(StatusCode.Deleted);
+			game = new Game(StatusCodeDAO.Deleted);
 		}
 		return game;
 	}
