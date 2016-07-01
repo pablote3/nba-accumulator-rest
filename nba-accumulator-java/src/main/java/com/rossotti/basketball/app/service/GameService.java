@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.rossotti.basketball.app.exception.PropertyException;
 import com.rossotti.basketball.app.resource.ClientSource;
 import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.client.service.FileClientService;
@@ -89,6 +90,9 @@ public class GameService {
 				}
 				else if (clientSource == ClientSource.Api) {
 					gameDTO = restClientService.retrieveBoxScore(event);
+				}
+				else {
+					throw new PropertyException("Unknown");
 				}
 				if (gameDTO.isFound()) {
 					awayBoxScore.updateTotals(gameDTO.away_totals);
