@@ -18,7 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.rossotti.basketball.client.service.FileClientService;
 import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.BoxScore.Location;
 import com.rossotti.basketball.dao.model.Game;
@@ -31,24 +30,6 @@ import com.rossotti.basketball.dao.repository.GameRepository;
 public class GameServiceTest {
 	@Mock
 	private GameRepository gameRepo;
-
-	@Mock
-	private PropertyService propertyService;
-
-	@Mock
-	private FileClientService fileClientService;
-
-//	@Mock
-//	private RestClientService restClientService;
-
-	@Mock
-	private RosterPlayerService rosterPlayerService;
-
-	@Mock
-	private OfficialService officialService;
-
-	@Mock
-	private TeamService teamService;
 
 	@InjectMocks
 	private GameService gameService = new GameService();
