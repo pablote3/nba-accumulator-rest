@@ -12,7 +12,7 @@ import javax.ws.rs.core.UriInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.rossotti.basketball.app.service.GameService;
+import com.rossotti.basketball.app.business.GameBusiness;
 import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.pub.PubGame;
 
@@ -20,13 +20,13 @@ import com.rossotti.basketball.dao.pub.PubGame;
 @Path("/score")
 public class ScoreResource {
 	@Autowired
-	private GameService gameService;
+	private GameBusiness gameBusiness;
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response scoreGame(@Context UriInfo uriInfo, Game game) {
-		Game resultGame = gameService.scoreGame(game);
+		Game resultGame = gameBusiness.scoreGame(game);
 		if (resultGame.isCompleted()) {
 			PubGame pubGame = game.toPubGame(uriInfo, game.getBoxScoreHome().getTeam().getTeamKey());
 			return Response.ok(pubGame)
