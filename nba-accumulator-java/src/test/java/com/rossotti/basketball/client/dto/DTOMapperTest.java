@@ -17,7 +17,7 @@ public class DTOMapperTest {
 
 	@Test
 	public void deserializeRoster() throws IOException {
-		InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockClient/rosterClient_Away.json");
+		InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockClient/rosterClient.json");
 		RosterDTO roster = mapper.readValue(baseJson, RosterDTO.class);
 		Assert.assertEquals("detroit-pistons", roster.team.getTeam_id());
 		Assert.assertEquals("Eskişehir, Turkey", roster.players[8].getBirthplace());
