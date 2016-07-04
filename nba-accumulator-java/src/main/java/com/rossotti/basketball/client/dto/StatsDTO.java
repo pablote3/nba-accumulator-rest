@@ -14,7 +14,7 @@ public class StatsDTO {
 	public Boolean isNotFound() {
 		return statusCode == StatusCodeDTO.NotFound;
 	}
-	public Boolean isJsonException() {
+	public Boolean isClientException() {
 		return statusCode == StatusCodeDTO.ClientException;
 	}
 }
