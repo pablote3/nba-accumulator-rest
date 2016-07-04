@@ -79,17 +79,18 @@ public class GameBusinessTest {
 			.thenReturn(null)
 			.thenReturn(ClientSource.File)
 			.thenReturn(ClientSource.File)
+			.thenReturn(ClientSource.Api)
+			.thenReturn(ClientSource.Api)
+			.thenReturn(ClientSource.File)
 			.thenReturn(ClientSource.Api);
-//			.thenReturn(null)
-//			.thenThrow(new PropertyException("propertyName"));
 		when(fileClientService.retrieveBoxScore(anyString()))
+			.thenReturn(createMockGameDTO_StatusCode(StatusCodeDTO.NotFound))
+			.thenReturn(createMockGameDTO_StatusCode(StatusCodeDTO.ClientException))
 			.thenReturn(createMockGameDTO_Found());
-//			.thenReturn(createMockGameDTO(StatusCodeDTO.NotFound))
-//			.thenReturn(createMockGameDTO(StatusCodeDTO.ClientException));
 		when(restClientService.retrieveBoxScore(anyString()))
+			.thenReturn(createMockGameDTO_StatusCode(StatusCodeDTO.NotFound))
+			.thenReturn(createMockGameDTO_StatusCode(StatusCodeDTO.ClientException))
 			.thenReturn(createMockGameDTO_Found());
-//			.thenReturn(createMockBoxScore(StatusCodeDTO.NotFound))
-//			.thenReturn(createMockBoxScore(StatusCodeDTO.ClientException));
 		when(rosterPlayerService.getBoxScorePlayers((BoxScorePlayerDTO[]) anyObject(), (LocalDate) anyObject(), anyString()))
 			.thenReturn(createMockBoxScorePlayersHome_Found())
 			.thenReturn(createMockBoxScorePlayersAway_Found());
@@ -99,7 +100,7 @@ public class GameBusinessTest {
 			.thenReturn(createMockTeamHome_Found())
 			.thenReturn(createMockTeamAway_Found());
 		when(gameService.updateGame((Game)anyObject()))
-			.thenReturn(createMockGame_StatusCode(StatusCodeDAO.NotFound))
+//			.thenReturn(createMockGame_StatusCode(StatusCodeDAO.NotFound))
 			.thenReturn(createMockGame_StatusCode(StatusCodeDAO.Updated));
 	}
 
@@ -107,17 +108,33 @@ public class GameBusinessTest {
 	public void scoreGame() {
 		Game game;
 
-		//client source property exception
+		//propertyService - fail - property exception
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isServerError());
 
-		//client source property null
+		//propertyService - fail - property null
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isServerError());
 
-		//game not found
+		//fileClientService - fail - game dto not found
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
-		Assert.assertTrue(game.isServerError());
+		Assert.assertTrue(game.isClientError());
+
+		//fileClientService - fail - client exception
+		game = gameBusiness.scoreGame(createMockGame_Scheduled());
+		Assert.assertTrue(game.isClientError());
+
+		//restClientService - fail - game dto not found
+		game = gameBusiness.scoreGame(createMockGame_Scheduled());
+		Assert.assertTrue(game.isClientError());
+
+		//restClientService - fail - client exception
+		game = gameBusiness.scoreGame(createMockGame_Scheduled());
+		Assert.assertTrue(game.isClientError());
+
+//		//game not found
+//		game = gameBusiness.scoreGame(createMockGame_Scheduled());
+//		Assert.assertTrue(game.isServerError());
 
 		//game updated - client source file
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
@@ -173,6 +190,12 @@ public class GameBusinessTest {
 			game = new GameDTO();
 			game.setStatusCode(StatusCodeDTO.ClientException);
 		}
+		return game;
+	}
+
+	private GameDTO createMockGameDTO_StatusCode(StatusCodeDTO statusCodeDTO) {
+		GameDTO game = new GameDTO();
+		game.setStatusCode(statusCodeDTO);
 		return game;
 	}
 
