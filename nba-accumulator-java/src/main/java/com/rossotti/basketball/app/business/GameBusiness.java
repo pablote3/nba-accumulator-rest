@@ -112,6 +112,10 @@ public class GameBusiness {
 					logger.info('\n' + "" + " unable to find game");
 					game.setStatus(GameStatus.ClientError);
 				}
+				else if (gameDTO.isClientException()) {
+					logger.info('\n' + "" + " client exception");
+					game.setStatus(GameStatus.ClientError);
+				}
 			}
 			else {
 				logger.info('\n' + "" + game.getStatus() + " game not eligible to be scored: " + event.toString());
