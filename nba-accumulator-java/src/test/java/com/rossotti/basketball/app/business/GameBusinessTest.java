@@ -34,6 +34,7 @@ import com.rossotti.basketball.client.dto.OfficialDTO;
 import com.rossotti.basketball.client.dto.StatusCodeDTO;
 import com.rossotti.basketball.client.service.FileClientService;
 import com.rossotti.basketball.client.service.RestClientService;
+import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.BoxScore.Location;
 import com.rossotti.basketball.dao.model.BoxScorePlayer;
@@ -92,9 +93,11 @@ public class GameBusinessTest {
 			.thenReturn(createMockGameDTO_StatusCode(StatusCodeDTO.ClientException))
 			.thenReturn(createMockGameDTO_Found());
 		when(rosterPlayerService.getBoxScorePlayers((BoxScorePlayerDTO[]) anyObject(), (LocalDate) anyObject(), anyString()))
+			.thenThrow(new NoSuchEntityException(RosterPlayer.class))
 			.thenReturn(createMockBoxScorePlayersHome_Found())
 			.thenReturn(createMockBoxScorePlayersAway_Found());
 		when(officialService.getGameOfficials((OfficialDTO[]) anyObject(), (LocalDate) anyObject()))
+			.thenThrow(new NoSuchEntityException(Official.class))
 			.thenReturn(createMockGameOfficials_Found());
 		when(teamService.findTeam(anyString(), (LocalDate) anyObject()))
 			.thenReturn(createMockTeamHome_Found())
@@ -108,27 +111,35 @@ public class GameBusinessTest {
 	public void scoreGame() {
 		Game game;
 
-		//propertyService - fail - property exception
+		//propertyService - property exception
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isServerError());
 
-		//propertyService - fail - property null
+		//propertyService - property null
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isServerError());
 
-		//fileClientService - fail - game dto not found
+		//fileClientService - game dto not found
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isClientError());
 
-		//fileClientService - fail - client exception
+		//fileClientService - client exception
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isClientError());
 
-		//restClientService - fail - game dto not found
+		//restClientService - game dto not found
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isClientError());
 
-		//restClientService - fail - client exception
+		//restClientService - client exception
+		game = gameBusiness.scoreGame(createMockGame_Scheduled());
+		Assert.assertTrue(game.isClientError());
+
+		//rosterPlayerService - no such entity exception
+		game = gameBusiness.scoreGame(createMockGame_Scheduled());
+		Assert.assertTrue(game.isClientError());
+
+		//officialService - no such entity exception
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isClientError());
 
