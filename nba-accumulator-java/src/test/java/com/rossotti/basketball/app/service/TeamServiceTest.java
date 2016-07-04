@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.StatusCodeDAO;
 import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.dao.repository.TeamRepository;
@@ -33,7 +34,7 @@ public class TeamServiceTest {
 			.thenReturn(createMockTeam("denver-mcnuggets", StatusCodeDAO.NotFound));
 	}
 
-	@Test
+	@Test(expected=NoSuchEntityException.class)
 	public void findTeam() {
 		Team team;
 		//team found
@@ -43,11 +44,9 @@ public class TeamServiceTest {
 
 		//team not found_gameDate
 		team = teamService.findTeam("new-orleans-hornets", new LocalDate(2010, 8, 26));
-		Assert.assertTrue(team.isNotFound());
 
 		//team not found_teamKey
 		team = teamService.findTeam("denver-mcnuggets", new LocalDate(2015, 8, 26));
-		Assert.assertTrue(team.isNotFound());
 	}
 	
 	private Team createMockTeam(String teamKey, StatusCodeDAO statusCode) {
