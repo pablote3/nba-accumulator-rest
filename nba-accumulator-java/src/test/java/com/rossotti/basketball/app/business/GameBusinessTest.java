@@ -100,10 +100,11 @@ public class GameBusinessTest {
 			.thenThrow(new NoSuchEntityException(Official.class))
 			.thenReturn(createMockGameOfficials_Found());
 		when(teamService.findTeam(anyString(), (LocalDate) anyObject()))
+			.thenThrow(new NoSuchEntityException(Team.class))
 			.thenReturn(createMockTeamHome_Found())
 			.thenReturn(createMockTeamAway_Found());
 		when(gameService.updateGame((Game)anyObject()))
-//			.thenReturn(createMockGame_StatusCode(StatusCodeDAO.NotFound))
+			.thenReturn(createMockGame_StatusCode(StatusCodeDAO.NotFound))
 			.thenReturn(createMockGame_StatusCode(StatusCodeDAO.Updated));
 	}
 
@@ -143,9 +144,13 @@ public class GameBusinessTest {
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isClientError());
 
-//		//game not found
-//		game = gameBusiness.scoreGame(createMockGame_Scheduled());
-//		Assert.assertTrue(game.isServerError());
+		//teamService - no such entity exception
+		game = gameBusiness.scoreGame(createMockGame_Scheduled());
+		Assert.assertTrue(game.isClientError());
+
+		//game not found
+		game = gameBusiness.scoreGame(createMockGame_Scheduled());
+		Assert.assertTrue(game.isServerError());
 
 		//game updated - client source file
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
@@ -172,13 +177,6 @@ public class GameBusinessTest {
 		boxScoreAway.setLocation(Location.Away);
 		boxScoreAway.setTeam(teamAway);
 		game.addBoxScore(boxScoreAway);
-		return game;
-	}
-
-	private Game createMockGame_Completed() {
-		Game game = new Game();
-		game.setGameDateTime(new LocalDateTime("2015-11-24T10:00"));
-		game.setStatus(GameStatus.Completed);
 		return game;
 	}
 
