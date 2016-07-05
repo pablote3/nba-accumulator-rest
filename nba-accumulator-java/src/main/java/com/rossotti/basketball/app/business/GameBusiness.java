@@ -49,7 +49,7 @@ public class GameBusiness {
 	@Autowired
 	private GameService gameService;
 	
-	private final Logger logger = LoggerFactory.getLogger(GameService.class);
+	private final Logger logger = LoggerFactory.getLogger(GameBusiness.class);
 	
 	public Game scoreGame(Game game) {
 		try {
