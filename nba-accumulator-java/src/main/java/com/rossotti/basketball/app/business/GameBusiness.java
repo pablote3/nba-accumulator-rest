@@ -18,6 +18,7 @@ import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.client.service.FileClientService;
 import com.rossotti.basketball.client.service.RestClientService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
+import com.rossotti.basketball.dao.model.AppStatus;
 import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.model.GameStatus;
@@ -102,24 +103,25 @@ public class GameBusiness {
 					Game updatedGame = gameService.updateGame(game);
 					if (updatedGame.isUpdated()) {
 						logger.info("Game Scored " + awayTeamKey +  " " + awayBoxScore.getPoints() + " " + homeTeamKey +  " " + homeBoxScore.getPoints());
+						game.setAppStatus(AppStatus.Completed);
 					}
 					else if (updatedGame.isNotFound()) {
 						logger.info("Unable to find game for update - " + updatedGame.getStatus());
-						game.setStatus(GameStatus.ServerError);
+						game.setAppStatus(AppStatus.ServerError);
 					}
 				}
 				else if (gameDTO.isNotFound()) {
 					logger.info('\n' + "" + " unable to find game");
-					game.setStatus(GameStatus.ClientError);
+					game.setAppStatus(AppStatus.ClientError);
 				}
 				else if (gameDTO.isClientException()) {
 					logger.info('\n' + "" + " client exception");
-					game.setStatus(GameStatus.ClientError);
+					game.setAppStatus(AppStatus.ClientError);
 				}
 			}
 			else {
 				logger.info('\n' + "" + game.getStatus() + " game not eligible to be scored: " + event.toString());
-				game.setStatus(GameStatus.ServerError);
+				game.setAppStatus(AppStatus.ServerError);
 			}
 		}
 		catch (NoSuchEntityException nse) {
@@ -129,11 +131,11 @@ public class GameBusiness {
 			else if (nse.getEntityClass().equals(RosterPlayer.class)) {
 				logger.info("Roster Player not found - need to rebuild active roster");
 			}
-			game.setStatus(GameStatus.ClientError);
+			game.setAppStatus(AppStatus.ClientError);
 		}
 		catch (Exception e) {
 			logger.info("unexpected exception = " + e);
-			game.setStatus(GameStatus.ServerError);
+			game.setAppStatus(AppStatus.ServerError);
 		}
 		return game;
 	}

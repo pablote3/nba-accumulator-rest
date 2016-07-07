@@ -114,43 +114,43 @@ public class GameBusinessTest {
 
 		//propertyService - property exception
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
-		Assert.assertTrue(game.isServerError());
+		Assert.assertTrue(game.isAppServerError());
 
 		//propertyService - property null
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
-		Assert.assertTrue(game.isServerError());
+		Assert.assertTrue(game.isAppServerError());
 
 		//fileClientService - game dto not found
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
-		Assert.assertTrue(game.isClientError());
+		Assert.assertTrue(game.isAppClientError());
 
 		//fileClientService - client exception
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
-		Assert.assertTrue(game.isClientError());
+		Assert.assertTrue(game.isAppClientError());
 
 		//restClientService - game dto not found
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
-		Assert.assertTrue(game.isClientError());
+		Assert.assertTrue(game.isAppClientError());
 
 		//restClientService - client exception
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
-		Assert.assertTrue(game.isClientError());
+		Assert.assertTrue(game.isAppClientError());
 
 		//rosterPlayerService - no such entity exception
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
-		Assert.assertTrue(game.isClientError());
+		Assert.assertTrue(game.isAppClientError());
 
 		//officialService - no such entity exception
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
-		Assert.assertTrue(game.isClientError());
+		Assert.assertTrue(game.isAppClientError());
 
 		//teamService - no such entity exception
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
-		Assert.assertTrue(game.isClientError());
+		Assert.assertTrue(game.isAppClientError());
 
 		//game not found
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
-		Assert.assertTrue(game.isServerError());
+		Assert.assertTrue(game.isAppServerError());
 
 		//game updated - client source file
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());

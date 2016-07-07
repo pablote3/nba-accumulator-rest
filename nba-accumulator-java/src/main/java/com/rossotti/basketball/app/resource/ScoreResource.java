@@ -27,16 +27,16 @@ public class ScoreResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response scoreGame(@Context UriInfo uriInfo, Game game) {
 		Game resultGame = gameBusiness.scoreGame(game);
-		if (resultGame.isCompleted()) {
+		if (resultGame.isAppCompleted()) {
 			PubGame pubGame = game.toPubGame(uriInfo, game.getBoxScoreHome().getTeam().getTeamKey());
 			return Response.ok(pubGame)
 				.link(uriInfo.getAbsolutePath(), "game")
 				.build();
 		}
-		else if(resultGame.isClientError()) {
+		else if(resultGame.isAppClientError()) {
 			return Response.status(400).build();
 		}
-		else if(resultGame.isServerError()) {
+		else if(resultGame.isAppServerError()) {
 			return Response.status(500).build();
 		}
 		else {

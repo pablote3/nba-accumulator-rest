@@ -6,6 +6,4 @@ public enum GameStatus {
 	Postponed,
 	Suspended,
 	Cancelled,
-	ClientError,
-	ServerError;
 }
