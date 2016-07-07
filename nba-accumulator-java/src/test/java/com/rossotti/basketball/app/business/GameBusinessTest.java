@@ -35,6 +35,7 @@ import com.rossotti.basketball.client.dto.StatusCodeDTO;
 import com.rossotti.basketball.client.service.FileClientService;
 import com.rossotti.basketball.client.service.RestClientService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
+import com.rossotti.basketball.dao.model.AppGame;
 import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.BoxScore.Location;
 import com.rossotti.basketball.dao.model.BoxScorePlayer;
@@ -110,7 +111,7 @@ public class GameBusinessTest {
 
 	@Test
 	public void scoreGame() {
-		Game game;
+		AppGame game;
 
 		//propertyService - property exception
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
@@ -154,11 +155,11 @@ public class GameBusinessTest {
 
 		//game updated - client source file
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
-		Assert.assertTrue(game.isCompleted());
+		Assert.assertTrue(game.isAppCompleted());
 
 		//game updated - client source api
 		game = gameBusiness.scoreGame(createMockGame_Scheduled());
-		Assert.assertTrue(game.isCompleted());
+		Assert.assertTrue(game.isAppCompleted());
 	}
 
 	private Game createMockGame_Scheduled() {

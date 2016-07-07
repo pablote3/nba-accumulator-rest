@@ -18,6 +18,7 @@ import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.client.service.FileClientService;
 import com.rossotti.basketball.client.service.RestClientService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
+import com.rossotti.basketball.dao.model.AppGame;
 import com.rossotti.basketball.dao.model.AppStatus;
 import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.Game;
@@ -52,7 +53,8 @@ public class GameBusiness {
 	
 	private final Logger logger = LoggerFactory.getLogger(GameBusiness.class);
 	
-	public Game scoreGame(Game game) {
+	public AppGame scoreGame(Game game) {
+		AppGame appGame = new AppGame(game);
 		try {
 			BoxScore awayBoxScore = game.getBoxScoreAway();
 			BoxScore homeBoxScore = game.getBoxScoreHome();
@@ -103,25 +105,25 @@ public class GameBusiness {
 					Game updatedGame = gameService.updateGame(game);
 					if (updatedGame.isUpdated()) {
 						logger.info("Game Scored " + awayTeamKey +  " " + awayBoxScore.getPoints() + " " + homeTeamKey +  " " + homeBoxScore.getPoints());
-						game.setAppStatus(AppStatus.Completed);
+						appGame.setAppStatus(AppStatus.Completed);
 					}
 					else if (updatedGame.isNotFound()) {
 						logger.info("Unable to find game for update - " + updatedGame.getStatus());
-						game.setAppStatus(AppStatus.ServerError);
+						appGame.setAppStatus(AppStatus.ServerError);
 					}
 				}
 				else if (gameDTO.isNotFound()) {
 					logger.info('\n' + "" + " unable to find game");
-					game.setAppStatus(AppStatus.ClientError);
+					appGame.setAppStatus(AppStatus.ClientError);
 				}
 				else if (gameDTO.isClientException()) {
 					logger.info('\n' + "" + " client exception");
-					game.setAppStatus(AppStatus.ClientError);
+					appGame.setAppStatus(AppStatus.ClientError);
 				}
 			}
 			else {
 				logger.info('\n' + "" + game.getStatus() + " game not eligible to be scored: " + event.toString());
-				game.setAppStatus(AppStatus.ServerError);
+				appGame.setAppStatus(AppStatus.ServerError);
 			}
 		}
 		catch (NoSuchEntityException nse) {
@@ -131,12 +133,12 @@ public class GameBusiness {
 			else if (nse.getEntityClass().equals(RosterPlayer.class)) {
 				logger.info("Roster Player not found - need to rebuild active roster");
 			}
-			game.setAppStatus(AppStatus.ClientError);
+			appGame.setAppStatus(AppStatus.ClientError);
 		}
 		catch (Exception e) {
 			logger.info("unexpected exception = " + e);
-			game.setAppStatus(AppStatus.ServerError);
+			appGame.setAppStatus(AppStatus.ServerError);
 		}
-		return game;
+		return appGame;
 	}
 }

@@ -31,25 +31,6 @@ import com.rossotti.basketball.util.DateTimeUtil;
 @Entity
 @Table (name="game")
 public class Game {
-	@Enumerated(EnumType.STRING)
-	@Transient
-	private AppStatus appStatus;
-	public AppStatus getAppStatus() {
-		return appStatus;
-	}
-	public void setAppStatus(AppStatus appStatus) {
-		this.appStatus = appStatus;
-	}
-	public Boolean isAppCompleted() {
-		return appStatus == AppStatus.Completed;
-	}
-	public Boolean isAppClientError() {
-		return appStatus == AppStatus.ClientError;
-	}
-	public Boolean isAppServerError() {
-		return appStatus == AppStatus.ServerError;
-	}
-
 	public Game() {
 		setStatusCode(StatusCodeDAO.Found);
 	}

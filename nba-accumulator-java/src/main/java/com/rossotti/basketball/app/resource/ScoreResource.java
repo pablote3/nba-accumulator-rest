@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.app.business.GameBusiness;
+import com.rossotti.basketball.dao.model.AppGame;
 import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.pub.PubGame;
 
@@ -26,7 +27,7 @@ public class ScoreResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response scoreGame(@Context UriInfo uriInfo, Game game) {
-		Game resultGame = gameBusiness.scoreGame(game);
+		AppGame resultGame = gameBusiness.scoreGame(game);
 		if (resultGame.isAppCompleted()) {
 			PubGame pubGame = game.toPubGame(uriInfo, game.getBoxScoreHome().getTeam().getTeamKey());
 			return Response.ok(pubGame)
