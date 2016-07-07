@@ -54,7 +54,7 @@ public class GameBusiness {
 	private final Logger logger = LoggerFactory.getLogger(GameBusiness.class);
 	
 	public AppGame scoreGame(Game game) {
-		AppGame appGame = new AppGame(game);
+		AppGame appGame = new AppGame();
 		try {
 			BoxScore awayBoxScore = game.getBoxScoreAway();
 			BoxScore homeBoxScore = game.getBoxScoreHome();
@@ -105,6 +105,7 @@ public class GameBusiness {
 					Game updatedGame = gameService.updateGame(game);
 					if (updatedGame.isUpdated()) {
 						logger.info("Game Scored " + awayTeamKey +  " " + awayBoxScore.getPoints() + " " + homeTeamKey +  " " + homeBoxScore.getPoints());
+						appGame.setGame(gameService.findByDateTeam(gameDate, awayTeamKey));
 						appGame.setAppStatus(AppStatus.Completed);
 					}
 					else if (updatedGame.isNotFound()) {

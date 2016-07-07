@@ -1,10 +1,6 @@
 package com.rossotti.basketball.dao.model;
 
 public class AppGame {
-	public AppGame(Game game) {
-		super();
-		this.game = game;
-	}
 	private AppStatus appStatus;
 	public AppStatus getAppStatus() {
 		return appStatus;
