@@ -79,6 +79,7 @@ public class GameBusiness {
 				else {
 					throw new PropertyException("Unknown");
 				}
+
 				if (gameDTO.isFound()) {
 					awayBoxScore.updateTotals(gameDTO.away_totals);
 					homeBoxScore.updateTotals(gameDTO.home_totals);
