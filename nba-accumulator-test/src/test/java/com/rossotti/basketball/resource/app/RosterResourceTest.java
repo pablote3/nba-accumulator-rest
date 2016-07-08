@@ -67,7 +67,7 @@ public class RosterResourceTest {
 	@Test
 	public void manageRoster_FileNotFound() {
 		expect().
-			statusCode(404).
+			statusCode(400).
 		given().
 			contentType(ContentType.JSON).
 		when().

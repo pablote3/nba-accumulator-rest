@@ -138,7 +138,8 @@ public class RosterPlayerBusiness {
 					rosterPlayerService.updateRosterPlayer(priorRosterPlayer);
 				}
 			}
-			appRoster.setRosterPlayers(rosterPlayerService.getRosterPlayers(rosterDTO.players, fromDate, teamKey));
+			appRoster.setRosterPlayers(rosterPlayerService.findRosterPlayers(fromDate, teamKey));
+			appRoster.setAppStatus(AppStatus.Completed);
 		}
 		else if (rosterDTO.isNotFound()) {
 			logger.info('\n' + "" + " unable to find game");
