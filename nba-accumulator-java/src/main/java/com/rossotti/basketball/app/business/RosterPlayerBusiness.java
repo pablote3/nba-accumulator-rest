@@ -62,84 +62,96 @@ public class RosterPlayerBusiness {
 			//activate new roster players
 			logger.info("Activate new roster players");
 			List<RosterPlayer> activeRosterPlayers = rosterPlayerService.getRosterPlayers(rosterDTO.players, fromDate, teamKey);
-			for (int i = 0; i < activeRosterPlayers.size(); i++) {
-				RosterPlayer activeRosterPlayer = activeRosterPlayers.get(i);
-				Player activePlayer = activeRosterPlayer.getPlayer();
-				RosterPlayer finderRosterPlayer = rosterPlayerService.findByDatePlayerNameTeam(fromDate, activePlayer.getLastName(), activePlayer.getFirstName(), teamKey);
-				if (finderRosterPlayer.isNotFound()) {
-					//player is not on current team roster
-					finderRosterPlayer = rosterPlayerService.findLatestByPlayerNameBirthdateSeason(fromDate, activePlayer.getLastName(), activePlayer.getFirstName(), activePlayer.getBirthdate());
+			if (activeRosterPlayers.size() > 0) {
+				for (int i = 0; i < activeRosterPlayers.size(); i++) {
+					RosterPlayer activeRosterPlayer = activeRosterPlayers.get(i);
+					Player activePlayer = activeRosterPlayer.getPlayer();
+					RosterPlayer finderRosterPlayer = rosterPlayerService.findByDatePlayerNameTeam(fromDate, activePlayer.getLastName(), activePlayer.getFirstName(), teamKey);
 					if (finderRosterPlayer.isNotFound()) {
-						//player is not on any roster for current season
-						Player finderPlayer = playerService.findByPlayerNameBirthdate(activePlayer.getLastName(), activePlayer.getFirstName(), activePlayer.getBirthdate());
-						if (finderPlayer.isNotFound()) {
-							//player does not exist
-							Player createPlayer = playerService.createPlayer(activePlayer);
-							activeRosterPlayer.setPlayer(createPlayer);
-							activeRosterPlayer.setFromDate(fromDate);
-							activeRosterPlayer.setToDate(toDate);
-							logger.info(generateLogMessage("Player does not exist", activeRosterPlayer));
-							rosterPlayerService.createRosterPlayer(activeRosterPlayer);
+						//player is not on current team roster
+						finderRosterPlayer = rosterPlayerService.findLatestByPlayerNameBirthdateSeason(fromDate, activePlayer.getLastName(), activePlayer.getFirstName(), activePlayer.getBirthdate());
+						if (finderRosterPlayer.isNotFound()) {
+							//player is not on any roster for current season
+							Player finderPlayer = playerService.findByPlayerNameBirthdate(activePlayer.getLastName(), activePlayer.getFirstName(), activePlayer.getBirthdate());
+							if (finderPlayer.isNotFound()) {
+								//player does not exist
+								Player createPlayer = playerService.createPlayer(activePlayer);
+								activeRosterPlayer.setPlayer(createPlayer);
+								activeRosterPlayer.setFromDate(fromDate);
+								activeRosterPlayer.setToDate(toDate);
+								logger.info(generateLogMessage("Player does not exist", activeRosterPlayer));
+								rosterPlayerService.createRosterPlayer(activeRosterPlayer);
+							}
+							else {
+								//player does exist, not on any roster
+								activeRosterPlayer.setPlayer(finderPlayer);
+								activeRosterPlayer.setFromDate(fromDate);
+								activeRosterPlayer.setToDate(toDate);
+								logger.info(generateLogMessage("Player does exist, not on any roster", activeRosterPlayer));
+								rosterPlayerService.createRosterPlayer(activeRosterPlayer);
+							}
 						}
 						else {
-							//player does exist, not on any roster
-							activeRosterPlayer.setPlayer(finderPlayer);
+							//player is on another roster for current season
+							finderRosterPlayer.setToDate(DateTimeUtil.getDateMinusOneDay(fromDate));
+							logger.info(generateLogMessage("Player on another team - Terminate", finderRosterPlayer));
+							rosterPlayerService.updateRosterPlayer(finderRosterPlayer);
+	
 							activeRosterPlayer.setFromDate(fromDate);
 							activeRosterPlayer.setToDate(toDate);
-							logger.info(generateLogMessage("Player does exist, not on any roster", activeRosterPlayer));
+							activeRosterPlayer.getPlayer().setId(finderRosterPlayer.getPlayer().getId());
+							logger.info(generateLogMessage("Player on another team - Add", activeRosterPlayer));
 							rosterPlayerService.createRosterPlayer(activeRosterPlayer);
 						}
 					}
 					else {
-						//player is on another roster for current season
-						finderRosterPlayer.setToDate(DateTimeUtil.getDateMinusOneDay(fromDate));
-						logger.info(generateLogMessage("Player on another team - Terminate", finderRosterPlayer));
-						rosterPlayerService.updateRosterPlayer(finderRosterPlayer);
-
-						activeRosterPlayer.setFromDate(fromDate);
-						activeRosterPlayer.setToDate(toDate);
-						activeRosterPlayer.getPlayer().setId(finderRosterPlayer.getPlayer().getId());
-						logger.info(generateLogMessage("Player on another team - Add", activeRosterPlayer));
-						rosterPlayerService.createRosterPlayer(activeRosterPlayer);
+						//player is on current team roster
+						activeRosterPlayer.setFromDate(finderRosterPlayer.getFromDate());
+						activeRosterPlayer.setToDate(finderRosterPlayer.getToDate());
+						logger.info(generateLogMessage("Player on current team roster", activeRosterPlayer));
 					}
+				}
+
+				//deactivate terminated roster players
+				logger.info("Deactivate terminated roster players");
+				List<RosterPlayer> priorRosterPlayers = rosterPlayerService.findRosterPlayers(fromDate, teamKey);
+				if (priorRosterPlayers.size() > 0) {
+					boolean foundPlayerOnRoster;
+					for (int i = 0; i < priorRosterPlayers.size(); i++) {
+						RosterPlayer priorRosterPlayer = priorRosterPlayers.get(i);
+						Player priorPlayer = priorRosterPlayer.getPlayer();
+						foundPlayerOnRoster = false;
+						for (int j = 0; j < activeRosterPlayers.size(); j++) {
+							RosterPlayer activeRosterPlayer = activeRosterPlayers.get(j);
+							Player activePlayer = activeRosterPlayer.getPlayer();
+							if (priorPlayer.getLastName().equals(activePlayer.getLastName()) &&
+									priorPlayer.getFirstName().equals(activePlayer.getFirstName()) &&
+									priorPlayer.getBirthdate().equals(activePlayer.getBirthdate())) {
+								//player is on current team roster
+								logger.info(generateLogMessage("Player on current team roster", priorRosterPlayer));
+								foundPlayerOnRoster = true;
+								break;
+							}
+						}
+						if (!foundPlayerOnRoster) {
+							//player is not on current team roster
+							priorRosterPlayer.setToDate(DateTimeUtil.getDateMinusOneDay(fromDate));
+							logger.info(generateLogMessage("Player is not on current team roster", priorRosterPlayer));
+							rosterPlayerService.updateRosterPlayer(priorRosterPlayer);
+						}
+					}
+					appRoster.setRosterPlayers(rosterPlayerService.findRosterPlayers(fromDate, teamKey));
+					appRoster.setAppStatus(AppStatus.Completed);
 				}
 				else {
-					//player is on current team roster
-					activeRosterPlayer.setFromDate(finderRosterPlayer.getFromDate());
-					activeRosterPlayer.setToDate(finderRosterPlayer.getToDate());
-					logger.info(generateLogMessage("Player on current team roster", activeRosterPlayer));
+					logger.info("Unable to find roster players on deactivation");
+					appRoster.setAppStatus(AppStatus.ServerError);
 				}
 			}
-
-			//deactivate terminated roster players
-			logger.info("Deactivate terminated roster players");
-			List<RosterPlayer> priorRosterPlayers = rosterPlayerService.findRosterPlayers(fromDate, teamKey);
-			boolean foundPlayerOnRoster;
-			for (int i = 0; i < priorRosterPlayers.size(); i++) {
-				RosterPlayer priorRosterPlayer = priorRosterPlayers.get(i);
-				Player priorPlayer = priorRosterPlayer.getPlayer();
-				foundPlayerOnRoster = false;
-				for (int j = 0; j < activeRosterPlayers.size(); j++) {
-					RosterPlayer activeRosterPlayer = activeRosterPlayers.get(j);
-					Player activePlayer = activeRosterPlayer.getPlayer();
-					if (priorPlayer.getLastName().equals(activePlayer.getLastName()) &&
-							priorPlayer.getFirstName().equals(activePlayer.getFirstName()) &&
-							priorPlayer.getBirthdate().equals(activePlayer.getBirthdate())) {
-						//player is on current team roster
-						logger.info(generateLogMessage("Player on current team roster", priorRosterPlayer));
-						foundPlayerOnRoster = true;
-						break;
-					}
-				}
-				if (!foundPlayerOnRoster) {
-					//player is not on current team roster
-					priorRosterPlayer.setToDate(DateTimeUtil.getDateMinusOneDay(fromDate));
-					logger.info(generateLogMessage("Player is not on current team roster", priorRosterPlayer));
-					rosterPlayerService.updateRosterPlayer(priorRosterPlayer);
-				}
+			else {
+				logger.info("Unable to get roster players on activation");
+				appRoster.setAppStatus(AppStatus.ServerError);
 			}
-			appRoster.setRosterPlayers(rosterPlayerService.findRosterPlayers(fromDate, teamKey));
-			appRoster.setAppStatus(AppStatus.Completed);
 		}
 		else if (rosterDTO.isNotFound()) {
 			logger.info('\n' + "" + " unable to find game");
