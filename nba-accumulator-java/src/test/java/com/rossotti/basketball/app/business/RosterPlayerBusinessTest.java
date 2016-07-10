@@ -25,6 +25,7 @@ import com.rossotti.basketball.app.provider.JsonProvider;
 import com.rossotti.basketball.app.resource.ClientSource;
 import com.rossotti.basketball.app.service.GameService;
 import com.rossotti.basketball.app.service.OfficialService;
+import com.rossotti.basketball.app.service.PlayerService;
 import com.rossotti.basketball.app.service.PropertyService;
 import com.rossotti.basketball.app.service.RosterPlayerService;
 import com.rossotti.basketball.app.service.TeamService;
@@ -38,6 +39,7 @@ import com.rossotti.basketball.client.service.FileClientService;
 import com.rossotti.basketball.client.service.RestClientService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.AppGame;
+import com.rossotti.basketball.dao.model.AppRoster;
 import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.BoxScore.Location;
 import com.rossotti.basketball.dao.model.BoxScorePlayer;
@@ -71,58 +73,74 @@ public class RosterPlayerBusinessTest {
 	private TeamService teamService;
 
 	@Mock
+	private PlayerService playerService;
+
+	@Mock
 	private GameService gameService;
 
 	@InjectMocks
-	private GameBusiness gameBusiness = new GameBusiness();
+	private RosterPlayerBusiness rosterPlayerBusiness = new RosterPlayerBusiness();
 
 	@Before
 	public void setUp() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenThrow(new PropertyException("propertyName"))
 			.thenReturn(null)
-			.thenReturn(ClientSource.File)
-			.thenReturn(ClientSource.File)
-			.thenReturn(ClientSource.Api)
-			.thenReturn(ClientSource.Api)
-			.thenReturn(ClientSource.File)
-			.thenReturn(ClientSource.Api);
+			.thenReturn(ClientSource.File);
+//			.thenReturn(ClientSource.File)
+//			.thenReturn(ClientSource.Api)
+//			.thenReturn(ClientSource.Api)
+//			.thenReturn(ClientSource.File)
+//			.thenReturn(ClientSource.Api);
 		when(fileClientService.retrieveRoster(anyString()))
-			.thenReturn(createMockRosterDTO_StatusCode(StatusCodeDTO.NotFound))
-			.thenReturn(createMockRosterDTO_StatusCode(StatusCodeDTO.ClientException))
-			.thenReturn(createMockRosterDTO_Found());
-		when(restClientService.retrieveRoster(anyString()))
-			.thenReturn(createMockRosterDTO_StatusCode(StatusCodeDTO.NotFound))
-			.thenReturn(createMockRosterDTO_StatusCode(StatusCodeDTO.ClientException))
-			.thenReturn(createMockRosterDTO_Found());
-		when(rosterPlayerService.getRosterPlayers((RosterPlayerDTO[]) anyObject(), (LocalDate) anyObject(), anyString()))
-			.thenThrow(new NoSuchEntityException(RosterPlayer.class))
-			.thenReturn(new ArrayList<RosterPlayer>());
+			.thenReturn(createMockRosterDTO_StatusCode(StatusCodeDTO.NotFound));
+//			.thenReturn(createMockRosterDTO_StatusCode(StatusCodeDTO.ClientException))
+//			.thenReturn(new RosterDTO())
+//			.thenReturn(createMockRosterDTO_Found());
+//		when(restClientService.retrieveRoster(anyString()))
+//			.thenReturn(createMockRosterDTO_StatusCode(StatusCodeDTO.NotFound))
+//			.thenReturn(createMockRosterDTO_StatusCode(StatusCodeDTO.ClientException))
+//			.thenReturn(new RosterDTO())
+//			.thenReturn(createMockRosterDTO_Found());
+//		when(rosterPlayerService.getRosterPlayers((RosterPlayerDTO[]) anyObject(), (LocalDate) anyObject(), anyString()))
+//			.thenThrow(new NoSuchEntityException(RosterPlayer.class))
+//			.thenReturn(new ArrayList<RosterPlayer>())
 //			.thenReturn(createMockRosterPlayers());
-		when(teamService.findTeam(anyString(), (LocalDate) anyObject()))
-			.thenThrow(new NoSuchEntityException(Team.class))
-			.thenReturn(createMockTeamHome_Found())
-			.thenReturn(createMockTeamAway_Found());
-		when(gameService.updateGame((Game)anyObject()))
-			.thenReturn(createMockGame_StatusCode(StatusCodeDAO.NotFound))
-			.thenReturn(createMockGame_StatusCode(StatusCodeDAO.Updated));
+//		when(rosterPlayerService.findByDatePlayerNameTeam((LocalDate) anyObject(), anyString(), anyString(), anyString()))
+//			.thenReturn(new RosterPlayer(StatusCodeDAO.NotFound))
+//			.thenReturn(createMockRosterPlayer("Jackson", "Reggie"));
+//		when(rosterPlayerService.findLatestByPlayerNameBirthdateSeason((LocalDate) anyObject(), anyString(), anyString(), (LocalDate) anyObject()))
+//			.thenReturn(new RosterPlayer(StatusCodeDAO.NotFound))
+//			.thenReturn(createMockRosterPlayer("Jackson", "Reggie"));
+//		when(playerService.findByPlayerNameBirthdate(anyString(), anyString(), (LocalDate) anyObject()))
+//			.thenReturn(new Player())
+//			.thenReturn(createMockPlayer("Bob", "Bowser"));
+//		when(rosterPlayerService.findRosterPlayers((LocalDate) anyObject(), anyString()))
+//			.thenReturn(new ArrayList<RosterPlayer>())
+//			.thenReturn(createMockRosterPlayers());
+//		when(playerService.createPlayer((Player)anyObject()))
+//			.thenReturn(new Player(StatusCodeDAO.Created));
+//		when(rosterPlayerService.createRosterPlayer((RosterPlayer)anyObject()))
+//			.thenReturn(new RosterPlayer(StatusCodeDAO.Created));
+//		when(rosterPlayerService.updateRosterPlayer((RosterPlayer)anyObject()))
+//			.thenReturn(new RosterPlayer(StatusCodeDAO.Updated));
 	}
 
 	@Test
-	public void scoreGame() {
-		AppGame game;
+	public void loadRoster() {
+		AppRoster roster;
 
-//		//propertyService - property exception
-//		game = gameBusiness.scoreGame(createMockGame_Scheduled());
-//		Assert.assertTrue(game.isAppServerError());
-//
-//		//propertyService - property null
-//		game = gameBusiness.scoreGame(createMockGame_Scheduled());
-//		Assert.assertTrue(game.isAppServerError());
-//
-//		//fileClientService - game dto not found
-//		game = gameBusiness.scoreGame(createMockGame_Scheduled());
-//		Assert.assertTrue(game.isAppClientError());
+		//propertyService - property exception
+		roster = rosterPlayerBusiness.loadRoster("2014-10-28", "detroit-pistons");
+		Assert.assertTrue(roster.isAppServerError());
+
+		//propertyService - property null
+		roster = rosterPlayerBusiness.loadRoster("2014-10-28", "detroit-pistons");
+		Assert.assertTrue(roster.isAppServerError());
+
+//		//fileClientService - roster dto not found
+		roster = rosterPlayerBusiness.loadRoster("2014-10-28", "detroit-pistons");
+		Assert.assertTrue(roster.isAppClientError());
 //
 //		//fileClientService - client exception
 //		game = gameBusiness.scoreGame(createMockGame_Scheduled());
@@ -161,13 +179,6 @@ public class RosterPlayerBusinessTest {
 //		Assert.assertTrue(game.isAppCompleted());
 	}
 
-	private Game createMockGame_StatusCode(StatusCodeDAO status) {
-		Game game = new Game();
-		game.setGameDateTime(new LocalDateTime("2015-11-24T10:00"));
-		game.setStatusCode(status);
-		return game;
-	}
-
 	private RosterDTO createMockRosterDTO_Found() {
 		RosterDTO roster = null;
 		try {
@@ -189,38 +200,32 @@ public class RosterPlayerBusinessTest {
 		return roster;
 	}
 
-//	private List<RosterPlayer> createMockRosterPlayers() {
-//		List<BoxScorePlayer> boxScorePlayers = new ArrayList<BoxScorePlayer>();
-//		boxScorePlayers.add(createMockBoxScorePlayer(1L, "Drummond", "Andre"));
-//		boxScorePlayers.add(createMockBoxScorePlayer(2L, "Morris", "Marcus"));
-//		boxScorePlayers.add(createMockBoxScorePlayer(3L, "Caldwell-Pope", "Kentavious"));
-//		boxScorePlayers.add(createMockBoxScorePlayer(4L, "Jackson", "Reggie"));
-//		return boxScorePlayers;
-//	}
+	private List<RosterPlayer> createMockRosterPlayers() {
+		List<RosterPlayer> rosterPlayers = new ArrayList<RosterPlayer>();
+		rosterPlayers.add(createMockRosterPlayer("Drummond", "Andre"));
+		rosterPlayers.add(createMockRosterPlayer("Morris", "Marcus"));
+		rosterPlayers.add(createMockRosterPlayer("Caldwell-Pope", "Kentavious"));
+		rosterPlayers.add(createMockRosterPlayer("Jackson", "Reggie"));
+		return rosterPlayers;
+	}
 
-	private BoxScorePlayer createMockBoxScorePlayer(Long id, String lastName, String firstName) {
-		BoxScorePlayer boxScorePlayer = new BoxScorePlayer();
-		boxScorePlayer.setId(id);
+	private RosterPlayer createMockRosterPlayer(String lastName, String firstName) {
+		RosterPlayer rosterPlayer = new RosterPlayer();
+		rosterPlayer.setPlayer(createMockPlayer(lastName, firstName));
+		return rosterPlayer;
+	}
+
+	private Player createMockPlayer(String lastName, String firstName) {
 		Player player = new Player();
 		player.setLastName(lastName);
 		player.setFirstName(firstName);
-		RosterPlayer rosterPlayer = new RosterPlayer();
-		rosterPlayer.setPlayer(player);
-		boxScorePlayer.setRosterPlayer(rosterPlayer);
-		return boxScorePlayer;
+		return player;
 	}
 
-	private Team createMockTeamHome_Found() {
+	private Team createMockTeam() {
 		Team team = new Team();
 		team.setId(1L);
 		team.setTeamKey("brooklyn-nets");
-		return team;
-	}
-
-	private Team createMockTeamAway_Found() {
-		Team team = new Team();
-		team.setId(2L);
-		team.setTeamKey("detroit-pistons");
 		return team;
 	}
 }
