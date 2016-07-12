@@ -68,7 +68,7 @@ public class RosterPlayerBusiness {
 					List<RosterPlayer> activeRosterPlayers = rosterPlayerService.getRosterPlayers(rosterDTO.players, fromDate, teamKey);
 					if (activeRosterPlayers.size() > 0) {
 						for (int i = 0; i < activeRosterPlayers.size(); i++) {
-							RosterPlayer activeRosterPlayer = activeRosterPlayers.get(i);
+							RosterPlayer activeRosterPlayer = (RosterPlayer)activeRosterPlayers.get(i);
 							Player activePlayer = activeRosterPlayer.getPlayer();
 							RosterPlayer finderRosterPlayer = rosterPlayerService.findByDatePlayerNameTeam(fromDate, activePlayer.getLastName(), activePlayer.getFirstName(), teamKey);
 							if (finderRosterPlayer.isNotFound()) {
@@ -114,7 +114,7 @@ public class RosterPlayerBusiness {
 								logger.info(generateLogMessage("Player on current team roster", activeRosterPlayer));
 							}
 						}
-	
+
 						//deactivate terminated roster players
 						logger.info("Deactivate terminated roster players");
 						List<RosterPlayer> priorRosterPlayers = rosterPlayerService.findRosterPlayers(fromDate, teamKey);
@@ -143,13 +143,13 @@ public class RosterPlayerBusiness {
 									rosterPlayerService.updateRosterPlayer(priorRosterPlayer);
 								}
 							}
+							appRoster.setRosterPlayers(rosterPlayerService.findRosterPlayers(fromDate, teamKey));
+							appRoster.setAppStatus(AppStatus.Completed);
 						}
 						else {
 							logger.info("Unable to find roster players on deactivation");
 							appRoster.setAppStatus(AppStatus.ServerError);
 						}
-						appRoster.setRosterPlayers(rosterPlayerService.findRosterPlayers(fromDate, teamKey));
-						appRoster.setAppStatus(AppStatus.Completed);
 					}
 					else {
 						logger.info("Unable to get roster players on activation");
