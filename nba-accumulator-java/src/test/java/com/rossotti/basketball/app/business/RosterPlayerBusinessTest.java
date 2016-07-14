@@ -69,7 +69,7 @@ public class RosterPlayerBusinessTest {
 	private RosterPlayerBusiness rosterPlayerBusiness = new RosterPlayerBusiness();
 
 	@Test
-	public void loadRoster_property_exception() {
+	public void propertyService_propertyException() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenThrow(new PropertyException("propertyName"));
 		AppRoster roster = rosterPlayerBusiness.loadRoster("2014-10-28", "detroit-pistons");
@@ -77,7 +77,7 @@ public class RosterPlayerBusinessTest {
 	}
 
 	@Test
-	public void loadRoster_property_null() {
+	public void propertyService_propertyNull() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(null);
 		AppRoster roster = rosterPlayerBusiness.loadRoster("2014-10-28", "detroit-pistons");
@@ -85,7 +85,7 @@ public class RosterPlayerBusinessTest {
 	}
 
 	@Test
-	public void loadRoster_file_rosterDTO_notFound() {
+	public void fileClientService_rosterNotFound() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.File);
 		when(fileClientService.retrieveRoster(anyString()))
@@ -95,7 +95,7 @@ public class RosterPlayerBusinessTest {
 	}
 
 	@Test
-	public void loadRoster_fileClientService_clientException() {
+	public void fileClientService_clientException() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.File);
 		when(fileClientService.retrieveRoster(anyString()))
@@ -105,7 +105,7 @@ public class RosterPlayerBusinessTest {
 	}
 
 	@Test
-	public void loadRoster_fileClientService_emptyList() {
+	public void fileClientService_emptyList() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.File);
 		when(fileClientService.retrieveRoster(anyString()))
@@ -115,7 +115,7 @@ public class RosterPlayerBusinessTest {
 	}
 	
 	@Test
-	public void loadRoster_restClientService_notFound() {
+	public void restClientService_rosterNotFound() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.Api);
 		when(restClientService.retrieveRoster(anyString()))
@@ -125,7 +125,7 @@ public class RosterPlayerBusinessTest {
 	}
 
 	@Test
-	public void loadRoster_restClientService_clientException() {
+	public void restClientService_clientException() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.Api);
 		when(restClientService.retrieveRoster(anyString()))
@@ -135,7 +135,7 @@ public class RosterPlayerBusinessTest {
 	}
 
 	@Test
-	public void loadRoster_restClientService_emptyList() {
+	public void restClientService_emptyList() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.Api);
 		when(restClientService.retrieveRoster(anyString()))
@@ -145,7 +145,7 @@ public class RosterPlayerBusinessTest {
 	}
 
 	@Test
-	public void loadRoster_rosterPlayerService_noSuchEntity_team() {
+	public void rosterPlayerService_noSuchEntity_team() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.File);
 		when(fileClientService.retrieveRoster(anyString()))
@@ -157,7 +157,7 @@ public class RosterPlayerBusinessTest {
 	}
 
 	@Test
-	public void loadRoster_rosterPlayerService_getRosterPlayers_emptyList() {
+	public void rosterPlayerService_getRosterPlayers_emptyList() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.Api);
 		when(restClientService.retrieveRoster(anyString()))
@@ -169,7 +169,7 @@ public class RosterPlayerBusinessTest {
 	}
 
 	@Test
-	public void loadRoster_rosterPlayerService_findRosterPlayers_emptyList() {
+	public void rosterPlayerService_findRosterPlayers_emptyList() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.Api);
 		when(restClientService.retrieveRoster(anyString()))
