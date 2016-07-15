@@ -27,7 +27,7 @@ public class RankResourceTest {
 	@Test
 	public void rankStandings_FileNotFound() {
 		expect().
-			statusCode(404).
+			statusCode(400).
 		given().
 			contentType(ContentType.JSON).
 		when().
