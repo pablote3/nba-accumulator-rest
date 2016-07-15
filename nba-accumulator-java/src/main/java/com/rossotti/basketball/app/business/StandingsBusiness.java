@@ -18,10 +18,12 @@ import com.rossotti.basketball.app.service.StandingsService;
 import com.rossotti.basketball.client.dto.StandingsDTO;
 import com.rossotti.basketball.client.service.FileClientService;
 import com.rossotti.basketball.client.service.RestClientService;
+import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.AppStandings;
 import com.rossotti.basketball.dao.model.AppStatus;
 import com.rossotti.basketball.dao.model.Standing;
 import com.rossotti.basketball.dao.model.StandingRecord;
+import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
@@ -110,16 +112,16 @@ public class StandingsBusiness {
 				appStandings.setAppStatus(AppStatus.ClientError);
 			}
 		}
-//		catch (NoSuchEntityException nse) {
-//			if (nse.getEntityClass().equals(Team.class)) {
-//				logger.info("Team not found");
-//			}
-//			appRoster.setAppStatus(AppStatus.ClientError);
-//		}
-//		catch (PropertyException pe) {
-//			logger.info("property exception = " + pe);
-//			appRoster.setAppStatus(AppStatus.ServerError);
-//		}
+		catch (NoSuchEntityException nse) {
+			if (nse.getEntityClass().equals(Team.class)) {
+				logger.info("Team not found");
+			}
+			appStandings.setAppStatus(AppStatus.ClientError);
+		}
+		catch (PropertyException pe) {
+			logger.info("property exception = " + pe);
+			appStandings.setAppStatus(AppStatus.ServerError);
+		}
 		catch (Exception e) {
 			logger.info("unexpected exception = " + e);
 			appStandings.setAppStatus(AppStatus.ServerError);
