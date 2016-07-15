@@ -41,7 +41,7 @@ import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
 @Path("/rosterPlayers")
-public class RosterPlayerResource {
+public class RosterPlayerDaoResource {
 
 	@Autowired
 	private RosterPlayerRepository rosterPlayerRepo;

@@ -24,7 +24,7 @@ import com.rossotti.basketball.dao.pub.PubStandings;
 
 @Service
 @Path("/rank")
-public class RankResource {
+public class StandingAppResource {
 	@Autowired
 	private StandingsBusiness standingsBusiness;
 

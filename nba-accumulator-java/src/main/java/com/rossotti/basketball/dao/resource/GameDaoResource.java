@@ -41,7 +41,7 @@ import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
 @Path("/games")
-public class GameResource {
+public class GameDaoResource {
 
 	@Autowired
 	private GameRepository gameRepo;

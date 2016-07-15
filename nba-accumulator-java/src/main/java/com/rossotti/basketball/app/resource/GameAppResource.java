@@ -19,7 +19,7 @@ import com.rossotti.basketball.dao.pub.PubGame;
 
 @Service
 @Path("/score")
-public class ScoreResource {
+public class GameAppResource {
 	@Autowired
 	private GameBusiness gameBusiness;
 

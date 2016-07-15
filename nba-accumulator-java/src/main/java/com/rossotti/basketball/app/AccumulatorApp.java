@@ -11,15 +11,15 @@ import com.rossotti.basketball.app.provider.DuplicateEntityExceptionMapper;
 import com.rossotti.basketball.app.provider.JsonProvider;
 import com.rossotti.basketball.app.provider.NoSuchEntityExceptionMapper;
 import com.rossotti.basketball.app.provider.PropertyExceptionMapper;
-import com.rossotti.basketball.app.resource.RankResource;
-import com.rossotti.basketball.app.resource.RosterResource;
-import com.rossotti.basketball.app.resource.ScoreResource;
-import com.rossotti.basketball.dao.resource.GameResource;
-import com.rossotti.basketball.dao.resource.OfficialResource;
-import com.rossotti.basketball.dao.resource.PlayerResource;
-import com.rossotti.basketball.dao.resource.RosterPlayerResource;
-import com.rossotti.basketball.dao.resource.StandingResource;
-import com.rossotti.basketball.dao.resource.TeamResource;
+import com.rossotti.basketball.app.resource.StandingAppResource;
+import com.rossotti.basketball.app.resource.RosterPlayerAppResource;
+import com.rossotti.basketball.app.resource.GameAppResource;
+import com.rossotti.basketball.dao.resource.GameDaoResource;
+import com.rossotti.basketball.dao.resource.OfficialDaoResource;
+import com.rossotti.basketball.dao.resource.PlayerDaoResource;
+import com.rossotti.basketball.dao.resource.RosterPlayerDaoResource;
+import com.rossotti.basketball.dao.resource.StandingDaoResource;
+import com.rossotti.basketball.dao.resource.TeamDaoResource;
 
 public class AccumulatorApp extends Application {
 	protected final Set<Class<?>> classes = new HashSet<>();
@@ -32,16 +32,16 @@ public class AccumulatorApp extends Application {
 
 	private void registerClasses() {
 		// Resources
-		classes.add(TeamResource.class);
-		classes.add(OfficialResource.class);
-		classes.add(PlayerResource.class);
-		classes.add(RosterPlayerResource.class);
-		classes.add(GameResource.class);
-		classes.add(StandingResource.class);
+		classes.add(TeamDaoResource.class);
+		classes.add(OfficialDaoResource.class);
+		classes.add(PlayerDaoResource.class);
+		classes.add(RosterPlayerDaoResource.class);
+		classes.add(GameDaoResource.class);
+		classes.add(StandingDaoResource.class);
 		
-		classes.add(ScoreResource.class);
-		classes.add(RosterResource.class);
-		classes.add(RankResource.class);
+		classes.add(GameAppResource.class);
+		classes.add(RosterPlayerAppResource.class);
+		classes.add(StandingAppResource.class);
 
 		// Providers
 		classes.add(JsonProvider.class);

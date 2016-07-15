@@ -34,7 +34,7 @@ import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
 @Path("/standings")
-public class StandingResource {
+public class StandingDaoResource {
 
 	@Autowired
 	private StandingRepository standingRepo;

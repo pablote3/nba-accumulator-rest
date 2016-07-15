@@ -25,7 +25,7 @@ import com.rossotti.basketball.dao.pub.PubTeam;
 
 @Service
 @Path("/roster")
-public class RosterResource {
+public class RosterPlayerAppResource {
 	@Autowired
 	private RosterPlayerBusiness rosterPlayerBusiness;
 

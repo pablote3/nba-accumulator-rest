@@ -32,7 +32,7 @@ import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
 @Path("/officials")
-public class OfficialResource {
+public class OfficialDaoResource {
 
 	@Autowired
 	private OfficialRepository officialRepo;
