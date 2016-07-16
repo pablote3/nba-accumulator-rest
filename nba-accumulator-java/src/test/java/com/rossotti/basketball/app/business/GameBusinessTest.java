@@ -71,7 +71,7 @@ public class GameBusinessTest {
 	private GameService gameService;
 
 	@InjectMocks
-	private GameBusiness gameBusiness = new GameBusiness();
+	private GameBusiness gameBusiness;
 
 	@Test
 	public void propertyService_propertyException() {

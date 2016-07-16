@@ -32,7 +32,7 @@ public class GameServiceTest {
 	private GameRepository gameRepo;
 
 	@InjectMocks
-	private GameService gameService = new GameService();
+	private GameService gameService;
 
 	@Before
 	public void setUp() {

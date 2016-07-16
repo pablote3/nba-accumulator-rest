@@ -53,7 +53,7 @@ public class StandingsBusinessTest {
 	private StandingsService standingsService;
 
 	@InjectMocks
-	private StandingsBusiness standingsBusiness = new StandingsBusiness();
+	private StandingsBusiness standingsBusiness;
 
 	@Test
 	public void propertyService_propertyException() {

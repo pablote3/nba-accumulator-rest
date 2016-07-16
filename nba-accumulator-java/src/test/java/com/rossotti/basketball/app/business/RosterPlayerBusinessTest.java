@@ -66,7 +66,7 @@ public class RosterPlayerBusinessTest {
 	private GameService gameService;
 
 	@InjectMocks
-	private RosterPlayerBusiness rosterPlayerBusiness = new RosterPlayerBusiness();
+	private RosterPlayerBusiness rosterPlayerBusiness;
 
 	@Test
 	public void propertyService_propertyException() {
