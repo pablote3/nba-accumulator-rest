@@ -17,7 +17,7 @@ import com.rossotti.basketball.app.service.PropertyService;
 import com.rossotti.basketball.app.service.StandingsService;
 import com.rossotti.basketball.client.dto.StandingsDTO;
 import com.rossotti.basketball.client.service.FileClientService;
-import com.rossotti.basketball.client.service.RestClientService;
+import com.rossotti.basketball.client.service.RestClientRetrieverService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.AppStandings;
 import com.rossotti.basketball.dao.model.AppStatus;
@@ -32,7 +32,7 @@ public class StandingsBusiness {
 	private PropertyService propertyService;
 
 	@Autowired
-	private RestClientService restClientService;
+	private RestClientRetrieverService restClientService;
 
 	@Autowired
 	private FileClientService fileClientService;

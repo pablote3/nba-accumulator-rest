@@ -31,7 +31,7 @@ import com.rossotti.basketball.client.dto.RosterDTO;
 import com.rossotti.basketball.client.dto.RosterPlayerDTO;
 import com.rossotti.basketball.client.dto.StatusCodeDTO;
 import com.rossotti.basketball.client.service.FileClientService;
-import com.rossotti.basketball.client.service.RestClientService;
+import com.rossotti.basketball.client.service.RestClientRetrieverService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.AppRoster;
 import com.rossotti.basketball.dao.model.Player;
@@ -48,7 +48,7 @@ public class RosterPlayerBusinessTest {
 	private FileClientService fileClientService;
 
 	@Mock
-	private RestClientService restClientService;
+	private RestClientRetrieverService restClientService;
 
 	@Mock
 	private RosterPlayerService rosterPlayerService;

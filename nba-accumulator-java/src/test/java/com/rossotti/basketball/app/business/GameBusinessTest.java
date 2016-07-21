@@ -32,7 +32,7 @@ import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.client.dto.OfficialDTO;
 import com.rossotti.basketball.client.dto.StatusCodeDTO;
 import com.rossotti.basketball.client.service.FileClientService;
-import com.rossotti.basketball.client.service.RestClientService;
+import com.rossotti.basketball.client.service.RestClientRetrieverService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.AppGame;
 import com.rossotti.basketball.dao.model.BoxScore;
@@ -56,7 +56,7 @@ public class GameBusinessTest {
 	private FileClientService fileClientService;
 
 	@Mock
-	private RestClientService restClientService;
+	private RestClientRetrieverService restClientService;
 
 	@Mock
 	private RosterPlayerService rosterPlayerService;

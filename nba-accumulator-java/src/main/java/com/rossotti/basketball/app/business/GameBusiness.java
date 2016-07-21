@@ -16,7 +16,7 @@ import com.rossotti.basketball.app.service.RosterPlayerService;
 import com.rossotti.basketball.app.service.TeamService;
 import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.client.service.FileClientService;
-import com.rossotti.basketball.client.service.RestClientService;
+import com.rossotti.basketball.client.service.RestClientRetrieverService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.AppGame;
 import com.rossotti.basketball.dao.model.AppStatus;
@@ -34,7 +34,7 @@ public class GameBusiness {
 	private PropertyService propertyService;
 
 	@Autowired
-	private RestClientService restClientService;
+	private RestClientRetrieverService restClientService;
 
 	@Autowired
 	private FileClientService fileClientService;

@@ -30,7 +30,7 @@ import com.rossotti.basketball.client.dto.StandingDTO;
 import com.rossotti.basketball.client.dto.StandingsDTO;
 import com.rossotti.basketball.client.dto.StatusCodeDTO;
 import com.rossotti.basketball.client.service.FileClientService;
-import com.rossotti.basketball.client.service.RestClientService;
+import com.rossotti.basketball.client.service.RestClientRetrieverService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.AppStandings;
 import com.rossotti.basketball.dao.model.Standing;
@@ -47,7 +47,7 @@ public class StandingsBusinessTest {
 	private FileClientService fileClientService;
 
 	@Mock
-	private RestClientService restClientService;
+	private RestClientRetrieverService restClientService;
 
 	@Mock
 	private StandingsService standingsService;
