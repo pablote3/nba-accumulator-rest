@@ -1,71 +1,150 @@
 package com.rossotti.basketball.client.service;
 
-import java.io.IOException;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import com.rossotti.basketball.app.exception.PropertyException;
+import com.rossotti.basketball.app.service.PropertyService;
 import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.client.dto.RosterDTO;
 import com.rossotti.basketball.client.dto.StandingsDTO;
-import com.rossotti.basketball.client.service.RestClientService;
-import com.rossotti.basketball.util.ThreadSleep;
+import com.rossotti.basketball.client.dto.StatsDTO;
+import com.rossotti.basketball.client.dto.StatusCodeDTO;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath:applicationContext.xml"})
+@RunWith(MockitoJUnitRunner.class)
 public class RestClientServiceTest {
-	@Autowired
+	@Mock
+	PropertyService propertyService;
+
+	@Mock
+	ClientService clientService;
+
+	@InjectMocks
 	private RestClientService restClientService;
 
-	@Before
-	public void setUp() {
-		ThreadSleep.sleep(10);
+	@Test
+	public void retrieveBoxScore_propertyException() {
+		when(propertyService.getProperty_Http(anyString()))
+			.thenThrow(new PropertyException("propertyName"));
+		GameDTO game = restClientService.retrieveBoxScore("20160311-houston-rockets-at-boston-celtics");
+		Assert.assertTrue(game.isServerException());
 	}
 
 	@Test
-	public void retrieveBoxScore_Found() throws IOException {
-		String event = "20160311-houston-rockets-at-boston-celtics";
-		GameDTO game = restClientService.retrieveBoxScore(event);
-		Assert.assertTrue(game.isFound());
-		Assert.assertEquals("Houston Rockets", game.away_team.getFull_name());
-	}
-	@Test
-	public void retrieveBoxScore_NotFound() throws IOException {
-		String event = "20160311-houston-rockets-at-boston-celticsss";
-		GameDTO game = restClientService.retrieveBoxScore(event);
+	public void retrieveBoxScore_notFound() {
+		when(propertyService.getProperty_Http(anyString()))
+			.thenReturn("https://");
+		when(clientService.getStatsDTO(anyString(), (StatsDTO) anyObject()))
+			.thenReturn(createMockGameDTO(new GameDTO(), StatusCodeDTO.NotFound));
+		GameDTO game = restClientService.retrieveBoxScore("20160311-houston-rockets-at-boston-celtics");
 		Assert.assertTrue(game.isNotFound());
 	}
 
 	@Test
-	public void retrieveRoster_Found() throws IOException {
-		String event = "toronto-raptors";
-		RosterDTO roster = restClientService.retrieveRoster(event);
-		Assert.assertTrue(roster.isFound());
-		Assert.assertEquals("Toronto Raptors", roster.team.getFull_name());
+	public void retrieveBoxScore_clientException() {
+		when(propertyService.getProperty_Http(anyString()))
+			.thenReturn("https://");
+		when(clientService.getStatsDTO(anyString(), (StatsDTO) anyObject()))
+			.thenReturn(createMockGameDTO(new GameDTO(), StatusCodeDTO.ClientException));
+		GameDTO game = restClientService.retrieveBoxScore("20160311-houston-rockets-at-boston-celtics");
+		Assert.assertTrue(game.isClientException());
 	}
+
 	@Test
-	public void retrieveRoster_NotFound() throws IOException {
-		String event = "toronto-raptiers";
-		RosterDTO roster = restClientService.retrieveRoster(event);
+	public void retrieveBoxScore_found() {
+		when(propertyService.getProperty_Http(anyString()))
+			.thenReturn("https://");
+		when(clientService.getStatsDTO(anyString(), (StatsDTO) anyObject()))
+			.thenReturn(createMockGameDTO(new GameDTO(), StatusCodeDTO.Found));
+		GameDTO game = restClientService.retrieveBoxScore("20160311-houston-rockets-at-boston-celtics");
+		Assert.assertTrue(game.isFound());
+	}
+
+	@Test
+	public void retrieveRoster_propertyException() {
+		when(propertyService.getProperty_Http(anyString()))
+			.thenThrow(new PropertyException("propertyName"));
+		RosterDTO roster = restClientService.retrieveRoster("toronto-raptors");
+		Assert.assertTrue(roster.isServerException());
+	}
+
+	@Test
+	public void retrieveRoster_notFound() {
+		when(propertyService.getProperty_Http(anyString()))
+			.thenReturn("https://");
+		when(clientService.getStatsDTO(anyString(), (StatsDTO) anyObject()))
+			.thenReturn(createMockGameDTO(new RosterDTO(), StatusCodeDTO.NotFound));
+		RosterDTO roster = restClientService.retrieveRoster("toronto-raptors");
 		Assert.assertTrue(roster.isNotFound());
 	}
 
 	@Test
-	public void retrieveStandings_Found() throws IOException {
-		String event = "20160216";
-		StandingsDTO standings = restClientService.retrieveStandings(event);
-		Assert.assertTrue(standings.isFound());
-		Assert.assertEquals("cleveland-cavaliers", standings.standing[0].getTeam_id());
+	public void retrieveRoster_clientException() {
+		when(propertyService.getProperty_Http(anyString()))
+			.thenReturn("https://");
+		when(clientService.getStatsDTO(anyString(), (StatsDTO) anyObject()))
+			.thenReturn(createMockGameDTO(new RosterDTO(), StatusCodeDTO.ClientException));
+		RosterDTO roster = restClientService.retrieveRoster("toronto-raptors");
+		Assert.assertTrue(roster.isClientException());
 	}
+
 	@Test
-	public void retrieveStandings_NotFound() throws IOException {
-		String event = "20160236";
-		StandingsDTO standings = restClientService.retrieveStandings(event);
+	public void retrieveRoster_found() {
+		when(propertyService.getProperty_Http(anyString()))
+			.thenReturn("https://");
+		when(clientService.getStatsDTO(anyString(), (StatsDTO) anyObject()))
+			.thenReturn(createMockGameDTO(new RosterDTO(), StatusCodeDTO.Found));
+		RosterDTO roster = restClientService.retrieveRoster("toronto-raptors");
+		Assert.assertTrue(roster.isFound());
+	}
+
+	@Test
+	public void retrieveStandings_propertyException() {
+		when(propertyService.getProperty_Http(anyString()))
+			.thenThrow(new PropertyException("propertyName"));
+		StandingsDTO standings = restClientService.retrieveStandings("20141108");
+		Assert.assertTrue(standings.isServerException());
+	}
+
+	@Test
+	public void retrieveStandings_notFound() {
+		when(propertyService.getProperty_Http(anyString()))
+			.thenReturn("https://");
+		when(clientService.getStatsDTO(anyString(), (StatsDTO) anyObject()))
+			.thenReturn(createMockGameDTO(new RosterDTO(), StatusCodeDTO.NotFound));
+		StandingsDTO standings = restClientService.retrieveStandings("20141108");
 		Assert.assertTrue(standings.isNotFound());
+	}
+
+	@Test
+	public void retrieveStandings_clientException() {
+		when(propertyService.getProperty_Http(anyString()))
+			.thenReturn("https://");
+		when(clientService.getStatsDTO(anyString(), (StatsDTO) anyObject()))
+			.thenReturn(createMockGameDTO(new RosterDTO(), StatusCodeDTO.ClientException));
+		StandingsDTO standings = restClientService.retrieveStandings("20141108");
+		Assert.assertTrue(standings.isClientException());
+	}
+
+	@Test
+	public void retrieveStandings_found() {
+		when(propertyService.getProperty_Http(anyString()))
+			.thenReturn("https://");
+		when(clientService.getStatsDTO(anyString(), (StatsDTO) anyObject()))
+			.thenReturn(createMockGameDTO(new RosterDTO(), StatusCodeDTO.Found));
+		StandingsDTO standings = restClientService.retrieveStandings("20141108");
+		Assert.assertTrue(standings.isFound());
+	}
+	private StatsDTO createMockGameDTO(StatsDTO stats, StatusCodeDTO statusCode) {
+		stats.setStatusCode(statusCode);
+		return stats;
 	}
 }
