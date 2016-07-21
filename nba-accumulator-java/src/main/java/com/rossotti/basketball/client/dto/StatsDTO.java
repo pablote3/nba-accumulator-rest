@@ -17,4 +17,7 @@ public class StatsDTO {
 	public Boolean isClientException() {
 		return statusCode == StatusCodeDTO.ClientException;
 	}
+	public Boolean isServerException() {
+		return statusCode == StatusCodeDTO.ServerException;
+	}
 }
