@@ -20,7 +20,7 @@ import com.rossotti.basketball.client.dto.StatsDTO;
 import com.rossotti.basketball.client.dto.StatusCodeDTO;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RestClientServiceTest {
+public class RestStatsServiceTest {
 	@Mock
 	PropertyService propertyService;
 
