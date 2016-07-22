@@ -74,7 +74,7 @@ public class GameBusiness {
 					gameDTO = fileClientService.retrieveBoxScore(event);
 				}
 				else if (clientSource == ClientSource.Api) {
-					gameDTO = (GameDTO)restStatsService.retrieveBoxScore(event);
+					gameDTO = restStatsService.retrieveBoxScore(event);
 				}
 				else {
 					throw new PropertyException("Unknown");

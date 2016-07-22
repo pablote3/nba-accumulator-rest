@@ -53,7 +53,7 @@ public class RosterPlayerBusiness {
 				rosterDTO = fileClientService.retrieveRoster(teamKey);
 			}
 			else if (clientSource == ClientSource.Api) {
-				rosterDTO = (RosterDTO)restStatsService.retrieveRoster(teamKey);
+				rosterDTO = restStatsService.retrieveRoster(teamKey);
 			}
 			else {
 				throw new PropertyException("Unknown");
