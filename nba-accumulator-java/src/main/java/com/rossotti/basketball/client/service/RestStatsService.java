@@ -24,42 +24,39 @@ public class RestStatsService {
 	private final Logger logger = LoggerFactory.getLogger(RestStatsService.class);
 
 	public GameDTO retrieveBoxScore(String event) {
-		GameDTO gameDTO;
+		GameDTO gameDTO = new GameDTO();
 		try {
 			String eventUrl = getEventUrl("xmlstats.urlBoxScore", event);
-			gameDTO = (GameDTO)restClientService.retrieveStats(eventUrl, new GameDTO());
+			gameDTO = (GameDTO)restClientService.retrieveStats(eventUrl, gameDTO);
 		}
 		catch (PropertyException pe) {
 			logger.info("property exception = " + pe);
-			gameDTO = new GameDTO();
 			gameDTO.setStatusCode(StatusCodeDTO.ServerException);
 		}
 		return gameDTO;
 	}
 
 	public RosterDTO retrieveRoster(String event) {
-		RosterDTO rosterDTO;
+		RosterDTO rosterDTO = new RosterDTO();
 		try {
 			String eventUrl = getEventUrl("xmlstats.urlRoster", event);
-			rosterDTO = (RosterDTO)restClientService.retrieveStats(eventUrl, new RosterDTO());
+			rosterDTO = (RosterDTO)restClientService.retrieveStats(eventUrl, rosterDTO);
 		}
 		catch (PropertyException pe) {
 			logger.info("property exception = " + pe);
-			rosterDTO = new RosterDTO();
 			rosterDTO.setStatusCode(StatusCodeDTO.ServerException);
 		}
 		return rosterDTO;
 	}
 
 	public StandingsDTO retrieveStandings(String event) {
-		StandingsDTO standingsDTO;
+		StandingsDTO standingsDTO = new StandingsDTO();
 		try {
 			String eventUrl = getEventUrl("xmlstats.urlStandings", event);
-			standingsDTO = (StandingsDTO)restClientService.retrieveStats(eventUrl, new StandingsDTO());
+			standingsDTO = (StandingsDTO)restClientService.retrieveStats(eventUrl, standingsDTO);
 		}
 		catch (PropertyException pe) {
 			logger.info("property exception = " + pe);
-			standingsDTO = new StandingsDTO();
 			standingsDTO.setStatusCode(StatusCodeDTO.ServerException);
 		}
 		return standingsDTO;
