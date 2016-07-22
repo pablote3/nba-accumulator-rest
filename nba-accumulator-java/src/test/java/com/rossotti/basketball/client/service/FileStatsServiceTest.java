@@ -16,7 +16,7 @@ import com.rossotti.basketball.client.service.FileClientService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:applicationContext.xml"})
-public class FileClientServiceTest {
+public class FileStatsServiceTest {
 	@Autowired
 	private FileClientService fileClientService;
 
