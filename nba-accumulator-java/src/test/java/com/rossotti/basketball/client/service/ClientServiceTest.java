@@ -20,7 +20,7 @@ public class ClientServiceTest {
 
 	@Before
 	public void setUp() {
-		ThreadSleep.sleep(10);
+		ThreadSleep.sleep(0);
 	}
 
 	@Ignore
