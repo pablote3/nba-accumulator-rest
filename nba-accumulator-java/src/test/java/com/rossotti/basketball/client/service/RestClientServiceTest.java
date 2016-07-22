@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import com.rossotti.basketball.util.ThreadSleep;
 
-public class ClientServiceTest {
+public class RestClientServiceTest {
 	private Client client;
 
 	@Before
