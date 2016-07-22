@@ -31,7 +31,7 @@ import com.rossotti.basketball.client.dto.RosterDTO;
 import com.rossotti.basketball.client.dto.RosterPlayerDTO;
 import com.rossotti.basketball.client.dto.StatusCodeDTO;
 import com.rossotti.basketball.client.service.FileClientService;
-import com.rossotti.basketball.client.service.RestClientRetrieverService;
+import com.rossotti.basketball.client.service.RestStatsService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.AppRoster;
 import com.rossotti.basketball.dao.model.Player;
@@ -48,7 +48,7 @@ public class RosterPlayerBusinessTest {
 	private FileClientService fileClientService;
 
 	@Mock
-	private RestClientRetrieverService restClientService;
+	private RestStatsService restStatsService;
 
 	@Mock
 	private RosterPlayerService rosterPlayerService;
@@ -118,7 +118,7 @@ public class RosterPlayerBusinessTest {
 	public void restClientService_rosterNotFound() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.Api);
-		when(restClientService.retrieveRoster(anyString()))
+		when(restStatsService.retrieveRoster(anyString()))
 			.thenReturn(createMockRosterDTO_StatusCode(StatusCodeDTO.NotFound));
 		AppRoster roster = rosterPlayerBusiness.loadRoster("2014-10-28", "detroit-pistons");
 		Assert.assertTrue(roster.isAppClientError());
@@ -128,7 +128,7 @@ public class RosterPlayerBusinessTest {
 	public void restClientService_clientException() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.Api);
-		when(restClientService.retrieveRoster(anyString()))
+		when(restStatsService.retrieveRoster(anyString()))
 			.thenReturn(createMockRosterDTO_StatusCode(StatusCodeDTO.ClientException));
 		AppRoster roster = rosterPlayerBusiness.loadRoster("2014-10-28", "detroit-pistons");
 		Assert.assertTrue(roster.isAppClientError());
@@ -138,7 +138,7 @@ public class RosterPlayerBusinessTest {
 	public void restClientService_emptyList() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.Api);
-		when(restClientService.retrieveRoster(anyString()))
+		when(restStatsService.retrieveRoster(anyString()))
 			.thenReturn(createMockRosterDTO_StatusCode(StatusCodeDTO.Found));
 		AppRoster roster = rosterPlayerBusiness.loadRoster("2014-10-28", "detroit-pistons");
 		Assert.assertTrue(roster.isAppClientError());
@@ -160,7 +160,7 @@ public class RosterPlayerBusinessTest {
 	public void rosterPlayerService_getRosterPlayers_emptyList() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.Api);
-		when(restClientService.retrieveRoster(anyString()))
+		when(restStatsService.retrieveRoster(anyString()))
 			.thenReturn(createMockRosterDTO_Found());
 		when(rosterPlayerService.getRosterPlayers((RosterPlayerDTO[]) anyObject(), (LocalDate) anyObject(), anyString()))
 			.thenReturn(new ArrayList<RosterPlayer>());
@@ -172,7 +172,7 @@ public class RosterPlayerBusinessTest {
 	public void rosterPlayerService_findRosterPlayers_emptyList() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.Api);
-		when(restClientService.retrieveRoster(anyString()))
+		when(restStatsService.retrieveRoster(anyString()))
 			.thenReturn(createMockRosterDTO_Found());
 		when(rosterPlayerService.getRosterPlayers((RosterPlayerDTO[]) anyObject(), (LocalDate) anyObject(), anyString()))
 			.thenReturn(createMockRosterPlayers());
@@ -194,7 +194,7 @@ public class RosterPlayerBusinessTest {
 	public void loadRoster_rosterUpdated() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.Api);
-		when(restClientService.retrieveRoster(anyString()))
+		when(restStatsService.retrieveRoster(anyString()))
 			.thenReturn(createMockRosterDTO_Found());
 		when(rosterPlayerService.getRosterPlayers((RosterPlayerDTO[]) anyObject(), (LocalDate) anyObject(), anyString()))
 			.thenReturn(createMockRosterPlayers());

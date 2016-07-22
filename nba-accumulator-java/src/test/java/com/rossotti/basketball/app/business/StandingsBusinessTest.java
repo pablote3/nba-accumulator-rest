@@ -30,7 +30,7 @@ import com.rossotti.basketball.client.dto.StandingDTO;
 import com.rossotti.basketball.client.dto.StandingsDTO;
 import com.rossotti.basketball.client.dto.StatusCodeDTO;
 import com.rossotti.basketball.client.service.FileClientService;
-import com.rossotti.basketball.client.service.RestClientRetrieverService;
+import com.rossotti.basketball.client.service.RestStatsService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.AppStandings;
 import com.rossotti.basketball.dao.model.Standing;
@@ -47,7 +47,7 @@ public class StandingsBusinessTest {
 	private FileClientService fileClientService;
 
 	@Mock
-	private RestClientRetrieverService restClientService;
+	private RestStatsService restStatsService;
 
 	@Mock
 	private StandingsService standingsService;
@@ -105,7 +105,7 @@ public class StandingsBusinessTest {
 	public void restClientService_standingsNotFound() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.Api);
-		when(restClientService.retrieveStandings(anyString()))
+		when(restStatsService.retrieveStandings(anyString()))
 			.thenReturn(createMockStandingsDTO_StatusCode(StatusCodeDTO.NotFound));
 		AppStandings standings = standingsBusiness.rankStandings("2014-10-28");
 		Assert.assertTrue(standings.isAppClientError());
@@ -115,7 +115,7 @@ public class StandingsBusinessTest {
 	public void restClientService_clientException() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.Api);
-		when(restClientService.retrieveStandings(anyString()))
+		when(restStatsService.retrieveStandings(anyString()))
 			.thenReturn(createMockStandingsDTO_StatusCode(StatusCodeDTO.ClientException));
 		AppStandings standings = standingsBusiness.rankStandings("2014-10-28");
 		Assert.assertTrue(standings.isAppClientError());
@@ -125,7 +125,7 @@ public class StandingsBusinessTest {
 	public void restClientService_emptyList() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.Api);
-		when(restClientService.retrieveStandings(anyString()))
+		when(restStatsService.retrieveStandings(anyString()))
 			.thenReturn(createMockStandingsDTO_StatusCode(StatusCodeDTO.Found));
 		AppStandings standings = standingsBusiness.rankStandings("2014-10-28");
 		Assert.assertTrue(standings.isAppClientError());

@@ -16,16 +16,16 @@ import com.rossotti.basketball.app.service.RosterPlayerService;
 import com.rossotti.basketball.app.service.TeamService;
 import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.client.service.FileClientService;
-import com.rossotti.basketball.client.service.RestClientRetrieverService;
+import com.rossotti.basketball.client.service.RestStatsService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.AppGame;
 import com.rossotti.basketball.dao.model.AppStatus;
 import com.rossotti.basketball.dao.model.BoxScore;
+import com.rossotti.basketball.dao.model.BoxScore.Result;
 import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.model.GameStatus;
 import com.rossotti.basketball.dao.model.Official;
 import com.rossotti.basketball.dao.model.RosterPlayer;
-import com.rossotti.basketball.dao.model.BoxScore.Result;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
@@ -34,7 +34,7 @@ public class GameBusiness {
 	private PropertyService propertyService;
 
 	@Autowired
-	private RestClientRetrieverService restClientService;
+	private RestStatsService restStatsService;
 
 	@Autowired
 	private FileClientService fileClientService;
@@ -74,7 +74,7 @@ public class GameBusiness {
 					gameDTO = fileClientService.retrieveBoxScore(event);
 				}
 				else if (clientSource == ClientSource.Api) {
-					gameDTO = restClientService.retrieveBoxScore(event);
+					gameDTO = (GameDTO)restStatsService.retrieveBoxScore(event);
 				}
 				else {
 					throw new PropertyException("Unknown");

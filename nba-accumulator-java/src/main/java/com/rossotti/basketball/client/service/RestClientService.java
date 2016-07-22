@@ -51,8 +51,8 @@ public class RestClientService {
 		return client;
 	}
 
-	public StatsDTO retrieveStats(String url, StatsDTO statsDTO) {
-		Response response = getClient().target(url).request().get();
+	public StatsDTO retrieveStats(String eventUrl, StatsDTO statsDTO) {
+		Response response = getClient().target(eventUrl).request().get();
 		if (response.getStatus() != 200) {
 			statsDTO.setStatusCode(StatusCodeDTO.NotFound);
 			response.readEntity(String.class);

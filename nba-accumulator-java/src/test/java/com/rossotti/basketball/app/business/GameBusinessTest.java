@@ -32,7 +32,7 @@ import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.client.dto.OfficialDTO;
 import com.rossotti.basketball.client.dto.StatusCodeDTO;
 import com.rossotti.basketball.client.service.FileClientService;
-import com.rossotti.basketball.client.service.RestClientRetrieverService;
+import com.rossotti.basketball.client.service.RestStatsService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.AppGame;
 import com.rossotti.basketball.dao.model.BoxScore;
@@ -56,7 +56,7 @@ public class GameBusinessTest {
 	private FileClientService fileClientService;
 
 	@Mock
-	private RestClientRetrieverService restClientService;
+	private RestStatsService restStatsService;
 
 	@Mock
 	private RosterPlayerService rosterPlayerService;
@@ -113,7 +113,7 @@ public class GameBusinessTest {
 	public void restClientService_gameNotFound() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.Api);
-		when(restClientService.retrieveBoxScore(anyString()))
+		when(restStatsService.retrieveBoxScore(anyString()))
 			.thenReturn(createMockGameDTO_StatusCode(StatusCodeDTO.NotFound));
 		AppGame game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isAppClientError());
@@ -123,7 +123,7 @@ public class GameBusinessTest {
 	public void restClientService_clientException() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.Api);
-		when(restClientService.retrieveBoxScore(anyString()))
+		when(restStatsService.retrieveBoxScore(anyString()))
 			.thenReturn(createMockGameDTO_StatusCode(StatusCodeDTO.ClientException));
 		AppGame game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isAppClientError());
@@ -175,7 +175,7 @@ public class GameBusinessTest {
 	public void gameService_updateGame_gameNotFound() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.Api);
-		when(restClientService.retrieveBoxScore(anyString()))
+		when(restStatsService.retrieveBoxScore(anyString()))
 			.thenReturn(createMockGameDTO_Found());
 		when(rosterPlayerService.getBoxScorePlayers((BoxScorePlayerDTO[]) anyObject(), (LocalDate) anyObject(), anyString()))
 			.thenReturn(createMockBoxScorePlayers_Found());
@@ -193,7 +193,7 @@ public class GameBusinessTest {
 	public void gameService_updateGame_complete() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.Api);
-		when(restClientService.retrieveBoxScore(anyString()))
+		when(restStatsService.retrieveBoxScore(anyString()))
 			.thenReturn(createMockGameDTO_Found());
 		when(rosterPlayerService.getBoxScorePlayers((BoxScorePlayerDTO[]) anyObject(), (LocalDate) anyObject(), anyString()))
 			.thenReturn(createMockBoxScorePlayers_Found());

@@ -17,7 +17,7 @@ import com.rossotti.basketball.app.service.PropertyService;
 import com.rossotti.basketball.app.service.StandingsService;
 import com.rossotti.basketball.client.dto.StandingsDTO;
 import com.rossotti.basketball.client.service.FileClientService;
-import com.rossotti.basketball.client.service.RestClientRetrieverService;
+import com.rossotti.basketball.client.service.RestStatsService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.AppStandings;
 import com.rossotti.basketball.dao.model.AppStatus;
@@ -32,7 +32,7 @@ public class StandingsBusiness {
 	private PropertyService propertyService;
 
 	@Autowired
-	private RestClientRetrieverService restClientService;
+	private RestStatsService restStatsService;
 
 	@Autowired
 	private FileClientService fileClientService;
@@ -53,7 +53,7 @@ public class StandingsBusiness {
 				standingsDTO = fileClientService.retrieveStandings(nakedAsOfDate);
 			}
 			else if (clientSource == ClientSource.Api) {
-				standingsDTO = restClientService.retrieveStandings(nakedAsOfDate);
+				standingsDTO = (StandingsDTO)restStatsService.retrieveStandings(nakedAsOfDate);
 			}
 			else {
 				throw new PropertyException("Unknown");
