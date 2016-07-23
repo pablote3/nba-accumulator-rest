@@ -14,7 +14,7 @@ import com.rossotti.basketball.app.service.PlayerService;
 import com.rossotti.basketball.app.service.PropertyService;
 import com.rossotti.basketball.app.service.RosterPlayerService;
 import com.rossotti.basketball.client.dto.RosterDTO;
-import com.rossotti.basketball.client.service.FileClientService;
+import com.rossotti.basketball.client.service.FileStatsService;
 import com.rossotti.basketball.client.service.RestStatsService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.AppRoster;
@@ -31,7 +31,7 @@ public class RosterPlayerBusiness {
 	private RestStatsService restStatsService;
 
 	@Autowired
-	private FileClientService fileClientService;
+	private FileStatsService fileStatsService;
 
 	@Autowired
 	private RosterPlayerService rosterPlayerService;
@@ -50,7 +50,7 @@ public class RosterPlayerBusiness {
 			RosterDTO rosterDTO = null;
 			ClientSource clientSource = propertyService.getProperty_ClientSource("accumulator.source.roster");
 			if (clientSource == ClientSource.File) {
-				rosterDTO = fileClientService.retrieveRoster(teamKey);
+				rosterDTO = fileStatsService.retrieveRoster(teamKey);
 			}
 			else if (clientSource == ClientSource.Api) {
 				rosterDTO = restStatsService.retrieveRoster(teamKey);

@@ -15,7 +15,7 @@ import com.rossotti.basketball.app.service.PropertyService;
 import com.rossotti.basketball.app.service.RosterPlayerService;
 import com.rossotti.basketball.app.service.TeamService;
 import com.rossotti.basketball.client.dto.GameDTO;
-import com.rossotti.basketball.client.service.FileClientService;
+import com.rossotti.basketball.client.service.FileStatsService;
 import com.rossotti.basketball.client.service.RestStatsService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.AppGame;
@@ -37,7 +37,7 @@ public class GameBusiness {
 	private RestStatsService restStatsService;
 
 	@Autowired
-	private FileClientService fileClientService;
+	private FileStatsService fileStatsService;
 
 	@Autowired
 	private OfficialService officialService;
@@ -71,7 +71,7 @@ public class GameBusiness {
 				GameDTO gameDTO = null;
 				ClientSource clientSource = propertyService.getProperty_ClientSource("accumulator.source.boxScore");
 				if (clientSource == ClientSource.File) {
-					gameDTO = fileClientService.retrieveBoxScore(event);
+					gameDTO = fileStatsService.retrieveBoxScore(event);
 				}
 				else if (clientSource == ClientSource.Api) {
 					gameDTO = restStatsService.retrieveBoxScore(event);

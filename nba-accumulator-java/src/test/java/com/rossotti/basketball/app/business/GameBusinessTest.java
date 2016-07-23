@@ -31,7 +31,7 @@ import com.rossotti.basketball.client.dto.BoxScorePlayerDTO;
 import com.rossotti.basketball.client.dto.GameDTO;
 import com.rossotti.basketball.client.dto.OfficialDTO;
 import com.rossotti.basketball.client.dto.StatusCodeDTO;
-import com.rossotti.basketball.client.service.FileClientService;
+import com.rossotti.basketball.client.service.FileStatsService;
 import com.rossotti.basketball.client.service.RestStatsService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.AppGame;
@@ -53,7 +53,7 @@ public class GameBusinessTest {
 	private PropertyService propertyService;
 
 	@Mock
-	private FileClientService fileClientService;
+	private FileStatsService fileStatsService;
 
 	@Mock
 	private RestStatsService restStatsService;
@@ -93,7 +93,7 @@ public class GameBusinessTest {
 	public void fileClientService_gameNotFound() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.File);
-		when(fileClientService.retrieveBoxScore(anyString()))
+		when(fileStatsService.retrieveBoxScore(anyString()))
 			.thenReturn(createMockGameDTO_StatusCode(StatusCodeDTO.NotFound));
 		AppGame game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isAppClientError());
@@ -103,7 +103,7 @@ public class GameBusinessTest {
 	public void fileClientService_clientException() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.File);
-		when(fileClientService.retrieveBoxScore(anyString()))
+		when(fileStatsService.retrieveBoxScore(anyString()))
 			.thenReturn(createMockGameDTO_StatusCode(StatusCodeDTO.ClientException));
 		AppGame game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isAppClientError());
@@ -133,7 +133,7 @@ public class GameBusinessTest {
 	public void rosterPlayerService_getBoxScorePlayers_noSuchEntityException() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.File);
-		when(fileClientService.retrieveBoxScore(anyString()))
+		when(fileStatsService.retrieveBoxScore(anyString()))
 			.thenReturn(createMockGameDTO_Found());
 		when(rosterPlayerService.getBoxScorePlayers((BoxScorePlayerDTO[]) anyObject(), (LocalDate) anyObject(), anyString()))
 			.thenThrow(new NoSuchEntityException(RosterPlayer.class));
@@ -145,7 +145,7 @@ public class GameBusinessTest {
 	public void officialService_getGameOfficials_noSuchEntityException() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.File);
-		when(fileClientService.retrieveBoxScore(anyString()))
+		when(fileStatsService.retrieveBoxScore(anyString()))
 			.thenReturn(createMockGameDTO_Found());
 		when(rosterPlayerService.getBoxScorePlayers((BoxScorePlayerDTO[]) anyObject(), (LocalDate) anyObject(), anyString()))
 			.thenReturn(createMockBoxScorePlayers_Found());
@@ -159,7 +159,7 @@ public class GameBusinessTest {
 	public void teamService_findTeam_noSuchEntityException() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.File);
-		when(fileClientService.retrieveBoxScore(anyString()))
+		when(fileStatsService.retrieveBoxScore(anyString()))
 			.thenReturn(createMockGameDTO_Found());
 		when(rosterPlayerService.getBoxScorePlayers((BoxScorePlayerDTO[]) anyObject(), (LocalDate) anyObject(), anyString()))
 			.thenReturn(createMockBoxScorePlayers_Found());

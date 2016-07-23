@@ -29,7 +29,7 @@ import com.rossotti.basketball.client.dto.RosterDTO;
 import com.rossotti.basketball.client.dto.StandingDTO;
 import com.rossotti.basketball.client.dto.StandingsDTO;
 import com.rossotti.basketball.client.dto.StatusCodeDTO;
-import com.rossotti.basketball.client.service.FileClientService;
+import com.rossotti.basketball.client.service.FileStatsService;
 import com.rossotti.basketball.client.service.RestStatsService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.AppStandings;
@@ -44,7 +44,7 @@ public class StandingsBusinessTest {
 	private PropertyService propertyService;
 
 	@Mock
-	private FileClientService fileClientService;
+	private FileStatsService fileStatsService;
 
 	@Mock
 	private RestStatsService restStatsService;
@@ -75,7 +75,7 @@ public class StandingsBusinessTest {
 	public void fileClientService_standingsNotFound() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.File);
-		when(fileClientService.retrieveStandings(anyString()))
+		when(fileStatsService.retrieveStandings(anyString()))
 			.thenReturn(createMockStandingsDTO_StatusCode(StatusCodeDTO.NotFound));
 		AppStandings standings = standingsBusiness.rankStandings("2014-10-28");
 		Assert.assertTrue(standings.isAppClientError());
@@ -85,7 +85,7 @@ public class StandingsBusinessTest {
 	public void fileClientService_clientException() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.File);
-		when(fileClientService.retrieveStandings(anyString()))
+		when(fileStatsService.retrieveStandings(anyString()))
 			.thenReturn(createMockStandingsDTO_StatusCode(StatusCodeDTO.ClientException));
 		AppStandings standings = standingsBusiness.rankStandings("2014-10-28");
 		Assert.assertTrue(standings.isAppClientError());
@@ -95,7 +95,7 @@ public class StandingsBusinessTest {
 	public void fileClientService_emptyList() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.File);
-		when(fileClientService.retrieveStandings(anyString()))
+		when(fileStatsService.retrieveStandings(anyString()))
 			.thenReturn(createMockStandingsDTO_StatusCode(StatusCodeDTO.Found));
 		AppStandings standings = standingsBusiness.rankStandings("2014-10-28");
 		Assert.assertTrue(standings.isAppClientError());
@@ -135,7 +135,7 @@ public class StandingsBusinessTest {
 	public void standingsService_noSuchEntity_team() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.File);
-		when(fileClientService.retrieveStandings(anyString()))
+		when(fileStatsService.retrieveStandings(anyString()))
 			.thenReturn(createMockStandingsDTO_StatusCode(StatusCodeDTO.Found));
 		when(standingsService.getStandings((StandingsDTO) anyObject()))
 			.thenThrow(new NoSuchEntityException(Team.class));
@@ -148,7 +148,7 @@ public class StandingsBusinessTest {
 	public void standingsService_createStanding_exists() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.File);
-		when(fileClientService.retrieveStandings(anyString()))
+		when(fileStatsService.retrieveStandings(anyString()))
 			.thenReturn(createStandingsDTO_Found());
 		when(standingsService.getStandings((StandingsDTO) anyObject()))
 			.thenReturn(createMockStandings());
@@ -169,7 +169,7 @@ public class StandingsBusinessTest {
 	public void standingsService_createStanding_created() {
 		when(propertyService.getProperty_ClientSource(anyString()))
 			.thenReturn(ClientSource.File);
-		when(fileClientService.retrieveStandings(anyString()))
+		when(fileStatsService.retrieveStandings(anyString()))
 			.thenReturn(createStandingsDTO_Found());
 		when(standingsService.getStandings((StandingsDTO) anyObject()))
 			.thenReturn(createMockStandings());

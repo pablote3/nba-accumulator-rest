@@ -16,7 +16,7 @@ import com.rossotti.basketball.app.resource.ClientSource;
 import com.rossotti.basketball.app.service.PropertyService;
 import com.rossotti.basketball.app.service.StandingsService;
 import com.rossotti.basketball.client.dto.StandingsDTO;
-import com.rossotti.basketball.client.service.FileClientService;
+import com.rossotti.basketball.client.service.FileStatsService;
 import com.rossotti.basketball.client.service.RestStatsService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
 import com.rossotti.basketball.dao.model.AppStandings;
@@ -35,7 +35,7 @@ public class StandingsBusiness {
 	private RestStatsService restStatsService;
 
 	@Autowired
-	private FileClientService fileClientService;
+	private FileStatsService fileStatsService;
 
 	@Autowired
 	private StandingsService standingsService;
@@ -50,7 +50,7 @@ public class StandingsBusiness {
 			LocalDate asOfDate = DateTimeUtil.getLocalDate(asOfDateString);
 			String nakedAsOfDate = DateTimeUtil.getStringDateNaked(asOfDate);
 			if (clientSource == ClientSource.File) {
-				standingsDTO = fileClientService.retrieveStandings(nakedAsOfDate);
+				standingsDTO = fileStatsService.retrieveStandings(nakedAsOfDate);
 			}
 			else if (clientSource == ClientSource.Api) {
 				standingsDTO = (StandingsDTO)restStatsService.retrieveStandings(nakedAsOfDate);
