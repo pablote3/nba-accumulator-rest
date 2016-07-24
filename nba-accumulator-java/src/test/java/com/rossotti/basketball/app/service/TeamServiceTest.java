@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 
 import org.joda.time.LocalDate;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -26,29 +25,31 @@ public class TeamServiceTest {
 	@InjectMocks
 	private TeamService teamService;
 
-	@Before
-	public void setUp() {
+	@Test(expected=NoSuchEntityException.class)
+	public void findTeam_notFound_gameDate() {
 		when(teamRepo.findTeam(anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockTeam("denver-nuggets", StatusCodeDAO.Found))
-			.thenReturn(createMockTeam("new-orleans-hornets", StatusCodeDAO.NotFound))
-			.thenReturn(createMockTeam("denver-mcnuggets", StatusCodeDAO.NotFound));
+			.thenReturn(createMockTeam("new-orleans-hornets", StatusCodeDAO.NotFound));
+		Team team = teamService.findTeam("new-orleans-hornets", new LocalDate(2010, 8, 26));
+		Assert.assertTrue(team.isNotFound());
 	}
 
 	@Test(expected=NoSuchEntityException.class)
-	public void findTeam() {
-		Team team;
-		//team found
-		team = teamService.findTeam("denver-nuggets", new LocalDate(2015, 11, 26));
+	public void findTeam_notFound_teamKey() {
+		when(teamRepo.findTeam(anyString(), (LocalDate) anyObject()))
+			.thenReturn(createMockTeam("denver-mcnuggets", StatusCodeDAO.NotFound));
+		Team team = teamService.findTeam("denver-mcnuggets", new LocalDate(2015, 8, 26));
+		Assert.assertTrue(team.isNotFound());
+	}
+
+	@Test
+	public void findTeam_found() {
+		when(teamRepo.findTeam(anyString(), (LocalDate) anyObject()))
+			.thenReturn(createMockTeam("denver-nuggets", StatusCodeDAO.Found));
+		Team team = teamService.findTeam("denver-nuggets", new LocalDate(2015, 11, 26));
 		Assert.assertEquals("denver-nuggets", team.getTeamKey());
 		Assert.assertTrue(team.isFound());
-
-		//team not found_gameDate
-		team = teamService.findTeam("new-orleans-hornets", new LocalDate(2010, 8, 26));
-
-		//team not found_teamKey
-		team = teamService.findTeam("denver-mcnuggets", new LocalDate(2015, 8, 26));
 	}
-	
+
 	private Team createMockTeam(String teamKey, StatusCodeDAO statusCode) {
 		Team team = new Team();
 		team.setTeamKey(teamKey);
@@ -57,5 +58,4 @@ public class TeamServiceTest {
 		team.setStatusCode(statusCode);
 		return team;
 	}
-
 }

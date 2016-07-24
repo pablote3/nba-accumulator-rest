@@ -43,41 +43,43 @@ public class StandingsService {
 	public List<Standing> getStandings(StandingsDTO standingsDTO) {
 		LocalDate asOfDate = DateTimeUtil.getLocalDate(standingsDTO.standings_date);
 		List<Standing> standings = new ArrayList<Standing>();
-		for (int i = 0; i < standingsDTO.standing.length; i++) {
-			StandingDTO standingDTO = standingsDTO.standing[i];
-			Team team = teamRepo.findTeam(standingDTO.getTeam_id(), asOfDate);
-			if (team.isNotFound()) {
-				logger.info("Team not found " + standingDTO.getTeam_id());
-				throw new NoSuchEntityException(Team.class);
+		if (standingsDTO.standing != null) {
+			for (int i = 0; i < standingsDTO.standing.length; i++) {
+				StandingDTO standingDTO = standingsDTO.standing[i];
+				Team team = teamRepo.findTeam(standingDTO.getTeam_id(), asOfDate);
+				if (team.isNotFound()) {
+					logger.info("Team not found " + standingDTO.getTeam_id());
+					throw new NoSuchEntityException(Team.class);
+				}
+				Standing standing = new Standing();
+				standing.setTeam(team);
+				standing.setStandingDate(asOfDate);
+				standing.setRank(standingDTO.getRank());
+				standing.setOrdinalRank(standingDTO.getOrdinal_rank());
+				standing.setGamesWon(standingDTO.getWon());
+				standing.setGamesLost(standingDTO.getLost());
+				standing.setStreak(standingDTO.getStreak());
+				standing.setStreakType(standingDTO.getStreak_type());
+				standing.setStreakTotal(standingDTO.getStreak_total());
+				standing.setGamesBack(standingDTO.getGames_back());
+				standing.setPointsFor(standingDTO.getPoints_for());
+				standing.setPointsAgainst(standingDTO.getPoints_against());
+				standing.setHomeWins(standingDTO.getHome_won());
+				standing.setHomeLosses(standingDTO.getHome_lost());
+				standing.setAwayWins(standingDTO.getAway_won());
+				standing.setAwayLosses(standingDTO.getAway_lost());
+				standing.setConferenceWins(standingDTO.getConference_won());
+				standing.setConferenceLosses(standingDTO.getConference_lost());
+				standing.setLastFive(standingDTO.getLast_five());
+				standing.setLastTen(standingDTO.getLast_ten());
+				standing.setGamesPlayed(standingDTO.getGames_played());
+				standing.setPointsScoredPerGame(standingDTO.getPoints_scored_per_game());
+				standing.setPointsAllowedPerGame(standingDTO.getPoints_allowed_per_game());
+				standing.setWinPercentage(standingDTO.getWin_percentage());
+				standing.setPointDifferential(standingDTO.getPoint_differential());
+				standing.setPointDifferentialPerGame(standingDTO.getPoint_differential_per_game());
+				standings.add(standing);
 			}
-			Standing standing = new Standing();
-			standing.setTeam(team);
-			standing.setStandingDate(asOfDate);
-			standing.setRank(standingDTO.getRank());
-			standing.setOrdinalRank(standingDTO.getOrdinal_rank());
-			standing.setGamesWon(standingDTO.getWon());
-			standing.setGamesLost(standingDTO.getLost());
-			standing.setStreak(standingDTO.getStreak());
-			standing.setStreakType(standingDTO.getStreak_type());
-			standing.setStreakTotal(standingDTO.getStreak_total());
-			standing.setGamesBack(standingDTO.getGames_back());
-			standing.setPointsFor(standingDTO.getPoints_for());
-			standing.setPointsAgainst(standingDTO.getPoints_against());
-			standing.setHomeWins(standingDTO.getHome_won());
-			standing.setHomeLosses(standingDTO.getHome_lost());
-			standing.setAwayWins(standingDTO.getAway_won());
-			standing.setAwayLosses(standingDTO.getAway_lost());
-			standing.setConferenceWins(standingDTO.getConference_won());
-			standing.setConferenceLosses(standingDTO.getConference_lost());
-			standing.setLastFive(standingDTO.getLast_five());
-			standing.setLastTen(standingDTO.getLast_ten());
-			standing.setGamesPlayed(standingDTO.getGames_played());
-			standing.setPointsScoredPerGame(standingDTO.getPoints_scored_per_game());
-			standing.setPointsAllowedPerGame(standingDTO.getPoints_allowed_per_game());
-			standing.setWinPercentage(standingDTO.getWin_percentage());
-			standing.setPointDifferential(standingDTO.getPoint_differential());
-			standing.setPointDifferentialPerGame(standingDTO.getPoint_differential_per_game());
-			standings.add(standing);
 		}
 		return standings;
 	}

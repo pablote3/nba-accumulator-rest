@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -30,25 +29,23 @@ public class OfficialServiceTest {
 	@InjectMocks
 	private OfficialService officialService;
 
-	@Before
-	public void setUp() {
+	@Test(expected=NoSuchEntityException.class)
+	public void getGameOfficials_notFound() {
 		when(officialRepo.findOfficial(anyString(), anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockOfficial("Adams", "Samuel", StatusCodeDAO.Found))
-			.thenReturn(createMockOfficial("Coors", "Adolph", StatusCodeDAO.Found))
 			.thenReturn(createMockOfficial("", "", StatusCodeDAO.NotFound));
+		List<GameOfficial> officials = officialService.getGameOfficials(createMockOfficialDTOs(), new LocalDate(2015, 8, 26));
+		Assert.assertTrue(officials.size() == 0);
 	}
 
-	@Test(expected=NoSuchEntityException.class)
-	public void getGameOfficials() {
-		List<GameOfficial> officials;
-		//game officials found
-		officials = officialService.getGameOfficials(createMockOfficialDTOs(), new LocalDate(2015, 11, 26));
+	@Test
+	public void getGameOfficials_found() {
+		when(officialRepo.findOfficial(anyString(), anyString(), (LocalDate) anyObject()))
+			.thenReturn(createMockOfficial("Adams", "Samuel", StatusCodeDAO.Found))
+			.thenReturn(createMockOfficial("Coors", "Adolph", StatusCodeDAO.Found));
+		List<GameOfficial> officials = officialService.getGameOfficials(createMockOfficialDTOs(), new LocalDate(2015, 11, 26));
 		Assert.assertEquals(2, officials.size());
 		Assert.assertEquals("Coors", officials.get(1).getOfficial().getLastName());
 		Assert.assertEquals("Adolph", officials.get(1).getOfficial().getFirstName());
-
-		//game officials not found
-		officials = officialService.getGameOfficials(createMockOfficialDTOs(), new LocalDate(2015, 8, 26));
 	}
 
 	private OfficialDTO[] createMockOfficialDTOs() {
@@ -64,7 +61,7 @@ public class OfficialServiceTest {
 		official.setFirst_name(firstName);
 		return official;
 	}
-	
+
 	private Official createMockOfficial(String lastName, String firstName, StatusCodeDAO statusCode) {
 		Official official = new Official();
 		official.setLastName(lastName);
