@@ -18,6 +18,9 @@ insert into official VALUES(5, 'Limo', '2005-07-01', 'TerribleCall', '100', '200
 insert into official VALUES(10, 'Zach', '2010-10-30', 'Zarba', '28', '9999-12-31');
 insert into official VALUES(11, 'Brian', '2010-04-25', 'Forte', '100', '9999-12-31');
 insert into official VALUES(12, 'Eli', '2010-11-05', 'Roe', '45', '9999-12-31');
+insert into official VALUES(20, 'Tony', '1994-11-08', 'Brothers', '25', '9999-12-31');
+insert into official VALUES(21, 'Sean', '1993-11-05', 'Corbin', '33', '9999-12-31');
+insert into official VALUES(22, 'J.T.', '2009-12-08', 'Orr', '72', '9999-12-31');
 
 insert into player VALUES(1, '2002-02-20', 'Sacramento, CA, USA', 'Luke Puzdrakiew''icz', 'Luke', 78, 'Puzdrakiew''icz', 175);
 insert into player VALUES(2, '1966-06-02', 'Sacramento, CA, USA', 'Thad Puzdrakiewicz', 'Thad', 81, 'Puzdrakiewicz', 210);

@@ -81,7 +81,7 @@ public class OfficialRepositoryTest {
 	@Test
 	public void findOfficialsByDateRange_Found() {
 		List<Official> officials = officialRepo.findOfficials(new LocalDate("2009-10-31"));
-		Assert.assertEquals(2, officials.size());
+		Assert.assertEquals(4, officials.size());
 	}
 
 	@Test
