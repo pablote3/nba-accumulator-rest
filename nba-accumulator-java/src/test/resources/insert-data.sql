@@ -3,10 +3,12 @@ insert into team VALUES(2, 'HAR', 'Harlem', 'East', 'Atlantic', 'Harlem', '2009-
 insert into team VALUES(3, 'STL', 'St. Louis', 'East', 'Southwest', 'St. Louis', '2009-07-01', 'St. Louis Bomber''s', 'Bomber''s', 'St. Louis Arena', 'MO', 'st-louis-bomber''s', '2010-06-30');
 insert into team VALUES(4, 'SAL', 'Salinas', 'West', 'Pacific', 'Salinas', '2010-07-01', 'Salinas Cowboys', 'Cowboys', 'Salinas High School', 'CA', 'salinas-cowboys', '9999-12-31');
 insert into team VALUES(5, 'STL', 'Baltimore', 'East', 'Southeast', 'Baltimore', '2005-07-01', 'Baltimore Bullets', 'Bullets', 'Baltimore Coliseum', 'MD', 'baltimore-bullets', '2006-06-30');
-insert into team VALUES(6, 'CLE', 'Relels', 'East', 'Central', 'Cleveland', '2010-07-01', 'Cleveland Rebels', 'Rebels', 'Cleveland Arena', 'OH', 'cleveland-rebels', '9999-12-31');
+insert into team VALUES(6, 'CLE', 'Rebels', 'East', 'Central', 'Cleveland', '2010-07-01', 'Cleveland Rebels', 'Rebels', 'Cleveland Arena', 'OH', 'cleveland-rebels', '9999-12-31');
 insert into team VALUES(7, 'ROC', 'Rochester', 'East', 'Atlantic', 'Rochester', '2008-07-01', 'Rochester Royals', 'Royals', 'Edgerton Park Arena', 'NY', 'rochester-royals', '2009-06-30');
 insert into team VALUES(8, 'STL', 'St. Louis', 'East', 'Southwest', 'St. Louis', '2010-07-01', 'St. Louis Bomber''s', 'Bomber''s', 'St. Louis Multiplex', 'MO', 'st-louis-bomber''s', '2011-06-30');
-insert into team VALUES(10, 'DET', 'Detroit', 'East', 'Central', 'Detroit', '2010-07-01', 'Detroit Pistons', 'Pistons', 'Palace of Auburn Hills', 'MI', 'detroit-pistons', '9999-12-31');
+insert into team VALUES(9, 'DET', 'Detroit', 'East', 'Central', 'Detroit', '2010-07-01', 'Detroit Pistons', 'Pistons', 'Palace of Auburn Hills', 'MI', 'detroit-pistons', '9999-12-31');
+insert into team VALUES(20, 'CHI', 'Chicago', 'East', 'Central', 'Chicago', '2012-07-01', 'Chicago Bulls', 'Bulls', 'United Center', 'IL', 'chicago-bulls', '9999-12-31');
+insert into team VALUES(21, 'UTA', 'Salt Lake City', 'West', 'Northwest', 'Utah', '2012-07-01', 'Utah Jazz', 'Jazz', 'Energy Solutions Arena', 'UT', 'utah-jazz', '9999-12-31');
 
 insert into official VALUES(1, 'Joe', '2009-07-01', 'LateCa''ll', '96', '2010-06-30');
 insert into official VALUES(2, 'Mike', '2009-07-01', 'MissedCa''ll', '97', '2010-06-30');
@@ -34,10 +36,10 @@ insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, positi
 insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(3, 2, 4, '2009-10-30', '2009-11-04', '12', 'C');
 insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(4, 2, 2, '2010-01-01', '2010-01-10', '12', 'C');
 insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(5, 3, 5, '2009-10-30', '9999-12-31', '9', 'PG');
-insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(10, 10, 10, '2015-11-15', '9999-12-31', '21', 'SG');
-insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(11, 11, 10, '2015-10-30', '9999-12-31', '28', 'PG');
-insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(12, 12, 10, '2015-10-30', '2015-12-01', '12', 'C');
-insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(13, 13, 10, '2015-10-30', '9999-12-31', '9', 'PG');
+insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(10, 10, 9, '2015-11-15', '9999-12-31', '21', 'SG');
+insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(11, 11, 9, '2015-10-30', '9999-12-31', '28', 'PG');
+insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(12, 12, 9, '2015-10-30', '2015-12-01', '12', 'C');
+insert into rosterPlayer (id, playerId, teamId, fromDate, toDate, number, position) VALUES(13, 13, 9, '2015-10-30', '9999-12-31', '9', 'PG');
 
 insert into game VALUES(1, '2015-10-27 20:00:00.0', 'Regular', 'Completed');
 insert into gameOfficial (id, gameId, officialId) VALUES(1, 1, 2);
@@ -74,8 +76,12 @@ insert into boxScore (id, gameId, teamId, location) VALUES(13, 7, 6, 'Home');
 insert into boxScore (id, gameId, teamId, location) VALUES(14, 7, 5, 'Away');
 
 insert into game VALUES(10, '2015-11-24 10:00:00.0', 'Regular', 'Completed');
-insert into boxScore (id, gameId, teamId, location) VALUES(20, 10, 10, 'Home');
+insert into boxScore (id, gameId, teamId, location) VALUES(20, 10, 9, 'Home');
 insert into boxScore (id, gameId, teamId, location) VALUES(21, 10, 8, 'Away');
+
+insert into game VALUES(20, '2015-01-07 19:00:00.0', 'Regular', 'Scheduled');
+insert into boxScore (id, gameId, teamId, location) VALUES(30, 20, 20, 'Home');
+insert into boxScore (id, gameId, teamId, location) VALUES(31, 20, 21, 'Away');
 
 insert into standing (id, teamId, standingDate, rank, ordinalRank, gamesWon, gamesLost, streak, streakType, streakTotal, gamesBack, pointsFor, pointsAgainst, homeWins, homeLosses, 
 awayWins, awayLosses, conferenceWins, conferenceLosses, lastFive, lastTen, gamesPlayed, pointsScoredPerGame, PointsAllowedPerGame, WinPercentage, PointDifferential, pointDifferentialPerGame) 
