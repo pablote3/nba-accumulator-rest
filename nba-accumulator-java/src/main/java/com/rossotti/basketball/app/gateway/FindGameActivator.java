@@ -12,18 +12,20 @@ public class FindGameActivator {
 	@Autowired
 	private GameService gameService;
 
-	public List<Game> findGames(ServiceProperties properties) {
+//	public List<Game> findGames(ServiceProperties properties) {
+	public List<Game> findGames(String stringDate) {
 		System.out.println("begin findGamesActivator");
-		String gameTeam = properties.getGameTeam();
-		LocalDate gameDate = DateTimeUtil.getLocalDate(properties.getGameDate());
+//		String gameTeam = properties.getGameTeam();
+//		LocalDate gameDate = DateTimeUtil.getLocalDate(properties.getGameDate());
+		LocalDate gameDate = DateTimeUtil.getLocalDate(stringDate);
 		List<Game> games;
-		if (gameTeam == null || gameTeam.isEmpty()) {
+//		if (gameTeam == null || gameTeam.isEmpty()) {
 			games = gameService.findByDate(gameDate);
-		}
-		else {
-			games = new ArrayList<Game>();
-			games.add(gameService.findByDateTeam(gameDate, gameTeam));
-		}
+//		}
+//		else {
+//			games = new ArrayList<Game>();
+//			games.add(gameService.findByDateTeam(gameDate, gameTeam));
+//		}
 		System.out.println("end findGamesActivator");
 		return games;
 	}
