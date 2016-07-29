@@ -12,9 +12,8 @@ public class FindGameActivator {
 	@Autowired
 	private GameService gameService;
 
-//	public List<Game> findGames(ServiceProperties properties) {
-	public List<Game> findGames(String stringDate) {
-		System.out.println("begin findGamesActivator");
+	public List<Game> processGames(String stringDate) {
+		System.out.println("begin processGames");
 //		String gameTeam = properties.getGameTeam();
 //		LocalDate gameDate = DateTimeUtil.getLocalDate(properties.getGameDate());
 		LocalDate gameDate = DateTimeUtil.getLocalDate(stringDate);
@@ -26,7 +25,7 @@ public class FindGameActivator {
 //			games = new ArrayList<Game>();
 //			games.add(gameService.findByDateTeam(gameDate, gameTeam));
 //		}
-		System.out.println("end findGamesActivator");
+		System.out.println("end processGames");
 		return games;
 	}
 }

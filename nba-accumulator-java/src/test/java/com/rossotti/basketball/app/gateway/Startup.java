@@ -12,7 +12,7 @@ public class Startup {
 		});
 		System.out.println("begin findGamesActivator");
 		GameGateway gameGateway = (GameGateway) context.getBean("gameGateway");
-		Game game = gameGateway.findGames("2015-01-07");
+		Game game = gameGateway.processGames("2015-01-07");
 		System.out.println("end findGamesActivator " + game.getBoxScoreHome().getTeam().getTeamKey());
 		context.close();
 	}

@@ -12,18 +12,10 @@
 
 	<context:component-scan base-package="com.rossotti.basketball.app.gateway" />
 
-	<!-- int-file:inbound-channel-adapter id="producer-file-adapter" channel="inboundChannel" directory="classpath:/" filename-pattern="si-properties.json" prevent-duplicates="true">
-		<int:poller fixed-rate="5000" />
-	</int-file:inbound-channel-adapter>
-	<int:channel id="inboundChannel" />
-
-	<int:json-to-object-transformer id="incomingJsonConverter" input-channel="inboundChannel" output-channel="transformerChannel" type="com.rossotti.basketball.app.gateway.ServiceProperties" />
-	<int:channel id="transformerChannel" / -->
-
 	<int:gateway id="gameGateway" service-interface="com.rossotti.basketball.app.gateway.GameGateway" />
-	<int:channel id="findGamesChannel" />
+	<int:channel id="gatewayChannel" />
 
-	<int:service-activator ref="findGamesBean" input-channel="findGamesChannel" output-channel="foundGamesChannel" method="findGames" />
+	<int:service-activator ref="findGamesBean" input-channel="gatewayChannel" output-channel="foundGamesChannel" method="processGames" />
 	<bean id="findGamesBean" class="com.rossotti.basketball.app.gateway.FindGameActivator" />
 	<int:channel id="foundGamesChannel" />
 
@@ -36,21 +28,13 @@
 	<int:channel id="scheduledRouteChannel">
 		<int:queue capacity="20" />
 	</int:channel>
-	<int:channel id="findGamesChannel" />
+	<int:channel id="aggregatorChannel" />
 
-	<int:service-activator ref="scoreGameBean" input-channel="scheduledRouteChannel" output-channel="findGamesChannel" method="scoreGame" />
+	<int:service-activator ref="scoreGameBean" input-channel="scheduledRouteChannel" output-channel="aggregatorChannel" method="scoreGame" />
 	<bean id="scoreGameBean" class="com.rossotti.basketball.app.business.GameBusiness" />
-	<!--  int:channel id="scoredGameChannel" />
 
-	<int:object-to-json-transformer id="scoredJsonConverter" input-channel="scoredGameChannel" output-channel="scoredTransformerChannel" />
-	<int:channel id="scoredTransformerChannel" />
-
-	<int:object-to-json-transformer id="completedJsonConverter" input-channel="completedRouteChannel" output-channel="completedTransformerChannel" />
-	<int:channel id="completedTransformerChannel" />
-
-	<int-file:outbound-channel-adapter id="consumer-file-adapter1" channel="scoredTransformerChannel" directory="file:////home/pablote/pdrive/pwork/rest/nba-accumulator/message/scored" />
-	<int-file:outbound-channel-adapter id="consumer-file-adapter2" channel="completedTransformerChannel" directory="file:////home/pablote/pdrive/pwork/rest/nba-accumulator/message/completed" / -->
+	<int:aggregator ref="aggregatorBean" input-channel="aggregatorChannel" output-channel="gatewayChannel"/>
+	<bean id="aggregatorBean" class="com.rossotti.basketball.app.gateway.GameAggregator" />
 
 	<int:poller id="defaultPoller" default="true" max-messages-per-poll="1" fixed-rate="200" />
-
 </beans>
