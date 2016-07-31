@@ -20,6 +20,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.rossotti.basketball.dao.model.BoxScore;
 import com.rossotti.basketball.dao.model.BoxScore.Location;
 import com.rossotti.basketball.dao.model.Game;
+import com.rossotti.basketball.dao.model.GameDay;
 import com.rossotti.basketball.dao.model.GameStatus;
 import com.rossotti.basketball.dao.model.StatusCodeDAO;
 import com.rossotti.basketball.dao.model.Team;
@@ -37,16 +38,16 @@ public class GameServiceTest {
 	public void findByDate_notFound() {
 		when(gameRepo.findByDate((LocalDate) anyObject()))
 			.thenReturn(new ArrayList<Game>());
-		List<Game> games = gameService.findByDate(new LocalDate(2015, 8, 26));
-		Assert.assertEquals(0, games.size());
+		GameDay games = gameService.findByDate(new LocalDate(2015, 8, 26));
+		Assert.assertEquals(0, games.getGames().size());
 	}
 
 	@Test
 	public void findByDate_found() {
 		when(gameRepo.findByDate((LocalDate) anyObject()))
 			.thenReturn(createMockGames());
-		List<Game> games = gameService.findByDate(new LocalDate(2015, 11, 26));
-		Assert.assertEquals(2, games.size());
+		GameDay games = gameService.findByDate(new LocalDate(2015, 11, 26));
+		Assert.assertEquals(2, games.getGames().size());
 	}
 
 	@Test
