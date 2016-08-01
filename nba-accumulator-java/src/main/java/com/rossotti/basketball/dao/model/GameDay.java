@@ -34,6 +34,9 @@ public class GameDay {
 	public void setGames(List<Game> games) {
 		this.games = games;
 	}
+	public void add(Game game) {
+		games.add(game);
+	}
 
 	public String toString() {
 		return new StringBuffer()
