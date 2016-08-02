@@ -13,13 +13,13 @@
 	<context:component-scan base-package="com.rossotti.basketball.app.gateway" />
 
 	<int:gateway id="gameGateway" service-interface="com.rossotti.basketball.app.gateway.GameGateway" />
-	<int:channel id="gatewayChannel" />
+	<int:channel id="gatewayRequestChannel" />
 
-	<int:service-activator ref="findGamesBean" input-channel="gatewayChannel" output-channel="foundGamesChannel" method="processGames" />
-	<bean id="findGamesBean" class="com.rossotti.basketball.app.gateway.FindGameActivator" />
-	<int:channel id="foundGamesChannel" />
+	<int:service-activator ref="gameActivatorBean" input-channel="gatewayRequestChannel" output-channel="gameActivatorChannel" method="processGames" />
+	<bean id="gameActivatorBean" class="com.rossotti.basketball.app.gateway.GameActivator" />
+	<int:channel id="gameActivatorChannel" />
 
-	<int:splitter ref="gameSplitter" input-channel="foundGamesChannel" output-channel="splitGameChannel" />
+	<int:splitter ref="gameSplitter" input-channel="gameActivatorChannel" output-channel="splitGameChannel" />
 	<bean id="gameSplitter" class="com.rossotti.basketball.app.gateway.GameSplitter" />
 	<int:channel id="splitGameChannel" />
 
@@ -33,8 +33,9 @@
 	<int:service-activator ref="scoreGameBean" input-channel="scheduledRouteChannel" output-channel="aggregatorChannel" method="scoreGame" />
 	<bean id="scoreGameBean" class="com.rossotti.basketball.app.business.GameBusiness" />
 
-	<int:aggregator ref="aggregatorBean" input-channel="aggregatorChannel" output-channel="gatewayChannel"/>
+	<int:aggregator ref="aggregatorBean" input-channel="aggregatorChannel" output-channel="gatewayReplyChannel" />
 	<bean id="aggregatorBean" class="com.rossotti.basketball.app.gateway.GameAggregator" />
+	<int:channel id="gatewayReplyChannel" />
 
 	<int:poller id="defaultPoller" default="true" max-messages-per-poll="1" fixed-rate="200" />
 </beans>
