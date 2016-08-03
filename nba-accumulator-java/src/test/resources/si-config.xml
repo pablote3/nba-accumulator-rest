@@ -14,7 +14,7 @@
 
 	<context:component-scan base-package="com.rossotti.basketball.app.gateway" />
 
-	<int:gateway id="gameGateway" service-interface="com.rossotti.basketball.app.gateway.GameGateway" />
+	<int:gateway id="gatewayService" service-interface="com.rossotti.basketball.app.gateway.GatewayService" />
 	<int:channel id="gatewayRequestChannel" />
 
 	<int:service-activator ref="gameActivatorBean" input-channel="gatewayRequestChannel" output-channel="gameActivatorChannel" method="processGames" />

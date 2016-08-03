@@ -10,10 +10,10 @@ public class Startup {
 					"classpath:si-config.xml",
 					"classpath:applicationContext.xml"
 		});
-		System.out.println("begin findGamesActivator");
-		GameGateway gameGateway = (GameGateway) context.getBean("gameGateway");
-		Game game = gameGateway.processGames("2015-01-07");
-		System.out.println("end findGamesActivator " + game.getBoxScoreHome().getTeam().getTeamKey());
+		System.out.println("begin gatewayService");
+		GatewayService gatewayService = (GatewayService) context.getBean("gatewayService");
+		Game game = gatewayService.processGames("2015-01-07");
+		System.out.println("end gatewayService " + game.getBoxScoreHome().getTeam().getTeamKey());
 		context.close();
 	}
 }
