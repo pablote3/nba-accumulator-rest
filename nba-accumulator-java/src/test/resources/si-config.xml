@@ -3,11 +3,13 @@
 	xmlns="http://www.springframework.org/schema/beans"
 	xmlns:int="http://www.springframework.org/schema/integration"
 	xmlns:int-file="http://www.springframework.org/schema/integration/file"
+	xmlns:int-stream="http://www.springframework.org/schema/integration/stream"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
 	http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file.xsd
+	http://www.springframework.org/schema/integration/stream http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<context:component-scan base-package="com.rossotti.basketball.app.gateway" />
@@ -33,9 +35,11 @@
 	<int:service-activator ref="scoreGameBean" input-channel="scheduledRouteChannel" output-channel="aggregatorChannel" method="scoreGame" />
 	<bean id="scoreGameBean" class="com.rossotti.basketball.app.business.GameBusiness" />
 
-	<int:aggregator ref="aggregatorBean" input-channel="aggregatorChannel" output-channel="gatewayReplyChannel" />
+	<int:aggregator ref="aggregatorBean" input-channel="aggregatorChannel" output-channel="outboundChannel" />
 	<bean id="aggregatorBean" class="com.rossotti.basketball.app.gateway.GameAggregator" />
-	<int:channel id="gatewayReplyChannel" />
+	<int:channel id="outboundChannel" />
+	
+	<int-stream:stdout-channel-adapter channel="outboundChannel" append-newline="true"/>
 
 	<int:poller id="defaultPoller" default="true" max-messages-per-poll="1" fixed-rate="200" />
 </beans>
