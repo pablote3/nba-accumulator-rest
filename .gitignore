@@ -1,0 +1,12 @@
+#IntelliJ
+/.idea/
+*.iml
+
+#Eclipse
+#.classpath
+#.project
+#/.settings/
+
+#Ignore
+/target/
+/nba-accumulator-web/src/main/webapp/service.properties
