@@ -14,8 +14,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.rossotti.basketball.dao.model.Standing;
 import com.rossotti.basketball.dao.model.Team;
-import com.rossotti.basketball.dao.repository.StandingRepository;
 
+@SuppressWarnings("CanBeFinal")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:applicationContext.xml"})
 public class StandingRepositoryTest {

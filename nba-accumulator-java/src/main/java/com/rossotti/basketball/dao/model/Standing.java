@@ -1,29 +1,16 @@
 package com.rossotti.basketball.dao.model;
 
-import java.net.URI;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
-import javax.ws.rs.core.UriInfo;
-
+import com.rossotti.basketball.dao.pub.PubStanding;
+import com.rossotti.basketball.util.DateTimeUtil;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
-import com.rossotti.basketball.dao.pub.PubStanding;
-import com.rossotti.basketball.util.DateTimeUtil;
+import javax.persistence.*;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 
 @Entity
-@Table (name="standing", uniqueConstraints=@UniqueConstraint(columnNames={"teamId", "standingDate"}))
+@Table(name="standing", uniqueConstraints=@UniqueConstraint(columnNames={"teamId", "standingDate"}))
 public class Standing {
 	public Standing() {
 		setStatusCode(StatusCodeDAO.Found);
@@ -55,7 +42,7 @@ public class Standing {
 	}
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy= GenerationType.AUTO)
 	private Long id;
 	public Long getId() {
 		return id;
@@ -164,7 +151,7 @@ public class Standing {
 	public void setPointsFor(Short pointsFor) {
 		this.pointsFor = pointsFor;
 	}
-	
+
 	@Column(name="pointsAgainst", nullable=false)
 	private Short pointsAgainst;
 	public Short getPointsAgainst() {
@@ -300,7 +287,7 @@ public class Standing {
 		this.pointDifferentialPerGame = pointDifferentialPerGame;
 	}
 
-	@Column(name="opptGamesWon", nullable=true)
+	@Column(name="opptGamesWon")
 	private Integer opptGamesWon;
 	public Integer getOpptGamesWon() {
 		return opptGamesWon;
@@ -309,7 +296,7 @@ public class Standing {
 		this.opptGamesWon = opptGamesWon;
 	}
 
-	@Column(name="opptGamesPlayed", nullable=true)
+	@Column(name="opptGamesPlayed")
 	private Integer opptGamesPlayed;
 	public Integer getOpptGamesPlayed() {
 		return opptGamesPlayed;
@@ -318,7 +305,7 @@ public class Standing {
 		this.opptGamesPlayed = opptGamesPlayed;
 	}
 
-	@Column(name="opptOpptGamesWon", nullable=true)
+	@Column(name="opptOpptGamesWon")
 	private Integer opptOpptGamesWon;
 	public Integer getOpptOpptGamesWon() {
 		return opptOpptGamesWon;
@@ -327,61 +314,59 @@ public class Standing {
 		this.opptOpptGamesWon = opptOpptGamesWon;
 	}
 
-	@Column(name="opptOpptGamesPlayed", nullable=true)
+	@Column(name="opptOpptGamesPlayed")
 	private Integer opptOpptGamesPlayed;
 	public Integer getOpptOpptGamesPlayed() {
 		return opptOpptGamesPlayed;
-	}	
+	}
 	public void setOpptOpptGamesPlayed(Integer opptOpptGamesPlayed) {
 		this.opptOpptGamesPlayed = opptOpptGamesPlayed;
 	}
 
 	public String toString() {
-		return new StringBuffer()
-			.append("\r" + "  id: " + this.id + "\n")
-			.append("  standingDate: " + this.standingDate + "\n")
-			.append("  teamKey: " + team.getTeamKey() + "\n")
-			.append("  gamesWon: " + this.gamesWon + "\n")
-			.append("  gamesLost: " + this.gamesLost + "\n")
-			.append("  statusCode: " + this.statusCode)
-			.toString();
+		return ("\r" + "  id: " + this.id + "\n") +
+				"  standingDate: " + this.standingDate + "\n" +
+				"  teamKey: " + team.getTeamKey() + "\n" +
+				"  gamesWon: " + this.gamesWon + "\n" +
+				"  gamesLost: " + this.gamesLost + "\n" +
+				"  statusCode: " + this.statusCode;
 	}
 
 	public PubStanding toPubStanding(UriInfo uriInfo) {
 		URI self;
 		self = uriInfo.getBaseUriBuilder().path("standings").
-											path(this.getTeam().getTeamKey()).
-											path(DateTimeUtil.getStringDate(this.getStandingDate())).build();
+				path(this.getTeam().getTeamKey()).
+				path(DateTimeUtil.getStringDate(this.getStandingDate())).build();
 		return new PubStanding( self,
-								this.standingDate,
-								this.rank,
-								this.ordinalRank,
-								this.gamesWon,
-								this.gamesLost,
-								this.streak,
-								this.streakType,
-								this.streakTotal,
-								this.gamesBack,
-								this.pointsFor,
-								this.pointsAgainst,
-								this.homeWins,
-								this.homeLosses,
-								this.awayWins,
-								this.awayLosses,
-								this.conferenceWins,
-								this.conferenceLosses,
-								this.lastFive,
-								this.lastTen,
-								this.gamesPlayed,
-								this.pointsScoredPerGame,
-								this.pointsAllowedPerGame,
-								this.winPercentage,
-								this.pointDifferential,
-								this.pointDifferentialPerGame,
-								this.opptGamesWon,
-								this.opptGamesPlayed,
-								this.opptOpptGamesWon,
-								this.opptOpptGamesPlayed,
-								this.getTeam().toPubTeam(uriInfo));
+				this.standingDate,
+				this.rank,
+				this.ordinalRank,
+				this.gamesWon,
+				this.gamesLost,
+				this.streak,
+				this.streakType,
+				this.streakTotal,
+				this.gamesBack,
+				this.pointsFor,
+				this.pointsAgainst,
+				this.homeWins,
+				this.homeLosses,
+				this.awayWins,
+				this.awayLosses,
+				this.conferenceWins,
+				this.conferenceLosses,
+				this.lastFive,
+				this.lastTen,
+				this.gamesPlayed,
+				this.pointsScoredPerGame,
+				this.pointsAllowedPerGame,
+				this.winPercentage,
+				this.pointDifferential,
+				this.pointDifferentialPerGame,
+				this.opptGamesWon,
+				this.opptGamesPlayed,
+				this.opptOpptGamesWon,
+				this.opptOpptGamesPlayed,
+				this.getTeam().toPubTeam(uriInfo));
 	}
 }

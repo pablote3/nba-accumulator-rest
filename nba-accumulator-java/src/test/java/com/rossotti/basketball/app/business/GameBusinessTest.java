@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.rossotti.basketball.client.dto.*;
+import com.rossotti.basketball.client.service.JsonProvider;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.junit.Assert;
@@ -20,17 +22,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rossotti.basketball.app.exception.PropertyException;
-import com.rossotti.basketball.app.provider.JsonProvider;
-import com.rossotti.basketball.app.resource.ClientSource;
 import com.rossotti.basketball.app.service.GameService;
 import com.rossotti.basketball.app.service.OfficialService;
 import com.rossotti.basketball.app.service.PropertyService;
 import com.rossotti.basketball.app.service.RosterPlayerService;
 import com.rossotti.basketball.app.service.TeamService;
-import com.rossotti.basketball.client.dto.BoxScorePlayerDTO;
-import com.rossotti.basketball.client.dto.GameDTO;
-import com.rossotti.basketball.client.dto.OfficialDTO;
-import com.rossotti.basketball.client.dto.StatusCodeDTO;
 import com.rossotti.basketball.client.service.FileStatsService;
 import com.rossotti.basketball.client.service.RestStatsService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
@@ -47,6 +43,7 @@ import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.model.StatusCodeDAO;
 import com.rossotti.basketball.dao.model.Team;
 
+@SuppressWarnings("CanBeFinal")
 @RunWith(MockitoJUnitRunner.class)
 public class GameBusinessTest {
 	@Mock
@@ -76,7 +73,7 @@ public class GameBusinessTest {
 	@Test
 	public void propertyService_propertyException() {
 		when(propertyService.getProperty_ClientSource(anyString()))
-			.thenThrow(new PropertyException("propertyName"));
+				.thenThrow(new PropertyException("propertyName"));
 		AppGame game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isAppServerError());
 	}
@@ -84,7 +81,7 @@ public class GameBusinessTest {
 	@Test
 	public void propertyService_propertyNull() {
 		when(propertyService.getProperty_ClientSource(anyString()))
-			.thenReturn(null);
+				.thenReturn(null);
 		AppGame game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isAppServerError());
 	}
@@ -92,9 +89,9 @@ public class GameBusinessTest {
 	@Test
 	public void fileClientService_gameNotFound() {
 		when(propertyService.getProperty_ClientSource(anyString()))
-			.thenReturn(ClientSource.File);
-		when(fileStatsService.retrieveBoxScore(anyString()))
-			.thenReturn(createMockGameDTO_StatusCode(StatusCodeDTO.NotFound));
+				.thenReturn(ClientSource.File);
+		when(fileStatsService.retrieveBoxScore(anyString(), (LocalDate) anyObject()))
+				.thenReturn(createMockGameDTO_StatusCode(StatusCodeDTO.NotFound));
 		AppGame game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isAppClientError());
 	}
@@ -102,9 +99,9 @@ public class GameBusinessTest {
 	@Test
 	public void fileClientService_clientException() {
 		when(propertyService.getProperty_ClientSource(anyString()))
-			.thenReturn(ClientSource.File);
-		when(fileStatsService.retrieveBoxScore(anyString()))
-			.thenReturn(createMockGameDTO_StatusCode(StatusCodeDTO.ClientException));
+				.thenReturn(ClientSource.File);
+		when(fileStatsService.retrieveBoxScore(anyString(), (LocalDate) anyObject()))
+				.thenReturn(createMockGameDTO_StatusCode(StatusCodeDTO.ClientException));
 		AppGame game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isAppClientError());
 	}
@@ -112,9 +109,9 @@ public class GameBusinessTest {
 	@Test
 	public void restClientService_gameNotFound() {
 		when(propertyService.getProperty_ClientSource(anyString()))
-			.thenReturn(ClientSource.Api);
-		when(restStatsService.retrieveBoxScore(anyString()))
-			.thenReturn(createMockGameDTO_StatusCode(StatusCodeDTO.NotFound));
+				.thenReturn(ClientSource.Api);
+		when(restStatsService.retrieveBoxScore(anyString(), (LocalDate) anyObject()))
+				.thenReturn(createMockGameDTO_StatusCode(StatusCodeDTO.NotFound));
 		AppGame game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isAppClientError());
 	}
@@ -122,69 +119,81 @@ public class GameBusinessTest {
 	@Test
 	public void restClientService_clientException() {
 		when(propertyService.getProperty_ClientSource(anyString()))
-			.thenReturn(ClientSource.Api);
-		when(restStatsService.retrieveBoxScore(anyString()))
-			.thenReturn(createMockGameDTO_StatusCode(StatusCodeDTO.ClientException));
+				.thenReturn(ClientSource.Api);
+		when(restStatsService.retrieveBoxScore(anyString(), (LocalDate) anyObject()))
+				.thenReturn(createMockGameDTO_StatusCode(StatusCodeDTO.ClientException));
 		AppGame game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isAppClientError());
 	}
 
 	@Test
-	public void rosterPlayerService_getBoxScorePlayers_noSuchEntityException() {
+	public void rosterPlayerService_getBoxScorePlayers_appRosterUpdate() {
 		when(propertyService.getProperty_ClientSource(anyString()))
-			.thenReturn(ClientSource.File);
-		when(fileStatsService.retrieveBoxScore(anyString()))
-			.thenReturn(createMockGameDTO_Found());
+				.thenReturn(ClientSource.File);
+		when(fileStatsService.retrieveBoxScore(anyString(), (LocalDate) anyObject()))
+				.thenReturn(createMockGameDTO_Found());
 		when(rosterPlayerService.getBoxScorePlayers((BoxScorePlayerDTO[]) anyObject(), (LocalDate) anyObject(), anyString()))
-			.thenThrow(new NoSuchEntityException(RosterPlayer.class));
+				.thenThrow(new NoSuchEntityException(RosterPlayer.class));
 		AppGame game = gameBusiness.scoreGame(createMockGame_Scheduled());
-		Assert.assertTrue(game.isAppClientError());
+		Assert.assertTrue(game.isAppRosterUpdate());
 	}
 
 	@Test
-	public void officialService_getGameOfficials_noSuchEntityException() {
+	public void rosterPlayerService_getBoxScorePlayers_appRosterError() {
 		when(propertyService.getProperty_ClientSource(anyString()))
-			.thenReturn(ClientSource.File);
-		when(fileStatsService.retrieveBoxScore(anyString()))
-			.thenReturn(createMockGameDTO_Found());
+				.thenReturn(ClientSource.File);
+		when(fileStatsService.retrieveBoxScore(anyString(), (LocalDate) anyObject()))
+				.thenReturn(createMockGameDTO_Found());
 		when(rosterPlayerService.getBoxScorePlayers((BoxScorePlayerDTO[]) anyObject(), (LocalDate) anyObject(), anyString()))
-			.thenReturn(createMockBoxScorePlayers_Found());
+				.thenThrow(new NoSuchEntityException(RosterPlayer.class));
+		AppGame game = gameBusiness.scoreGame(createMockGame_Scheduled(), "detroit-pistons");
+		Assert.assertTrue(game.isAppRosterError());
+	}
+
+	@Test
+	public void officialService_getGameOfficials_appOfficialError() {
+		when(propertyService.getProperty_ClientSource(anyString()))
+				.thenReturn(ClientSource.File);
+		when(fileStatsService.retrieveBoxScore(anyString(), (LocalDate) anyObject()))
+				.thenReturn(createMockGameDTO_Found());
+		when(rosterPlayerService.getBoxScorePlayers((BoxScorePlayerDTO[]) anyObject(), (LocalDate) anyObject(), anyString()))
+				.thenReturn(createMockBoxScorePlayers_Found());
 		when(officialService.getGameOfficials((OfficialDTO[]) anyObject(), (LocalDate) anyObject()))
-			.thenThrow(new NoSuchEntityException(Official.class));
+				.thenThrow(new NoSuchEntityException(Official.class));
 		AppGame game = gameBusiness.scoreGame(createMockGame_Scheduled());
-		Assert.assertTrue(game.isAppClientError());
+		Assert.assertTrue(game.isAppOfficialError());
 	}
 
 	@Test
-	public void teamService_findTeam_noSuchEntityException() {
+	public void teamService_findTeam_appTeamError() {
 		when(propertyService.getProperty_ClientSource(anyString()))
-			.thenReturn(ClientSource.File);
-		when(fileStatsService.retrieveBoxScore(anyString()))
-			.thenReturn(createMockGameDTO_Found());
+				.thenReturn(ClientSource.File);
+		when(fileStatsService.retrieveBoxScore(anyString(), (LocalDate) anyObject()))
+				.thenReturn(createMockGameDTO_Found());
 		when(rosterPlayerService.getBoxScorePlayers((BoxScorePlayerDTO[]) anyObject(), (LocalDate) anyObject(), anyString()))
-			.thenReturn(createMockBoxScorePlayers_Found());
+				.thenReturn(createMockBoxScorePlayers_Found());
 		when(officialService.getGameOfficials((OfficialDTO[]) anyObject(), (LocalDate) anyObject()))
-			.thenReturn(createMockGameOfficials_Found());
+				.thenReturn(createMockGameOfficials_Found());
 		when(teamService.findTeam(anyString(), (LocalDate) anyObject()))
-			.thenThrow(new NoSuchEntityException(Team.class));
+				.thenThrow(new NoSuchEntityException(Team.class));
 		AppGame game = gameBusiness.scoreGame(createMockGame_Scheduled());
-		Assert.assertTrue(game.isAppClientError());
+		Assert.assertTrue(game.isAppTeamError());
 	}
-	
+
 	@Test
 	public void gameService_updateGame_gameNotFound() {
 		when(propertyService.getProperty_ClientSource(anyString()))
-			.thenReturn(ClientSource.Api);
-		when(restStatsService.retrieveBoxScore(anyString()))
-			.thenReturn(createMockGameDTO_Found());
+				.thenReturn(ClientSource.Api);
+		when(restStatsService.retrieveBoxScore(anyString(), (LocalDate) anyObject()))
+				.thenReturn(createMockGameDTO_Found());
 		when(rosterPlayerService.getBoxScorePlayers((BoxScorePlayerDTO[]) anyObject(), (LocalDate) anyObject(), anyString()))
-			.thenReturn(createMockBoxScorePlayers_Found());
+				.thenReturn(createMockBoxScorePlayers_Found());
 		when(officialService.getGameOfficials((OfficialDTO[]) anyObject(), (LocalDate) anyObject()))
-			.thenReturn(createMockGameOfficials_Found());
+				.thenReturn(createMockGameOfficials_Found());
 		when(teamService.findTeam(anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockTeam_Found());
+				.thenReturn(createMockTeam_Found());
 		when(gameService.updateGame((Game)anyObject()))
-			.thenReturn(createMockGame_StatusCode(StatusCodeDAO.NotFound));
+				.thenReturn(createMockGame_StatusCode(StatusCodeDAO.NotFound));
 		AppGame game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isAppServerError());
 	}
@@ -192,17 +201,17 @@ public class GameBusinessTest {
 	@Test
 	public void gameService_updateGame_complete() {
 		when(propertyService.getProperty_ClientSource(anyString()))
-			.thenReturn(ClientSource.Api);
-		when(restStatsService.retrieveBoxScore(anyString()))
-			.thenReturn(createMockGameDTO_Found());
+				.thenReturn(ClientSource.Api);
+		when(restStatsService.retrieveBoxScore(anyString(), (LocalDate) anyObject()))
+				.thenReturn(createMockGameDTO_Found());
 		when(rosterPlayerService.getBoxScorePlayers((BoxScorePlayerDTO[]) anyObject(), (LocalDate) anyObject(), anyString()))
-			.thenReturn(createMockBoxScorePlayers_Found());
+				.thenReturn(createMockBoxScorePlayers_Found());
 		when(officialService.getGameOfficials((OfficialDTO[]) anyObject(), (LocalDate) anyObject()))
-			.thenReturn(createMockGameOfficials_Found());
+				.thenReturn(createMockGameOfficials_Found());
 		when(teamService.findTeam(anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockTeam_Found());
+				.thenReturn(createMockTeam_Found());
 		when(gameService.updateGame((Game)anyObject()))
-			.thenReturn(createMockGame_StatusCode(StatusCodeDAO.Updated));
+				.thenReturn(createMockGame_StatusCode(StatusCodeDAO.Updated));
 		AppGame game = gameBusiness.scoreGame(createMockGame_Scheduled());
 		Assert.assertTrue(game.isAppCompleted());
 	}
@@ -234,7 +243,7 @@ public class GameBusinessTest {
 	}
 
 	private GameDTO createMockGameDTO_Found() {
-		GameDTO game = null;
+		GameDTO game;
 		try {
 			ObjectMapper mapper = JsonProvider.buildObjectMapper();
 			InputStream baseJson = this.getClass().getClassLoader().getResourceAsStream("mockClient/gameClient.json");

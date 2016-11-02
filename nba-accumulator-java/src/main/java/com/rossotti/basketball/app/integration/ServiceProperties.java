@@ -1,4 +1,4 @@
-package com.rossotti.basketball.app.gateway;
+package com.rossotti.basketball.app.integration;
 
 public class ServiceProperties {
 	private String gameDate;

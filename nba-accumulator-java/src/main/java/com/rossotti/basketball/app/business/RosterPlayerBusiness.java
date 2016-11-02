@@ -9,14 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.app.exception.PropertyException;
-import com.rossotti.basketball.app.resource.ClientSource;
 import com.rossotti.basketball.app.service.PlayerService;
 import com.rossotti.basketball.app.service.PropertyService;
 import com.rossotti.basketball.app.service.RosterPlayerService;
+import com.rossotti.basketball.client.dto.ClientSource;
 import com.rossotti.basketball.client.dto.RosterDTO;
 import com.rossotti.basketball.client.service.FileStatsService;
 import com.rossotti.basketball.client.service.RestStatsService;
 import com.rossotti.basketball.dao.exception.NoSuchEntityException;
+import com.rossotti.basketball.dao.model.AppGame;
 import com.rossotti.basketball.dao.model.AppRoster;
 import com.rossotti.basketball.dao.model.AppStatus;
 import com.rossotti.basketball.dao.model.Player;
@@ -27,48 +28,52 @@ import com.rossotti.basketball.util.FormatUtil;
 
 @Service
 public class RosterPlayerBusiness {
-	@Autowired
-	private RestStatsService restStatsService;
+	private final RestStatsService restStatsService;
 
-	@Autowired
-	private FileStatsService fileStatsService;
+	private final FileStatsService fileStatsService;
 
-	@Autowired
-	private RosterPlayerService rosterPlayerService;
+	private final RosterPlayerService rosterPlayerService;
 
-	@Autowired
-	private PlayerService playerService;
+	private final PlayerService playerService;
 
-	@Autowired
-	private PropertyService propertyService;
+	private final PropertyService propertyService;
 
 	private final Logger logger = LoggerFactory.getLogger(RosterPlayerBusiness.class);
+
+	@Autowired
+	public RosterPlayerBusiness(RosterPlayerService rosterPlayerService, PropertyService propertyService, FileStatsService fileStatsService, RestStatsService restStatsService, PlayerService playerService) {
+		this.rosterPlayerService = rosterPlayerService;
+		this.propertyService = propertyService;
+		this.fileStatsService = fileStatsService;
+		this.restStatsService = restStatsService;
+		this.playerService = playerService;
+	}
 
 	public AppRoster loadRoster(String asOfDateString, String teamKey) {
 		AppRoster appRoster = new AppRoster();
 		try {
-			RosterDTO rosterDTO = null;
+			RosterDTO rosterDTO;
+			LocalDate fromDate = DateTimeUtil.getLocalDate(asOfDateString);
+			LocalDate toDate = DateTimeUtil.getLocalDateSeasonMax(fromDate);
 			ClientSource clientSource = propertyService.getProperty_ClientSource("accumulator.source.roster");
 			if (clientSource == ClientSource.File) {
-				rosterDTO = fileStatsService.retrieveRoster(teamKey);
+				rosterDTO = fileStatsService.retrieveRoster(teamKey, fromDate);
 			}
 			else if (clientSource == ClientSource.Api) {
-				rosterDTO = restStatsService.retrieveRoster(teamKey);
+				rosterDTO = restStatsService.retrieveRoster(teamKey, fromDate);
 			}
 			else {
 				throw new PropertyException("Unknown");
 			}
-	
+
 			if (rosterDTO.isFound()) {
 				if (rosterDTO.players.length > 0) {
-					LocalDate fromDate = DateTimeUtil.getLocalDate(asOfDateString);
-					LocalDate toDate = DateTimeUtil.getLocalDateSeasonMax(fromDate);
 					//activate new roster players
 					logger.info("Activate new roster players");
 					List<RosterPlayer> activeRosterPlayers = rosterPlayerService.getRosterPlayers(rosterDTO.players, fromDate, teamKey);
 					if (activeRosterPlayers.size() > 0) {
 						for (int i = 0; i < activeRosterPlayers.size(); i++) {
-							RosterPlayer activeRosterPlayer = (RosterPlayer)activeRosterPlayers.get(i);
+							RosterPlayer activeRosterPlayer = activeRosterPlayers.get(i);
 							Player activePlayer = activeRosterPlayer.getPlayer();
 							RosterPlayer finderRosterPlayer = rosterPlayerService.findByDatePlayerNameTeam(fromDate, activePlayer.getLastName(), activePlayer.getFirstName(), teamKey);
 							if (finderRosterPlayer.isNotFound()) {
@@ -111,7 +116,7 @@ public class RosterPlayerBusiness {
 								//player is on current team roster
 								activeRosterPlayer.setFromDate(finderRosterPlayer.getFromDate());
 								activeRosterPlayer.setToDate(finderRosterPlayer.getToDate());
-								logger.info(generateLogMessage("Player on current team roster", activeRosterPlayer));
+								logger.debug(generateLogMessage("Player on current team roster", activeRosterPlayer));
 							}
 						}
 
@@ -131,7 +136,7 @@ public class RosterPlayerBusiness {
 											priorPlayer.getFirstName().equals(activePlayer.getFirstName()) &&
 											priorPlayer.getBirthdate().equals(activePlayer.getBirthdate())) {
 										//player is on current team roster
-										logger.info(generateLogMessage("Player on current team roster", priorRosterPlayer));
+										logger.debug(generateLogMessage("Player on current team roster", priorRosterPlayer));
 										foundPlayerOnRoster = true;
 										break;
 									}
@@ -157,16 +162,16 @@ public class RosterPlayerBusiness {
 					}
 				}
 				else {
-					logger.info('\n' + "" + " client exception - roster found with empty player list");
+					logger.info("Client exception - roster found with empty player list");
 					appRoster.setAppStatus(AppStatus.ClientError);
 				}
 			}
 			else if (rosterDTO.isNotFound()) {
-				logger.info('\n' + "" + " unable to find game");
+				logger.info("Unable to find roster");
 				appRoster.setAppStatus(AppStatus.ClientError);
 			}
 			else if (rosterDTO.isClientException()) {
-				logger.info('\n' + "" + " client exception");
+				logger.info("Client exception");
 				appRoster.setAppStatus(AppStatus.ClientError);
 			}
 		}
@@ -177,25 +182,36 @@ public class RosterPlayerBusiness {
 			appRoster.setAppStatus(AppStatus.ClientError);
 		}
 		catch (PropertyException pe) {
-			logger.info("property exception = " + pe);
+			logger.info("Property exception = " + pe);
 			appRoster.setAppStatus(AppStatus.ServerError);
 		}
 		catch (Exception e) {
-			logger.info("unexpected exception = " + e);
+			logger.info("Unexpected exception = " + e);
 			appRoster.setAppStatus(AppStatus.ServerError);
 		}
 		return appRoster;
 	}
 
+	public AppGame loadRoster(AppGame appGame) {
+		logger.info("Load Roster for team = " + appGame.getRosterLastTeam() + " gameDate = " + DateTimeUtil.getStringDate(appGame.getGame().getGameDateTime()));
+		AppRoster roster = loadRoster(DateTimeUtil.getStringDate(appGame.getGame().getGameDateTime()), appGame.getRosterLastTeam());
+		if (roster.isAppClientError()) {
+			appGame.setAppStatus(AppStatus.ClientError);
+		}
+		else if (roster.isAppServerError()) {
+			appGame.setAppStatus(AppStatus.ServerError);
+		}
+		else if (roster.isAppCompleted()) {
+			appGame.setAppStatus(AppStatus.RosterComplete);
+		}
+		return appGame;
+	}
+
 	private String generateLogMessage(String messageType, RosterPlayer rosterPlayer) {
-		StringBuilder sb;
-		sb = new StringBuilder();
-		sb.append(FormatUtil.padString(messageType, 40));
-		sb.append(" name = " + FormatUtil.padString(rosterPlayer.getPlayer().getFirstName() + " " + rosterPlayer.getPlayer().getLastName(), 35));
-		sb.append(" dob = " + DateTimeUtil.getStringDate(rosterPlayer.getPlayer().getBirthdate()));
-		sb.append(" team = " + rosterPlayer.getTeam().getAbbr());
-		sb.append(" fromDate = " + DateTimeUtil.getStringDate(rosterPlayer.getFromDate()));
-		sb.append(" toDate = " + DateTimeUtil.getStringDate(rosterPlayer.getToDate()));
-		return sb.toString();
+		return FormatUtil.padString(messageType, 40) +
+				" fromDate = " + DateTimeUtil.getStringDate(rosterPlayer.getFromDate()) +
+				" toDate = " + DateTimeUtil.getStringDate(rosterPlayer.getToDate()) +
+				" dob = " + DateTimeUtil.getStringDate(rosterPlayer.getPlayer().getBirthdate()) +
+				" name = " + FormatUtil.padString(rosterPlayer.getPlayer().getFirstName() + " " + rosterPlayer.getPlayer().getLastName(), 35);
 	}
 }

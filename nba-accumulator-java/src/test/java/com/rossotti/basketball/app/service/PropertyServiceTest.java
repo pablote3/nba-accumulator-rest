@@ -8,9 +8,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.rossotti.basketball.app.exception.PropertyException;
-import com.rossotti.basketball.app.resource.ClientSource;
-import com.rossotti.basketball.app.service.PropertyService;
+import com.rossotti.basketball.client.dto.ClientSource;
 
+@SuppressWarnings("CanBeFinal")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:applicationContext.xml"})
 public class PropertyServiceTest {

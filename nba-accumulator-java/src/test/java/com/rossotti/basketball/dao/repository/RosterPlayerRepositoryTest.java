@@ -11,13 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import com.rossotti.basketball.dao.model.Player;
 import com.rossotti.basketball.dao.model.RosterPlayer;
 import com.rossotti.basketball.dao.model.Team;
-import com.rossotti.basketball.dao.repository.RosterPlayerRepository;
 import com.rossotti.basketball.dao.model.Position;
 
+@SuppressWarnings("CanBeFinal")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:applicationContext.xml"})
 public class RosterPlayerRepositoryTest {
@@ -89,7 +88,7 @@ public class RosterPlayerRepositoryTest {
 		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiew'icz", "Luke", "chicago-zephers", new LocalDate("2009-10-30"));
 		Assert.assertTrue(findRosterPlayer.isNotFound());
 	}
-	
+
 	@Test
 	public void findRosterPlayerByNameTeamAsOfDate_NotFound_FromDate() {
 		RosterPlayer findRosterPlayer = rosterPlayerRepo.findRosterPlayer("Puzdrakiew'icz", "Luke", "chicago-zephyrs", new LocalDate("2009-10-29"));
@@ -144,8 +143,7 @@ public class RosterPlayerRepositoryTest {
 
 	@Test(expected=PropertyValueException.class)
 	public void createRosterPlayer_MissingRequiredData() {
-		RosterPlayer createRosterPlayer = rosterPlayerRepo.createRosterPlayer(getMockRosterPlayer(null,  new LocalDate("2009-12-01"), new LocalDate("2009-12-15")));
-		Assert.assertTrue(createRosterPlayer.isCreated());
+		rosterPlayerRepo.createRosterPlayer(getMockRosterPlayer(null,  new LocalDate("2009-12-01"), new LocalDate("2009-12-15")));
 	}
 
 	@Test
@@ -201,7 +199,7 @@ public class RosterPlayerRepositoryTest {
 		player.setBirthdate(new LocalDate("1966-06-02"));
 		return player;
 	}
-	
+
 	private Team getMockTeam() {
 		Team team = new Team();
 		team.setId(2L);

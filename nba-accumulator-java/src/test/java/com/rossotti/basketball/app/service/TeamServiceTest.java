@@ -17,6 +17,7 @@ import com.rossotti.basketball.dao.model.StatusCodeDAO;
 import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.dao.repository.TeamRepository;
 
+@SuppressWarnings("CanBeFinal")
 @RunWith(MockitoJUnitRunner.class)
 public class TeamServiceTest {
 	@Mock
@@ -28,7 +29,7 @@ public class TeamServiceTest {
 	@Test(expected=NoSuchEntityException.class)
 	public void findTeam_notFound_gameDate() {
 		when(teamRepo.findTeam(anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockTeam("new-orleans-hornets", StatusCodeDAO.NotFound));
+				.thenReturn(createMockTeam("new-orleans-hornets", "Hornets", StatusCodeDAO.NotFound));
 		Team team = teamService.findTeam("new-orleans-hornets", new LocalDate(2010, 8, 26));
 		Assert.assertTrue(team.isNotFound());
 	}
@@ -36,7 +37,7 @@ public class TeamServiceTest {
 	@Test(expected=NoSuchEntityException.class)
 	public void findTeam_notFound_teamKey() {
 		when(teamRepo.findTeam(anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockTeam("denver-mcnuggets", StatusCodeDAO.NotFound));
+				.thenReturn(createMockTeam("denver-mcnuggets", "Nuggets", StatusCodeDAO.NotFound));
 		Team team = teamService.findTeam("denver-mcnuggets", new LocalDate(2015, 8, 26));
 		Assert.assertTrue(team.isNotFound());
 	}
@@ -44,15 +45,41 @@ public class TeamServiceTest {
 	@Test
 	public void findTeam_found() {
 		when(teamRepo.findTeam(anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockTeam("denver-nuggets", StatusCodeDAO.Found));
+				.thenReturn(createMockTeam("denver-nuggets", "Nuggets", StatusCodeDAO.Found));
 		Team team = teamService.findTeam("denver-nuggets", new LocalDate(2015, 11, 26));
 		Assert.assertEquals("denver-nuggets", team.getTeamKey());
 		Assert.assertTrue(team.isFound());
 	}
 
-	private Team createMockTeam(String teamKey, StatusCodeDAO statusCode) {
+	@Test(expected=NoSuchEntityException.class)
+	public void findTeamByLastName_notFound_gameDate() {
+		when(teamRepo.findTeamByLastName(anyString(), (LocalDate) anyObject()))
+				.thenReturn(createMockTeam("new-orleans-hornets", "Hornets", StatusCodeDAO.NotFound));
+		Team team = teamService.findTeamByLastName("Hornets", new LocalDate(2010, 8, 26));
+		Assert.assertTrue(team.isNotFound());
+	}
+
+	@Test(expected=NoSuchEntityException.class)
+	public void findTeamByLastName_notFound_lastName() {
+		when(teamRepo.findTeamByLastName(anyString(), (LocalDate) anyObject()))
+				.thenReturn(createMockTeam("denver-mcnuggets", "Nuggers", StatusCodeDAO.NotFound));
+		Team team = teamService.findTeamByLastName("Nuggers", new LocalDate(2015, 8, 26));
+		Assert.assertTrue(team.isNotFound());
+	}
+
+	@Test
+	public void findTeamByLastName_found() {
+		when(teamRepo.findTeamByLastName(anyString(), (LocalDate) anyObject()))
+				.thenReturn(createMockTeam("denver-nuggets", "Nuggets", StatusCodeDAO.Found));
+		Team team = teamService.findTeamByLastName("Nuggets", new LocalDate(2015, 11, 26));
+		Assert.assertEquals("Nuggets", team.getLastName());
+		Assert.assertTrue(team.isFound());
+	}
+
+	private Team createMockTeam(String teamKey, String lastName, StatusCodeDAO statusCode) {
 		Team team = new Team();
 		team.setTeamKey(teamKey);
+		team.setLastName(lastName);
 		team.setFromDate(new LocalDate(1995, 11, 26));
 		team.setToDate(new LocalDate(2014, 11, 26));
 		team.setStatusCode(statusCode);

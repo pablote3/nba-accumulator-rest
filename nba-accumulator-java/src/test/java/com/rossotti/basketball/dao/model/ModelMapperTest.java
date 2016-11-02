@@ -3,22 +3,15 @@ package com.rossotti.basketball.dao.model;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.rossotti.basketball.client.service.JsonProvider;
 import org.joda.time.LocalDateTime;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rossotti.basketball.app.provider.JsonProvider;
-import com.rossotti.basketball.dao.model.Game;
-import com.rossotti.basketball.dao.model.Official;
-import com.rossotti.basketball.dao.model.Player;
-import com.rossotti.basketball.dao.model.RosterPlayer;
-import com.rossotti.basketball.dao.model.Standing;
-import com.rossotti.basketball.dao.model.Team;
-import com.rossotti.basketball.dao.model.Position;
 
 public class ModelMapperTest {
-	private ObjectMapper mapper = JsonProvider.buildObjectMapper();
+	private final ObjectMapper mapper = JsonProvider.buildObjectMapper();
 
 	@Test
 	public void deserialize_JsonToPojo_Official() throws IOException {

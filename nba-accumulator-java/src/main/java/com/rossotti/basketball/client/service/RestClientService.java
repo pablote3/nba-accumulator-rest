@@ -1,6 +1,8 @@
 package com.rossotti.basketball.client.service;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -9,32 +11,28 @@ import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rossotti.basketball.app.exception.PropertyException;
-import com.rossotti.basketball.app.provider.JsonProvider;
 import com.rossotti.basketball.app.service.PropertyService;
+import com.rossotti.basketball.client.dto.RosterDTO;
 import com.rossotti.basketball.client.dto.StatsDTO;
 import com.rossotti.basketball.client.dto.StatusCodeDTO;
+import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
-
 public class RestClientService {
-	@Autowired
-	private PropertyService propertyService;
+	private final PropertyService propertyService;
 
-	private static ObjectMapper mapper = JsonProvider.buildObjectMapper();
+	private static final ObjectMapper mapper = JsonProvider.buildObjectMapper();
 	private final Logger logger = LoggerFactory.getLogger(RestClientService.class);
-	private Client client;
 
-	ClientRequestFilter clientFilter = new ClientRequestFilter() {
-		@Override
+	private final ClientRequestFilter clientFilter = new ClientRequestFilter() {
 		public void filter(ClientRequestContext requestContext) throws PropertyException {
 			String accessToken = propertyService.getProperty_String("xmlstats.accessToken");
 			String userAgent = propertyService.getProperty_String("xmlstats.userAgent");
@@ -44,33 +42,43 @@ public class RestClientService {
 		}
 	};
 
+	@Autowired
+	public RestClientService(PropertyService propertyService) {
+		this.propertyService = propertyService;
+	}
+
 	private Client getClient() {
-		client = ClientBuilder.newBuilder().build();
+		Client client = ClientBuilder.newBuilder().build();
 		client.register(clientFilter);
-		logger.info('\n' + "Client service initialized");
+		logger.debug("Client service initialized");
 		return client;
 	}
 
-	public StatsDTO retrieveStats(String eventUrl, StatsDTO statsDTO) {
+	public StatsDTO retrieveStats(String baseUrl, String event, StatsDTO statsDTO, LocalDate asOfDate) {
+		String eventUrl = baseUrl + event + ".json";
 		Response response = getClient().target(eventUrl).request().get();
-		if (response.getStatus() != 200) {
+		if (response.getStatus() == 401) {
+			logger.info("Invalid token supplied on client request - returning http status = 401");
+			statsDTO.setStatusCode(StatusCodeDTO.NotFound);
+			response.readEntity(String.class);
+		}
+		else if (response.getStatus() != 200) {
+			logger.info("Unable to retrieve client request - returning http status = " + response.getStatus());
 			statsDTO.setStatusCode(StatusCodeDTO.NotFound);
 			response.readEntity(String.class);
 		}
 		else {
 			try {
-				statsDTO = mapper.readValue(response.readEntity(String.class), statsDTO.getClass());
+				String baseJson = response.readEntity(String.class);
+				if (statsDTO instanceof RosterDTO) {
+					String file = propertyService.getProperty_Path("xmlstats.fileRoster") + "/" + event + "-" + DateTimeUtil.getStringDateNaked(asOfDate) + ".json";
+					OutputStream outputStream = new FileOutputStream(file, false);
+					outputStream.write(baseJson.getBytes());
+					outputStream.close();
+				}
+				statsDTO = mapper.readValue(baseJson, statsDTO.getClass());
 				statsDTO.setStatusCode(StatusCodeDTO.Found);
-			}
-			catch (JsonParseException jpe) {
-				statsDTO.setStatusCode(StatusCodeDTO.ClientException);
-				jpe.printStackTrace();
-			}
-			catch (JsonMappingException jme) {
-				statsDTO.setStatusCode(StatusCodeDTO.ClientException);
-				jme.printStackTrace();
-			}
-			catch (IOException ioe) {
+			} catch (IOException ioe) {
 				statsDTO.setStatusCode(StatusCodeDTO.ClientException);
 				ioe.printStackTrace();
 			}

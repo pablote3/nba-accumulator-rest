@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +17,19 @@ import com.rossotti.basketball.dao.model.StatusCodeDAO;
 @Repository
 @Transactional
 public class PlayerRepository {
+	private final SessionFactory sessionFactory;
+
 	@Autowired
-	private SessionFactory sessionFactory;
+	public PlayerRepository(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	public Player findPlayer(String lastName, String firstName, LocalDate birthdate) {
-		String sql = 	"from Player " +
-						"where lastName = :lastName " +
-						"and firstName = :firstName " +
-						"and birthdate = :birthdate";
-		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		String sql =    "from Player " +
+				"where lastName = :lastName " +
+				"and firstName = :firstName " +
+				"and birthdate = :birthdate";
+		Query query = getSession().createQuery(sql);
 		query.setParameter("lastName", lastName);
 		query.setParameter("firstName", firstName);
 		query.setParameter("birthdate", birthdate);
@@ -41,10 +46,10 @@ public class PlayerRepository {
 
 	@SuppressWarnings("unchecked")
 	public List<Player> findPlayers(String lastName, String firstName) {
-		String sql = 	"from Player " +
-						"where lastName = :lastName " +
-						"and firstName = :firstName";
-		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		String sql =    "from Player " +
+				"where lastName = :lastName " +
+				"and firstName = :firstName ";
+		Query query = getSession().createQuery(sql);
 		query.setParameter("lastName", lastName);
 		query.setParameter("firstName", firstName);
 
@@ -58,7 +63,7 @@ public class PlayerRepository {
 	public Player createPlayer(Player createPlayer) {
 		Player player = findPlayer(createPlayer.getLastName(), createPlayer.getFirstName(), createPlayer.getBirthdate());
 		if (player.isNotFound()) {
-			getSessionFactory().getCurrentSession().persist(createPlayer);
+			getSession().persist(createPlayer);
 			createPlayer.setStatusCode(StatusCodeDAO.Created);
 		}
 		else {
@@ -78,7 +83,7 @@ public class PlayerRepository {
 			player.setWeight(updatePlayer.getWeight());
 			player.setBirthplace(updatePlayer.getBirthplace());
 			player.setStatusCode(StatusCodeDAO.Updated);
-			getSessionFactory().getCurrentSession().saveOrUpdate(player);
+			getSession().saveOrUpdate(player);
 		}
 		return player;
 	}
@@ -86,17 +91,13 @@ public class PlayerRepository {
 	public Player deletePlayer(String lastName, String firstName, LocalDate birthdate) {
 		Player player = findPlayer(lastName, firstName, birthdate);
 		if (player.isFound()) {
-			getSessionFactory().getCurrentSession().delete(player);
+			getSession().delete(player);
 			player = new Player(StatusCodeDAO.Deleted);
 		}
 		return player;
 	}
 
-	public SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
-
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+	private Session getSession() {
+		return sessionFactory.getCurrentSession();
 	}
 }

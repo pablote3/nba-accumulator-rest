@@ -1,27 +1,18 @@
 package com.rossotti.basketball.dao.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.ws.rs.core.UriInfo;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.rossotti.basketball.dao.pub.PubBoxScorePlayer;
 
+import javax.persistence.*;
+import javax.ws.rs.core.UriInfo;
+
 @Entity
-@Table (name="boxScorePlayer")
+@Table(name="boxScorePlayer")
 public class BoxScorePlayer {
 	public BoxScorePlayer() {}
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy= GenerationType.AUTO)
 	@Column(name="id")
 	private Long id;
 	public Long getId() {
@@ -63,7 +54,7 @@ public class BoxScorePlayer {
 		this.position = position;
 	}
 
-	@Column(name="starter", nullable=true)
+	@Column(name="starter")
 	private boolean starter;
 	public boolean getStarter() {
 		return starter;
@@ -72,7 +63,7 @@ public class BoxScorePlayer {
 		this.starter = starter;
 	}
 
-	@Column(name="minutes", nullable=true)
+	@Column(name="minutes")
 	private Short minutes;
 	public Short getMinutes() {
 		return minutes;
@@ -81,7 +72,7 @@ public class BoxScorePlayer {
 		this.minutes = minutes;
 	}
 
-	@Column(name="points", nullable=true)
+	@Column(name="points")
 	private Short points;
 	public Short getPoints() {
 		return points;
@@ -90,7 +81,7 @@ public class BoxScorePlayer {
 		this.points = points;
 	}
 
-	@Column(name="assists", nullable=true)
+	@Column(name="assists")
 	private Short assists;
 	public Short getAssists() {
 		return assists;
@@ -99,7 +90,7 @@ public class BoxScorePlayer {
 		this.assists = assists;
 	}
 
-	@Column(name="turnovers", nullable=true)
+	@Column(name="turnovers")
 	private Short turnovers;
 	public Short getTurnovers() {
 		return turnovers;
@@ -108,7 +99,7 @@ public class BoxScorePlayer {
 		this.turnovers = turnovers;
 	}
 
-	@Column(name="steals", nullable=true)
+	@Column(name="steals")
 	private Short steals;
 	public Short getSteals() {
 		return steals;
@@ -117,7 +108,7 @@ public class BoxScorePlayer {
 		this.steals = steals;
 	}
 
-	@Column(name="blocks", nullable=true)
+	@Column(name="blocks")
 	private Short blocks;
 	public Short getBlocks() {
 		return blocks;
@@ -126,7 +117,7 @@ public class BoxScorePlayer {
 		this.blocks = blocks;
 	}
 
-	@Column(name="fieldGoalAttempts", nullable=true)
+	@Column(name="fieldGoalAttempts")
 	private Short fieldGoalAttempts;
 	public Short getFieldGoalAttempts() {
 		return fieldGoalAttempts;
@@ -135,7 +126,7 @@ public class BoxScorePlayer {
 		this.fieldGoalAttempts = fieldGoalAttempts;
 	}
 
-	@Column(name="fieldGoalMade", nullable=true)
+	@Column(name="fieldGoalMade")
 	private Short fieldGoalMade;
 	public Short getFieldGoalMade() {
 		return fieldGoalMade;
@@ -144,7 +135,7 @@ public class BoxScorePlayer {
 		this.fieldGoalMade = fieldGoalMade;
 	}
 
-	@Column(name="fieldGoalPercent", nullable=true)
+	@Column(name="fieldGoalPercent")
 	private Float fieldGoalPercent;
 	public Float getFieldGoalPercent() {
 		return fieldGoalPercent;
@@ -153,7 +144,7 @@ public class BoxScorePlayer {
 		this.fieldGoalPercent = fieldGoalPercent;
 	}
 
-	@Column(name="threePointAttempts", nullable=true)
+	@Column(name="threePointAttempts")
 	private Short threePointAttempts;
 	public Short getThreePointAttempts() {
 		return threePointAttempts;
@@ -162,7 +153,7 @@ public class BoxScorePlayer {
 		this.threePointAttempts = threePointAttempts;
 	}
 
-	@Column(name="threePointMade", nullable=true)
+	@Column(name="threePointMade")
 	private Short threePointMade;
 	public Short getThreePointMade() {
 		return threePointMade;
@@ -171,7 +162,7 @@ public class BoxScorePlayer {
 		this.threePointMade = threePointMade;
 	}
 
-	@Column(name="threePointPercent", nullable=true)
+	@Column(name="threePointPercent")
 	private Float threePointPercent;
 	public Float getThreePointPercent() {
 		return threePointPercent;
@@ -180,7 +171,7 @@ public class BoxScorePlayer {
 		this.threePointPercent = threePointPercent;
 	}
 
-	@Column(name="freeThrowAttempts", nullable=true)
+	@Column(name="freeThrowAttempts")
 	private Short freeThrowAttempts;
 	public Short getFreeThrowAttempts() {
 		return freeThrowAttempts;
@@ -189,7 +180,7 @@ public class BoxScorePlayer {
 		this.freeThrowAttempts = freeThrowAttempts;
 	}
 
-	@Column(name="freeThrowMade", nullable=true)
+	@Column(name="freeThrowMade")
 	private Short freeThrowMade;
 	public Short getFreeThrowMade() {
 		return freeThrowMade;
@@ -198,7 +189,7 @@ public class BoxScorePlayer {
 		this.freeThrowMade = freeThrowMade;
 	}
 
-	@Column(name="freeThrowPercent", nullable=true)
+	@Column(name="freeThrowPercent")
 	private Float freeThrowPercent;
 	public Float getFreeThrowPercent() {
 		return freeThrowPercent;
@@ -207,7 +198,7 @@ public class BoxScorePlayer {
 		this.freeThrowPercent = freeThrowPercent;
 	}
 
-	@Column(name="reboundsOffense", nullable=true)
+	@Column(name="reboundsOffense")
 	private Short reboundsOffense;
 	public Short getReboundsOffense() {
 		return reboundsOffense;
@@ -216,7 +207,7 @@ public class BoxScorePlayer {
 		this.reboundsOffense = reboundsOffense;
 	}
 
-	@Column(name="reboundsDefense", nullable=true)
+	@Column(name="reboundsDefense")
 	private Short reboundsDefense;
 	public Short getReboundsDefense() {
 		return reboundsDefense;
@@ -225,7 +216,7 @@ public class BoxScorePlayer {
 		this.reboundsDefense = reboundsDefense;
 	}
 
-	@Column(name="personalFouls", nullable=true)
+	@Column(name="personalFouls")
 	private Short personalFouls;
 	public Short getPersonalFouls() {
 		return personalFouls;
@@ -235,15 +226,13 @@ public class BoxScorePlayer {
 	}
 
 	public String toString() {
-		return new StringBuffer()
-			.append("  id: " + this.id + "\n")
-			.append("  position: " + this.position + "\n")
-			.append("  points: " + this.points + "\n")
-			.append("  assists: " + this.assists + "\n")
-			.append("  turnovers: " + this.turnovers + "\n")
-			.append("  steals: " + this.steals + "\n")
-			.append("  blocks: " + this.blocks)
-			.toString();
+		return ("  id: " + this.id + "\n") +
+				"  position: " + this.position + "\n" +
+				"  points: " + this.points + "\n" +
+				"  assists: " + this.assists + "\n" +
+				"  turnovers: " + this.turnovers + "\n" +
+				"  steals: " + this.steals + "\n" +
+				"  blocks: " + this.blocks;
 	}
 
 	public PubBoxScorePlayer toPubBoxScorePlayer(UriInfo uriInfo) {

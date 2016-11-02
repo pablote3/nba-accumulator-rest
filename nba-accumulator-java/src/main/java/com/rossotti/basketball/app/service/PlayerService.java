@@ -9,8 +9,12 @@ import com.rossotti.basketball.dao.repository.PlayerRepository;
 
 @Service
 public class PlayerService {
+	private final PlayerRepository playerRepo;
+
 	@Autowired
-	private PlayerRepository playerRepo;
+	public PlayerService(PlayerRepository playerRepo) {
+		this.playerRepo = playerRepo;
+	}
 
 	public Player findByPlayerNameBirthdate(String lastName, String firstName, LocalDate birthdate) {
 		return playerRepo.findPlayer(lastName, firstName, birthdate);

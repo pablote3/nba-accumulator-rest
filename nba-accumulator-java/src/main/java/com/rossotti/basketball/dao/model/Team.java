@@ -1,32 +1,19 @@
 package com.rossotti.basketball.dao.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.rossotti.basketball.dao.pub.PubTeam;
+import com.rossotti.basketball.util.DateTimeUtil;
+import org.hibernate.annotations.Type;
+import org.joda.time.LocalDate;
+
+import javax.persistence.*;
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
-import javax.ws.rs.core.UriInfo;
-
-import org.hibernate.annotations.Type;
-import org.joda.time.LocalDate;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.rossotti.basketball.dao.pub.PubTeam;
-import com.rossotti.basketball.util.DateTimeUtil;
-
 @Entity
-@Table (name="team", uniqueConstraints=@UniqueConstraint(columnNames={"teamKey", "fromDate", "toDate"}))
+@Table(name="team", uniqueConstraints=@UniqueConstraint(columnNames={"teamKey", "fromDate", "toDate"}))
 public class Team {
 	public Team() {
 		setStatusCode(StatusCodeDAO.Found);
@@ -58,7 +45,7 @@ public class Team {
 	}
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy= GenerationType.AUTO)
 	private Long id;
 	public Long getId() {
 		return id;
@@ -164,7 +151,7 @@ public class Team {
 
 	public enum Conference {
 		East,
-		West;
+		West
 	}
 
 	@Enumerated(EnumType.STRING)
@@ -183,7 +170,7 @@ public class Team {
 		Southeast,
 		Southwest,
 		Northwest,
-		Pacific;
+		Pacific
 	}
 
 	@Column(name="siteName", length=30, nullable=false)
@@ -214,32 +201,30 @@ public class Team {
 	}
 
 	public String toString() {
-		return new StringBuffer()
-			.append("\n" + "  id: " + this.id + "\n")
-			.append("  teamKey: " + this.teamKey + "\n")
-			.append("  fromDate: " + this.fromDate + "\n")
-			.append("  toDate: " + this.toDate + "\n")
-			.append("  statusCode: " + this.statusCode)
-			.toString();
+		return ("\n" + "  id: " + this.id + "\n") +
+				"  teamKey: " + this.teamKey + "\n" +
+				"  fromDate: " + this.fromDate + "\n" +
+				"  toDate: " + this.toDate + "\n" +
+				"  statusCode: " + this.statusCode;
 	}
 
 	public PubTeam toPubTeam(UriInfo uriInfo) {
 		URI self;
 		self = uriInfo.getBaseUriBuilder().path("teams").
-											path(this.getTeamKey()).
-											path(DateTimeUtil.getStringDate(this.getFromDate())).build();
+				path(this.getTeamKey()).
+				path(DateTimeUtil.getStringDate(this.getFromDate())).build();
 		return new PubTeam( self,
-							this.teamKey,
-							this.firstName,
-							this.lastName,
-							this.fullName,
-							this.fromDate,
-							this.toDate,
-							this.abbr,
-							this.conference,
-							this.division,
-							this.city,
-							this.state,
-							this.siteName);
+				this.teamKey,
+				this.firstName,
+				this.lastName,
+				this.fullName,
+				this.fromDate,
+				this.toDate,
+				this.abbr,
+				this.conference,
+				this.division,
+				this.city,
+				this.state,
+				this.siteName);
 	}
 }

@@ -23,13 +23,17 @@ import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
 public class RosterPlayerService {
-	@Autowired
-	private RosterPlayerRepository rosterPlayerRepo;
+	private final RosterPlayerRepository rosterPlayerRepo;
 
-	@Autowired
-	private TeamRepository teamRepo;
+	private final TeamRepository teamRepo;
 
 	private final Logger logger = LoggerFactory.getLogger(RosterPlayerService.class);
+
+	@Autowired
+	public RosterPlayerService(RosterPlayerRepository rosterPlayerRepo, TeamRepository teamRepo) {
+		this.rosterPlayerRepo = rosterPlayerRepo;
+		this.teamRepo = teamRepo;
+	}
 
 	public List<BoxScorePlayer> getBoxScorePlayers(BoxScorePlayerDTO[] boxScorePlayerDTOs, LocalDate gameDate, String teamKey) {
 		List<BoxScorePlayer> boxScorePlayers = new ArrayList<BoxScorePlayer>();

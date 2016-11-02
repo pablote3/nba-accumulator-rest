@@ -61,7 +61,7 @@ public class DateTimeUtilTest {
 		LocalDateTime dateTime = DateTimeUtil.getLocalDateTime("2014-06-30T10:30");
 		Assert.assertEquals(new LocalDateTime("2014-06-30T10:30"), dateTime);
 	}
-	
+
 	@Test
 	public void getLocalDateTimeMin() {
 		LocalDateTime dateTime = DateTimeUtil.getLocalDateTimeMin(new LocalDate("2014-06-30"));
@@ -184,9 +184,8 @@ public class DateTimeUtilTest {
 
 	@Test
 	public void calculateDateDiff_NullMinDate() {
-		LocalDateTime minDate = null;
 		LocalDateTime maxDate = new LocalDateTime("2013-06-01T20:00");
-		int days = DateTimeUtil.getDaysBetweenTwoDateTimes(minDate, maxDate);
+		int days = DateTimeUtil.getDaysBetweenTwoDateTimes(null, maxDate);
 		Assert.assertEquals(0, days);
 	}
 
@@ -195,10 +194,22 @@ public class DateTimeUtilTest {
 		LocalDate date = DateTimeUtil.getDateMinusOneDay(new LocalDate("2013-06-30"));
 		Assert.assertEquals(new LocalDate(2013, 6, 29), date);
 	}
-
 	@Test
 	public void createDateMinusOneDay_BeginingOfMonth() {
 		LocalDate date = DateTimeUtil.getDateMinusOneDay(new LocalDate("2013-07-01"));
 		Assert.assertEquals(new LocalDate(2013, 6, 30), date);
+	}
+
+	@Test
+	public void isDate_PastDate() {
+		Assert.assertTrue(DateTimeUtil.isDate("1969-12-31"));
+	}
+	@Test
+	public void isDate_FutureDate() {
+		Assert.assertTrue(DateTimeUtil.isDate("2069-12-31"));
+	}
+	@Test
+	public void isDate_InvalidDate() {
+		Assert.assertFalse(DateTimeUtil.isDate("2069-12"));
 	}
 }

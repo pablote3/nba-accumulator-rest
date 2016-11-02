@@ -21,6 +21,7 @@ import com.rossotti.basketball.dao.model.Official;
 import com.rossotti.basketball.dao.model.StatusCodeDAO;
 import com.rossotti.basketball.dao.repository.OfficialRepository;
 
+@SuppressWarnings("CanBeFinal")
 @RunWith(MockitoJUnitRunner.class)
 public class OfficialServiceTest {
 	@Mock
@@ -32,7 +33,7 @@ public class OfficialServiceTest {
 	@Test(expected=NoSuchEntityException.class)
 	public void getGameOfficials_notFound() {
 		when(officialRepo.findOfficial(anyString(), anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockOfficial("", "", StatusCodeDAO.NotFound));
+				.thenReturn(createMockOfficial("", "", StatusCodeDAO.NotFound));
 		List<GameOfficial> officials = officialService.getGameOfficials(createMockOfficialDTOs(), new LocalDate(2015, 8, 26));
 		Assert.assertTrue(officials.size() == 0);
 	}
@@ -40,8 +41,8 @@ public class OfficialServiceTest {
 	@Test
 	public void getGameOfficials_found() {
 		when(officialRepo.findOfficial(anyString(), anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockOfficial("Adams", "Samuel", StatusCodeDAO.Found))
-			.thenReturn(createMockOfficial("Coors", "Adolph", StatusCodeDAO.Found));
+				.thenReturn(createMockOfficial("Adams", "Samuel", StatusCodeDAO.Found))
+				.thenReturn(createMockOfficial("Coors", "Adolph", StatusCodeDAO.Found));
 		List<GameOfficial> officials = officialService.getGameOfficials(createMockOfficialDTOs(), new LocalDate(2015, 11, 26));
 		Assert.assertEquals(2, officials.size());
 		Assert.assertEquals("Coors", officials.get(1).getOfficial().getLastName());

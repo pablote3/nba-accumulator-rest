@@ -24,18 +24,18 @@ import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.dao.model.BoxScore.Location;
 import com.rossotti.basketball.dao.model.Position;
 import com.rossotti.basketball.dao.model.Game.SeasonType;
-import com.rossotti.basketball.dao.repository.GameRepository;
 
+@SuppressWarnings("CanBeFinal")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:applicationContext.xml"})
 public class GameRepositoryTest {
 
 	@Autowired
-	private GameRepository gameRepo;
+	private GameRepository gameRepository;
 
 	@Test
 	public void findByDateTeam_Found() {
-		Game findGame = gameRepo.findByDateTeam(new LocalDate("2015-10-27"), "chicago-zephyr's");
+		Game findGame = gameRepository.findByDateTeam(new LocalDate("2015-10-27"), "chicago-zephyr's");
 		Assert.assertTrue(findGame.isFound());
 		Assert.assertEquals("QuestionableCall", findGame.getGameOfficials().get(2).getOfficial().getLastName());
 		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGame.getGameDateTime());
@@ -49,19 +49,19 @@ public class GameRepositoryTest {
 
 	@Test
 	public void findByDateTeam_NotFound_GameDate() {
-		Game findGame = gameRepo.findByDateTeam(new LocalDate("2015-10-26"), "chicago-zephyr's");
+		Game findGame = gameRepository.findByDateTeam(new LocalDate("2015-10-26"), "chicago-zephyr's");
 		Assert.assertTrue(findGame.isNotFound());
 	}
 
 	@Test
 	public void findByDateTeam_NotFound_Team() {
-		Game findGame = gameRepo.findByDateTeam(new LocalDate("2015-10-27"), "chicago-zephyre's");
+		Game findGame = gameRepository.findByDateTeam(new LocalDate("2015-10-27"), "chicago-zephyre's");
 		Assert.assertTrue(findGame.isNotFound());
 	}
 
 	@Test
 	public void findByDateRangeSize_Size0() {
-		List<Game> findGames = gameRepo.findByDateRangeSize(new LocalDate("2015-10-28"), 0);
+		List<Game> findGames = gameRepository.findByDateRangeSize(new LocalDate("2015-10-28"), 0);
 		Assert.assertEquals(4, findGames.size());
 		Assert.assertEquals(new LocalDateTime("2015-10-28T20:00"), findGames.get(0).getGameDateTime());
 		Assert.assertEquals(new LocalDateTime("2015-10-29T20:00"), findGames.get(1).getGameDateTime());
@@ -71,28 +71,28 @@ public class GameRepositoryTest {
 
 	@Test
 	public void findByDateRangeSize_Size1() {
-		List<Game> findGames = gameRepo.findByDateRangeSize(new LocalDate("2015-10-27"), 1);
+		List<Game> findGames = gameRepository.findByDateRangeSize(new LocalDate("2015-10-27"), 1);
 		Assert.assertEquals(1, findGames.size());
 		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGames.get(0).getGameDateTime());
 	}
 
 	@Test
 	public void findByDateRangeSize_Size2() {
-		List<Game> findGames = gameRepo.findByDateRangeSize(new LocalDate("2015-10-27"), 2);
+		List<Game> findGames = gameRepository.findByDateRangeSize(new LocalDate("2015-10-27"), 2);
 		Assert.assertEquals(2, findGames.size());
 		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGames.get(0).getGameDateTime());
 		Assert.assertEquals(new LocalDateTime("2015-10-27T20:30"), findGames.get(1).getGameDateTime());
 	}
-	
+
 	@Test
 	public void findByDateRangeSize_NotFound() {
-		List<Game> findGames = gameRepo.findByDateRangeSize(new LocalDate("2015-12-01"), 2);
+		List<Game> findGames = gameRepository.findByDateRangeSize(new LocalDate("2015-12-01"), 2);
 		Assert.assertEquals(0, findGames.size());
 	}
 
 	@Test
 	public void findByDateScheduled_Found() {
-		List<Game> findGames = gameRepo.findByDate(new LocalDate("2015-10-27"));
+		List<Game> findGames = gameRepository.findByDate(new LocalDate("2015-10-27"));
 		Assert.assertEquals(3, findGames.size());
 		Assert.assertEquals(new LocalDateTime("2015-10-27T20:30"), findGames.get(0).getGameDateTime());
 		Assert.assertTrue(findGames.get(0).isScheduled());
@@ -104,25 +104,25 @@ public class GameRepositoryTest {
 
 	@Test
 	public void findByDateScheduled_NotFound() {
-		List<Game> findGames = gameRepo.findByDate(new LocalDate("2015-10-26"));
+		List<Game> findGames = gameRepository.findByDate(new LocalDate("2015-10-26"));
 		Assert.assertEquals(0, findGames.size());
 	}
 
 	@Test
 	public void findPreviousByDateTeam_Found() {
-		LocalDateTime dateTime = gameRepo.findPreviousGameDateTimeByDateTeam(new LocalDate("2015-10-30"), "chicago-zephyr's");
+		LocalDateTime dateTime = gameRepository.findPreviousGameDateTimeByDateTeam(new LocalDate("2015-10-30"), "chicago-zephyr's");
 		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00:00.0"), dateTime);
 	}
 
 	@Test
 	public void findPreviousByDateTeam_NotFound() {
-		LocalDateTime dateTime = gameRepo.findPreviousGameDateTimeByDateTeam(new LocalDate("2015-10-27"), "st-louis-bomber's");
+		LocalDateTime dateTime = gameRepository.findPreviousGameDateTimeByDateTeam(new LocalDate("2015-10-27"), "st-louis-bomber's");
 		Assert.assertEquals(null, dateTime);
 	}
 
 	@Test
 	public void findByDateTeamSeason_Found() {
-		List<Game> findGames = gameRepo.findByDateTeamSeason(new LocalDate("2015-10-28"), "chicago-zephyr's");
+		List<Game> findGames = gameRepository.findByDateTeamSeason(new LocalDate("2015-10-28"), "chicago-zephyr's");
 		Assert.assertEquals(2, findGames.size());
 		Assert.assertEquals(new LocalDateTime("2015-10-27T20:00"), findGames.get(0).getGameDateTime());
 		Assert.assertEquals(new LocalDateTime("2015-10-28T20:00"), findGames.get(1).getGameDateTime());
@@ -130,20 +130,20 @@ public class GameRepositoryTest {
 
 	@Test
 	public void findByDateTeamSeason_NotFound() {
-		List<Game> findGames = gameRepo.findByDateTeamSeason(new LocalDate("2015-09-29"), "st-louis-bomber's");
+		List<Game> findGames = gameRepository.findByDateTeamSeason(new LocalDate("2015-09-29"), "st-louis-bomber's");
 		Assert.assertEquals(0, findGames.size());
 	}
 
 	@Test
 	public void findCountGamesByDateScheduled() {
-		int games = gameRepo.findCountGamesByDateScheduled(new LocalDate("2015-10-28"));
+		int games = gameRepository.findCountGamesByDateScheduled(new LocalDate("2015-10-28"));
 		Assert.assertEquals(1, games);
 	}
 
 	@Test
 	public void createGame_Created() {
-		Game createGame = gameRepo.createGame(createMockGame(new LocalDateTime("2015-10-10T21:00"), 1L, "chicago-zephyr's", 2L, "harlem-globetrotter's"));
-		Game findGame = gameRepo.findByDateTeam(new LocalDate("2015-10-10"), "chicago-zephyr's");
+		Game createGame = gameRepository.createGame(createMockGame(new LocalDateTime("2015-10-10T21:00"), 1L, "chicago-zephyr's", 2L, "harlem-globetrotter's"));
+		Game findGame = gameRepository.findByDateTeam(new LocalDate("2015-10-10"), "chicago-zephyr's");
 		Assert.assertTrue(createGame.isCreated());
 		Assert.assertEquals(2, findGame.getBoxScores().size());
 		Assert.assertEquals(Location.Home, findGame.getBoxScores().get(0).getLocation());
@@ -151,7 +151,7 @@ public class GameRepositoryTest {
 	}
 
 	public void createGame_Duplicate() {
-		Game game = gameRepo.createGame(createMockGame(new LocalDateTime("2015-10-27T20:00"), 1L, "chicago-zephyr's", 2L, "harlem-globetrotter's"));
+		Game game = gameRepository.createGame(createMockGame(new LocalDateTime("2015-10-27T20:00"), 1L, "chicago-zephyr's", 2L, "harlem-globetrotter's"));
 		Assert.assertTrue(game.isFound());
 	}
 
@@ -159,20 +159,20 @@ public class GameRepositoryTest {
 	public void createGame_Exception_MissingRequiredData() {
 		Game game = createMockGame(new LocalDateTime("2015-10-11T21:00"), 1L, "chicago-zephyr's", 2L, "harlem-globetrotter's");
 		game.getBoxScores().get(0).setLocation(null);
-		gameRepo.createGame(game);
+		gameRepository.createGame(game);
 	}
 
 	@Test
 	public void updateGame_Updated() {
-		Game findGame = gameRepo.findByDateTeam(new LocalDate("2015-10-27"), "salinas-cowboys");
+		Game findGame = gameRepository.findByDateTeam(new LocalDate("2015-10-27"), "salinas-cowboys");
 		findGame.addGameOfficial(getMockGameOfficial(findGame, 1L, "LateCall", "Joe"));
 		findGame.addGameOfficial(getMockGameOfficial(findGame, 3L, "MissedCall", "Mike"));
 		findGame.addGameOfficial(getMockGameOfficial(findGame, 4L, "QuestionableCall", "Hefe"));
 		updateMockBoxScoreHome(findGame);
 		updateMockBoxScoreAway(findGame);
-		Game updateGame = gameRepo.updateGame(findGame);
+		Game updateGame = gameRepository.updateGame(findGame);
 		Assert.assertTrue(updateGame.isUpdated());
-		Game game = gameRepo.findByDateTeam(new LocalDate("2015-10-27"), "salinas-cowboys");
+		Game game = gameRepository.findByDateTeam(new LocalDate("2015-10-27"), "salinas-cowboys");
 		BoxScore homeBoxScore = game.getBoxScoreHome();
 		BoxScorePlayer homeBoxScorePlayer0 = homeBoxScore.getBoxScorePlayers().get(0);
 		Assert.assertTrue(homeBoxScorePlayer0.getMinutes().equals((short)20));
@@ -188,27 +188,27 @@ public class GameRepositoryTest {
 
 	@Test
 	public void updateGame_NotFound_Both() {
-		Game updateGame = gameRepo.updateGame(createMockGame(new LocalDateTime("2015-11-24T10:00"), 1L, "chicago-zephyr's", 2L, "harlem-globetrotter's"));
+		Game updateGame = gameRepository.updateGame(createMockGame(new LocalDateTime("2015-11-24T10:00"), 1L, "chicago-zephyr's", 2L, "harlem-globetrotter's"));
 		Assert.assertTrue(updateGame.isNotFound());
 	}
 
 	@Test
 	public void updateGame_NotFound_Single() {
-		Game updateGame = gameRepo.updateGame(createMockGame(new LocalDateTime("2015-11-24T10:00"), 1L, "chicago-zephyr's", 8L, "st-louis-bomber's"));
+		Game updateGame = gameRepository.updateGame(createMockGame(new LocalDateTime("2015-11-24T10:00"), 1L, "chicago-zephyr's", 8L, "st-louis-bomber's"));
 		Assert.assertTrue(updateGame.isNotFound());
 	}
 
 	@Test
 	public void deleteGame_Deleted() {
-		Game deleteGame = gameRepo.deleteGame(new LocalDate("2015-10-15"), "baltimore-bullets");
-		Game findGame = gameRepo.findByDateTeam(new LocalDate("2015-10-15"), "baltimore-bullets");
+		Game deleteGame = gameRepository.deleteGame(new LocalDate("2015-10-15"), "baltimore-bullets");
+		Game findGame = gameRepository.findByDateTeam(new LocalDate("2015-10-15"), "baltimore-bullets");
 		Assert.assertTrue(deleteGame.isDeleted());
 		Assert.assertTrue(findGame.isNotFound());
 	}
 
 	@Test
 	public void deleteGame_NotFound() {
-		Game deleteGame = gameRepo.deleteGame(new LocalDate("2015-10-15"), "baltimore-bulletiers");
+		Game deleteGame = gameRepository.deleteGame(new LocalDate("2015-10-15"), "baltimore-bulletiers");
 		Assert.assertTrue(deleteGame.isNotFound());
 	}
 

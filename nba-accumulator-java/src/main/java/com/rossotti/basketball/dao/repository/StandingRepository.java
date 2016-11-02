@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +17,19 @@ import com.rossotti.basketball.dao.model.StatusCodeDAO;
 @Repository
 @Transactional
 public class StandingRepository {
+	private final SessionFactory sessionFactory;
+
 	@Autowired
-	private SessionFactory sessionFactory;
+	public StandingRepository(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	public Standing findStanding(String teamKey, LocalDate asOfDate) {
-		String sql = 	"select s from Standing s " +
-						"inner join s.team t " +
-						"where t.teamKey = :teamKey " +
-						"and s.standingDate = :asOfDate";
-		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		String sql =    "select s from Standing s " +
+				"inner join s.team t " +
+				"where t.teamKey = :teamKey " +
+				"and s.standingDate = :asOfDate";
+		Query query = getSession().createQuery(sql);
 		query.setParameter("teamKey", teamKey);
 		query.setParameter("asOfDate", asOfDate);
 
@@ -40,11 +45,12 @@ public class StandingRepository {
 
 	@SuppressWarnings("unchecked")
 	public List<Standing> findStandings(LocalDate asOfDate) {
-		String sql = 	"select s " +
-						"from Standing s " +
-						"inner join s.team t " +
-						"where s.standingDate = '" + asOfDate + "'";
-		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		String sql =    "select s from Standing s " +
+				"inner join s.team t " +
+				"where s.standingDate = :asOfDate";
+		Query query = getSession().createQuery(sql);
+		query.setParameter("asOfDate", asOfDate);
+
 		List<Standing> standings = (List<Standing>)query.list();
 		if (standings == null) {
 			standings = new ArrayList<Standing>();
@@ -55,7 +61,7 @@ public class StandingRepository {
 	public Standing createStanding(Standing createStanding) {
 		Standing standing = findStanding(createStanding.getTeam().getTeamKey(), createStanding.getStandingDate());
 		if (standing.isNotFound()) {
-			getSessionFactory().getCurrentSession().persist(createStanding);
+			getSession().persist(createStanding);
 			createStanding.setStatusCode(StatusCodeDAO.Created);
 			return createStanding;
 		}
@@ -96,7 +102,7 @@ public class StandingRepository {
 			standing.setOpptOpptGamesWon(s.getOpptOpptGamesWon());
 			standing.setOpptOpptGamesPlayed(s.getOpptOpptGamesPlayed());
 			standing.setStatusCode(StatusCodeDAO.Updated);
-			getSessionFactory().getCurrentSession().saveOrUpdate(standing);
+			getSession().saveOrUpdate(standing);
 		}
 		return standing;
 	}
@@ -104,17 +110,13 @@ public class StandingRepository {
 	public Standing deleteStanding(String teamKey, LocalDate asOfDate) {
 		Standing standing = findStanding(teamKey, asOfDate);
 		if (standing.isFound()) {
-			getSessionFactory().getCurrentSession().delete(standing);
+			getSession().delete(standing);
 			standing = new Standing(StatusCodeDAO.Deleted);
 		}
 		return standing;
 	}
 
-	public SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
-
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+	private Session getSession() {
+		return sessionFactory.getCurrentSession();
 	}
 }

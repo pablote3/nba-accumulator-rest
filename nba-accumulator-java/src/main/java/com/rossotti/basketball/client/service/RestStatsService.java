@@ -1,5 +1,6 @@
 package com.rossotti.basketball.client.service;
 
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,56 +16,54 @@ import com.rossotti.basketball.client.dto.StatusCodeDTO;
 @Service
 
 public class RestStatsService {
-	@Autowired
-	private PropertyService propertyService;
+	private final PropertyService propertyService;
 
-	@Autowired
-	private RestClientService restClientService;
+	private final RestClientService restClientService;
 
 	private final Logger logger = LoggerFactory.getLogger(RestStatsService.class);
 
-	public GameDTO retrieveBoxScore(String event) {
+	@Autowired
+	public RestStatsService(RestClientService restClientService, PropertyService propertyService) {
+		this.restClientService = restClientService;
+		this.propertyService = propertyService;
+	}
+
+	public GameDTO retrieveBoxScore(String event, LocalDate asOfDate) {
 		GameDTO gameDTO = new GameDTO();
 		try {
-			String eventUrl = getEventUrl("xmlstats.urlBoxScore", event);
-			gameDTO = (GameDTO)restClientService.retrieveStats(eventUrl, gameDTO);
+			String baseUrl = propertyService.getProperty_Http("xmlstats.urlBoxScore");
+			gameDTO = (GameDTO)restClientService.retrieveStats(baseUrl, event, gameDTO, asOfDate);
 		}
 		catch (PropertyException pe) {
-			logger.info("property exception = " + pe);
+			logger.info("Property exception = " + pe);
 			gameDTO.setStatusCode(StatusCodeDTO.ServerException);
 		}
 		return gameDTO;
 	}
 
-	public RosterDTO retrieveRoster(String event) {
+	public RosterDTO retrieveRoster(String event, LocalDate asOfDate) {
 		RosterDTO rosterDTO = new RosterDTO();
 		try {
-			String eventUrl = getEventUrl("xmlstats.urlRoster", event);
-			rosterDTO = (RosterDTO)restClientService.retrieveStats(eventUrl, rosterDTO);
+			String baseUrl = propertyService.getProperty_Http("xmlstats.urlRoster");
+			rosterDTO = (RosterDTO)restClientService.retrieveStats(baseUrl, event, rosterDTO, asOfDate);
 		}
 		catch (PropertyException pe) {
-			logger.info("property exception = " + pe);
+			logger.info("Property exception = " + pe);
 			rosterDTO.setStatusCode(StatusCodeDTO.ServerException);
 		}
 		return rosterDTO;
 	}
 
-	public StandingsDTO retrieveStandings(String event) {
+	public StandingsDTO retrieveStandings(String event, LocalDate asOfDate) {
 		StandingsDTO standingsDTO = new StandingsDTO();
 		try {
-			String eventUrl = getEventUrl("xmlstats.urlStandings", event);
-			standingsDTO = (StandingsDTO)restClientService.retrieveStats(eventUrl, standingsDTO);
+			String baseUrl = propertyService.getProperty_Http("xmlstats.urlStandings");
+			standingsDTO = (StandingsDTO)restClientService.retrieveStats(baseUrl, event, standingsDTO, asOfDate);
 		}
 		catch (PropertyException pe) {
-			logger.info("property exception = " + pe);
+			logger.info("Property exception = " + pe);
 			standingsDTO.setStatusCode(StatusCodeDTO.ServerException);
 		}
 		return standingsDTO;
-	}
-
-	private String getEventUrl(String propertyName, String event) throws PropertyException {
-		String url = propertyService.getProperty_Http(propertyName);
-		String eventUrl = url + event + ".json";
-		return eventUrl;
 	}
 }

@@ -34,6 +34,7 @@ import com.rossotti.basketball.dao.repository.GameRepository;
 import com.rossotti.basketball.dao.repository.StandingRepository;
 import com.rossotti.basketball.dao.repository.TeamRepository;
 
+@SuppressWarnings("CanBeFinal")
 @RunWith(MockitoJUnitRunner.class)
 public class StandingsServiceTest {
 	@Mock
@@ -51,7 +52,7 @@ public class StandingsServiceTest {
 	@Test(expected=NoSuchEntityException.class)
 	public void getStandings_teamNotFound() {
 		when(teamRepo.findTeam(anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockTeam("denver-mcnuggets", StatusCodeDAO.NotFound));
+				.thenReturn(createMockTeam("denver-mcnuggets", StatusCodeDAO.NotFound));
 		List<Standing> standings = standingsService.getStandings(createMockStandingsDTO_teamNotFound());
 		Assert.assertTrue(standings.size() == 0);
 	}
@@ -59,7 +60,7 @@ public class StandingsServiceTest {
 	@Test
 	public void getStandings_teamFound() {
 		when(teamRepo.findTeam(anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockTeam("denver-nuggets", StatusCodeDAO.Found));
+				.thenReturn(createMockTeam("denver-nuggets", StatusCodeDAO.Found));
 		List<Standing> standings = standingsService.getStandings(createMockStandingsDTO_teamFound());
 		Assert.assertEquals(1, standings.size());
 		Assert.assertEquals("denver-nuggets", standings.get(0).getTeam().getTeamKey());
@@ -69,7 +70,7 @@ public class StandingsServiceTest {
 	@Test
 	public void findStanding_notFound() {
 		when(standingRepo.findStanding(anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockStanding("denver-mcnuggets", null, null, null, null, StatusCodeDAO.NotFound));
+				.thenReturn(createMockStanding("denver-mcnuggets", null, null, null, null, StatusCodeDAO.NotFound));
 		Standing standing = standingsService.findStanding("denver-mcnuggets", new LocalDate(2015, 11, 26));
 		Assert.assertTrue(standing.isNotFound());
 	}
@@ -77,7 +78,7 @@ public class StandingsServiceTest {
 	@Test
 	public void findStanding_found() {
 		when(standingRepo.findStanding(anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockStanding("denver-nuggets", (short)4, (short)7, 18, 35, StatusCodeDAO.Found));
+				.thenReturn(createMockStanding("denver-nuggets", (short)4, (short)7, 18, 35, StatusCodeDAO.Found));
 		Standing standing = standingsService.findStanding("denver-nuggets", new LocalDate(2015, 11, 26));
 		Assert.assertEquals("denver-nuggets", standing.getTeam().getTeamKey());
 		Assert.assertTrue(standing.isFound());
@@ -86,7 +87,7 @@ public class StandingsServiceTest {
 	@Test
 	public void findStandings_notFound() {
 		when(standingRepo.findStandings((LocalDate) anyObject()))
-			.thenReturn(new ArrayList<Standing>());
+				.thenReturn(new ArrayList<Standing>());
 		List<Standing> standings = standingsService.findStandings(new LocalDate(2015, 8, 26));
 		Assert.assertEquals(new ArrayList<Standing>(), standings);
 	}
@@ -94,7 +95,7 @@ public class StandingsServiceTest {
 	@Test
 	public void findStandings_found() {
 		when(standingRepo.findStandings((LocalDate) anyObject()))
-			.thenReturn(createMockStandings());
+				.thenReturn(createMockStandings());
 		List<Standing> standings = standingsService.findStandings(new LocalDate(2015, 11, 26));
 		Assert.assertEquals(5, standings.size());
 		Assert.assertEquals("utah-jazz", standings.get(1).getTeam().getTeamKey());
@@ -104,7 +105,7 @@ public class StandingsServiceTest {
 	@Test(expected=DuplicateEntityException.class)
 	public void createStanding_alreadyExists() {
 		when(standingRepo.createStanding((Standing) anyObject()))
-			.thenThrow(new DuplicateEntityException(Standing.class));
+				.thenThrow(new DuplicateEntityException(Standing.class));
 		Standing standing = standingsService.createStanding(createMockStanding("houston-rockets", (short)7, (short)10, null, null, StatusCodeDAO.Found));
 		Assert.assertTrue(standing.isNotFound());
 	}
@@ -112,7 +113,7 @@ public class StandingsServiceTest {
 	@Test
 	public void createStanding_created() {
 		when(standingRepo.createStanding((Standing) anyObject()))
-			.thenReturn(createMockStanding("sacramento-kings",(short)1, (short)4, null, null, StatusCodeDAO.Created));
+				.thenReturn(createMockStanding("sacramento-kings",(short)1, (short)4, null, null, StatusCodeDAO.Created));
 		Standing standing = standingsService.createStanding(createMockStanding("sacramento-kings", (short)5, (short)15, null, null, StatusCodeDAO.NotFound));
 		Assert.assertEquals("sacramento-kings", standing.getTeam().getTeamKey());
 		Assert.assertTrue(standing.isCreated());
@@ -121,7 +122,7 @@ public class StandingsServiceTest {
 	@Test
 	public void updateStanding_notFound() {
 		when(standingRepo.updateStanding((Standing) anyObject()))
-			.thenReturn(createMockStanding("seattle-supersonics", null, null, null, null, StatusCodeDAO.NotFound));
+				.thenReturn(createMockStanding("seattle-supersonics", null, null, null, null, StatusCodeDAO.NotFound));
 		Standing standing = standingsService.updateStanding(createMockStanding("seattle-supersonics", null, null, null, null, StatusCodeDAO.NotFound));
 		Assert.assertEquals("seattle-supersonics", standing.getTeam().getTeamKey());
 		Assert.assertTrue(standing.isNotFound());
@@ -130,7 +131,7 @@ public class StandingsServiceTest {
 	@Test
 	public void updateStanding_updated() {
 		when(standingRepo.updateStanding((Standing) anyObject()))
-			.thenReturn(createMockStanding("toronto-raptors", (short)10, (short)15, 25, 35, StatusCodeDAO.Updated));
+				.thenReturn(createMockStanding("toronto-raptors", (short)10, (short)15, 25, 35, StatusCodeDAO.Updated));
 		Standing standing = standingsService.updateStanding(createMockStanding("toronto-raptors", (short)18, (short)22, 42, 68, StatusCodeDAO.Found));
 		Assert.assertEquals("toronto-raptors", standing.getTeam().getTeamKey());
 		Assert.assertTrue(standing.isUpdated());
@@ -139,9 +140,9 @@ public class StandingsServiceTest {
 	@Test
 	public void deleteStandings_notFound() {
 		when(standingRepo.findStandings((LocalDate) anyObject()))
-			.thenReturn(createMockStandings());
+				.thenReturn(createMockStandings());
 		when(standingRepo.deleteStanding(anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockStanding("seattle-supersonics", null, null, null, null, StatusCodeDAO.NotFound));
+				.thenReturn(createMockStanding("seattle-supersonics", null, null, null, null, StatusCodeDAO.NotFound));
 		List<Standing> standings = standingsService.deleteStandings(new LocalDate(2015, 11, 26));
 		Assert.assertTrue(standings.get(1).isNotFound());
 	}
@@ -149,9 +150,9 @@ public class StandingsServiceTest {
 	@Test
 	public void deleteStandings_deleted() {
 		when(standingRepo.findStandings((LocalDate) anyObject()))
-			.thenReturn(createMockStandings());
+				.thenReturn(createMockStandings());
 		when(standingRepo.deleteStanding(anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockStanding("toronto-raptors", (short)4, (short)5, 18, 27, StatusCodeDAO.Deleted));
+				.thenReturn(createMockStanding("toronto-raptors", (short)4, (short)5, 18, 27, StatusCodeDAO.Deleted));
 		List<Standing> standings = standingsService.deleteStandings(new LocalDate(2015, 11, 26));
 		Assert.assertTrue(standings.get(0).isDeleted());
 	}
@@ -159,17 +160,17 @@ public class StandingsServiceTest {
 	@Test
 	public void buildStandingsMap_noEntries() {
 		when(gameRepo.findByDateTeamSeason((LocalDate) anyObject(), anyString()))
-			.thenReturn(new ArrayList<Game>());
-		Map<String, StandingRecord> standingsMap = standingsService.buildStandingsMap(new ArrayList<Standing>(), new LocalDate(2015, 12, 05));
+				.thenReturn(new ArrayList<Game>());
+		Map<String, StandingRecord> standingsMap = standingsService.buildStandingsMap(new ArrayList<Standing>(), new LocalDate(2015, 12, 5));
 		Assert.assertEquals(new HashMap<String, StandingRecord>(), standingsMap);
 	}
 
 	@Test
 	public void buildStandingsMap_hasEntries() {
 		when(gameRepo.findByDateTeamSeason((LocalDate) anyObject(), anyString()))
-			.thenReturn(createMockGames_Kings())
-			.thenReturn(createMockGames_Jazz());
-		Map<String, StandingRecord> standingsMap = standingsService.buildStandingsMap(createMockStandings(), new LocalDate(2015, 12, 05));
+				.thenReturn(createMockGames_Kings())
+				.thenReturn(createMockGames_Jazz());
+		Map<String, StandingRecord> standingsMap = standingsService.buildStandingsMap(createMockStandings(), new LocalDate(2015, 12, 5));
 		Assert.assertEquals(5, standingsMap.size());
 		Assert.assertEquals(3, standingsMap.get("utah-jazz").getGamesWon().intValue());
 		Assert.assertEquals(4, standingsMap.get("utah-jazz").getGamesPlayed().intValue());
@@ -180,18 +181,18 @@ public class StandingsServiceTest {
 	@Test
 	public void buildHeadToHeadMap() {
 		when(gameRepo.findByDateTeamSeason((LocalDate) anyObject(), anyString()))
-			.thenReturn(createMockGames_Kings())
-			.thenReturn(createMockGames_Jazz());
+				.thenReturn(createMockGames_Kings())
+				.thenReturn(createMockGames_Jazz());
 		Map<String, StandingRecord> headToHeadMap;
 		//headToHead map with entries
-		headToHeadMap = standingsService.buildHeadToHeadMap("sacramento-kings", new LocalDate(2015, 12, 05), createMockStandingsMap());
+		headToHeadMap = standingsService.buildHeadToHeadMap("sacramento-kings", new LocalDate(2015, 12, 5), createMockStandingsMap());
 		Assert.assertEquals(3, headToHeadMap.size());
 		Assert.assertEquals(0, headToHeadMap.get("detroit-pistons").getGamesWon().intValue());
 		Assert.assertEquals(1, headToHeadMap.get("detroit-pistons").getGamesPlayed().intValue());
 		Assert.assertEquals(1, headToHeadMap.get("detroit-pistons").getOpptGamesWon().intValue());
 		Assert.assertEquals(4, headToHeadMap.get("detroit-pistons").getOpptGamesPlayed().intValue());
 
-		headToHeadMap = standingsService.buildHeadToHeadMap("utah-jazz", new LocalDate(2015, 12, 05), createMockStandingsMap());
+		headToHeadMap = standingsService.buildHeadToHeadMap("utah-jazz", new LocalDate(2015, 12, 5), createMockStandingsMap());
 		Assert.assertEquals(3, headToHeadMap.size());
 		Assert.assertEquals(0, headToHeadMap.get("phoenix-suns").getGamesWon().intValue());
 		Assert.assertEquals(2, headToHeadMap.get("phoenix-suns").getGamesPlayed().intValue());
@@ -202,9 +203,9 @@ public class StandingsServiceTest {
 	@Test
 	public void calculateStrengthOfSchedule() {
 		when(gameRepo.findByDateTeamSeason((LocalDate) anyObject(), anyString()))
-			.thenReturn(createMockGames_Kings())
-			.thenReturn(createMockGames_Jazz());
-		StandingRecord standingRecord = standingsService.calculateStrengthOfSchedule("sacramento-kings", new LocalDate(2015, 12, 05), createMockStandingsMap(), createMockHeadToHeadMap_Kings());
+				.thenReturn(createMockGames_Kings())
+				.thenReturn(createMockGames_Jazz());
+		StandingRecord standingRecord = standingsService.calculateStrengthOfSchedule("sacramento-kings", new LocalDate(2015, 12, 5), createMockStandingsMap(), createMockHeadToHeadMap_Kings());
 		Assert.assertEquals(3, standingRecord.getGamesWon().intValue());
 		Assert.assertEquals(7, standingRecord.getGamesPlayed().intValue());
 		Assert.assertEquals(-12, standingRecord.getOpptGamesWon().intValue());
@@ -260,14 +261,13 @@ public class StandingsServiceTest {
 	}
 
 	private List<Standing> createMockStandings() {
-		List<Standing> standings = Arrays.asList(
-			createMockStanding("sacramento-kings", (short)1, (short)4, 7, 11, StatusCodeDAO.Found),
-			createMockStanding("utah-jazz", (short)3, (short)4, 3, 10, StatusCodeDAO.Found),
-			createMockStanding("detroit-pistons", (short)1, (short)3, 3, 4, StatusCodeDAO.Found),
-			createMockStanding("phoenix-suns", (short)1, (short)2, 3, 4, StatusCodeDAO.Found),
-			createMockStanding("miami-heat", (short)2, (short)3, 3, 6, StatusCodeDAO.Found)
+		return Arrays.asList(
+				createMockStanding("sacramento-kings", (short)1, (short)4, 7, 11, StatusCodeDAO.Found),
+				createMockStanding("utah-jazz", (short)3, (short)4, 3, 10, StatusCodeDAO.Found),
+				createMockStanding("detroit-pistons", (short)1, (short)3, 3, 4, StatusCodeDAO.Found),
+				createMockStanding("phoenix-suns", (short)1, (short)2, 3, 4, StatusCodeDAO.Found),
+				createMockStanding("miami-heat", (short)2, (short)3, 3, 6, StatusCodeDAO.Found)
 		);
-		return standings;
 	}
 
 	private Standing createMockStanding(String teamKey, Short gamesWon, Short gamesPlayed, Integer opptGamesWon, Integer opptGamesPlayed, StatusCodeDAO statusCode) {
@@ -309,23 +309,21 @@ public class StandingsServiceTest {
 	}
 
 	private List<Game> createMockGames_Kings() {
-		List<Game> games = Arrays.asList(
+		return Arrays.asList(
 				createMockGame(new LocalDateTime("2015-12-02T10:00"), "detroit-pistons", "sacramento-kings"),
 				createMockGame(new LocalDateTime("2015-12-03T10:00"), "sacramento-kings", "miami-heat"),
 				createMockGame(new LocalDateTime("2015-12-04T10:00"), "miami-heat", "sacramento-kings"),
 				createMockGame(new LocalDateTime("2015-12-05T10:00"), "utah-jazz", "sacramento-kings")
-			);
-			return games;
+		);
 	}
 
 	private List<Game> createMockGames_Jazz() {
-		List<Game> games = Arrays.asList(
+		return Arrays.asList(
 				createMockGame(new LocalDateTime("2015-12-02T10:00"), "phoenix-suns", "utah-jazz"),
 				createMockGame(new LocalDateTime("2015-12-03T10:00"), "detroit-pistons", "utah-jazz"),
 				createMockGame(new LocalDateTime("2015-12-04T10:00"), "utah-jazz", "phoenix-suns"),
 				createMockGame(new LocalDateTime("2015-12-05T10:00"), "utah-jazz", "sacramento-kings")
-			);
-			return games;
+		);
 	}
 
 	private Game createMockGame(LocalDateTime gameDateTime, String homeTeamKey, String awayTeamKey) {

@@ -1,37 +1,22 @@
 package com.rossotti.basketball.dao.model;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.ws.rs.core.UriInfo;
-
-import org.hibernate.annotations.Type;
-import org.joda.time.LocalDate;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.rossotti.basketball.dao.pub.PubRosterPlayer;
 import com.rossotti.basketball.dao.pub.PubRosterPlayer_ByPlayer;
 import com.rossotti.basketball.dao.pub.PubRosterPlayer_ByTeam;
 import com.rossotti.basketball.util.DateTimeUtil;
+import org.hibernate.annotations.Type;
+import org.joda.time.LocalDate;
+
+import javax.persistence.*;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table (name="rosterPlayer")
+@Table(name="rosterPlayer")
 public class RosterPlayer {
 	public RosterPlayer() {
 		setStatusCode(StatusCodeDAO.Found);
@@ -63,7 +48,7 @@ public class RosterPlayer {
 	}
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy= GenerationType.AUTO)
 	private Long id;
 	public Long getId() {
 		return id;
@@ -72,7 +57,7 @@ public class RosterPlayer {
 		this.id = id;
 	}
 
-	@ManyToOne(cascade=CascadeType.MERGE)
+	@ManyToOne(cascade= CascadeType.MERGE)
 	@JoinColumn(name="teamId", referencedColumnName="id", nullable=false)
 	@JsonBackReference(value="rosterPlayer-to-team")
 	private Team team;
@@ -83,7 +68,7 @@ public class RosterPlayer {
 		this.team = team;
 	}
 
-	@ManyToOne(cascade=CascadeType.MERGE)
+	@ManyToOne(cascade= CascadeType.MERGE)
 	@JoinColumn(name="playerId", referencedColumnName="id", nullable=false)
 	@JsonBackReference(value="rosterPlayer-to-player")
 	private Player player;
@@ -94,9 +79,9 @@ public class RosterPlayer {
 		this.player = player;
 	}
 
-	@OneToMany(mappedBy="rosterPlayer", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="rosterPlayer", fetch = FetchType.LAZY, cascade= CascadeType.ALL)
 	private List<BoxScorePlayer> boxScorePlayers = new ArrayList<BoxScorePlayer>();
-	public List<BoxScorePlayer> getBoxScorePlayers()  {
+	private List<BoxScorePlayer> getBoxScorePlayers()  {
 		return boxScorePlayers;
 	}
 	@JsonManagedReference(value="boxScorePlayer-to-rosterPlayer")
@@ -150,58 +135,56 @@ public class RosterPlayer {
 	}
 
 	public String toString() {
-		return new StringBuffer()
-			.append("\r" + "  id: " + this.id + "\n")
-			.append("  lastName: " + player.getLastName() + "\n")
-			.append("  firstName: " + player.getFirstName() + "\n")
-			.append("  birthDate: " + player.getBirthdate() + "\n")
-			.append("  teamKey: " + team.getTeamKey() + "\n")
-			.append("  fromDate: " + this.getFromDate() + "\n")
-			.append("  toDate: " + this.getToDate() + "\n")
-			.append("  statusCode: " + this.statusCode)
-			.toString();
+		return ("\r" + "  id: " + this.id + "\n") +
+				"  lastName: " + player.getLastName() + "\n" +
+				"  firstName: " + player.getFirstName() + "\n" +
+				"  birthDate: " + player.getBirthdate() + "\n" +
+				"  teamKey: " + team.getTeamKey() + "\n" +
+				"  fromDate: " + this.getFromDate() + "\n" +
+				"  toDate: " + this.getToDate() + "\n" +
+				"  statusCode: " + this.statusCode;
 	}
 
 	public PubRosterPlayer toPubRosterPlayer(UriInfo uriInfo) {
 		URI self = uriInfo.getBaseUriBuilder().path("rosterPlayers").
-												path(this.getPlayer().getLastName()).
-												path(this.getPlayer().getFirstName()).
-												path(DateTimeUtil.getStringDate(this.getPlayer().getBirthdate())).
-												path(DateTimeUtil.getStringDate(this.getFromDate())).build();
+				path(this.getPlayer().getLastName()).
+				path(this.getPlayer().getFirstName()).
+				path(DateTimeUtil.getStringDate(this.getPlayer().getBirthdate())).
+				path(DateTimeUtil.getStringDate(this.getFromDate())).build();
 		return new PubRosterPlayer(self,
-							this.fromDate,
-							this.toDate,
-							this.position,
-							this.number,
-							this.getPlayer().toPubPlayer(uriInfo),
-							this.getTeam().toPubTeam(uriInfo));
+				this.fromDate,
+				this.toDate,
+				this.position,
+				this.number,
+				this.getPlayer().toPubPlayer(uriInfo),
+				this.getTeam().toPubTeam(uriInfo));
 	}
 
 	public PubRosterPlayer_ByPlayer toPubRosterPlayer_ByPlayer(UriInfo uriInfo) {
 		URI self = uriInfo.getBaseUriBuilder().path("rosterPlayers").
-												path(this.getPlayer().getLastName()).
-												path(this.getPlayer().getFirstName()).
-												path(DateTimeUtil.getStringDate(this.getPlayer().getBirthdate())).
-												path(DateTimeUtil.getStringDate(this.getFromDate())).build();
+				path(this.getPlayer().getLastName()).
+				path(this.getPlayer().getFirstName()).
+				path(DateTimeUtil.getStringDate(this.getPlayer().getBirthdate())).
+				path(DateTimeUtil.getStringDate(this.getFromDate())).build();
 		return new PubRosterPlayer_ByPlayer(self,
-							this.fromDate,
-							this.toDate,
-							this.position,
-							this.number,
-							this.getTeam().toPubTeam(uriInfo));
+				this.fromDate,
+				this.toDate,
+				this.position,
+				this.number,
+				this.getTeam().toPubTeam(uriInfo));
 	}
 
 	public PubRosterPlayer_ByTeam toPubRosterPlayer_ByTeam(UriInfo uriInfo) {
 		URI self = uriInfo.getBaseUriBuilder().path("rosterPlayers").
-												path(this.getPlayer().getLastName()).
-												path(this.getPlayer().getFirstName()).
-												path(this.getTeam().getTeamKey()).
-												path(DateTimeUtil.getStringDate(this.getFromDate())).build();
+				path(this.getPlayer().getLastName()).
+				path(this.getPlayer().getFirstName()).
+				path(this.getTeam().getTeamKey()).
+				path(DateTimeUtil.getStringDate(this.getFromDate())).build();
 		return new PubRosterPlayer_ByTeam(self,
-							this.fromDate,
-							this.toDate,
-							this.position,
-							this.number,
-							this.getPlayer().toPubPlayer(uriInfo));
+				this.fromDate,
+				this.toDate,
+				this.position,
+				this.number,
+				this.getPlayer().toPubPlayer(uriInfo));
 	}
 }

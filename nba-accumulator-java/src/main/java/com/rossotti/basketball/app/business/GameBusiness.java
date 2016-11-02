@@ -1,5 +1,6 @@
 package com.rossotti.basketball.app.business;
 
+import com.rossotti.basketball.client.dto.ClientSource;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rossotti.basketball.app.exception.PropertyException;
-import com.rossotti.basketball.app.resource.ClientSource;
 import com.rossotti.basketball.app.service.GameService;
 import com.rossotti.basketball.app.service.OfficialService;
 import com.rossotti.basketball.app.service.PropertyService;
@@ -26,34 +26,39 @@ import com.rossotti.basketball.dao.model.Game;
 import com.rossotti.basketball.dao.model.GameStatus;
 import com.rossotti.basketball.dao.model.Official;
 import com.rossotti.basketball.dao.model.RosterPlayer;
+import com.rossotti.basketball.dao.model.Team;
 import com.rossotti.basketball.util.DateTimeUtil;
 
 @Service
 public class GameBusiness {
-	@Autowired
-	private PropertyService propertyService;
+	private final PropertyService propertyService;
 
-	@Autowired
-	private RestStatsService restStatsService;
+	private final RestStatsService restStatsService;
 
-	@Autowired
-	private FileStatsService fileStatsService;
+	private final FileStatsService fileStatsService;
 
-	@Autowired
-	private OfficialService officialService;
+	private final OfficialService officialService;
 
-	@Autowired
-	private RosterPlayerService rosterPlayerService;
+	private final RosterPlayerService rosterPlayerService;
 
-	@Autowired
-	private TeamService teamService;
-	
-	@Autowired
-	private GameService gameService;
-	
+	private final TeamService teamService;
+
+	private final GameService gameService;
+
 	private final Logger logger = LoggerFactory.getLogger(GameBusiness.class);
-	
-	public AppGame scoreGame(Game game) {
+
+	@Autowired
+	public GameBusiness(OfficialService officialService, RestStatsService restStatsService, TeamService teamService, RosterPlayerService rosterPlayerService, GameService gameService, PropertyService propertyService, FileStatsService fileStatsService) {
+		this.officialService = officialService;
+		this.restStatsService = restStatsService;
+		this.teamService = teamService;
+		this.rosterPlayerService = rosterPlayerService;
+		this.gameService = gameService;
+		this.propertyService = propertyService;
+		this.fileStatsService = fileStatsService;
+	}
+
+	public AppGame scoreGame(Game game, String previousUpdateTeam) {
 		AppGame appGame = new AppGame();
 		try {
 			BoxScore awayBoxScore = game.getBoxScoreAway();
@@ -66,15 +71,15 @@ public class GameBusiness {
 			String event = DateTimeUtil.getStringDateNaked(gameDateTime) + "-" + awayTeamKey + "-at-" + homeTeamKey;
 
 			if (game.isScheduled()) {
-				logger.info('\n' + "Scheduled game ready to be scored: " + event);
+				logger.debug("Scheduled game ready to be scored: " + event);
 
-				GameDTO gameDTO = null;
+				GameDTO gameDTO;
 				ClientSource clientSource = propertyService.getProperty_ClientSource("accumulator.source.boxScore");
 				if (clientSource == ClientSource.File) {
-					gameDTO = fileStatsService.retrieveBoxScore(event);
+					gameDTO = fileStatsService.retrieveBoxScore(event, gameDate);
 				}
 				else if (clientSource == ClientSource.Api) {
-					gameDTO = restStatsService.retrieveBoxScore(event);
+					gameDTO = restStatsService.retrieveBoxScore(event, gameDate);
 				}
 				else {
 					throw new PropertyException("Unknown");
@@ -85,7 +90,9 @@ public class GameBusiness {
 					homeBoxScore.updateTotals(gameDTO.home_totals);
 					awayBoxScore.updatePeriodScores(gameDTO.away_period_scores);
 					homeBoxScore.updatePeriodScores(gameDTO.home_period_scores);
+					appGame.setRosterLastTeam(awayTeamKey);
 					awayBoxScore.setBoxScorePlayers(rosterPlayerService.getBoxScorePlayers(gameDTO.away_stats, gameDate, awayTeamKey));
+					appGame.setRosterLastTeam(homeTeamKey);
 					homeBoxScore.setBoxScorePlayers(rosterPlayerService.getBoxScorePlayers(gameDTO.home_stats, gameDate, homeTeamKey));
 					game.setGameOfficials(officialService.getGameOfficials(gameDTO.officials, gameDate));
 					awayBoxScore.setTeam(teamService.findTeam(awayTeamKey, gameDate));
@@ -105,7 +112,7 @@ public class GameBusiness {
 					game.setStatus(GameStatus.Completed);
 					Game updatedGame = gameService.updateGame(game);
 					if (updatedGame.isUpdated()) {
-						logger.info("Game Scored " + awayTeamKey +  " " + awayBoxScore.getPoints() + " " + homeTeamKey +  " " + homeBoxScore.getPoints());
+						logger.info("Game " + game.getStatus() + ": " + awayBoxScore.getTeam().getAbbr() +  " " + awayBoxScore.getPoints() + " at " + homeBoxScore.getTeam().getAbbr() +  " " + homeBoxScore.getPoints());
 						appGame.setGame(gameService.findByDateTeam(gameDate, awayTeamKey));
 						appGame.setAppStatus(AppStatus.Completed);
 					}
@@ -115,36 +122,66 @@ public class GameBusiness {
 					}
 				}
 				else if (gameDTO.isNotFound()) {
-					logger.info('\n' + "" + " unable to find game");
+					logger.info("Unable to find game");
 					appGame.setAppStatus(AppStatus.ClientError);
 				}
 				else if (gameDTO.isClientException()) {
-					logger.info('\n' + "" + " client exception");
+					logger.info("Client exception");
 					appGame.setAppStatus(AppStatus.ClientError);
 				}
 			}
 			else {
-				logger.info('\n' + "" + game.getStatus() + " game not eligible to be scored: " + event.toString());
-				appGame.setAppStatus(AppStatus.ServerError);
+				logger.info(game.getStatus() + " game not eligible to be scored: " + event);
+				appGame.setAppStatus(AppStatus.Completed);
 			}
 		}
 		catch (NoSuchEntityException nse) {
 			if (nse.getEntityClass().equals(Official.class)) {
 				logger.info("Official not found - need to add official");
+				appGame.setAppStatus(AppStatus.OfficialError);
+			}
+			else if (nse.getEntityClass().equals(Team.class)) {
+				logger.info("Team not found - need to add team");
+				appGame.setAppStatus(AppStatus.TeamError);
 			}
 			else if (nse.getEntityClass().equals(RosterPlayer.class)) {
-				logger.info("Roster Player not found - need to rebuild active roster");
+				if (previousUpdateTeam == null || previousUpdateTeam != appGame.getRosterLastTeam()) {
+					logger.info("Roster Player not found - need to rebuild active roster");
+					appGame.setAppStatus(AppStatus.RosterUpdate);
+				}
+				else {
+					logger.info("Roster Player not found - problem between box score and roster");
+					appGame.setAppStatus(AppStatus.RosterError);
+				}
 			}
-			appGame.setAppStatus(AppStatus.ClientError);
 		}
 		catch (PropertyException pe) {
-			logger.info("property exception = " + pe);
+			logger.info("Property exception = " + pe);
 			appGame.setAppStatus(AppStatus.ServerError);
 		}
 		catch (Exception e) {
-			logger.info("unexpected exception = " + e);
+			logger.info("Unexpected exception = " + e);
 			appGame.setAppStatus(AppStatus.ServerError);
 		}
+		finally {
+			appGame.setGame(game);
+		}
 		return appGame;
+	}
+
+	public AppGame scoreGame(Game game) {
+		return scoreGame(game, null);
+	}
+
+	public AppGame scoreGame(AppGame appGame) {
+		if (appGame.isAppServerError()) {
+			return appGame;
+		}
+		else if(appGame.isAppRosterUpdate()) {
+			return scoreGame(appGame.getGame(), appGame.getRosterLastTeam());
+		}
+		else {
+			return scoreGame(appGame.getGame());
+		}
 	}
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +17,20 @@ import com.rossotti.basketball.dao.model.StatusCodeDAO;
 @Repository
 @Transactional
 public class OfficialRepository {
+	private final SessionFactory sessionFactory;
+
 	@Autowired
-	private SessionFactory sessionFactory;
+	public OfficialRepository(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	public Official findOfficial(String lastName, String firstName, LocalDate asOfDate) {
-		String sql = 	"from Official " +
-						"where lastName = :lastName " +
-						"and firstName = :firstName " +
-						"and fromDate <= :asOfDate " +
-						"and toDate >= :asOfDate";
-		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		String sql =    "from Official " +
+				"where lastName = :lastName " +
+				"and firstName = :firstName " +
+				"and fromDate <= :asOfDate " +
+				"and toDate >= :asOfDate";
+		Query query = getSession().createQuery(sql);
 		query.setParameter("lastName", lastName);
 		query.setParameter("firstName", firstName);
 		query.setParameter("asOfDate", asOfDate);
@@ -42,10 +47,10 @@ public class OfficialRepository {
 
 	@SuppressWarnings("unchecked")
 	public List<Official> findOfficials(String lastName, String firstName) {
-		String sql = 	"from Official " +
-						"where lastName = :lastName " +
-						"and firstName = :firstName";
-		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		String sql =    "from Official " +
+				"where lastName = :lastName " +
+				"and firstName = :firstName";
+		Query query = getSession().createQuery(sql);
 		query.setParameter("lastName", lastName);
 		query.setParameter("firstName", firstName);
 
@@ -58,10 +63,10 @@ public class OfficialRepository {
 
 	@SuppressWarnings("unchecked")
 	public List<Official> findOfficials(LocalDate asOfDate) {
-		String sql = 	"from Official " +
-						"where fromDate <= :asOfDate " +
-						"and toDate >= :asOfDate";
-		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		String sql =    "from Official " +
+				"where fromDate <= :asOfDate " +
+				"and toDate >= :asOfDate";
+		Query query = getSession().createQuery(sql);
 		query.setParameter("asOfDate", asOfDate);
 
 		List<Official> officials = query.list();
@@ -74,7 +79,7 @@ public class OfficialRepository {
 	public Official createOfficial(Official createOfficial) {
 		Official official = findOfficial(createOfficial.getLastName(), createOfficial.getFirstName(), createOfficial.getFromDate());
 		if (official.isNotFound()) {
-			getSessionFactory().getCurrentSession().persist(createOfficial);
+			getSession().persist(createOfficial);
 			createOfficial.setStatusCode(StatusCodeDAO.Created);
 		}
 		else {
@@ -92,7 +97,7 @@ public class OfficialRepository {
 			official.setToDate(updateOfficial.getToDate());
 			official.setNumber(updateOfficial.getNumber());
 			official.setStatusCode(StatusCodeDAO.Updated);
-			getSessionFactory().getCurrentSession().saveOrUpdate(official);
+			getSession().saveOrUpdate(official);
 		}
 		return official;
 	}
@@ -100,17 +105,13 @@ public class OfficialRepository {
 	public Official deleteOfficial(String lastName, String firstName, LocalDate asOfDate) {
 		Official official = findOfficial(lastName, firstName, asOfDate);
 		if (official.isFound()) {
-			getSessionFactory().getCurrentSession().delete(official);
+			getSession().delete(official);
 			official = new Official(StatusCodeDAO.Deleted);
 		}
 		return official;
 	}
 
-	public SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
-
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+	private Session getSession() {
+		return sessionFactory.getCurrentSession();
 	}
 }

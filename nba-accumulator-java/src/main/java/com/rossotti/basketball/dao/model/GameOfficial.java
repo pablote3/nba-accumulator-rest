@@ -1,27 +1,19 @@
 package com.rossotti.basketball.dao.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.ws.rs.core.UriInfo;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.rossotti.basketball.dao.pub.PubGameOfficial;
 import com.rossotti.basketball.dao.pub.PubOfficial;
 
+import javax.persistence.*;
+import javax.ws.rs.core.UriInfo;
+
 @Entity
-@Table (name="gameOfficial")
+@Table(name="gameOfficial")
 public class GameOfficial {
 	public GameOfficial() {}
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy= GenerationType.AUTO)
 	@Column(name="id")
 	private Long id;
 	public Long getId() {
@@ -31,7 +23,7 @@ public class GameOfficial {
 		this.id = id;
 	}
 
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne(cascade= CascadeType.ALL)
 	@JoinColumn(name="gameId", referencedColumnName="id", nullable=false)
 	@JsonBackReference(value="gameOfficial-to-game")
 	private Game game;
@@ -42,7 +34,7 @@ public class GameOfficial {
 		this.game = game;
 	}
 
-	@ManyToOne(cascade=CascadeType.MERGE)
+	@ManyToOne(cascade= CascadeType.MERGE)
 	@JoinColumn(name="officialId", referencedColumnName="id", nullable=false)
 	@JsonBackReference(value="gameOfficial-to-official")
 	private Official official;
@@ -54,12 +46,10 @@ public class GameOfficial {
 	}
 
 	public String toString() {
-		return new StringBuffer()
-			.append("  id: " + this.id + "\n")
-			.append("  official: " + this.official.toString() + "\n")
-			.toString();
+		return ("  id: " + this.id + "\n") +
+				"  official: " + this.official.toString() + "\n";
 	}
-	
+
 	public PubGameOfficial toPubGameOfficial(UriInfo uriInfo) {
 		PubOfficial pubOfficial = this.getOfficial().toPubOfficial(uriInfo);
 		return new PubGameOfficial(pubOfficial);

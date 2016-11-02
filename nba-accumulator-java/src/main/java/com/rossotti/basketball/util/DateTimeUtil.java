@@ -9,10 +9,10 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class DateTimeUtil {
 
-	static DateTimeFormatter dateNakedFormatter = DateTimeFormat.forPattern("yyyyMMdd");
-	static DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-	static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm");
-	
+	private static final DateTimeFormatter dateNakedFormatter = DateTimeFormat.forPattern("yyyyMMdd");
+	private static final DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm");
+
 	static public String getStringDate(LocalDate date) {
 		return date.toString(dateFormatter);
 	}
@@ -98,22 +98,22 @@ public class DateTimeUtil {
 //	static public String getSeason(LocalDate date) {
 //		LocalDate minDate = getDateMinSeason(date);
 //		String minYear = minDate.toString(DateTimeFormat.forPattern("yyyy"));
-//		
+//
 //		LocalDate  maxDate = getDateMaxSeason(date);
 //		String maxYear = maxDate.toString(DateTimeFormat.forPattern("yy"));
-//		
-//		return minYear + "-" + maxYear; 
+//
+//		return minYear + "-" + maxYear;
 //	}
-//	
-//	static public boolean isDate(String strDate)  {
-//		try {
-//			DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-//			dateTimeFormatter.parseDateTime(strDate);
-//			return true;
-//		} catch (Exception e) {
-//			return false;
-//		}
-//	}
+
+	static public boolean isDate(String strDate)  {
+		try {
+			DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+			dateTimeFormatter.parseDateTime(strDate);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 
 	static public LocalDate getDateMinusOneDay(LocalDate date) {
 		return date.minusDays(1);

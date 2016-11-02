@@ -17,10 +17,14 @@ import com.rossotti.basketball.dao.repository.OfficialRepository;
 
 @Service
 public class OfficialService {
-	@Autowired
-	private OfficialRepository officialRepo;
+	private final OfficialRepository officialRepo;
 
 	private final Logger logger = LoggerFactory.getLogger(OfficialService.class);
+
+	@Autowired
+	public OfficialService(OfficialRepository officialRepo) {
+		this.officialRepo = officialRepo;
+	}
 
 	public List<GameOfficial> getGameOfficials(OfficialDTO[] officials, LocalDate gameDate) {
 		List<GameOfficial> gameOfficials = new ArrayList<GameOfficial>();

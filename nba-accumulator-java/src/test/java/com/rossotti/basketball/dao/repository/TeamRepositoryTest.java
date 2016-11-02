@@ -1,6 +1,8 @@
 package com.rossotti.basketball.dao.repository;
 
-import java.util.List;
+import com.rossotti.basketball.dao.model.Team;
+import com.rossotti.basketball.dao.model.Team.Conference;
+import com.rossotti.basketball.dao.model.Team.Division;
 
 import org.hibernate.PropertyValueException;
 import org.joda.time.LocalDate;
@@ -11,12 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import java.util.List;
 
-import com.rossotti.basketball.dao.model.Team;
-import com.rossotti.basketball.dao.model.Team.Conference;
-import com.rossotti.basketball.dao.model.Team.Division;
-import com.rossotti.basketball.dao.repository.TeamRepository;
-
+@SuppressWarnings("CanBeFinal")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:applicationContext.xml"})
 public class TeamRepositoryTest {
@@ -57,6 +56,38 @@ public class TeamRepositoryTest {
 	}
 
 	@Test
+	public void findTeamByLastName_Found_FromDate() {
+		Team findTeam = teamRepo.findTeamByLastName("Globetrotter's", new LocalDate("2009-07-01"));
+		Assert.assertEquals("Harlem Globetrotter's", findTeam.getFullName());
+		Assert.assertTrue(findTeam.isFound());
+	}
+
+	@Test
+	public void findTeamByLastName_Found_ToDate() {
+		Team findTeam = teamRepo.findTeamByLastName("Globetrotter's", new LocalDate("2010-06-30"));
+		Assert.assertEquals("Harlem Globetrotter's", findTeam.getFullName());
+		Assert.assertTrue(findTeam.isFound());
+	}
+
+	@Test
+	public void findTeamByLastName_NotFound_TeamKey() {
+		Team findTeam = teamRepo.findTeamByLastName("Globetreker's", new LocalDate("2009-07-01"));
+		Assert.assertTrue(findTeam.isNotFound());
+	}
+
+	@Test
+	public void findTeamByLastName_NotFound_BeforeAsOfDate() {
+		Team findTeam = teamRepo.findTeamByLastName("Globetrotter's", new LocalDate("2009-06-30"));
+		Assert.assertTrue(findTeam.isNotFound());
+	}
+
+	@Test
+	public void findTeamByLastName_NotFound_AfterAsOfDate() {
+		Team findTeam = teamRepo.findTeamByLastName("Globetrotter's", new LocalDate("2010-07-01"));
+		Assert.assertTrue(findTeam.isNotFound());
+	}
+
+	@Test
 	public void findTeamsByKey_Found() {
 		List<Team> teams = teamRepo.findTeams("st-louis-bomber's");
 		Assert.assertEquals(2, teams.size());
@@ -67,7 +98,7 @@ public class TeamRepositoryTest {
 		List<Team> teams = teamRepo.findTeams("st-louis-bombber's");
 		Assert.assertEquals(0, teams.size());
 	}
-	
+
 	@Test
 	public void findTeamsByDateRange_Found() {
 		List<Team> teams = teamRepo.findTeams(new LocalDate("2009-10-31"));
@@ -129,6 +160,7 @@ public class TeamRepositoryTest {
 	@Test
 	public void deleteTeam_Deleted() {
 		Team deleteTeam = teamRepo.deleteTeam("rochester-royals", new LocalDate("2009-06-30"));
+		teamRepo.deleteTeam("rochester-royals", new LocalDate("2009-06-30"));
 		Team findTeam = teamRepo.findTeam("rochester-royals", new LocalDate("2009-06-30"));
 		Assert.assertTrue(deleteTeam.isDeleted());
 		Assert.assertTrue(findTeam.isNotFound());

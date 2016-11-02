@@ -25,7 +25,7 @@ public class StandingRecord {
 	}
 	public void setGamesPlayed(Integer gamesPlayed) {
 		this.gamesPlayed = gamesPlayed;
-	}	
+	}
 
 	public Integer getOpptGamesWon() {
 		return opptGamesWon;

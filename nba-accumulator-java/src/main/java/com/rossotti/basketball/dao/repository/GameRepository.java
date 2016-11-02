@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -23,19 +24,23 @@ import com.rossotti.basketball.util.DateTimeUtil;
 @Repository
 @Transactional
 public class GameRepository {
+	private final SessionFactory sessionFactory;
+
 	@Autowired
-	private SessionFactory sessionFactory;
+	public GameRepository(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
 	public Game findByDateTeam(LocalDate gameDate, String teamKey) {
 		LocalDateTime fromDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
 		LocalDateTime toDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
-		String sql = 	"select game from Game game " +
-						"inner join game.boxScores boxScores " +
-						"inner join boxScores.team team " +
-						"where game.gameDateTime >= :fromDateTime " +
-						"and game.gameDateTime <= :toDateTime " +
-						"and team.teamKey = :teamKey";
-		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		String sql =    "select game from Game game " +
+				"inner join game.boxScores boxScores " +
+				"inner join boxScores.team team " +
+				"where game.gameDateTime >= :fromDateTime " +
+				"and game.gameDateTime <= :toDateTime " +
+				"and team.teamKey = :teamKey";
+		Query query = getSession().createQuery(sql);
 		query.setParameter("fromDateTime", fromDateTime);
 		query.setParameter("toDateTime", toDateTime);
 		query.setParameter("teamKey", teamKey);
@@ -43,12 +48,11 @@ public class GameRepository {
 		Game findGame = (Game)query.uniqueResult();
 		if (findGame == null) {
 			return new Game(StatusCodeDAO.NotFound);
-		} 
+		}
 		else {
-			Game game = (Game)getSessionFactory().getCurrentSession().createCriteria(Game.class)
-				.add(Restrictions.eq("id", findGame.getId()))
-				.uniqueResult();
-			return game;
+			return (Game)getSession().createCriteria(Game.class)
+					.add(Restrictions.eq("id", findGame.getId()))
+					.uniqueResult();
 		}
 	}
 
@@ -56,16 +60,16 @@ public class GameRepository {
 	public List<Game> findByDateTeamSeason(LocalDate gameDate, String teamKey) {
 		LocalDateTime fromDateTime = DateTimeUtil.getLocalDateTimeSeasonMin(gameDate);
 		LocalDateTime toDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
-		String sql = 	"select game from Game game " +
-						"left join game.boxScores boxScores " +
-						"inner join boxScores.team team " +
-						"where game.gameDateTime >= :fromDateTime " +
-						"and game.gameDateTime <= :toDateTime " +
-						"and (game.status = :gameStatus1 " +
-						"or game.status = :gameStatus2) " +
-						"and team.teamKey = :teamKey " +
-						"order by gameDateTime asc";
-		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
+		String sql =    "select game from Game game " +
+				"left join game.boxScores boxScores " +
+				"inner join boxScores.team team " +
+				"where game.gameDateTime >= :fromDateTime " +
+				"and game.gameDateTime <= :toDateTime " +
+				"and (game.status = :gameStatus1 " +
+				"or game.status = :gameStatus2) " +
+				"and team.teamKey = :teamKey " +
+				"order by gameDateTime asc";
+		Query query = getSession().createQuery(sql);
 
 		query.setParameter("fromDateTime", fromDateTime);
 		query.setParameter("toDateTime", toDateTime);
@@ -77,9 +81,9 @@ public class GameRepository {
 		List<Game> games = new ArrayList<Game>();
 		if (findGames != null) {
 			for (int i = 0; i < findGames.size(); i++) {
-				Game game = (Game)getSessionFactory().getCurrentSession().createCriteria(Game.class)
-					.add(Restrictions.eq("id", findGames.get(i).getId()))
-					.uniqueResult();
+				Game game = (Game)getSession().createCriteria(Game.class)
+						.add(Restrictions.eq("id", findGames.get(i).getId()))
+						.uniqueResult();
 				games.add(game);
 			}
 		}
@@ -90,7 +94,7 @@ public class GameRepository {
 	public List<Game> findByDateRangeSize(LocalDate gameDate, int maxRows) {
 		LocalDateTime gameDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
 		LocalDateTime maxDateTime = DateTimeUtil.getLocalDateTimeSeasonMax(gameDate);
-		List<Game> findGames = getSessionFactory().getCurrentSession().createCriteria(Game.class)
+		List<Game> findGames = getSession().createCriteria(Game.class)
 				.add(Restrictions.between("gameDateTime", gameDateTime, maxDateTime))
 				.addOrder(Order.asc("gameDateTime"))
 				.setMaxResults(maxRows)
@@ -98,9 +102,9 @@ public class GameRepository {
 		List<Game> games = new ArrayList<Game>();
 		if (findGames != null) {
 			for (int i = 0; i < findGames.size(); i++) {
-				Game game = (Game)getSessionFactory().getCurrentSession().createCriteria(Game.class)
-					.add(Restrictions.eq("id", findGames.get(i).getId()))
-					.uniqueResult();
+				Game game = (Game)getSession().createCriteria(Game.class)
+						.add(Restrictions.eq("id", findGames.get(i).getId()))
+						.uniqueResult();
 				games.add(game);
 			}
 		}
@@ -111,7 +115,7 @@ public class GameRepository {
 	public List<Game> findByDate(LocalDate gameDate) {
 		LocalDateTime minDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
 		LocalDateTime maxDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
-		List<Game> findGames = getSessionFactory().getCurrentSession().createCriteria(Game.class)
+		List<Game> findGames = getSession().createCriteria(Game.class)
 				.add(Restrictions.between("gameDateTime", minDateTime, maxDateTime))
 				.addOrder(Order.desc("status"))
 				.addOrder(Order.asc("gameDateTime"))
@@ -119,9 +123,9 @@ public class GameRepository {
 		List<Game> games = new ArrayList<Game>();
 		if (findGames != null) {
 			for (int i = 0; i < findGames.size(); i++) {
-				Game game = (Game)getSessionFactory().getCurrentSession().createCriteria(Game.class)
-					.add(Restrictions.eq("id", findGames.get(i).getId()))
-					.uniqueResult();
+				Game game = (Game)getSession().createCriteria(Game.class)
+						.add(Restrictions.eq("id", findGames.get(i).getId()))
+						.uniqueResult();
 				games.add(game);
 			}
 		}
@@ -131,15 +135,14 @@ public class GameRepository {
 	@SuppressWarnings("unchecked")
 	public LocalDateTime findPreviousGameDateTimeByDateTeam(LocalDate gameDate, String teamKey) {
 		LocalDateTime gameDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
-		String sql = 	"select game from Game game " +
-						"left join game.boxScores boxScores " +
-						"inner join boxScores.team team " +
-						"where game.gameDateTime <= :gameDateTime " +
-						"and game.status = :gameStatus " +
-						"and team.teamKey = :teamKey " +
-						"order by gameDateTime desc";
-		Query query = getSessionFactory().getCurrentSession().createQuery(sql);
-
+		String sql =    "select game from Game game " +
+				"left join game.boxScores boxScores " +
+				"inner join boxScores.team team " +
+				"where game.gameDateTime <= :gameDateTime " +
+				"and game.status = :gameStatus " +
+				"and team.teamKey = :teamKey " +
+				"order by gameDateTime desc";
+		Query query = getSession().createQuery(sql);
 		query.setParameter("gameDateTime", gameDateTime);
 		query.setParameter("gameStatus", GameStatus.Completed);
 		query.setParameter("teamKey", teamKey);
@@ -156,7 +159,7 @@ public class GameRepository {
 	public int findCountGamesByDateScheduled(LocalDate gameDate) {
 		LocalDateTime fromDateTime = DateTimeUtil.getLocalDateTimeMin(gameDate);
 		LocalDateTime toDateTime = DateTimeUtil.getLocalDateTimeMax(gameDate);
-		List<Game> games = getSessionFactory().getCurrentSession().createCriteria(Game.class)
+		List<Game> games = getSession().createCriteria(Game.class)
 				.add(Restrictions.between("gameDateTime", fromDateTime, toDateTime))
 				.add(Restrictions.eq("status", GameStatus.Scheduled))
 				.list();
@@ -169,7 +172,7 @@ public class GameRepository {
 			for (int i = 0; i < createGame.getBoxScores().size(); i++) {
 				createGame.getBoxScores().get(i).setGame(createGame);
 			}
-			getSessionFactory().getCurrentSession().persist(createGame);
+			getSession().persist(createGame);
 			createGame.setStatusCode(StatusCodeDAO.Created);
 			return createGame;
 		}
@@ -262,7 +265,7 @@ public class GameRepository {
 			}
 
 			findGame.setStatusCode(StatusCodeDAO.Updated);
-			getSessionFactory().getCurrentSession().saveOrUpdate(findGame);
+			getSession().saveOrUpdate(findGame);
 		}
 		return findGame;
 	}
@@ -270,17 +273,13 @@ public class GameRepository {
 	public Game deleteGame(LocalDate gameDate, String teamKey) {
 		Game game = findByDateTeam(gameDate, teamKey);
 		if (game.isFound()) {
-			getSessionFactory().getCurrentSession().delete(game);
+			getSession().delete(game);
 			game = new Game(StatusCodeDAO.Deleted);
 		}
 		return game;
 	}
 
-	public SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
-
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+	private Session getSession() {
+		return sessionFactory.getCurrentSession();
 	}
 }

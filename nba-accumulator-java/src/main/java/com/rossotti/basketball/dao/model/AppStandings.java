@@ -4,9 +4,6 @@ import java.util.List;
 
 public class AppStandings {
 	private AppStatus appStatus;
-	public AppStatus getAppStatus() {
-		return appStatus;
-	}
 	public void setAppStatus(AppStatus appStatus) {
 		this.appStatus = appStatus;
 	}

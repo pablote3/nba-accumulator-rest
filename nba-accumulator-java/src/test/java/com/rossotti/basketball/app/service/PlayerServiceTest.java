@@ -17,6 +17,7 @@ import com.rossotti.basketball.dao.model.Player;
 import com.rossotti.basketball.dao.model.StatusCodeDAO;
 import com.rossotti.basketball.dao.repository.PlayerRepository;
 
+@SuppressWarnings("CanBeFinal")
 @RunWith(MockitoJUnitRunner.class)
 public class PlayerServiceTest {
 	@Mock
@@ -28,7 +29,7 @@ public class PlayerServiceTest {
 	@Test
 	public void findLatestByPlayerNameBirthdateSeason_notFound() {
 		when(playerRepo.findPlayer(anyString(), anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockPlayer("Simmons", "Richard", StatusCodeDAO.NotFound));
+				.thenReturn(createMockPlayer("Simmons", "Richard", StatusCodeDAO.NotFound));
 		Player player = playerService.findByPlayerNameBirthdate("Simmons", "Richard", new LocalDate(1995, 11, 26));
 		Assert.assertTrue(player.isNotFound());
 	}
@@ -36,7 +37,7 @@ public class PlayerServiceTest {
 	@Test
 	public void findLatestByPlayerNameBirthdateSeason_found() {
 		when(playerRepo.findPlayer(anyString(), anyString(), (LocalDate) anyObject()))
-			.thenReturn(createMockPlayer("Adams", "Samuel", StatusCodeDAO.Found));
+				.thenReturn(createMockPlayer("Adams", "Samuel", StatusCodeDAO.Found));
 		Player player = playerService.findByPlayerNameBirthdate("Adams", "Samuel", new LocalDate(1995, 11, 26));
 		Assert.assertEquals("Samuel", player.getFirstName());
 		Assert.assertTrue(player.isFound());
@@ -45,7 +46,7 @@ public class PlayerServiceTest {
 	@Test(expected=DuplicateEntityException.class)
 	public void createPlayer_alreadyExists() {
 		when(playerRepo.createPlayer((Player) anyObject()))
-			.thenThrow(new DuplicateEntityException(Player.class));
+				.thenThrow(new DuplicateEntityException(Player.class));
 		Player player = playerService.createPlayer(createMockPlayer("Smith", "Emmitt", StatusCodeDAO.Found));
 		Assert.assertTrue(player.isNotFound());
 	}
@@ -53,7 +54,7 @@ public class PlayerServiceTest {
 	@Test
 	public void createPlayer_created() {
 		when(playerRepo.createPlayer((Player) anyObject()))
-			.thenReturn(createMockPlayer("Payton", "Walter", StatusCodeDAO.Created));
+				.thenReturn(createMockPlayer("Payton", "Walter", StatusCodeDAO.Created));
 		Player player = playerService.createPlayer(createMockPlayer("Payton", "Walter", StatusCodeDAO.Created));
 		Assert.assertEquals("Walter", player.getFirstName());
 		Assert.assertTrue(player.isCreated());

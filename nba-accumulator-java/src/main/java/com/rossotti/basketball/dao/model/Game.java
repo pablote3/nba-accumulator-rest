@@ -1,35 +1,22 @@
 package com.rossotti.basketball.dao.model;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.ws.rs.core.UriInfo;
-
-import org.hibernate.annotations.Type;
-import org.joda.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.rossotti.basketball.dao.model.BoxScore.Location;
 import com.rossotti.basketball.dao.pub.PubBoxScore;
 import com.rossotti.basketball.dao.pub.PubGame;
 import com.rossotti.basketball.dao.pub.PubGameOfficial;
 import com.rossotti.basketball.util.DateTimeUtil;
+import org.hibernate.annotations.Type;
+import org.joda.time.LocalDateTime;
+
+import javax.persistence.*;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table (name="game")
+@Table(name="game")
 public class Game {
 	public Game() {
 		setStatusCode(StatusCodeDAO.Found);
@@ -61,7 +48,7 @@ public class Game {
 	}
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy= GenerationType.AUTO)
 	@Column(name="id")
 	private Long id;
 	public Long getId() {
@@ -71,7 +58,7 @@ public class Game {
 		this.id = id;
 	}
 
-	@OneToMany(mappedBy="game", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="game", fetch = FetchType.LAZY, cascade= CascadeType.ALL)
 	private List<BoxScore> boxScores = new ArrayList<BoxScore>();
 	public List<BoxScore> getBoxScores() {
 		return boxScores;
@@ -103,7 +90,7 @@ public class Game {
 		}
 	}
 
-	@OneToMany(mappedBy="game", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="game", fetch = FetchType.LAZY, cascade= CascadeType.ALL)
 	private List<GameOfficial> gameOfficials = new ArrayList<GameOfficial>();
 	public List<GameOfficial> getGameOfficials() {
 		return gameOfficials;
@@ -170,23 +157,21 @@ public class Game {
 	}
 
 	public String toString() {
-		return new StringBuffer()
-			.append("\r" + "  id: " + this.id + "\n")
-			.append("  gameDateTime: " + this.gameDateTime + "\n")
-			.append("  status: " + this.status + "\n")
-			.append("  seasonType: " + this.seasonType + "\n")
-			.append("  statusCode: " + this.statusCode)
-			.toString();
+		return ("\r" + "  id: " + this.id + "\n") +
+				"  gameDateTime: " + this.gameDateTime + "\n" +
+				"  status: " + this.status + "\n" +
+				"  seasonType: " + this.seasonType + "\n" +
+				"  statusCode: " + this.statusCode;
 	}
 
 	public PubGame toPubGame(UriInfo uriInfo, String teamKey) {
 		URI scoreLink = null;
 
 		URI selfLink = uriInfo.getBaseUriBuilder()
-								.path("games")
-								.path(DateTimeUtil.getStringDate(this.getGameDateTime()))
-								.path(teamKey).build();
-	
+				.path("games")
+				.path(DateTimeUtil.getStringDate(this.getGameDateTime()))
+				.path(teamKey).build();
+
 		List<PubBoxScore> listPubBoxScore = new ArrayList<PubBoxScore>();
 		if (this.getBoxScores().size() > 0) {
 			for (BoxScore boxScore : this.getBoxScores()) {

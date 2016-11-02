@@ -1,32 +1,19 @@
 package com.rossotti.basketball.dao.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.rossotti.basketball.dao.pub.PubPlayer;
+import com.rossotti.basketball.util.DateTimeUtil;
+import org.hibernate.annotations.Type;
+import org.joda.time.LocalDate;
+
+import javax.persistence.*;
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
-import javax.ws.rs.core.UriInfo;
-
-import org.hibernate.annotations.Type;
-import org.joda.time.LocalDate;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.rossotti.basketball.dao.pub.PubPlayer;
-import com.rossotti.basketball.util.DateTimeUtil;
-
 @Entity
-@Table (name="player", uniqueConstraints=@UniqueConstraint(columnNames={"lastName", "firstName", "birthdate"}))
+@Table(name="player", uniqueConstraints=@UniqueConstraint(columnNames={"lastName", "firstName", "birthdate"}))
 public class Player {
 	public Player() {
 		setStatusCode(StatusCodeDAO.Found);
@@ -58,7 +45,7 @@ public class Player {
 	}
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy= GenerationType.AUTO)
 	@Column(name="id")
 	private Long id;
 	public Long getId() {
@@ -115,7 +102,7 @@ public class Player {
 		this.displayName = displayName;
 	}
 
-	@Column(name="height", nullable=true)
+	@Column(name="height")
 	private Short height;
 	public Short getHeight() {
 		return height;
@@ -124,7 +111,7 @@ public class Player {
 		this.height = height;
 	}
 
-	@Column(name="weight", nullable=true)
+	@Column(name="weight")
 	private Short weight;
 	public Short getWeight() {
 		return weight;
@@ -133,7 +120,7 @@ public class Player {
 		this.weight = weight;
 	}
 
-	@Column(name="birthplace", length=40, nullable=true)
+	@Column(name="birthplace", length=40)
 	private String birthplace;
 	public String getBirthplace() {
 		return birthplace;
@@ -143,28 +130,26 @@ public class Player {
 	}
 
 	public String toString() {
-		return new StringBuffer()
-			.append("\n" + "  id: " + this.id + "\n")
-			.append("  lastName: " + this.lastName + "\n")
-			.append("  firstName: " + this.firstName + "\n")
-			.append("  birthdate: " + this.birthdate + "\n")
-			.append("  statusCode: " + this.statusCode)
-			.toString();
+		return ("\n" + "  id: " + this.id + "\n") +
+				"  lastName: " + this.lastName + "\n" +
+				"  firstName: " + this.firstName + "\n" +
+				"  birthdate: " + this.birthdate + "\n" +
+				"  statusCode: " + this.statusCode;
 	}
 
 	public PubPlayer toPubPlayer(UriInfo uriInfo) {
 		URI self;
 		self = uriInfo.getBaseUriBuilder().path("players").
-											path(this.getLastName()).
-											path(this.getFirstName()).
-											path(DateTimeUtil.getStringDate(this.getBirthdate())).build();
+				path(this.getLastName()).
+				path(this.getFirstName()).
+				path(DateTimeUtil.getStringDate(this.getBirthdate())).build();
 		return new PubPlayer( self,
-							this.lastName,
-							this.firstName,
-							this.birthdate,
-							this.displayName,
-							this.height,
-							this.weight,
-							this.birthplace);
+				this.lastName,
+				this.firstName,
+				this.birthdate,
+				this.displayName,
+				this.height,
+				this.weight,
+				this.birthplace);
 	}
 }

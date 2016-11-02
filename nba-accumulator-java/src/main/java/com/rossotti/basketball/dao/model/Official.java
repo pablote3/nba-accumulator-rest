@@ -1,32 +1,19 @@
 package com.rossotti.basketball.dao.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.rossotti.basketball.dao.pub.PubOfficial;
+import com.rossotti.basketball.util.DateTimeUtil;
+import org.hibernate.annotations.Type;
+import org.joda.time.LocalDate;
+
+import javax.persistence.*;
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
-import javax.ws.rs.core.UriInfo;
-
-import org.hibernate.annotations.Type;
-import org.joda.time.LocalDate;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.rossotti.basketball.dao.pub.PubOfficial;
-import com.rossotti.basketball.util.DateTimeUtil;
-
 @Entity
-@Table (name="official", uniqueConstraints=@UniqueConstraint(columnNames={"lastName", "firstName", "fromDate", "toDate"}))
+@Table(name="official", uniqueConstraints=@UniqueConstraint(columnNames={"lastName", "firstName", "fromDate", "toDate"}))
 public class Official {
 	public Official() {
 		setStatusCode(StatusCodeDAO.Found);
@@ -58,7 +45,7 @@ public class Official {
 	}
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy= GenerationType.AUTO)
 	private Long id;
 	public Long getId() {
 		return id;
@@ -69,7 +56,7 @@ public class Official {
 
 	@OneToMany(mappedBy="official", fetch = FetchType.LAZY)
 	private List<GameOfficial> gameOfficials = new ArrayList<GameOfficial>();
-	public List<GameOfficial> getGameOfficials() {
+	private List<GameOfficial> getGameOfficials() {
 		return gameOfficials;
 	}
 	@JsonManagedReference(value="gameOfficial-to-official")
@@ -131,26 +118,24 @@ public class Official {
 	}
 
 	public String toString() {
-		return new StringBuffer()
-			.append("\r" + "  id: " + this.id + "\n")
-			.append("  lastName: " + this.lastName + "\n")
-			.append("  firstName: " + this.firstName + "\n")
-			.append("  fromDate: " + this.fromDate + "\n")
-			.append("  toDate: " + this.toDate + "\n")
-			.append("  statusCode: " + this.statusCode)
-			.toString();
+		return ("\r" + "  id: " + this.id + "\n") +
+				"  lastName: " + this.lastName + "\n" +
+				"  firstName: " + this.firstName + "\n" +
+				"  fromDate: " + this.fromDate + "\n" +
+				"  toDate: " + this.toDate + "\n" +
+				"  statusCode: " + this.statusCode;
 	}
 
 	public PubOfficial toPubOfficial(UriInfo uriInfo) {
 		URI self;
 		self = uriInfo.getBaseUriBuilder().path("officials").
-											path(this.getLastName()).
-											path(this.getFirstName()).
-											path(DateTimeUtil.getStringDate(this.getFromDate())).build();
+				path(this.getLastName()).
+				path(this.getFirstName()).
+				path(DateTimeUtil.getStringDate(this.getFromDate())).build();
 		return new PubOfficial( self,
-							this.lastName,
-							this.firstName,
-							this.fromDate,
-							this.number);
+				this.lastName,
+				this.firstName,
+				this.fromDate,
+				this.number);
 	}
 }
